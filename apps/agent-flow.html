@@ -239,7 +239,7 @@ const KB = [
  {id:'discovery', title:'Discovery-Sprint', tags:['discovery','konzept','start','dauer','dauert','lange','angebot','roadmap','prototyp','wochen'], text:'Der Discovery-Sprint bringt dich in 1–2 Wochen von der Idee zum belastbaren Konzept mit Festpreis-Angebot, Cloud-Architektur und klickbarem Prototyp.'},
  {id:'lockin', title:'Code-Übergabe & kein Lock-in', tags:['lock-in','lockin','code','übergabe','eigentum','wartung','betrieb','sla'], text:'Du erhältst den vollständigen Quellcode samt Dokumentation. Betrieb & Wartung ab 690 € / Monat — oder dein Team übernimmt selbst.'},
  {id:'support', title:'Betrieb, Monitoring & Support', tags:['support','betrieb','monitoring','wartung','fehler','ausfall','dashboard','sensor','sensordaten','daten','störung','problem','funktioniert','mqtt','gateway'], text:'Für betriebene Lösungen bieten wir Monitoring, Updates und definierte Reaktionszeiten (SLA). Bei Störungen prüfen wir zuerst Datenquelle, Verbindung (z. B. MQTT/Gateway) und Schwellwerte.'},
- {id:'kontakt', title:'Erstgespräch & Kontakt', tags:['kontakt','erstgespräch','termin','gespräch','beratung','anfrage'], text:'Das Erstgespräch (30 Min) ist kostenlos und unverbindlich — hallo@aiwithmaris.com oder über das Kontaktformular.'}
+ {id:'kontakt', title:'Erstgespräch & Kontakt', tags:['kontakt','erstgespräch','termin','gespräch','beratung','anfrage'], text:'Das Erstgespräch (30 Min) ist kostenlos und unverbindlich — marisnicolasreinold@gmail.com oder über das Kontaktformular.'}
 ];
 
 /* ===== Beispiel-Anfragen ===== */
@@ -316,8 +316,8 @@ function generateDraftSim(ctx,feedback){
   }
   // CTA: erste Support-Antwort vergisst sie bewusst -> QA löst Revision aus
   const wantCTA = !(cat==='support' && !feedback);
-  if(wantCTA) body.push(tx('Am schnellsten kommen wir in einem kostenlosen 30-Minuten-Erstgespräch weiter — du erreichst uns unter hallo@aiwithmaris.com.',
-                          'The quickest next step is a free 30-minute intro call — reach us at hallo@aiwithmaris.com.',lang));
+  if(wantCTA) body.push(tx('Am schnellsten kommen wir in einem kostenlosen 30-Minuten-Erstgespräch weiter — du erreichst uns unter marisnicolasreinold@gmail.com.',
+                          'The quickest next step is a free 30-minute intro call — reach us at marisnicolasreinold@gmail.com.',lang));
   // Feedback: DSGVO ergänzen, falls gefordert und fehlt
   if(feedback && /dsgvo|eu|datenhoheit|gdpr/i.test(feedback) && !/eu|dsgvo|gdpr|datenhoheit/i.test(body.join(' ')))
     body.push(tx('Deine Daten bleiben dabei vollständig in deiner eigenen Umgebung (EU-Region wählbar, DSGVO-konform).',
@@ -332,7 +332,7 @@ async function generateDraft(ctx,feedback){
   return generateDraftSim(ctx,feedback);
 }
 async function generateDraftLive(ctx,feedback){
-  const sys='Du bist der Antwort-Agent von AI with Maris (KI-Coaching & maßgeschneiderte Software). Antworte freundlich, präzise und in der SPRACHE DER ANFRAGE. Nutze ausschließlich die gelieferten Wissens-Snippets, keine erfundenen Fakten, keine Garantien/Überversprechen. Schließe mit einem konkreten nächsten Schritt (kostenloses 30-Min-Erstgespräch, hallo@aiwithmaris.com).';
+  const sys='Du bist der Antwort-Agent von AI with Maris (KI-Coaching & maßgeschneiderte Software). Antworte freundlich, präzise und in der SPRACHE DER ANFRAGE. Nutze ausschließlich die gelieferten Wissens-Snippets, keine erfundenen Fakten, keine Garantien/Überversprechen. Schließe mit einem konkreten nächsten Schritt (kostenloses 30-Min-Erstgespräch, marisnicolasreinold@gmail.com).';
   const kb=ctx.sources.map(s=>'- '+s.title+': '+s.text).join('\n');
   const user='Anfrage:\n'+ctx.input+'\n\nKategorie: '+ctx.classification.label+'\nWissen:\n'+kb+(feedback?('\n\nDiese QA-Punkte beheben: '+feedback):'');
   const r=await fetch(CONFIG.live.endpoint,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+CONFIG.live.apiKey},
