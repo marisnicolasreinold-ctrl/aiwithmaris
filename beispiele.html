@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#05060c" />
+
+<title>Anwendungsbeispiele — AI with Maris Live-Mockups &amp; Showcase</title>
+<meta name="description" content="Erlebe interaktive Software-Beispiele von AI with Maris in Echtzeit: IoT-Anlagen-Monitoring, Dokumenten-Verarbeitung und Vertriebs-Pipeline." />
+<meta name="author" content="AI with Maris" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://aiwithmaris.com/beispiele.html" />
+
+<link rel="icon" type="image/png" href="./assets/logo-axon.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Manrope:wght@300;400;500;600&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+<canvas id="scene"></canvas>
+<div class="bg-glow"></div><div class="grain"></div><div class="vignette"></div>
+<div class="cursor-ring"></div><div class="cursor-dot"></div>
+
+<a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+<nav id="nav" aria-label="Hauptnavigation">
+  <div class="nav-inner">
+    <a class="logo" href="index.html" aria-label="AI with Maris — zur Startseite"><img src="./assets/logo-axon.png" alt="" />AI with Maris</a>
+    <div class="nav-links" id="navlinks">
+      <a href="leistungen.html">Leistungen</a>
+      <a href="loesungen.html">Lösungen</a>
+      <a href="beispiele.html" class="active">Beispiele</a>
+      <a href="ueber-uns.html">Über uns</a>
+      <a href="preise.html">Preise &amp; FAQ</a>
+      <a href="kontakt.html" class="nav-cta">Erstgespräch</a>
+    </div>
+    <button class="burger" id="burger" type="button" aria-label="Menü öffnen" aria-expanded="false" aria-controls="navlinks"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="wrap">
+<main id="main" tabindex="-1">
+
+<!-- SHOWCASE INTRODUCTION -->
+<section class="hero" style="min-height: 60vh; padding-top: 140px;">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Interactive Showcase</span>
+      <h1>Eine Plattform, viele <br><span class="grad">digitale Gesichter.</span></h1>
+      <p class="lead" style="margin-top:20px;">Wir entwickeln Anwendungen maßgeschneidert auf deine Anforderungen — von robust-industriellen Dashboards bis zu warm-minimalistischen Dokumenten-Pipelines. Klicke dich durch drei typische Live-Mockups.</p>
+    </div>
+  </div>
+</section>
+
+<!-- THE INTERACTIVE MOCKUP STAGE -->
+<section style="padding: 20px 0 90px;">
+  <div class="container">
+    <div class="demo-band reveal d1">
+      <div class="db-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.4"/><circle cx="18" cy="6" r="2.4"/><circle cx="18" cy="18" r="2.4"/><path d="M8 11l8-4M8 13l8 4"/></svg></div>
+      <div class="db-txt"><b>Alles live ausprobieren — ohne Login</b><span>Jedes Beispiel unten gibt es als echte, klickbare App. Neu: ein KI-Agenten-Workflow, der eine Kundenanfrage automatisch triagiert, beantwortet und prüft.</span></div>
+      <a class="btn btn-primary" href="apps/agent-flow.html" data-hover>KI-Agenten-Workflow öffnen <span class="arrow">↗</span></a>
+    </div>
+    <div class="demo-band reveal d1" style="margin-top:14px">
+      <div class="db-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.7" fill="#5ef0ff"/></svg></div>
+      <div class="db-txt"><b>Neu: ATLAS — Produktions-Cockpit mit sprechendem KI-Assistenten</b><span>Eine KI-Kugel im „Jarvis"-Stil brieft deine Produktionsleitung morgens per Sprache: überfällige, gefährdete und in der Fertigung hängende Aufträge, Prioritäten, Engpässe und To-dos auf einen Blick. Live im Browser, ohne Login.</span></div>
+      <a class="btn btn-primary" href="apps/atlas.html" data-hover>ATLAS Live-Demo öffnen <span class="arrow">↗</span></a>
+    </div>
+    <div class="showcase-tabs reveal d1" role="tablist" aria-label="Beispiel-Projekte">
+      <button class="active" id="tab-iot" type="button" role="tab" aria-selected="true" aria-controls="m-iot" data-tab="iot"><span aria-hidden="true">⬡</span> IoT-Monitoring</button>
+      <button id="tab-doc" type="button" role="tab" aria-selected="false" aria-controls="m-doc" tabindex="-1" data-tab="doc"><span aria-hidden="true">⬢</span> Dokumenten-Automatisierung</button>
+      <button id="tab-crm" type="button" role="tab" aria-selected="false" aria-controls="m-crm" tabindex="-1" data-tab="crm"><span aria-hidden="true">◆</span> Vertriebs-Cockpit</button>
+    </div>
+    <div class="mock-stage reveal d2">
+      
+      <!-- TAB 1: IOT MONITORING -->
+      <div class="mock active" id="m-iot" role="tabpanel" aria-labelledby="tab-iot" tabindex="0">
+        <div class="frame" aria-hidden="true">
+          <div class="frame-bar"><div class="lights"><i></i><i></i><i></i></div><div class="url">monitor.deine-cloud.net</div></div>
+          <div class="frame-body mk-iot">
+            <div class="top"><h4>FlowOps · Anlagen-Monitoring</h4><span class="live"><i></i>LIVE · IoT Hub</span></div>
+            <div class="kpis">
+              <div class="kpi"><div class="lbl">Temperatur</div><div class="val" data-iot="temp">62.4<span>°C</span></div><div class="st ok">stabil</div></div>
+              <div class="kpi"><div class="lbl">Durchfluss</div><div class="val" data-iot="flow">118<span>l/m</span></div><div class="st ok">normal</div></div>
+              <div class="kpi"><div class="lbl">Druck</div><div class="val" data-iot="pres">4.7<span>bar</span></div><div class="st warn">erhöht</div></div>
+              <div class="kpi"><div class="lbl">Vibration</div><div class="val" data-iot="vib">0.31<span>mm</span></div><div class="st ok">ok</div></div>
+            </div>
+            <div class="chart"><div class="ch-top"><span>Durchfluss · letzte 60 s</span><span id="iot-now">— l/m</span></div>
+              <svg class="spark" id="iot-spark" viewBox="0 0 300 96" preserveAspectRatio="none">
+                <defs><linearGradient id="ig" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5cd8ff" stop-opacity=".4"/><stop offset="1" stop-color="#5cd8ff" stop-opacity="0"/></linearGradient></defs>
+                <path id="iot-fill" fill="url(#ig)"/><polyline id="iot-line" fill="none" stroke="#5cd8ff" stroke-width="2"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="mock-meta">
+          <div><h3>FlowOps — Echtzeit-Anlagenüberwachung</h3>
+            <p>Sensordaten via MQTT, Live-Dashboard mit Schwellwert-Alarmen und automatischer Eskalation per Teams-Nachricht. Läuft in der Cloud deiner Wahl.</p><a class="btn btn-ghost demo-link" href="apps/flowops.html" data-hover>Live-Demo öffnen <span class="arrow">↗</span></a></div>
+          <div class="stack"><span>IoT Hub</span><span>Time Series</span><span>MQTT</span><span>React</span></div>
+        </div>
+      </div>
+
+      <!-- TAB 2: DOCFLOW -->
+      <div class="mock" id="m-doc" role="tabpanel" aria-labelledby="tab-doc" tabindex="0">
+        <div class="frame" aria-hidden="true">
+          <div class="frame-bar"><div class="lights"><i></i><i></i><i></i></div><div class="url">docflow.deine-cloud.net</div></div>
+          <div class="frame-body mk-doc">
+            <div class="top"><h4>DocFlow · Dokumenten-Automatisierung</h4><span class="badge">312 verarbeitet · heute</span></div>
+            <div class="pipe">
+              <div class="stg done"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 16V4M6 10l6-6 6 6"/><path d="M4 20h16"/></svg></div><div class="nm">Eingang</div><div class="sub">E-Mail · Upload</div></div>
+              <div class="stg done"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 5v2M12 17v2M5 12h2M17 12h2"/></svg></div><div class="nm">KI-Extraktion</div><div class="sub">Felder erkannt</div></div>
+              <div class="stg"><div class="ic"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div><div class="nm">Prüfung</div><div class="sub">2 offen</div></div>
+              <div class="stg"><div class="ic"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8"/><path d="M3.3 7L12 12l8.7-5"/></svg></div><div class="nm">Cloud-Archiv</div><div class="sub">archiviert</div></div>
+            </div>
+            <div class="rows">
+              <div class="row"><div class="file"><span class="dotf"></span>Rechnung_2026-0481.pdf</div><span class="chip ok">extrahiert</span></div>
+              <div class="row"><div class="file"><span class="dotf"></span>Lieferschein_AC-220.pdf</div><span class="chip ok">extrahiert</span></div>
+              <div class="row"><div class="file"><span class="dotf"></span>Vertrag_NDA_2026.docx</div><span class="chip proc">in Prüfung</span></div>
+              <div class="row"><div class="file"><span class="dotf"></span>Bestellung_4471.pdf</div><span class="chip ok">extrahiert</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="mock-meta">
+          <div><h3>DocFlow — Dokumente automatisch verstehen</h3>
+            <p>Eingehende PDFs und Mails werden von einem Sprachmodell gelesen, relevante Felder extrahiert, geprüft und revisionssicher in deinem Cloud-Speicher abgelegt.</p><a class="btn btn-ghost demo-link" href="apps/docflow.html" data-hover>Live-Demo öffnen <span class="arrow">↗</span></a></div>
+          <div class="stack"><span>LLM / OpenAI</span><span>Functions</span><span>Object Storage</span><span>Workflow</span></div>
+        </div>
+      </div>
+
+      <!-- TAB 3: CRM PIPELINE -->
+      <div class="mock" id="m-crm" role="tabpanel" aria-labelledby="tab-crm" tabindex="0">
+        <div class="frame" aria-hidden="true">
+          <div class="frame-bar"><div class="lights"><i></i><i></i><i></i></div><div class="url">cockpit.deine-cloud.net</div></div>
+          <div class="frame-body mk-crm">
+            <div class="top"><h4>PulseCRM · Vertriebs-Cockpit</h4><span class="badge" style="background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08); color: #fff;">Q2 · 487.200 € Pipeline</span></div>
+            <div class="cols">
+              <div class="col"><h5>Lead <b>7</b></h5>
+                <div class="deal"><div class="nm">Stadtwerke Nord</div><div class="am">€ 42.000</div></div>
+                <div class="deal"><div class="nm">AcuraSens GmbH</div><div class="am">€ 18.500</div></div></div>
+              <div class="col"><h5>Angebot <b>4</b></h5>
+                <div class="deal"><div class="nm">Klärwerk West</div><div class="am">€ 96.000</div></div>
+                <div class="deal"><div class="nm">eom solutions</div><div class="am">€ 31.200</div></div></div>
+              <div class="col"><h5>Gewonnen <b>3</b></h5>
+                <div class="deal"><div class="nm">Alpenwasser AG</div><div class="am">€ 128.000</div></div>
+                <div class="deal"><div class="nm">SOMMER Mess.</div><div class="am">€ 54.300</div></div></div>
+            </div>
+            <div class="bars" id="crm-bars">
+              <div class="b" style="height:40%"></div><div class="b" style="height:62%"></div><div class="b" style="height:48%"></div>
+              <div class="b" style="height:78%"></div><div class="b" style="height:66%"></div><div class="b" style="height:92%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="mock-meta">
+          <div><h3>PulseCRM — Vertrieb auf einen Blick</h3>
+            <p>Leads, Angebote und Umsätze in einer Pipeline. KI fasst die Kundenhistorie zusammen und schlägt den nächsten Schritt vor — alle Daten in deiner eigenen Datenbank.</p><a class="btn btn-ghost demo-link" href="apps/pulsecrm.html" data-hover>Live-Demo öffnen <span class="arrow">↗</span></a></div>
+          <div class="stack"><span>SQL-DB</span><span>Next.js</span><span>SSO</span><span>BI-Reporting</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PROJECT METRICS / CASES -->
+<section class="section-pad" style="padding-top:0">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Case Studies</span>
+      <h2>Erfolge unserer Kunden.</h2>
+    </div>
+    <div class="tgrid">
+      <figure class="tcard reveal d1" style="margin:0">
+        <div class="t-result"><span class="t-metric">−14&nbsp;h</span><span class="t-label">manuelle Arbeit / Woche</span></div>
+        <blockquote class="quote" style="border:0;margin:0">„Unsere Angebotserstellung lief vorher komplett per Hand. Heute zieht die Software die Daten selbst zusammen — wir gewinnen fast zwei Arbeitstage pro Woche zurück."</blockquote>
+        <figcaption class="who"><span class="av" aria-hidden="true">MB</span><span><span class="nm">M. Berger</span><span class="ro">Vertriebsleitung · Maschinenbau</span></span></figcaption>
+      </figure>
+      <figure class="tcard reveal d2" style="margin:0">
+        <div class="t-result"><span class="t-metric">3&nbsp;Wochen</span><span class="t-label">bis zum Go-Live</span></div>
+        <blockquote class="quote" style="border:0;margin:0">„Vom Erstgespräch bis zum laufenden Dashboard waren es drei Wochen. Und das Beste: Alles läuft in unserer eigenen Azure-Umgebung."</blockquote>
+        <figcaption class="who"><span class="av" aria-hidden="true">SK</span><span><span class="nm">S. Klein</span><span class="ro">IT-Leitung · Energieversorger</span></span></figcaption>
+      </figure>
+      <figure class="tcard reveal d3" style="margin:0">
+        <div class="t-result"><span class="t-metric">100&nbsp;%</span><span class="t-label">Team an Bord</span></div>
+        <blockquote class="quote" style="border:0;margin:0">„Das Coaching hat bei uns den Knoten gelöst. Nach zwei Workshops nutzt das ganze Team KI im Alltag — ohne Angst, etwas falsch zu machen."</blockquote>
+        <figcaption class="who"><span class="av" aria-hidden="true">AW</span><span><span class="nm">A. Weber</span><span class="ro">Geschäftsführung · Agentur</span></span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- CALL TO ACTION -->
+<section class="section-pad" style="padding-top:0">
+  <div class="container">
+    <div class="cta reveal">
+      <h2>Möchtest du eine Live-Demo?</h2>
+      <p>Gerne demonstrieren wir dir unsere entwickelten Systeme in einem kurzen Video-Call an echten Beispielen.</p>
+      <a href="kontakt.html" class="btn btn-primary" data-hover>Jetzt Termin vereinbaren <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div><div class="logo" style="margin-bottom:16px"><img src="./assets/logo-axon.png" alt="" />AI with Maris</div>
+        <p>KI-Coaching &amp; maßgeschneiderte Software-Entwicklung — cloud-neutral, datensouverän, ohne Lock-in.</p></div>
+      <div class="foot-links">
+        <div class="foot-col"><h4>Angebot</h4><a href="leistungen.html">Leistungen</a><a href="loesungen.html">Lösungen</a><a href="beispiele.html">Beispiele</a><a href="preise.html">Preise</a></div>
+        <div class="foot-col"><h4>Kontakt</h4><a href="mailto:hallo@aiwithmaris.com">hallo@aiwithmaris.com</a><a href="kontakt.html">Erstgespräch</a></div>
+        <div class="foot-col"><h4>Rechtliches</h4><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a><a href="agb.html">AGB</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 AI with Maris</span><span>Made in Germany · Cloud-neutral · Powered by AI</span></div>
+  </div>
+</footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="./main.js"></script>
+
+<!-- PAGE-SPECIFIC INTERACTIVE SHOWCASE SCRIPT -->
+<script>
+// Mockup Tab Controller
+(function() {
+  const tabs = Array.from(document.querySelectorAll('.showcase-tabs [role="tab"]'));
+  const mocks = {
+    iot: document.getElementById('m-iot'),
+    doc: document.getElementById('m-doc'),
+    crm: document.getElementById('m-crm')
+  };
+
+  function selectTab(b, focus) {
+    tabs.forEach(x => {
+      const sel = x === b;
+      x.classList.toggle('active', sel);
+      x.setAttribute('aria-selected', sel ? 'true' : 'false');
+      x.tabIndex = sel ? 0 : -1;
+    });
+    Object.values(mocks).forEach(m => {
+      if (m) m.classList.remove('active');
+    });
+    const targetMock = mocks[b.dataset.tab];
+    if (targetMock) targetMock.classList.add('active');
+    if (focus) b.focus();
+  }
+
+  tabs.forEach((b, i) => {
+    b.addEventListener('click', () => selectTab(b));
+    b.addEventListener('keydown', e => {
+      let n = null;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') n = (i + 1) % tabs.length;
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') n = (i - 1 + tabs.length) % tabs.length;
+      else if (e.key === 'Home') n = 0;
+      else if (e.key === 'End') n = tabs.length - 1;
+      
+      if (n !== null) {
+        e.preventDefault();
+        selectTab(tabs[n], true);
+      }
+    });
+  });
+})();
+
+// IoT Mockup Real-time Simulation
+(function() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const line = document.getElementById('iot-line');
+  const fill = document.getElementById('iot-fill');
+  const now = document.getElementById('iot-now');
+  if (!line || !fill || !now) return;
+
+  let data = Array.from({ length: 40 }, () => 50 + Math.random() * 40);
+
+  function draw() {
+    const W = 300, H = 96, min = 30, max = 130, n = data.length;
+    const pts = data.map((v, i) => {
+      const x = i / (n - 1) * W;
+      const y = H - ((v - min) / (max - min)) * H;
+      return [x, y];
+    });
+    line.setAttribute('points', pts.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' '));
+    fill.setAttribute('d', `M0,${H} ` + pts.map(p => 'L' + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ') + ` L${W},${H} Z`);
+    now.textContent = Math.round(data[n - 1]) + ' l/m';
+  }
+
+  draw();
+
+  const temp = document.querySelector('[data-iot="temp"]');
+  const flow = document.querySelector('[data-iot="flow"]');
+  const pres = document.querySelector('[data-iot="pres"]');
+  const vib = document.querySelector('[data-iot="vib"]');
+  const iotMock = document.getElementById('m-iot');
+
+  setInterval(() => {
+    if (iotMock && !iotMock.classList.contains('active')) return;
+    data.push(Math.max(35, Math.min(125, data[data.length - 1] + (Math.random() - .5) * 18)));
+    data.shift();
+    draw();
+    if (temp) temp.innerHTML = (60 + Math.random() * 5).toFixed(1) + '<span>°C</span>';
+    if (flow) flow.innerHTML = Math.round(data[data.length - 1]) + '<span>l/m</span>';
+    if (pres) pres.innerHTML = (4.4 + Math.random() * .6).toFixed(1) + '<span>bar</span>';
+    if (vib) vib.innerHTML = (0.28 + Math.random() * .08).toFixed(2) + '<span>mm</span>';
+  }, 1400);
+})();
+
+// CRM Bar chart slide animation
+(function() {
+  const bio = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) {
+      document.querySelectorAll('#crm-bars .b').forEach((b, i) => {
+        const h = b.style.height;
+        b.style.height = '0%';
+        setTimeout(() => b.style.height = h, 80 * i);
+      });
+      bio.disconnect();
+    }
+  }), { threshold: 0.4 });
+  const crm = document.getElementById('m-crm');
+  if (crm) bio.observe(crm.closest('.mock-stage'));
+})();
+</script>
+</body>
+</html>

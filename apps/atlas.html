@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#05060c" />
+<meta name="robots" content="noindex" />
+<title>ATLAS · Production Command — AI with Maris Demo</title>
+<meta name="description" content="Interactive demo: a Jarvis-style production command center for electronics manufacturing — a talking AI orb that gives a spoken morning briefing on overdue, at-risk and stuck work orders." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2305060c'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%235ef0ff' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='3.4' fill='%23ffd479'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05060c;--bg2:#0a0e16;--cyan:#5ef0ff;--violet:#7c5cff;--gold:#ffd479;
+  --green:#5cff9d;--amber:#ffcc55;--red:#ff6b8b;
+  --text:#eef1fa;--muted:rgba(238,241,250,.62);--faint:rgba(238,241,250,.34);
+  --line:rgba(238,241,250,.10);--focus:#5ef0ff;
+  --display:'Sora',sans-serif;--body:'Manrope',sans-serif;--mono:'Space Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+  background-image:radial-gradient(closest-side at 50% -5%,rgba(124,92,255,.14),transparent 60%),radial-gradient(closest-side at 8% 8%,rgba(94,240,255,.10),transparent 55%),radial-gradient(closest-side at 95% 4%,rgba(255,212,121,.07),transparent 55%)}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(94,240,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(94,240,255,.035) 1px,transparent 1px);
+  background-size:46px 46px;mask-image:radial-gradient(ellipse at 50% 30%,#000 30%,transparent 78%)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:8px}
+button{font-family:inherit}
+
+/* ── Topbar ── */
+.topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:16px;padding:13px 22px;
+  background:rgba(5,6,12,.74);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.back{color:var(--muted);text-decoration:none;font-size:.84rem;font-weight:600;white-space:nowrap}
+.back:hover{color:var(--cyan)}
+.brand{font-family:var(--display);font-weight:800;font-size:1.05rem;letter-spacing:.04em;display:flex;align-items:center;gap:9px}
+.brand .dot{width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,var(--cyan) 55%,var(--violet));box-shadow:0 0 12px var(--cyan)}
+.brand .sub{font-family:var(--body);font-weight:400;font-size:.8rem;color:var(--muted);letter-spacing:0}
+.tspacer{flex:1}
+.clock{font-family:var(--mono);font-size:.82rem;color:var(--text);text-align:right;line-height:1.25}
+.clock .d{font-size:.66rem;color:var(--muted)}
+.sys{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:.7rem;letter-spacing:.07em;color:var(--green);
+  border:1px solid rgba(92,255,157,.3);background:rgba(92,255,157,.07);padding:6px 11px;border-radius:22px;white-space:nowrap}
+.sys.alert{color:var(--red);border-color:rgba(255,107,139,.4);background:rgba(255,107,139,.08)}
+.sys i{width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 9px currentColor;animation:blink 1.5s infinite}
+@keyframes blink{50%{opacity:.3}}
+
+.wrap{position:relative;z-index:1;max-width:1340px;margin:0 auto;padding:18px 22px 56px}
+
+/* ── Control bar ── */
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px}
+.btn{font-family:var(--body);font-weight:600;font-size:.82rem;padding:9px 15px;border-radius:24px;border:1px solid var(--line);
+  background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;transition:border-color .2s,background .2s,transform .15s;display:inline-flex;align-items:center;gap:7px}
+.btn:hover{border-color:rgba(94,240,255,.5)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{color:#04050a;background:linear-gradient(110deg,var(--cyan),var(--violet));border-color:transparent;font-weight:700}
+.btn.warn{color:var(--amber);border-color:rgba(255,204,85,.4);background:rgba(255,204,85,.07)}
+.btn.ghost{color:var(--muted)}
+.btn[aria-pressed="true"]{border-color:rgba(94,240,255,.6);color:var(--cyan)}
+.speed{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.7rem;color:var(--muted)}
+.speed input{accent-color:var(--cyan);width:88px}
+.live{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.7rem;color:var(--green);letter-spacing:.08em}
+.live i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:blink 1.4s infinite}
+.live.paused{color:var(--amber)}.live.paused i{background:var(--amber);box-shadow:0 0 10px var(--amber);animation:none}
+
+/* ── KPI strip ── */
+.kpis{display:grid;grid-template-columns:repeat(7,1fr);gap:11px;margin-bottom:18px}
+@media(max-width:1100px){.kpis{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:640px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{padding:13px 14px;border-radius:14px;border:1px solid var(--line);position:relative;cursor:pointer;
+  background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.012));transition:border-color .2s,transform .15s}
+.kpi:hover{border-color:rgba(94,240,255,.45);transform:translateY(-2px)}
+.kpi.sel{border-color:rgba(94,240,255,.7);box-shadow:0 0 0 1px rgba(94,240,255,.25)}
+.kpi .nm{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+.kpi .v{font-family:var(--display);font-weight:800;font-size:1.5rem;margin-top:5px;font-variant-numeric:tabular-nums;line-height:1}
+.kpi .v small{font-size:.78rem;font-weight:600;color:var(--muted)}
+.kpi .sub{font-size:.68rem;color:var(--faint);margin-top:5px;min-height:.9em}
+.kpi.acc-cyan .v{color:var(--cyan)}.kpi.acc-red .v{color:var(--red)}.kpi.acc-amber .v{color:var(--amber)}
+.kpi.acc-violet .v{color:#b9a8ff}.kpi.acc-green .v{color:var(--green)}.kpi.acc-gold .v{color:var(--gold)}
+
+/* ── Deck layout ── */
+.deck{display:grid;grid-template-columns:1fr 1.18fr 1fr;gap:16px;align-items:start}
+@media(max-width:1100px){.deck{grid-template-columns:1fr}.core{order:-1}}
+.deck2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media(max-width:860px){.deck2{grid-template-columns:1fr}}
+.panel{border:1px solid var(--line);border-radius:18px;background:linear-gradient(160deg,rgba(255,255,255,.04),rgba(255,255,255,.008));padding:16px}
+.panel h2{font-family:var(--display);font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:8px}
+.panel .h-sub{font-size:.74rem;color:var(--muted);margin:3px 0 12px}
+.panel h2 .cnt{font-family:var(--mono);font-size:.66rem;color:var(--muted);background:rgba(255,255,255,.07);border-radius:20px;padding:2px 8px;margin-left:auto}
+
+/* ── Core / Orb ── */
+.core{display:flex;flex-direction:column;align-items:center;text-align:center;border-color:rgba(124,92,255,.22);
+  background:radial-gradient(closest-side at 50% 22%,rgba(124,92,255,.12),transparent 70%),linear-gradient(160deg,rgba(255,255,255,.04),rgba(255,255,255,.008))}
+.orb-wrap{position:relative;width:300px;max-width:78vw;aspect-ratio:1;margin:4px auto 2px}
+#orb{width:100%;height:100%;display:block}
+.orb-state{position:absolute;left:50%;bottom:6%;transform:translateX(-50%);font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--cyan);opacity:.85;white-space:nowrap}
+.greet{font-family:var(--display);font-weight:700;font-size:1.06rem;margin-top:2px}
+.greet .g{background:linear-gradient(110deg,var(--cyan),var(--violet) 60%,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.brief{font-size:.92rem;line-height:1.62;color:#dfe4f3;margin-top:10px;min-height:120px;text-align:left;width:100%;
+  white-space:pre-wrap;font-weight:300}
+.brief b{color:#fff;font-weight:600}
+.brief .cy{color:var(--cyan);font-weight:500}.brief .rd{color:var(--red);font-weight:500}.brief .am{color:var(--amber);font-weight:500}
+.caret{display:inline-block;width:8px;height:1.05em;vertical-align:-2px;background:var(--cyan);margin-left:2px;animation:caret 1s steps(1) infinite;box-shadow:0 0 8px var(--cyan)}
+@keyframes caret{50%{opacity:0}}
+.voice-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px;width:100%}
+.vbtn{font-family:var(--body);font-weight:600;font-size:.78rem;padding:8px 13px;border-radius:22px;border:1px solid var(--line);
+  background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:border-color .2s,color .2s}
+.vbtn:hover{border-color:rgba(94,240,255,.5)}
+.vbtn.on{border-color:rgba(94,240,255,.6);color:var(--cyan)}
+.vsel{font-family:var(--mono);font-size:.72rem;color:var(--text);background:rgba(10,14,22,.92);border:1px solid var(--line);border-radius:22px;padding:8px 12px;max-width:250px;cursor:pointer}
+.vsel:focus{outline:none;border-color:rgba(94,240,255,.55)}
+.vsel option{background:#0a0e16;color:var(--text)}
+.hint{font-size:.72rem;color:var(--gold);margin-top:10px;opacity:.92;display:flex;gap:7px;align-items:center;justify-content:center}
+.hint.hidden{display:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px;width:100%;border-top:1px solid var(--line);padding-top:14px}
+.chip{font-family:var(--mono);font-size:.68rem;letter-spacing:.02em;padding:7px 12px;border-radius:20px;border:1px solid var(--line);
+  background:rgba(255,255,255,.03);color:var(--muted);cursor:pointer;transition:color .2s,border-color .2s,background .2s}
+.chip:hover{color:var(--text);border-color:rgba(94,240,255,.5);background:rgba(94,240,255,.05)}
+
+/* ── Priority queue ── */
+.queue{display:flex;flex-direction:column}
+.qlist{display:flex;flex-direction:column;gap:9px;max-height:560px;overflow:auto;padding-right:3px}
+.qitem{text-align:left;width:100%;border:1px solid var(--line);border-radius:13px;padding:11px 12px;cursor:pointer;
+  background:linear-gradient(160deg,rgba(255,255,255,.045),rgba(255,255,255,.01));transition:border-color .2s,transform .15s;position:relative;display:block}
+.qitem:hover{border-color:rgba(94,240,255,.45);transform:translatex(2px)}
+.qitem .top{display:flex;align-items:baseline;gap:8px}
+.qitem .wo{font-family:var(--mono);font-size:.74rem;color:var(--cyan)}
+.qitem .cust{font-family:var(--display);font-weight:600;font-size:.9rem}
+.qitem .amt{margin-left:auto;font-family:var(--mono);font-size:.76rem;color:var(--muted);white-space:nowrap}
+.qitem .prod{font-size:.76rem;color:var(--muted);margin-top:1px}
+.qitem .meta{display:flex;align-items:center;gap:8px;margin-top:9px;flex-wrap:wrap}
+.flag{font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.05em;padding:3px 8px;border-radius:16px;font-weight:700}
+.flag.overdue{background:rgba(255,107,139,.16);color:var(--red)}
+.flag.blocked{background:rgba(124,92,255,.18);color:#c3b4ff}
+.flag.stuck{background:rgba(255,204,85,.16);color:var(--amber)}
+.flag.atrisk{background:rgba(255,170,90,.14);color:#ffb15e}
+.flag.new{background:rgba(94,240,255,.14);color:var(--cyan)}
+.flag.ok{background:rgba(92,255,157,.12);color:var(--green)}
+.qitem .reason{font-size:.74rem;color:var(--muted)}
+.qitem .score{margin-left:auto;font-family:var(--mono);font-size:.66rem;color:var(--faint)}
+.qitem .score b{color:var(--text)}
+.qitem .rec{font-size:.73rem;color:#bfe9ff;margin-top:8px;padding:7px 9px;border-radius:8px;background:rgba(94,240,255,.06);border:1px solid rgba(94,240,255,.16)}
+.qitem .rec::before{content:"▸ ";color:var(--cyan)}
+.filtertag{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:.66rem;color:var(--cyan);
+  background:rgba(94,240,255,.08);border:1px solid rgba(94,240,255,.25);border-radius:18px;padding:4px 10px;margin-bottom:10px}
+.filtertag button{background:none;border:none;color:var(--cyan);cursor:pointer;font-size:.9rem;line-height:1}
+.empty{color:var(--faint);font-style:italic;font-size:.82rem;padding:18px 4px}
+
+/* ── Flow / stages / cells ── */
+.flowlist{display:flex;flex-direction:column;gap:6px}
+.stage{display:grid;grid-template-columns:18px 1fr auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:11px;
+  padding:9px 11px;cursor:pointer;background:rgba(255,255,255,.02);transition:border-color .2s,background .2s}
+.stage:hover{border-color:rgba(94,240,255,.4)}
+.stage.sel{border-color:rgba(94,240,255,.65);background:rgba(94,240,255,.05)}
+.stage.bottleneck{border-color:rgba(255,107,139,.5);background:rgba(255,107,139,.06)}
+.stage .ix{font-family:var(--mono);font-size:.66rem;color:var(--faint);text-align:center}
+.stage .nm{font-size:.82rem;font-weight:500}
+.stage .nm small{display:block;font-family:var(--mono);font-size:.6rem;color:var(--faint);font-weight:400}
+.stage .wip{display:flex;align-items:center;gap:8px}
+.stage .bar2{width:62px;height:6px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden}
+.stage .bar2 i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--cyan),var(--violet))}
+.stage.bottleneck .bar2 i{background:linear-gradient(90deg,var(--amber),var(--red))}
+.stage .num{font-family:var(--mono);font-size:.74rem;color:var(--text);min-width:18px;text-align:right}
+.cells{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px}
+@media(max-width:1100px){.cells{grid-template-columns:1fr 1fr 1fr}}
+.cell{border:1px solid var(--line);border-radius:12px;padding:11px;background:rgba(255,255,255,.02);cursor:pointer;transition:border-color .2s}
+.cell:hover{border-color:rgba(94,240,255,.4)}
+.cell.sel{border-color:rgba(94,240,255,.65);background:rgba(94,240,255,.05)}
+.cell .cn{font-family:var(--display);font-weight:700;font-size:.84rem;display:flex;align-items:center;justify-content:space-between}
+.cell .cn .st{font-family:var(--mono);font-size:.58rem;padding:2px 7px;border-radius:14px;text-transform:uppercase;letter-spacing:.04em}
+.cell .cn .st.ok{background:rgba(92,255,157,.12);color:var(--green)}
+.cell .cn .st.high{background:rgba(255,204,85,.16);color:var(--amber)}
+.cell .cn .st.over{background:rgba(255,107,139,.16);color:var(--red)}
+.cell .load{height:7px;border-radius:5px;background:rgba(255,255,255,.08);margin-top:9px;overflow:hidden}
+.cell .load i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,var(--green),var(--cyan))}
+.cell.high .load i{background:linear-gradient(90deg,var(--amber),var(--gold))}
+.cell.over .load i{background:linear-gradient(90deg,var(--red),var(--amber))}
+.cell .cm{font-family:var(--mono);font-size:.62rem;color:var(--muted);margin-top:7px}
+
+/* ── To-dos & incoming ── */
+.todos{display:flex;flex-direction:column;gap:8px}
+.todo{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:11px;padding:10px 11px;background:rgba(255,255,255,.02)}
+.todo input{appearance:none;width:19px;height:19px;border:1.5px solid var(--muted);border-radius:6px;cursor:pointer;flex-shrink:0;margin-top:1px;position:relative;transition:border-color .2s,background .2s}
+.todo input:checked{background:var(--cyan);border-color:var(--cyan)}
+.todo input:checked::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#04050a;font-size:.8rem;font-weight:700}
+.todo .tx{font-size:.82rem;line-height:1.4}
+.todo .tx .wo{font-family:var(--mono);font-size:.68rem;color:var(--cyan)}
+.todo.done .tx{color:var(--faint);text-decoration:line-through}
+.incoming{display:flex;flex-direction:column;gap:8px}
+.inc{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:11px;padding:10px 11px;background:rgba(94,240,255,.04)}
+.inc .pulse{width:9px;height:9px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan);flex-shrink:0;animation:blink 1.6s infinite}
+.inc .ix{flex:1}
+.inc .wo{font-family:var(--mono);font-size:.7rem;color:var(--cyan)}
+.inc .nm{font-size:.84rem;font-weight:600}
+.inc .sub{font-size:.72rem;color:var(--muted)}
+.inc .ago{font-family:var(--mono);font-size:.64rem;color:var(--faint);white-space:nowrap}
+
+/* ── Dialog ── */
+dialog{max-width:540px;width:94%;padding:0;border:1px solid var(--line);border-radius:20px;background:var(--bg2);color:var(--text)}
+dialog::backdrop{background:rgba(3,4,9,.72);backdrop-filter:blur(6px)}
+.dlg-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:18px 20px 14px;border-bottom:1px solid var(--line)}
+.dlg-h .wo{font-family:var(--mono);font-size:.74rem;color:var(--cyan)}
+.dlg-h h3{font-family:var(--display);font-weight:700;font-size:1.12rem;margin-top:2px}
+.dlg-h .sub{font-size:.78rem;color:var(--muted);margin-top:2px}
+.lg-close{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);font-size:1.2rem;cursor:pointer;flex-shrink:0}
+.dlg-b{padding:16px 20px 20px}
+.dlg-stat{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.dlg-stat .s{border:1px solid var(--line);border-radius:11px;padding:9px 10px;background:rgba(255,255,255,.02)}
+.dlg-stat .l{font-family:var(--mono);font-size:.58rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.dlg-stat .n{font-family:var(--display);font-weight:700;font-size:1rem;margin-top:3px;font-variant-numeric:tabular-nums}
+.timeline{display:flex;flex-direction:column;gap:0;margin:6px 0 14px}
+.tl{display:grid;grid-template-columns:20px 1fr;gap:11px;align-items:start;position:relative;padding-bottom:11px}
+.tl:not(:last-child)::before{content:"";position:absolute;left:9px;top:18px;bottom:-2px;width:2px;background:var(--line)}
+.tl .mk{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);background:var(--bg2);margin-top:1px;z-index:1}
+.tl.done .mk{background:var(--green);border-color:var(--green)}
+.tl.cur .mk{background:var(--cyan);border-color:var(--cyan);box-shadow:0 0 11px var(--cyan)}
+.tl .nm{font-size:.84rem;font-weight:500}
+.tl.todo .nm{color:var(--faint)}
+.tl .mt{font-family:var(--mono);font-size:.64rem;color:var(--muted)}
+.dlg-rec{font-size:.84rem;color:#bfe9ff;padding:11px 13px;border-radius:11px;background:rgba(94,240,255,.07);border:1px solid rgba(94,240,255,.2);line-height:1.5}
+.dlg-rec b{color:#fff}
+.dlg-foot{display:flex;gap:9px;padding:14px 20px;border-top:1px solid var(--line)}
+
+.note{margin-top:26px;font-size:.78rem;color:var(--muted);font-weight:300;line-height:1.6;border-top:1px solid var(--line);padding-top:16px;max-width:900px}
+.note b{color:var(--text);font-weight:600}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.caret{display:none}}
+::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:rgba(238,241,250,.14);border-radius:8px}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="back" href="../beispiele.html">&larr; Back to AI with Maris</a>
+  <div class="brand"><span class="dot"></span>ATLAS <span class="sub">· Production Command</span></div>
+  <span class="tspacer"></span>
+  <div class="clock"><div id="clk">—</div><div class="d" id="clkd">—</div></div>
+  <span class="sys" id="sys"><i></i><span id="sysTxt">BOOTING</span></span>
+</header>
+
+<div class="wrap">
+  <div class="bar">
+    <button class="btn primary" id="briefBtn">&#9658; Brief me</button>
+    <button class="btn warn" id="disruptBtn">&#9888; Simulate disruption</button>
+    <button class="btn ghost" id="pauseBtn" aria-pressed="false">&#10073;&#10073; Pause</button>
+    <span class="speed"><label for="spd">Sim&nbsp;speed</label><input type="range" id="spd" min="0.5" max="4" step="0.5" value="1"><span id="spdv">1&times;</span></span>
+    <span class="tspacer" style="flex:1"></span>
+    <span class="live" id="liveTag"><i></i>LIVE</span>
+  </div>
+
+  <div class="kpis" id="kpis" role="group" aria-label="Key production metrics"></div>
+
+  <div class="deck">
+    <!-- Priority queue -->
+    <section class="panel queue" aria-label="Priority queue">
+      <h2>Priority Queue <span class="cnt" id="qCnt">0</span></h2>
+      <div class="h-sub">Ranked by lateness, value, customer tier &amp; blockers</div>
+      <div id="filterTag"></div>
+      <div class="qlist" id="qlist"></div>
+    </section>
+
+    <!-- Core / Orb -->
+    <section class="panel core" aria-label="ATLAS assistant">
+      <div class="orb-wrap">
+        <canvas id="orb" width="600" height="600" aria-hidden="true"></canvas>
+        <div class="orb-state" id="orbState">ONLINE</div>
+      </div>
+      <div class="greet" id="greet"><span class="g">ATLAS online</span></div>
+      <div class="brief" id="brief" aria-hidden="true"></div>
+      <div class="sr" id="briefLive" aria-live="polite" aria-atomic="true"></div>
+      <div class="voice-row">
+        <button class="vbtn on" id="muteBtn" aria-pressed="false">&#128266; Voice on</button>
+        <button class="vbtn" id="replayBtn">&#8635; Replay</button>
+        <select class="vsel" id="voiceSel" aria-label="Select voice" title="For the most natural voices, open in Microsoft Edge" style="display:none"></select>
+      </div>
+      <div class="hint" id="voiceNote" style="display:none;color:var(--amber)">&#9888; This browser has no English voice, so speech is muted to avoid a wrong-language accent. For natural speech, open ATLAS in <b>Microsoft Edge</b> (free neural voices) — or add an English voice via Windows Settings &rarr; Time &amp; language &rarr; Speech.</div>
+      <div class="hint" id="hint">&#128161; Tap anywhere to enable ATLAS voice</div>
+      <div class="chips" id="chips" role="group" aria-label="Ask ATLAS"></div>
+    </section>
+
+    <!-- Production flow -->
+    <section class="panel flow" aria-label="Production flow">
+      <h2>Production Flow</h2>
+      <div class="h-sub">Work in progress per stage · bottleneck flagged</div>
+      <div class="flowlist" id="flowlist"></div>
+      <div class="cells" id="cells" aria-label="Production cells"></div>
+    </section>
+  </div>
+
+  <div class="deck2">
+    <section class="panel todos-panel" aria-label="Today's to-dos">
+      <h2>Today&rsquo;s To-Dos <span class="cnt" id="todoCnt">0</span></h2>
+      <div class="h-sub">Auto-derived from the highest-priority issues</div>
+      <div class="todos" id="todos"></div>
+    </section>
+    <section class="panel" aria-label="Incoming orders">
+      <h2>Incoming <span class="cnt" id="incCnt">0</span></h2>
+      <div class="h-sub">Fresh work orders from the last 24 hours</div>
+      <div class="incoming" id="incoming"></div>
+    </section>
+  </div>
+
+  <p class="note"><b>Demo:</b> all work-order data is simulated in your browser (deterministic seed + live sim loop) and ATLAS&rsquo; briefing is generated by a transparent rule-based engine — no server, no API key, works fully offline. In production, ATLAS reads live from your <b>MES/ERP</b> (work orders, stage scans, AOI &amp; final-test results, material/kitting status) and the same <code>Brain</code> seam can be pointed at an <b>LLM</b> for free-form questions. Voice uses the browser&rsquo;s Web Speech API; mic input &amp; text chat are pre-wired toggles for a later step.</p>
+</div>
+
+<dialog id="dlg" aria-labelledby="dlgTitle">
+  <div class="dlg-h">
+    <div><div class="wo" id="dlgWo">—</div><h3 id="dlgTitle">—</h3><div class="sub" id="dlgSub">—</div></div>
+    <button class="lg-close" id="dlgClose" aria-label="Close">&times;</button>
+  </div>
+  <div class="dlg-b">
+    <div class="dlg-stat" id="dlgStat"></div>
+    <div class="timeline" id="dlgTl"></div>
+    <div class="dlg-rec" id="dlgRec">—</div>
+  </div>
+  <div class="dlg-foot">
+    <button class="btn primary" id="dlgAsk">&#128266; Ask ATLAS about this</button>
+    <button class="btn ghost" id="dlgClose2">Close</button>
+  </div>
+</dialog>
+
+<script>
+"use strict";
+const REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = id => document.getElementById(id);
+const HOUR = 3600000, DAY = 86400000;
+
+/* ── Deterministic RNG (mulberry32) ── */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const rng = mulberry32(0x4A2B17);
+const pick = arr => arr[Math.floor(rng()*arr.length)];
+const ri = (a,b) => a + Math.floor(rng()*(b-a+1));
+const rf = (a,b) => a + rng()*(b-a);
+
+/* ── Static config ── */
+const STAGES = [
+  {id:'goodsin', nm:'Goods-in / QC',     sc:6},
+  {id:'smd',     nm:'SMD Placement',     sc:10},
+  {id:'tht',     nm:'Through-hole',      sc:8},
+  {id:'solder',  nm:'Soldering',         sc:6},
+  {id:'clean',   nm:'Cleaning',          sc:3},
+  {id:'calib',   nm:'Calibration',       sc:9},
+  {id:'align',   nm:'Alignment',         sc:7},
+  {id:'test',    nm:'Final Test / QA',   sc:6},
+  {id:'ship',    nm:'Shipping',          sc:3},
+];
+const STIDX = Object.fromEntries(STAGES.map((s,i)=>[s.id,i]));
+const TOTAL_SC = STAGES.reduce((a,s)=>a+s.sc,0);
+const CELLS = ['Cell A','Cell B','Cell C'];
+const CELL_CAP = 7;
+const CUSTOMERS = [
+  {n:'Stadtwerke Nord',tier:3},{n:'AcuraSens GmbH',tier:2},{n:'Klärwerk West',tier:2},
+  {n:'Alpenwasser AG',tier:3},{n:'SOMMER Messtechnik',tier:2},{n:'eom solutions',tier:1},
+  {n:'Helios Medizintechnik',tier:3},{n:'Brandt Automotive',tier:3},{n:'NordWind Energy',tier:2},
+  {n:'Vektor Robotics',tier:2},{n:'Pulsar Avionics',tier:3},{n:'Tiefsee Marine',tier:1},
+];
+const tierOf = n => (CUSTOMERS.find(c=>c.n===n)||{tier:1}).tier;
+const PRODUCTS = ['Flow sensor board FS-220','Pressure module PM-12','Temp probe TP-7','Gas sensor array GA-9',
+  'Level radar LR-30','Vibration node VN-4','IMU board IM-6','Calibration unit CU-9','Power stage PS-18',
+  'RF telemetry TX-2','pH analyzer board PA-5','Optical sensor OS-11'];
+const QTYS = [50,100,150,200,250,300,400,500,750,1000];
+const BLOCKS = ['Awaiting reels — STM32G0 MCU (ETA 2 days)','Calibration rig CR-2 occupied','Failed AOI — rework loop',
+  'Missing test fixture FX-114','Solder paste lot expired — awaiting QC release','Awaiting customer approval — gerber rev C'];
+
+/* ── State ── */
+const state = { now: Date.now(), running: !REDUCE, speed: 1, filter: null, muted: false,
+  voiceUnlocked: false, lastBrief: '', orders: [], history: [], todosDone: {}, disrupted: false, voiceName: null };
+
+/* ── Persistence ── */
+const LS = 'aiwm_atlas_v1';
+function loadPrefs(){ try{ const p=JSON.parse(localStorage.getItem(LS)||'{}');
+  if(p.muted!=null) state.muted=p.muted; if(p.todosDone) state.todosDone=p.todosDone; if(p.voiceName) state.voiceName=p.voiceName; }catch(e){} }
+function savePrefs(){ try{ localStorage.setItem(LS,JSON.stringify({muted:state.muted,todosDone:state.todosDone,voiceName:state.voiceName})); }catch(e){} }
+
+/* ── Order factory ── */
+let woSeq = 24801;
+function mkOrder(o){
+  const cust = o.customer || pick(CUSTOMERS).n;
+  const stage = o.stage || pick(STAGES).id;
+  const unit = o.unit || rf(90,520);
+  const qty = o.qty || pick(QTYS);
+  return {
+    id: o.id || ('WO-'+(woSeq++)),
+    customer: cust, tier: tierOf(cust),
+    product: o.product || pick(PRODUCTS),
+    qty, value: Math.round(qty*unit),
+    type: o.type || (rng()<0.18?'NPI':'Series'),
+    cell: o.cell || pick(CELLS),
+    stage,
+    receivedAt: state.now - (o.recAgoH!=null?o.recAgoH:rf(28,400))*HOUR,
+    dueAt: state.now + (o.dueInH!=null?o.dueInH:rf(60,360))*HOUR,
+    enteredStageAt: state.now - (o.enteredAgoH!=null?o.enteredAgoH:rf(1,30))*HOUR,
+    block: o.block || null,
+  };
+}
+
+/* ── Seeded scenario (hand-tuned hero cases + random fill) ── */
+function buildOrders(){
+  const scripted = [
+    {id:'WO-24817',customer:'Stadtwerke Nord',product:'Flow sensor board FS-220',qty:500,unit:180,stage:'calib',cell:'Cell B',recAgoH:9*24,dueInH:-2*24,enteredAgoH:31,block:'Calibration rig CR-2 occupied'},
+    {id:'WO-24820',customer:'Pulsar Avionics',product:'IMU board IM-6',qty:120,unit:430,type:'NPI',stage:'smd',cell:'Cell A',recAgoH:5*24,dueInH:3*24,enteredAgoH:12,block:'Awaiting reels — STM32G0 MCU (ETA 2 days)'},
+    {id:'WO-24805',customer:'Brandt Automotive',product:'Power stage PS-18',qty:300,unit:260,stage:'test',cell:'Cell C',recAgoH:11*24,dueInH:1*24,enteredAgoH:20,block:'Failed AOI — rework loop'},
+    {id:'WO-24799',customer:'Klärwerk West',product:'Level radar LR-30',qty:80,unit:540,stage:'align',cell:'Cell A',recAgoH:13*24,dueInH:-1*24,enteredAgoH:10},
+    {id:'WO-24831',customer:'Helios Medizintechnik',product:'Gas sensor array GA-9',qty:60,unit:610,type:'NPI',stage:'goodsin',cell:'Cell B',recAgoH:6,dueInH:5*24,block:'Awaiting customer approval — gerber rev C'},
+    {id:'WO-24832',customer:'Vektor Robotics',product:'Vibration node VN-4',qty:250,unit:150,stage:'goodsin',cell:'Cell C',recAgoH:3,dueInH:8*24,enteredAgoH:3},
+    {id:'WO-24788',customer:'Alpenwasser AG',product:'Pressure module PM-12',qty:400,unit:230,stage:'solder',cell:'Cell A',recAgoH:7*24,dueInH:4*24,enteredAgoH:2},
+    {id:'WO-24796',customer:'SOMMER Messtechnik',product:'Calibration unit CU-9',qty:150,unit:380,stage:'clean',cell:'Cell B',recAgoH:8*24,dueInH:2*24,enteredAgoH:9},
+  ].map(mkOrder);
+
+  woSeq = 24840;
+  const fill = [];
+  const midStages = ['smd','tht','solder','clean','calib','align','test'];
+  for(let i=0;i<26;i++){
+    const o = { stage: rng()<0.72 ? pick(midStages) : pick(STAGES).id };
+    if(rng()<0.10) o.block = pick(BLOCKS);
+    if(rng()<0.14) o.dueInH = -rf(6,40);            // a few overdue
+    else if(rng()<0.22) o.dueInH = rf(12,60);       // a few tight
+    if(rng()<0.10) o.recAgoH = rf(2,22);            // a couple fresh
+    if(rng()<0.18) o.enteredAgoH = rf(20,46);       // a few long-dwell
+    fill.push(mkOrder(o));
+  }
+  state.orders = scripted.concat(fill);
+
+  // Week history for on-time %
+  state.history = Array.from({length:14},()=>({onTime: rng()>0.16}));
+}
+
+/* ── Derivations ── */
+function remainingHours(o){ let h=0; for(let i=STIDX[o.stage];i<STAGES.length;i++) h+=STAGES[i].sc; return h; }
+function progressPct(o){ let h=0; for(let i=0;i<STIDX[o.stage];i++) h+=STAGES[i].sc; return Math.round(h/TOTAL_SC*100); }
+function dwellH(o){ return (state.now - o.enteredStageAt)/HOUR; }
+function dueInH(o){ return (o.dueAt - state.now)/HOUR; }
+function ageH(o){ return (state.now - o.receivedAt)/HOUR; }
+
+let MAXVAL = 1;
+function derive(o){
+  const di = dueInH(o), rem = remainingHours(o), dw = dwellH(o), age = ageH(o);
+  const shipped = o.stage==='ship';
+  const overdue = di < 0 && !shipped;
+  const blocked = !!o.block;
+  const stuck = dw > 1.5*STAGES[STIDX[o.stage]].sc && !shipped;
+  const atRisk = !overdue && di < rem*1.25 && !shipped;
+  const isNew = age < 24;
+  // priority score
+  let s = 0;
+  s += di<=0 ? 40 + Math.min(32, -di/24*9) : Math.max(0, 30 - di/24*3.4);
+  s += Math.min(20, o.value/MAXVAL*20);
+  s += o.tier*3;
+  if(blocked) s+=11; if(stuck) s+=8; if(atRisk) s+=6;
+  o.d = { di, rem, dw, age, shipped, overdue, blocked, stuck, atRisk, isNew, score: Math.round(Math.min(100,s)) };
+  return o.d;
+}
+function recompute(){
+  MAXVAL = Math.max(...state.orders.map(o=>o.value));
+  state.orders.forEach(derive);
+}
+
+/* ── Flag / labels / recommendation ── */
+function primaryFlag(o){
+  const d=o.d;
+  if(d.overdue) return {k:'overdue',l:'Overdue',reason:`${Math.ceil(-d.di/24)}d past due`};
+  if(d.blocked) return {k:'blocked',l:'Blocked',reason:o.block};
+  if(d.stuck)   return {k:'stuck',l:'Stuck',reason:`Stuck ${fmtH(d.dw)} at ${STAGES[STIDX[o.stage]].nm}`};
+  if(d.atRisk)  return {k:'atrisk',l:'At risk',reason:`~${Math.round(d.rem)}h work left, due in ${fmtH(d.di)}`};
+  if(d.isNew)   return {k:'new',l:'New',reason:`Arrived ${fmtH(d.age)} ago`};
+  return {k:'ok',l:'On track',reason:`Due in ${fmtH(d.di)}`};
+}
+function recommend(o){
+  const b=(o.block||'').toLowerCase();
+  if(b.includes('reel')||b.includes('material')||b.includes('paste')) return `Chase purchasing on the missing parts; kit a partial build to keep ${o.cell} moving.`;
+  if(b.includes('rig')||b.includes('fixture')||b.includes('oven')) return `Free up the shared resource or reroute to another cell with spare capacity.`;
+  if(b.includes('approval')||b.includes('gerber')) return `Escalate sign-off with ${o.customer} today — NPI clock is running.`;
+  if(b.includes('aoi')||b.includes('rework')) return `Prioritise the rework lane and review the process; failures repeat if root cause is open.`;
+  if(o.d.overdue) return `Expedite through the remaining ${STAGES.length-STIDX[o.stage]-1} stages and pre-alert logistics.`;
+  if(o.d.stuck) return `Unblock at ${STAGES[STIDX[o.stage]].nm}; check whether ${o.cell} is overloaded.`;
+  if(o.d.atRisk) return `Pull forward in ${o.cell}; a short overtime block recovers the buffer.`;
+  return `On track — no action needed.`;
+}
+
+/* ── Aggregates ── */
+function agg(){
+  const o=state.orders;
+  const overdue=o.filter(x=>x.d.overdue), atRisk=o.filter(x=>x.d.atRisk), blocked=o.filter(x=>x.d.blocked);
+  const newOnes=o.filter(x=>x.d.isNew);
+  const wipVal=o.reduce((a,x)=>a+(x.d.shipped?0:x.value),0);
+  const onTime=Math.round(state.history.filter(h=>h.onTime).length/state.history.length*100);
+  // bottleneck stage = highest count weighted by overdue
+  const byStage={}; STAGES.forEach(s=>byStage[s.id]=0);
+  o.forEach(x=>{ if(!x.d.shipped) byStage[x.stage]+= 1 + (x.d.overdue?1.5:0); });
+  let bnStage=STAGES[0].id, bnv=-1; for(const s of STAGES){ if(byStage[s.id]>bnv){bnv=byStage[s.id];bnStage=s.id;} }
+  // cell loads
+  const cl={}; CELLS.forEach(c=>cl[c]={n:0,over:0}); o.forEach(x=>{ if(!x.d.shipped){cl[x.cell].n++; if(x.d.overdue)cl[x.cell].over++;} });
+  let bnCell=CELLS[0],bncv=-1; for(const c of CELLS){ if(cl[c].n>bncv){bncv=cl[c].n;bnCell=c;} }
+  return {overdue,atRisk,blocked,newOnes,wipVal,onTime,bnStage,bnCell,cl,byStage,
+    active:o.filter(x=>!x.d.shipped).length};
+}
+
+/* ── Formatting ── */
+function fmtMoney(v){ if(v>=1e6)return '€'+(v/1e6).toFixed(2)+'M'; if(v>=1e3)return '€'+Math.round(v/1e3)+'k'; return '€'+v; }
+function fmtH(h){ h=Math.abs(h); return h<24? Math.round(h)+'h' : (h/24).toFixed(h<48?1:0)+'d'; }
+function ranked(){ return state.orders.filter(o=>!o.d.shipped).slice().sort((a,b)=>b.d.score-a.d.score); }
+function esc(s){ return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+
+/* ════════════ BRAIN (rule-based, AI-ready seam) ════════════ */
+const Brain = {
+  greeting(){ const h=new Date(state.now).getHours();
+    return h<5?'Good night':h<12?'Good morning':h<18?'Good afternoon':'Good evening'; },
+  brief(){
+    const a=agg(), r=ranked(), top=r[0];
+    const date=new Date(state.now).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+    const time=new Date(state.now).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+    const L=[];
+    L.push(`${this.greeting()}. ATLAS online — ${date}, ${time}.`);
+    L.push(`You have <b>${a.active}</b> active work orders across ${CELLS.length} cells. Headlines: <span class="rd">${a.overdue.length} overdue</span>, <span class="am">${a.atRisk.length} at risk</span>, ${a.blocked.length} blocked.`);
+    if(top){ const f=primaryFlag(top);
+      L.push(`Top priority is <b>${top.id}</b> — ${top.qty}× ${top.product} for <b>${top.customer}</b>, worth <span class="cy">${fmtMoney(top.value)}</span>. ${f.l}: ${esc(f.reason)}. I'd ${recommend(top).charAt(0).toLowerCase()+recommend(top).slice(1)}`); }
+    const others=r.slice(1,3).filter(o=>o.d.overdue||o.d.blocked||o.d.stuck);
+    if(others.length) L.push(`Also watch ${others.map(o=>'<b>'+o.id+'</b> ('+primaryFlag(o).l.toLowerCase()+')').join(' and ')}.`);
+    if(a.newOnes.length) L.push(`<span class="cy">${a.newOnes.length} new order${a.newOnes.length>1?'s':''}</span> arrived overnight, including ${a.newOnes[0].id} for ${a.newOnes[0].customer}.`);
+    L.push(`Today's bottleneck is <b>${a.bnCell}</b>, with the heaviest queue at <b>${STAGES[STIDX[a.bnStage]].nm}</b>. On-time delivery this week sits at <b>${a.onTime}%</b>.`);
+    L.push(`I've put your top three actions in the to-do list. Tap any order for the full picture.`);
+    return L.join(' ');
+  },
+  answer(intent){
+    const a=agg(), r=ranked();
+    if(intent==='brief') return this.brief();
+    if(intent==='priorities'){ const t=r.slice(0,3);
+      return `Your top three right now: `+t.map((o,i)=>`${i+1}) <b>${o.id}</b> ${o.customer}, ${primaryFlag(o).l.toLowerCase()}, priority ${o.d.score}`).join('; ')+`. ${t[0]?recommend(t[0]):''}`; }
+    if(intent==='overdue'){ const o=a.overdue.sort((x,y)=>x.d.di-y.d.di);
+      if(!o.length) return `Good news — nothing is overdue right now. ${a.atRisk.length} orders are at risk, though.`;
+      return `<span class="rd">${o.length} overdue</span>: `+o.slice(0,4).map(x=>`<b>${x.id}</b> (${x.customer}, ${Math.ceil(-x.d.di/24)}d late)`).join(', ')+`. The worst is ${o[0].id}. ${recommend(o[0])}`; }
+    if(intent==='stuck'){ const o=state.orders.filter(x=>x.d.stuck&&!x.d.shipped).sort((x,y)=>y.d.dw-x.d.dw);
+      if(!o.length) return `Nothing is stuck beyond its normal cycle time — flow is healthy.`;
+      return `${o.length} job${o.length>1?'s are':' is'} stuck: `+o.slice(0,4).map(x=>`<b>${x.id}</b> — ${fmtH(x.d.dw)} at ${STAGES[STIDX[x.stage]].nm}`).join(', ')+`. ${recommend(o[0])}`; }
+    if(intent==='material'){ const o=state.orders.filter(x=>x.d.blocked);
+      if(!o.length) return `No material or resource blocks logged right now.`;
+      return `${o.length} blocked: `+o.slice(0,4).map(x=>`<b>${x.id}</b> — ${esc(x.block)}`).join('; ')+`.`; }
+    if(intent==='todos'){ const t=r.slice(0,3);
+      return `Three things for you today: `+t.map((o,i)=>`${i+1}) ${recommend(o).replace(/\.$/,'')} (<b>${o.id}</b>)`).join('; ')+`.`; }
+    return this.brief();
+  }
+};
+
+/* ════════════ VOICE (Web Speech API, TTS) ════════════ */
+const Voice = {
+  synth: window.speechSynthesis || null, voices: [], voice: null,
+  speaking:false, level:0, boundaryPulse:0, _q:[], _ka:null,
+  init(){ if(!this.synth) return; const set=()=>{ this.rank(); this.populate(); };
+    set(); this.synth.onvoiceschanged=set; },
+  score(v){ const n=(v.name||'').toLowerCase(), l=(v.lang||'').toLowerCase(); let s=0;
+    if(/natural|neural/.test(n)) s+=120;            // Edge "Online (Natural)" neural voices — best & free
+    if(/google/.test(n)) s+=90;                     // Chrome "Google …" voices
+    if(/online/.test(n)) s+=35;
+    if(/(aria|guy|jenny|ryan|sonia|libby|samantha|karen|moira|daniel|tessa|serena|fiona|allison|ava|nathan)/.test(n)) s+=50;
+    if(/desktop/.test(n)) s-=70;                    // old robotic SAPI5
+    if(/microsoft/.test(n)&&!/natural|online/.test(n)) s-=35;
+    if(/ryan|george|guy|daniel/.test(n)) s+=8;      // calm, Jarvis-ish lean
+    if(/^en[-_]us/.test(l)) s+=15; else if(/^en[-_]gb/.test(l)) s+=13; else if(/^en/.test(l)) s+=6;
+    return s; },
+  rank(){ const all=this.synth.getVoices()||[];
+    this.voices = all.filter(v=>/^en/i.test(v.lang||'')||/english/i.test(v.name||'')).sort((a,b)=>this.score(b)-this.score(a));
+    this.voice = (state.voiceName && (this.voices.find(v=>v.name===state.voiceName)||all.find(v=>v.name===state.voiceName)))
+      || this.voices[0] || all[0] || null; },
+  populate(){ const sel=$('voiceSel'), note=$('voiceNote');
+    if(note) note.style.display=this.voices.length?'none':'';
+    if(!sel) return;
+    if(!this.voices.length){ sel.style.display='none'; return; }
+    sel.style.display=''; sel.innerHTML=this.voices.map(v=>{
+      const label=v.name.replace(/^Microsoft\s+/,'').replace(/\s*-\s*English.*$/i,'').replace(/\s*\(([^)]*)\)/,' · $1').trim();
+      return `<option value="${v.name.replace(/"/g,'&quot;')}"${this.voice&&v.name===this.voice.name?' selected':''}>${esc(label)} · ${v.lang}</option>`;
+    }).join(''); },
+  setByName(name){ const v=this.voices.find(x=>x.name===name)||(this.synth.getVoices()||[]).find(x=>x.name===name);
+    if(v){ this.voice=v; state.voiceName=name; savePrefs(); } },
+  strip(html){ return html.replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&rsquo;/g,'’').replace(/&times;/g,'x').replace(/\s+/g,' ').trim(); },
+  speak(html){ if(!this.synth||state.muted||!state.voiceUnlocked||!this.voices.length) return;
+    this.stop();
+    const text=this.strip(html); if(!text) return;
+    this._q=(text.match(/[^.!?]+[.!?]+|\S[^.!?]*$/g)||[text]).map(s=>s.trim()).filter(Boolean);
+    this.speaking=true; setOrbState('SPEAKING'); this._keepAlive(true); this._next(); },
+  _next(){ if(!this._q.length){ this.speaking=false; setOrbState('ONLINE'); this._keepAlive(false); return; }
+    const s=this._q.shift(), u=new SpeechSynthesisUtterance(s);
+    if(this.voice){ u.voice=this.voice; u.lang=this.voice.lang; } else u.lang='en-US';
+    u.rate=1.0; u.pitch=1.0; u.volume=1;
+    u.onboundary=()=>{ this.boundaryPulse=Math.min(1,this.boundaryPulse+0.45); };
+    u.onend=()=>this._next(); u.onerror=()=>this._next();
+    try{ this.synth.speak(u); }catch(e){ this._next(); } },
+  _keepAlive(on){ if(this._ka){ clearInterval(this._ka); this._ka=null; }
+    if(on&&this.synth) this._ka=setInterval(()=>{ if(this.speaking){ try{this.synth.resume();}catch(e){} } else { clearInterval(this._ka); this._ka=null; } },9000); },
+  stop(){ if(this.synth){ try{this.synth.cancel();}catch(e){}} this._q=[]; this.speaking=false; this._keepAlive(false); setOrbState('ONLINE'); }
+};
+
+/* ════════════ ORB (Canvas 2D arc reactor) ════════════ */
+const Orb = {
+  cv:null, ctx:null, t:0, dpr:1, alert:0,
+  init(){ this.cv=$('orb'); if(!this.cv) return; this.ctx=this.cv.getContext('2d');
+    this.resize(); window.addEventListener('resize',()=>this.resize());
+    if(REDUCE){ this.draw(0); } else { requestAnimationFrame(ts=>this.loop(ts)); } },
+  resize(){ const r=this.cv.getBoundingClientRect(); this.dpr=Math.min(2,window.devicePixelRatio||1);
+    this.cv.width=Math.max(200,r.width*this.dpr); this.cv.height=this.cv.width; if(REDUCE) this.draw(0); },
+  loop(ts){ this.t=ts/1000;
+    const target = Voice.speaking ? 0.55+0.45*(0.5+0.5*Math.sin(this.t*9)+0.0) : 0.12+0.06*Math.sin(this.t*1.4);
+    Voice.level += (Math.min(1,target+Voice.boundaryPulse) - Voice.level)*0.18;
+    Voice.boundaryPulse *= 0.86; this.alert *= 0.95;
+    this.draw(this.t); requestAnimationFrame(t=>this.loop(t)); },
+  draw(t){
+    const ctx=this.ctx,W=this.cv.width,H=this.cv.height,cx=W/2,cy=H/2,R=W*0.40,lvl=REDUCE?0.2:Voice.level;
+    ctx.clearRect(0,0,W,H);
+    const al=this.alert;
+    const c1=al>0.2?'#ff6b8b':'#5ef0ff', c2=al>0.2?'#ffcc55':'#7c5cff';
+    // outer glow
+    let g=ctx.createRadialGradient(cx,cy,R*0.1,cx,cy,R*1.5);
+    g.addColorStop(0,`rgba(94,240,255,${0.10+lvl*0.18})`); g.addColorStop(0.5,'rgba(124,92,255,0.06)'); g.addColorStop(1,'rgba(124,92,255,0)');
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    // rotating rings
+    for(let i=0;i<3;i++){
+      const rr=R*(0.62+i*0.16), seg=10+i*4, rot=t*(i%2?-0.25:0.4)*(1+i*0.3);
+      ctx.lineWidth=Math.max(1.2,W*0.006); ctx.strokeStyle=i===1?c2:c1; ctx.globalAlpha=0.30+0.12*i+lvl*0.25;
+      for(let s=0;s<seg;s++){ const a0=rot+s/seg*Math.PI*2, a1=a0+(Math.PI*2/seg)*0.6;
+        ctx.beginPath(); ctx.arc(cx,cy,rr,a0,a1); ctx.stroke(); }
+    }
+    ctx.globalAlpha=1;
+    // tick ring
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(t*0.12);
+    for(let s=0;s<48;s++){ const a=s/48*Math.PI*2, r0=R*1.02, r1=R*(s%4===0?1.10:1.06);
+      ctx.globalAlpha=0.18+0.5*lvl*(s%4===0?1:0.4); ctx.strokeStyle=c1; ctx.lineWidth=W*0.003;
+      ctx.beginPath(); ctx.moveTo(Math.cos(a)*r0,Math.sin(a)*r0); ctx.lineTo(Math.cos(a)*r1,Math.sin(a)*r1); ctx.stroke(); }
+    ctx.restore(); ctx.globalAlpha=1;
+    // particles
+    if(!REDUCE) for(let s=0;s<26;s++){ const a=t*0.5+s*2.39, rr=R*(0.5+0.5*((s*97%100)/100));
+      const px=cx+Math.cos(a)*rr, py=cy+Math.sin(a*0.9)*rr*0.7;
+      ctx.globalAlpha=0.12+0.4*lvl; ctx.fillStyle=s%3?c1:c2;
+      ctx.beginPath(); ctx.arc(px,py,W*0.004,0,7); ctx.fill(); }
+    ctx.globalAlpha=1;
+    // core
+    const cr=R*(0.30+lvl*0.10);
+    let cg=ctx.createRadialGradient(cx,cy-cr*0.2,cr*0.1,cx,cy,cr);
+    cg.addColorStop(0,'#ffffff'); cg.addColorStop(0.35,al>0.2?'#ffd479':'#bfefff'); cg.addColorStop(0.75,c1); cg.addColorStop(1,'rgba(124,92,255,0.0)');
+    ctx.fillStyle=cg; ctx.beginPath(); ctx.arc(cx,cy,cr,0,7); ctx.fill();
+    // core ring
+    ctx.strokeStyle='rgba(255,255,255,'+(0.5+lvl*0.4)+')'; ctx.lineWidth=W*0.004;
+    ctx.beginPath(); ctx.arc(cx,cy,cr*1.18,0,7); ctx.stroke();
+  },
+  flashAlert(){ this.alert=1; }
+};
+function setOrbState(s){ const el=$('orbState'); if(el) el.textContent=s; }
+
+/* ════════════ TELEPROMPTER ════════════ */
+let typeTok=0;
+function showBrief(html,{speak=false}={}){
+  state.lastBrief=html;
+  $('briefLive').textContent=Voice.strip(html);
+  const el=$('brief'); const tok=++typeTok;
+  if(REDUCE){ el.innerHTML=html; }
+  else {
+    // type out: reveal by character but keep tags intact
+    el.innerHTML=''; const parts=html.split(/(<[^>]+>)/); let chunks=[];
+    parts.forEach(p=>{ if(p.startsWith('<')) chunks.push({tag:p}); else for(const ch of p) chunks.push({c:ch}); });
+    let i=0, buf='';
+    (function step(){ if(tok!==typeTok) return; if(i>=chunks.length){ el.innerHTML=buf; return; }
+      const k=chunks[i++]; buf += k.tag||k.c; el.innerHTML=buf+'<span class="caret"></span>';
+      setTimeout(step, k.tag?0:11); })();
+  }
+  if(speak) Voice.speak(html);
+}
+
+/* ════════════ RENDER ════════════ */
+const KPIDEF = [
+  {key:'active', nm:'Active Orders', acc:'acc-cyan'},
+  {key:'overdue',nm:'Overdue', acc:'acc-red', filter:'overdue'},
+  {key:'atRisk', nm:'At Risk', acc:'acc-amber', filter:'atrisk'},
+  {key:'blocked',nm:'Blocked', acc:'acc-violet', filter:'blocked'},
+  {key:'onTime', nm:'On-Time / wk', acc:'acc-green', suf:'%'},
+  {key:'wip',    nm:'WIP Value', acc:'acc-gold'},
+  {key:'bn',     nm:'Bottleneck', acc:'acc-red'},
+];
+function renderKPIs(a){
+  const map={ active:{v:a.active,sub:`${state.orders.length} total`},
+    overdue:{v:a.overdue.length,sub:a.overdue.length?'needs chasing':'all clear'},
+    atRisk:{v:a.atRisk.length,sub:'tight on time'},
+    blocked:{v:a.blocked.length,sub:'material / rig'},
+    onTime:{v:a.onTime,suf:'%',sub:'last 14 shipped'},
+    wip:{v:fmtMoney(a.wipVal),sub:'in progress',raw:true},
+    bn:{v:a.bnCell.replace('Cell ','Cell '),sub:STAGES[STIDX[a.bnStage]].nm,small:true} };
+  $('kpis').innerHTML=KPIDEF.map(d=>{ const m=map[d.key];
+    const val = m.raw||m.small ? m.v : (m.v+(m.suf||''));
+    return `<div class="kpi ${d.acc} ${state.filter&&state.filter===d.filter?'sel':''}" ${d.filter?`data-filter="${d.filter}" role="button" tabindex="0"`:''}>
+      <div class="nm">${d.nm}</div><div class="v" style="${m.small?'font-size:1rem':''}">${val}</div><div class="sub">${m.sub}</div></div>`;
+  }).join('');
+}
+function renderQueue(){
+  let list=ranked();
+  const f=state.filter;
+  if(f) list=list.filter(o=> f==='overdue'?o.d.overdue : f==='atrisk'?o.d.atRisk : f==='blocked'?o.d.blocked :
+    f.startsWith('stage:')?o.stage===f.slice(6) : f.startsWith('cell:')?o.cell===f.slice(5) : true);
+  $('qCnt').textContent=list.length;
+  const ft=$('filterTag');
+  if(f){ const lbl = f.startsWith('stage:')?STAGES[STIDX[f.slice(6)]].nm : f.startsWith('cell:')?f.slice(5) : f;
+    ft.innerHTML=`<span class="filtertag">Filter: ${esc(lbl)} <button id="clrFilter" aria-label="Clear filter">&times;</button></span>`; }
+  else ft.innerHTML='';
+  if(!list.length){ $('qlist').innerHTML='<div class="empty">No orders match this filter.</div>'; return; }
+  $('qlist').innerHTML=list.map(o=>{ const f=primaryFlag(o);
+    return `<button class="qitem" data-id="${o.id}">
+      <div class="top"><span class="wo">${o.id}</span><span class="cust">${esc(o.customer)}</span><span class="amt">${fmtMoney(o.value)}</span></div>
+      <div class="prod">${o.qty}× ${esc(o.product)} · ${o.type} · ${o.cell}</div>
+      <div class="meta"><span class="flag ${f.k}">${f.l}</span><span class="reason">${esc(f.reason)}</span><span class="score">PRIO <b>${o.d.score}</b></span></div>
+      ${f.k!=='ok'?`<div class="rec">${esc(recommend(o))}</div>`:''}
+    </button>`; }).join('');
+}
+function renderFlow(a){
+  const max=Math.max(1,...Object.values(a.byStage));
+  $('flowlist').innerHTML=STAGES.map((s,i)=>{ const n=a.byStage[s.id]||0, bn=s.id===a.bnStage;
+    return `<div class="stage ${bn?'bottleneck':''} ${state.filter==='stage:'+s.id?'sel':''}" data-stage="${s.id}" role="button" tabindex="0">
+      <span class="ix">${i+1}</span>
+      <span class="nm">${s.nm}<small>cycle ~${s.sc}h</small></span>
+      <span class="wip"><span class="bar2"><i style="width:${Math.round(n/max*100)}%"></i></span><span class="num">${Math.round(n)}</span></span>
+    </div>`; }).join('');
+  $('cells').innerHTML=CELLS.map(c=>{ const cl=a.cl[c], pct=Math.min(100,Math.round(cl.n/CELL_CAP*100));
+    const st = cl.n>CELL_CAP?'over':cl.n>=CELL_CAP-1?'high':'ok';
+    const lbl = st==='over'?'OVERLOAD':st==='high'?'HIGH':'OK';
+    return `<div class="cell ${st} ${state.filter==='cell:'+c?'sel':''}" data-cell="${c}" role="button" tabindex="0">
+      <div class="cn">${c}<span class="st ${st}">${lbl}</span></div>
+      <div class="load"><i style="width:${pct}%"></i></div>
+      <div class="cm">${cl.n} WIP · ${cl.over} overdue</div></div>`; }).join('');
+}
+function renderTodos(){
+  const t=ranked().slice(0,3);
+  $('todoCnt').textContent=t.filter(o=>!state.todosDone[o.id]).length;
+  $('todos').innerHTML=t.map(o=>{ const done=!!state.todosDone[o.id];
+    return `<label class="todo ${done?'done':''}"><input type="checkbox" data-id="${o.id}" ${done?'checked':''}>
+      <span class="tx"><span class="wo">${o.id}</span> · ${esc(recommend(o))}</span></label>`; }).join('');
+}
+function renderIncoming(a){
+  const list=a.newOnes.slice().sort((x,y)=>x.d.age-y.d.age);
+  $('incCnt').textContent=list.length;
+  if(!list.length){ $('incoming').innerHTML='<div class="empty">No new orders in the last 24h.</div>'; return; }
+  $('incoming').innerHTML=list.slice(0,6).map(o=>`
+    <div class="inc"><span class="pulse"></span><div class="ix"><span class="wo">${o.id}</span>
+      <div class="nm">${esc(o.customer)}</div><div class="sub">${o.qty}× ${esc(o.product)} · due in ${fmtH(o.d.di)}</div></div>
+      <span class="ago">${fmtH(o.d.age)} ago</span></div>`).join('')
+    + (list.length>6?`<div class="empty">+${list.length-6} more in the last 24h</div>`:'');
+}
+function renderSys(a){
+  const alerts=a.overdue.length+a.blocked.length;
+  const el=$('sys');
+  if(alerts>0){ el.classList.add('alert'); $('sysTxt').textContent=`${alerts} ALERT${alerts>1?'S':''}`; }
+  else { el.classList.remove('alert'); $('sysTxt').textContent='ALL SYSTEMS NOMINAL'; }
+}
+function renderAll(){
+  recompute(); const a=agg();
+  renderKPIs(a); renderQueue(); renderFlow(a); renderTodos(); renderIncoming(a); renderSys(a);
+}
+
+/* ── Order dialog ── */
+function openOrder(id){
+  const o=state.orders.find(x=>x.id===id); if(!o) return;
+  $('dlgWo').textContent=o.id;
+  $('dlgTitle').textContent=o.customer;
+  $('dlgSub').textContent=`${o.qty}× ${o.product} · ${o.type} · ${o.cell}`;
+  $('dlgStat').innerHTML=`
+    <div class="s"><div class="l">Value</div><div class="n">${fmtMoney(o.value)}</div></div>
+    <div class="s"><div class="l">Due</div><div class="n" style="color:${o.d.overdue?'var(--red)':'var(--text)'}">${o.d.overdue?Math.ceil(-o.d.di/24)+'d late':'in '+fmtH(o.d.di)}</div></div>
+    <div class="s"><div class="l">Progress</div><div class="n">${progressPct(o)}%</div></div>`;
+  const cur=STIDX[o.stage];
+  $('dlgTl').innerHTML=STAGES.map((s,i)=>{ const cls=i<cur?'done':i===cur?'cur':'todo';
+    const mt=i===cur?`Here ${fmtH(o.d.dw)}${o.d.stuck?' · stuck':''}`:i<cur?'done':'';
+    return `<div class="tl ${cls}"><div class="mk"></div><div><div class="nm">${s.nm}</div>${mt?`<div class="mt">${mt}</div>`:''}</div></div>`; }).join('');
+  const f=primaryFlag(o);
+  $('dlgRec').innerHTML=`<b>${f.l}${f.k!=='ok'?' — ':''}</b>${f.k!=='ok'?esc(f.reason):''}<br><br>${esc(recommend(o))}`;
+  $('dlgAsk').onclick=()=>{ const f=primaryFlag(o);
+    showBrief(`<b>${o.id}</b> — ${esc(o.customer)}, ${o.qty}× ${esc(o.product)}. ${f.l}: ${esc(f.reason)}. ${esc(recommend(o))}`,{speak:true}); };
+  $('dlg').showModal();
+}
+
+/* ════════════ SIMULATION ════════════ */
+let simEventT=0;
+function tickClock(){
+  if(state.running){ state.now += 1000 * 60 * state.speed; } // 1 real s ≈ 1 sim min × speed
+  $('clk').textContent=new Date(state.now).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  $('clkd').textContent=new Date(state.now).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+  if(state.running){ renderAll(); }
+}
+function simEvent(){
+  if(!state.running) return;
+  // deliver finished orders (keeps the board bounded + feeds the on-time % live)
+  state.orders=state.orders.filter(o=>{
+    if(o.stage==='ship' && (state.now-o.enteredStageAt)>3*HOUR){
+      state.history.push({onTime:o.dueAt>=o.enteredStageAt}); if(state.history.length>20) state.history.shift();
+      return false; }
+    return true; });
+  const roll=rng();
+  const active=state.orders.filter(o=>!o.d.shipped);
+  if(roll<0.5 && active.length){ // advance a healthy order one stage
+    const cand=active.filter(o=>!o.d.blocked && STIDX[o.stage]<STAGES.length-1);
+    if(cand.length){ const o=pick(cand); o.stage=STAGES[STIDX[o.stage]+1].id; o.enteredStageAt=state.now; }
+  } else if(roll<0.56 && active.length<36){ // occasional new order (~6%)
+    woSeq=Math.max(woSeq,24900)+ri(1,4);
+    state.orders.unshift(mkOrder({stage:'goodsin',recAgoH:rf(0.2,1.5),dueInH:rf(80,260)}));
+  } else if(roll<0.66){ // resolve a block
+    const b=state.orders.find(o=>o.d.blocked); if(b){ b.block=null; }
+  }
+  renderAll();
+}
+function disrupt(){
+  const active=state.orders.filter(o=>!o.d.shipped && !o.d.blocked && !o.d.overdue);
+  const scenarios=[
+    ()=>{ const o=pick(active)||state.orders[0]; o.block='Reflow oven RO-1 temperature fault'; o.enteredStageAt=state.now-26*HOUR;
+      return `Heads up — <span class="rd">disruption detected</span>. ${o.id} (${o.customer}) just hit a reflow oven RO-1 temperature fault and is now stuck. ${recommend(o)}`; },
+    ()=>{ const o=pick(active)||state.orders[0]; o.block='Failed AOI — rework loop'; o.stage='test'; o.enteredStageAt=state.now-18*HOUR;
+      return `Heads up — ${o.id} failed AOI at final test and dropped into the rework loop. ${recommend(o)}`; },
+    ()=>{ woSeq=Math.max(woSeq,24960)+ri(1,3); const o=mkOrder({customer:'Brandt Automotive',product:'Power stage PS-18',qty:600,unit:280,stage:'goodsin',recAgoH:0.3,dueInH:30});
+      state.orders.unshift(o); return `Heads up — a <span class="cy">rush order</span> just landed: ${o.id} for ${o.customer}, ${fmtMoney(o.value)}, due in just ${fmtH(o.d.di)}. I've placed it at the top of the queue.`; },
+    ()=>{ const o=pick(active)||state.orders[0]; o.block='Awaiting reels — STM32G0 MCU (ETA 2 days)';
+      return `Heads up — a component shortage just hit ${o.id}: the STM32G0 MCU reels are out. ${recommend(o)}`; },
+  ];
+  state.disrupted=true;
+  const msg=pick(scenarios)();
+  Orb.flashAlert();
+  renderAll();
+  showBrief(msg,{speak:true});
+}
+
+/* ════════════ EVENTS ════════════ */
+function unlockVoice(){ if(state.voiceUnlocked) return; state.voiceUnlocked=true;
+  $('hint').classList.add('hidden');
+  if(!state.muted && state.lastBrief) Voice.speak(state.lastBrief); }
+
+function bind(){
+  // global gesture unlock for TTS (autoplay policy)
+  ['pointerdown','keydown'].forEach(ev=>window.addEventListener(ev,unlockVoice,{once:true}));
+
+  $('briefBtn').onclick=()=>{ unlockVoice(); showBrief(Brain.brief(),{speak:true}); };
+  $('disruptBtn').onclick=()=>{ unlockVoice(); disrupt(); };
+  $('pauseBtn').onclick=e=>{ state.running=!state.running; const b=e.currentTarget;
+    b.setAttribute('aria-pressed',String(!state.running));
+    b.innerHTML=state.running?'&#10073;&#10073; Pause':'&#9658; Resume';
+    $('liveTag').classList.toggle('paused',!state.running);
+    $('liveTag').innerHTML=state.running?'<i></i>LIVE':'<i></i>PAUSED'; };
+  $('spd').oninput=e=>{ state.speed=parseFloat(e.target.value); $('spdv').innerHTML=state.speed+'&times;'; };
+
+  $('muteBtn').onclick=e=>{ state.muted=!state.muted; const b=e.currentTarget;
+    b.setAttribute('aria-pressed',String(state.muted)); b.classList.toggle('on',!state.muted);
+    b.innerHTML=state.muted?'&#128263; Voice off':'&#128266; Voice on';
+    if(state.muted) Voice.stop(); savePrefs(); };
+  $('replayBtn').onclick=()=>{ unlockVoice(); if(state.lastBrief) showBrief(state.lastBrief,{speak:true}); };
+  $('voiceSel').onchange=e=>{ unlockVoice(); Voice.setByName(e.target.value); Voice.speak('Voice updated. ATLAS ready.'); };
+
+  // chips
+  const CHIPS=[['brief','Brief me'],['priorities','Top priorities'],['overdue','Overdue'],['stuck','Stuck'],['material','Material'],['todos','To-dos']];
+  $('chips').innerHTML=CHIPS.map(c=>`<button class="chip" data-intent="${c[0]}">${c[1]}</button>`).join('');
+  $('chips').addEventListener('click',e=>{ const b=e.target.closest('.chip'); if(!b) return;
+    unlockVoice(); showBrief(Brain.answer(b.dataset.intent),{speak:true}); });
+
+  // KPI filters
+  $('kpis').addEventListener('click',e=>{ const k=e.target.closest('[data-filter]'); if(!k) return;
+    state.filter = state.filter===k.dataset.filter?null:k.dataset.filter; renderAll(); });
+  $('kpis').addEventListener('keydown',e=>{ if(e.key!=='Enter'&&e.key!==' ')return; const k=e.target.closest('[data-filter]'); if(!k)return;
+    e.preventDefault(); state.filter=state.filter===k.dataset.filter?null:k.dataset.filter; renderAll(); });
+
+  // queue + filter clear (delegated)
+  $('qlist').addEventListener('click',e=>{ const it=e.target.closest('.qitem'); if(it) openOrder(it.dataset.id); });
+  $('filterTag').addEventListener('click',e=>{ if(e.target.id==='clrFilter'){ state.filter=null; renderAll(); } });
+
+  // flow stage + cell filters (delegated)
+  function flowFilter(el){ if(el.dataset.stage){ const v='stage:'+el.dataset.stage; state.filter=state.filter===v?null:v; }
+    else if(el.dataset.cell){ const v='cell:'+el.dataset.cell; state.filter=state.filter===v?null:v; } renderAll(); }
+  ['flowlist','cells'].forEach(idd=>{ const root=$(idd);
+    root.addEventListener('click',e=>{ const el=e.target.closest('[data-stage],[data-cell]'); if(el) flowFilter(el); });
+    root.addEventListener('keydown',e=>{ if(e.key!=='Enter'&&e.key!==' ')return; const el=e.target.closest('[data-stage],[data-cell]'); if(el){e.preventDefault();flowFilter(el);} }); });
+
+  // todos
+  $('todos').addEventListener('change',e=>{ const cb=e.target.closest('input'); if(!cb)return;
+    if(cb.checked) state.todosDone[cb.dataset.id]=1; else delete state.todosDone[cb.dataset.id];
+    savePrefs(); renderTodos(); });
+
+  // dialog
+  $('dlgClose').onclick=$('dlgClose2').onclick=()=>$('dlg').close();
+  $('dlg').addEventListener('click',e=>{ if(e.target===$('dlg')) $('dlg').close(); });
+}
+
+/* ════════════ BOOT ════════════ */
+function boot(){
+  loadPrefs();
+  buildOrders(); recompute();
+  Voice.init(); Orb.init(); bind();
+  // reflect muted pref on button
+  if(state.muted){ const b=$('muteBtn'); b.classList.remove('on'); b.setAttribute('aria-pressed','true'); b.innerHTML='&#128263; Voice off'; }
+  $('greet').innerHTML=`<span class="g">${Brain.greeting()}, production.</span>`;
+  renderAll();
+  tickClock(); setInterval(tickClock,1000);
+  setInterval(simEvent,6000);
+  setOrbState('ONLINE');
+  // auto-run the morning briefing text on load (voice waits for first gesture)
+  showBrief(Brain.brief(),{speak:true});
+}
+document.addEventListener('DOMContentLoaded',boot);
+</script>
+</body>
+</html>

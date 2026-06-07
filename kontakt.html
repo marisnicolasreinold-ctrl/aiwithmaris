@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#05060c" />
+
+<title>Kontakt &amp; Erstgespräch — AI with Maris</title>
+<meta name="description" content="Nimm Kontakt mit AI with Maris auf. Sichere dir dein kostenloses 30-minütiges Erstgespräch für KI-Coaching und Cloud-Software." />
+<meta name="author" content="AI with Maris" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://aiwithmaris.com/kontakt.html" />
+
+<link rel="icon" type="image/png" href="./assets/logo-axon.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Manrope:wght@300;400;500;600&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+<canvas id="scene"></canvas>
+<div class="bg-glow"></div><div class="grain"></div><div class="vignette"></div>
+<div class="cursor-ring"></div><div class="cursor-dot"></div>
+
+<a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+<nav id="nav" aria-label="Hauptnavigation">
+  <div class="nav-inner">
+    <a class="logo" href="index.html" aria-label="AI with Maris — zur Startseite"><img src="./assets/logo-axon.png" alt="" />AI with Maris</a>
+    <div class="nav-links" id="navlinks">
+      <a href="leistungen.html">Leistungen</a>
+      <a href="loesungen.html">Lösungen</a>
+      <a href="beispiele.html">Beispiele</a>
+      <a href="ueber-uns.html">Über uns</a>
+      <a href="preise.html">Preise &amp; FAQ</a>
+      <a href="kontakt.html" class="active">Erstgespräch</a>
+    </div>
+    <button class="burger" id="burger" type="button" aria-label="Menü öffnen" aria-expanded="false" aria-controls="navlinks"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="wrap">
+<main id="main" tabindex="-1">
+
+<!-- KONTAKT INTRODUCTION -->
+<section class="hero" style="min-height: 50vh; padding-top: 140px;">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Erstgespräch</span>
+      <h1>Lass uns euren ersten <br><span class="grad">Use-Case finden.</span></h1>
+      <p class="lead" style="margin-top:20px;">Sichere dir ein kostenloses, 30-minütiges Erstgespräch — vollkommen unverbindlich. Wir besprechen deine Ziele und erörtern passende Quick Wins und Cloud-Setups.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT GRID & FORM -->
+<section style="padding: 20px 0 90px;">
+  <div class="container">
+    <div class="contact-grid reveal d1">
+      <div>
+        <h3 style="font-family:var(--display);font-weight:700;font-size:1.4rem;margin-bottom:10px">Direkt loslegen</h3>
+        <p style="color:var(--muted);font-weight:300">Schreib uns kurz, worum es geht — wir melden uns mit konkreten ersten Ideen, nicht mit einem Standard-Angebot.</p>
+        <div class="contact-points" style="margin-top: 24px;">
+          <div class="cp"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><div><b>E-Mail</b><a href="mailto:hallo@aiwithmaris.com?subject=Erstgespr%C3%A4ch%20AI with Maris">hallo@aiwithmaris.com</a></div></div>
+          <div class="cp"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><div><b>Antwort &lt; 24&nbsp;h</b><span>An Werktagen melden wir uns am selben oder nächsten Tag.</span></div></div>
+          <div class="cp"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg><div><b>Unverbindlich &amp; vertraulich</b><span>Kein Verkaufsdruck. Deine Angaben behandeln wir streng vertraulich.</span></div></div>
+        </div>
+      </div>
+      <form class="form" id="contactForm" novalidate>
+        <div class="form-row">
+          <div class="field">
+            <label for="cf-name">Name <span class="req" aria-hidden="true">*</span></label>
+            <input id="cf-name" name="name" type="text" autocomplete="name" required aria-required="true" aria-describedby="err-name" placeholder="Vor- und Nachname" />
+            <p class="err" id="err-name">Bitte gib deinen Namen an.</p>
+          </div>
+          <div class="field">
+            <label for="cf-company">Unternehmen</label>
+            <input id="cf-company" name="company" type="text" autocomplete="organization" placeholder="Optional" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="cf-email">E-Mail <span class="req" aria-hidden="true">*</span></label>
+            <input id="cf-email" name="email" type="email" autocomplete="email" required aria-required="true" aria-describedby="err-email" placeholder="du@firma.de" />
+            <p class="err" id="err-email">Bitte gib eine gültige E-Mail-Adresse an.</p>
+          </div>
+          <div class="field">
+            <label for="cf-phone">Telefon</label>
+            <input id="cf-phone" name="phone" type="tel" autocomplete="tel" placeholder="Optional" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="cf-msg">Worum geht's? <span class="req" aria-hidden="true">*</span></label>
+          <textarea id="cf-msg" name="message" required aria-required="true" aria-describedby="err-msg" placeholder="Beschreibe kurz deinen Use-Case oder deine Frage…"></textarea>
+          <p class="err" id="err-msg">Bitte schreib uns ein, zwei Sätze.</p>
+        </div>
+        <label class="consent"><input type="checkbox" id="cf-consent" name="consent" required aria-describedby="err-consent" /> <span>Ich bin einverstanden, dass meine Angaben zur Bearbeitung meiner Anfrage gespeichert werden. Mehr dazu in der <a href="datenschutz.html">Datenschutzerklärung</a>.<span class="err" id="err-consent">Bitte bestätige die Einwilligung, damit wir dich kontaktieren dürfen.</span></span></label>
+        <button type="submit" class="btn btn-primary" data-hover style="width:100%;justify-content:center">Erstgespräch anfragen <span class="arrow">→</span></button>
+        <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div><div class="logo" style="margin-bottom:16px"><img src="./assets/logo-axon.png" alt="" />AI with Maris</div>
+        <p>KI-Coaching &amp; maßgeschneiderte Software-Entwicklung — cloud-neutral, datensouverän, ohne Lock-in.</p></div>
+      <div class="foot-links">
+        <div class="foot-col"><h4>Angebot</h4><a href="leistungen.html">Leistungen</a><a href="loesungen.html">Lösungen</a><a href="beispiele.html">Beispiele</a><a href="preise.html">Preise</a></div>
+        <div class="foot-col"><h4>Kontakt</h4><a href="mailto:hallo@aiwithmaris.com">hallo@aiwithmaris.com</a><a href="kontakt.html">Erstgespräch</a></div>
+        <div class="foot-col"><h4>Rechtliches</h4><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a><a href="agb.html">AGB</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 AI with Maris</span><span>Made in Germany · Cloud-neutral · Powered by AI</span></div>
+  </div>
+</footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="./main.js"></script>
+
+<!-- PAGE-SPECIFIC CONTACT VALIDATION SCRIPT -->
+<script>
+(function() {
+  const form = document.getElementById('contactForm');
+  if (!form) return;
+  const ENDPOINT = '';
+  const MAILTO = 'hallo@aiwithmaris.com';
+  
+  const $ = id => document.getElementById(id);
+  const status = $('formStatus');
+  const consent = $('cf-consent');
+  const consentErr = $('err-consent');
+  
+  const fields = [
+    { el: $('cf-name'),  err: 'err-name',  test: v => v.trim().length > 1 },
+    { el: $('cf-email'), err: 'err-email', test: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) },
+    { el: $('cf-msg'),   err: 'err-msg',   test: v => v.trim().length > 4 }
+  ];
+
+  function setErr(f, bad) {
+    f.el.setAttribute('aria-invalid', bad ? 'true' : 'false');
+    $(f.err).classList.toggle('show', bad);
+  }
+
+  function showStatus(msg, ok) {
+    status.textContent = msg;
+    status.className = 'form-status show ' + (ok ? 'ok' : 'bad');
+  }
+
+  fields.forEach(f => f.el.addEventListener('input', () => {
+    if (f.el.getAttribute('aria-invalid') === 'true') {
+      setErr(f, !f.test(f.el.value));
+    }
+  }));
+
+  consent.addEventListener('change', () => consentErr.classList.toggle('show', !consent.checked));
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    let firstBad = null;
+    fields.forEach(f => {
+      const bad = !f.test(f.el.value);
+      setErr(f, bad);
+      if (bad && !firstBad) firstBad = f.el;
+    });
+
+    if (!consent.checked) {
+      consentErr.classList.add('show');
+      if (!firstBad) firstBad = consent;
+    }
+
+    if (firstBad) {
+      firstBad.focus();
+      showStatus('Bitte prüfe die markierten Felder.', false);
+      return;
+    }
+
+    const data = {
+      name: $('cf-name').value.trim(),
+      email: $('cf-email').value.trim(),
+      company: $('cf-company').value.trim(),
+      phone: $('cf-phone').value.trim(),
+      message: $('cf-msg').value.trim()
+    };
+
+    if (ENDPOINT) {
+      const btn = form.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      showStatus('Wird gesendet …', true);
+      try {
+        const r = await fetch(ENDPOINT, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        if (r.ok) {
+          form.reset();
+          fields.forEach(f => setErr(f, false));
+          consentErr.classList.remove('show');
+          showStatus('Danke! Deine Anfrage ist angekommen — wir melden uns innerhalb von 24 Stunden (werktags).', true);
+        } else {
+          showStatus('Das hat leider nicht geklappt. Schreib uns gern direkt an ' + MAILTO + '.', false);
+        }
+      } catch (err) {
+        showStatus('Netzwerkfehler. Schreib uns gern direkt an ' + MAILTO + '.', false);
+      }
+      btn.disabled = false;
+    } else {
+      const subject = encodeURIComponent('Erstgespräch-Anfrage — ' + (data.company || data.name));
+      const body = encodeURIComponent('Name: ' + data.name + '\nFirma: ' + data.company + '\nE-Mail: ' + data.email + '\nTelefon: ' + data.phone + '\n\n' + data.message);
+      window.location.href = 'mailto:' + MAILTO + '?subject=' + subject + '&body=' + body;
+      showStatus('Dein E-Mail-Programm öffnet sich mit der vorausgefüllten Anfrage. Alternativ direkt an ' + MAILTO + '.', true);
+    }
+  });
+})();
+</script>
+</body>
+</html>

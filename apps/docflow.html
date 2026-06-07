@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#05060c" />
+<meta name="robots" content="noindex" />
+<title>DocFlow · Dokumenten-Automatisierung — AI with Maris-Demo</title>
+<meta name="description" content="Interaktive Demo: Dokumente einfügen, automatisch Felder extrahieren, prüfen und revisionssicher archivieren." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2305060c'/%3E%3Crect x='9' y='6' width='14' height='20' rx='2' fill='none' stroke='%235ef0ff' stroke-width='2'/%3E%3Cpath d='M12 12h8M12 16h8M12 20h5' stroke='%237c5cff' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05060c;--bg2:#0a0e16;--cyan:#5ef0ff;--violet:#7c5cff;--green:#5cff9d;--amber:#ffcc55;--red:#ff6b8b;
+  --text:#eef1fa;--muted:rgba(238,241,250,.62);--line:rgba(238,241,250,.10);--focus:#5ef0ff;
+  --display:'Sora',sans-serif;--body:'Manrope',sans-serif;--mono:'Space Mono',monospace;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--body);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(closest-side at 12% 0%,rgba(124,92,255,.12),transparent 60%),radial-gradient(closest-side at 90% 6%,rgba(94,240,255,.10),transparent 60%)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:6px}
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 22px;background:rgba(5,6,12,.72);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.back{color:var(--muted);text-decoration:none;font-size:.86rem;font-weight:600}.back:hover{color:var(--cyan)}
+.ttl{font-family:var(--display);font-weight:700;font-size:1.04rem}.ttl .sub{color:var(--muted);font-weight:400;font-size:.84rem}
+.badge{font-family:var(--mono);font-size:.7rem;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:6px 12px}
+.wrap{max-width:1240px;margin:0 auto;padding:20px 22px 40px;display:grid;grid-template-columns:1fr 1.25fr;gap:18px;align-items:start}
+@media(max-width:920px){.wrap{grid-template-columns:1fr}}
+.card{padding:20px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(160deg,rgba(255,255,255,.045),rgba(255,255,255,.01))}
+.card h2{font-family:var(--display);font-weight:700;font-size:1rem;margin-bottom:4px}
+.card .sub{font-size:.8rem;color:var(--muted);margin-bottom:14px}
+.samples{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.samples button{font-family:var(--mono);font-size:.7rem;padding:7px 11px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);cursor:pointer}
+.samples button:hover{color:var(--text);border-color:rgba(94,240,255,.4)}
+textarea{width:100%;min-height:280px;font-family:var(--mono);font-size:.78rem;line-height:1.5;color:var(--text);background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;padding:14px;resize:vertical}
+textarea:focus{outline:none;border-color:rgba(94,240,255,.5)}
+.btn{font-family:var(--body);font-weight:600;font-size:.88rem;padding:11px 18px;border-radius:28px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;transition:border-color .2s ease,transform .2s ease}
+.btn:hover{border-color:rgba(94,240,255,.5)}
+.btn.primary{color:#04050a;background:linear-gradient(110deg,var(--cyan),var(--violet));border-color:transparent}
+.btn.primary:hover{transform:translateY(-2px)}
+.row{display:flex;gap:9px;margin-top:12px;flex-wrap:wrap}
+.pipe{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.stage{text-align:center;padding:14px 8px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.025);transition:border-color .3s ease,background .3s ease}
+.stage.active{border-color:rgba(94,240,255,.6);background:rgba(94,240,255,.06)}
+.stage.done{border-color:rgba(92,255,157,.4)}
+.stage .ic{width:36px;height:36px;margin:0 auto 8px;border-radius:11px;display:grid;place-items:center;background:rgba(255,255,255,.05);border:1px solid var(--line)}
+.stage.done .ic{background:var(--green)}.stage.done .ic svg{stroke:#04060a}
+.stage.active .ic{background:linear-gradient(150deg,rgba(94,240,255,.3),rgba(124,92,255,.3))}
+.stage .ic svg{width:18px;height:18px;stroke:var(--cyan);fill:none;stroke-width:1.8}
+.stage .nm{font-size:.78rem;font-weight:600}.stage .st{font-size:.66rem;color:var(--muted);margin-top:2px}
+.fields{display:grid;gap:8px}
+.field{display:grid;grid-template-columns:130px 1fr auto;gap:12px;align-items:center;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.025);font-size:.85rem}
+.field .k{font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+.field .val{font-weight:500;word-break:break-word}
+.field .val.miss{color:var(--amber);font-style:italic}
+.conf{font-family:var(--mono);font-size:.62rem;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.conf.hoch{background:rgba(92,255,157,.12);color:var(--green)}
+.conf.mittel{background:rgba(255,204,85,.14);color:var(--amber)}
+.conf.fehlt{background:rgba(255,107,139,.14);color:var(--red)}
+.verdict{display:flex;align-items:center;gap:10px;margin:14px 0;padding:12px 15px;border-radius:12px;font-size:.88rem;font-weight:500}
+.verdict.ok{background:rgba(92,255,157,.1);border:1px solid rgba(92,255,157,.3);color:#7dffb0}
+.verdict.review{background:rgba(255,204,85,.1);border:1px solid rgba(255,204,85,.3);color:#ffd87a}
+.empty{color:rgba(238,241,250,.32);font-style:italic;font-size:.84rem;padding:18px 0;text-align:center}
+.arch{display:grid;gap:8px;max-height:260px;overflow:auto}
+.arch-item{display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.025);font-size:.84rem;cursor:pointer;transition:border-color .2s ease}
+.arch-item:hover{border-color:rgba(94,240,255,.4)}
+.arch-item .ty{font-family:var(--mono);font-size:.64rem;padding:3px 8px;border-radius:6px;background:rgba(124,92,255,.16);color:#c9b8ff}
+.arch-item .meta{flex:1;min-width:0}.arch-item .meta b{font-weight:600}.arch-item .meta span{display:block;font-size:.72rem;color:var(--muted)}
+.arch-item .am{font-family:var(--mono);font-size:.8rem;color:var(--cyan)}
+.arch-item .x{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem}
+.mini{font-size:.72rem;color:var(--muted);margin-top:6px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="back" href="../beispiele.html">&larr; Zurück zu AI with Maris</a>
+  <div class="ttl">DocFlow <span class="sub">· Dokumenten-Automatisierung</span></div>
+  <span class="badge" id="archBadge">0 archiviert</span>
+</header>
+
+<div class="wrap">
+  <!-- EINGANG -->
+  <section class="card">
+    <h2>Dokument einfügen</h2>
+    <div class="sub">Wähle ein Beispiel oder füge eigenen Text ein (z. B. aus einer Rechnung). Die Extraktion läuft auf dem echten Text.</div>
+    <div class="samples" id="samples"></div>
+    <textarea id="doc" spellcheck="false" aria-label="Dokumenttext"></textarea>
+    <div class="row">
+      <button class="btn primary" id="procBtn">Verarbeiten &rarr;</button>
+      <button class="btn" id="clearBtn">Leeren</button>
+    </div>
+  </section>
+
+  <!-- VERARBEITUNG + ERGEBNIS -->
+  <section class="card">
+    <h2>Automatische Verarbeitung</h2>
+    <div class="sub">Eingang &rarr; KI-Extraktion &rarr; Prüfung &rarr; Cloud-Archiv</div>
+    <div class="pipe" id="pipe">
+      <div class="stage" data-s="in"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 16V4M6 10l6-6 6 6"/><path d="M4 20h16"/></svg></div><div class="nm">Eingang</div><div class="st">—</div></div>
+      <div class="stage" data-s="ex"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 5v2M12 17v2M5 12h2M17 12h2"/></svg></div><div class="nm">KI-Extraktion</div><div class="st">—</div></div>
+      <div class="stage" data-s="ch"><div class="ic"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div><div class="nm">Prüfung</div><div class="st">—</div></div>
+      <div class="stage" data-s="ar"><div class="ic"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8"/><path d="M3.3 7L12 12l8.7-5"/></svg></div><div class="nm">Cloud-Archiv</div><div class="st">—</div></div>
+    </div>
+
+    <div id="resultArea"><div class="empty">Noch kein Dokument verarbeitet.</div></div>
+
+    <h2 style="margin-top:22px">Archiv</h2>
+    <div class="sub">Lokal gespeichert (Demo) — im Betrieb: revisionssicher in deinem Cloud-Speicher.</div>
+    <div class="arch" id="arch"><div class="empty">Archiv ist leer.</div></div>
+    <div class="row" id="archActions" hidden><button class="btn" id="exportBtn">Als JSON exportieren</button><button class="btn" id="wipeBtn">Archiv leeren</button></div>
+  </section>
+</div>
+
+<script>
+"use strict";
+const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=id=>document.getElementById(id);
+
+const SAMPLES={
+ rechnung:`ACME Industrietechnik GmbH
+Musterstraße 12, 80331 München
+
+RECHNUNG
+
+Rechnungsnummer: 2026-0481
+Rechnungsdatum: 14.05.2026
+Kunde: Stadtwerke Nord AG
+
+Pos  Beschreibung              Menge  Einzelpreis   Gesamt
+1    Sensor-Gateway IoT-200      4     420,00 €    1.680,00 €
+2    Montage & Inbetriebnahme    1     650,00 €      650,00 €
+
+Zwischensumme: 2.330,00 €
+USt 19 %: 442,70 €
+Gesamtbetrag: 2.772,70 €
+
+IBAN: DE12 3704 0044 0532 0130 00
+Zahlbar innerhalb von 14 Tagen.`,
+ lieferschein:`Lieferschein Nr. LS-AC-220
+Datum: 12.05.2026
+Lieferant: AcuraSens GmbH
+Empfänger: Klärwerk West
+
+Artikel: Durchflusssensor DN50 — Menge: 6 Stück
+Artikel: Druckmessumformer 0–10 bar — Menge: 3 Stück`,
+ vertrag:`Vertraulichkeitsvereinbarung (NDA)
+
+zwischen AI with Maris und der eom solutions GmbH
+Datum: 02.06.2026
+Laufzeit: 24 Monate
+
+Beide Parteien verpflichten sich zur Geheimhaltung.`
+};
+
+function detectType(t){
+  if(/rechnung/i.test(t)) return 'Rechnung';
+  if(/lieferschein/i.test(t)) return 'Lieferschein';
+  if(/vertrag|vereinbarung|nda|geheimhaltung/i.test(t)) return 'Vertrag';
+  return 'Dokument';
+}
+function firstMatch(t,re){ const m=t.match(re); return m?(m[1]||m[0]).trim():null; }
+function money(t){ // größter €-Betrag, bevorzugt nahe "Gesamt"
+  const near=t.match(/(?:Gesamtbetrag|Rechnungsbetrag|Gesamtsumme|Gesamt|Summe|Total)\s*[:]?\s*([\d.]+,\d{2})/i);
+  if(near) return near[1]+' €';
+  const all=[...t.matchAll(/([\d.]+,\d{2})\s*€/g)].map(m=>m[1]);
+  if(!all.length) return null;
+  const max=all.map(s=>parseFloat(s.replace(/\./g,'').replace(',','.'))).reduce((a,b,i)=>b>a.v?{v:b,s:all[i]}:a,{v:-1,s:null});
+  return max.s? max.s+' €':null;
+}
+function extract(t){
+  const type=detectType(t);
+  const fields=[
+    {k:'Dokumenttyp', v:type, c:'hoch'},
+    {k:'Beleg-Nr.', v:firstMatch(t,/(?:Rechnungs-?nummer|Rechnungs-?Nr\.?|Lieferschein\s*Nr\.?|Beleg-?nummer|Nr\.?)\s*[:.]?\s*([A-Z]{0,3}[-]?\d[\w\-\/]+)/i)},
+    {k:'Datum', v:firstMatch(t,/(\d{1,2}\.\d{1,2}\.\d{2,4})/)},
+    {k:'Betrag (brutto)', v:money(t)},
+    {k:'USt-Satz', v:(()=>{const m=t.match(/(?:USt|MwSt|Mehrwertsteuer)\.?\s*(\d{1,2})\s*%/i);return m?m[1]+' %':null;})()},
+    {k:'Lieferant/Absender', v:(()=>{
+        const lf=firstMatch(t,/(?:Lieferant|Absender|Aussteller)\s*[:]?\s*(.+)/i);
+        if(lf) return lf;
+        const line=t.split(/\n/).map(s=>s.trim()).find(s=>/(GmbH|AG|KG|UG|e\.K\.|GbR|Ltd|Inc)/.test(s));
+        return line||null;
+      })()},
+    {k:'IBAN', v:firstMatch(t,/\b([A-Z]{2}\d{2}(?:\s?\d{2,4}){3,6})\b/)},
+    {k:'Positionen', v:(()=>{const p=(t.match(/^\s*\d+\s+\S/gm)||[]).length; const a=(t.match(/Artikel\s*:/gi)||[]).length; const n=Math.max(p,a); return n?String(n):null;})()}
+  ];
+  // Konfidenz: vorhanden -> hoch (außer heuristische Felder -> mittel), fehlt -> fehlt
+  const heuristic=new Set(['Lieferant/Absender','Betrag (brutto)','Positionen']);
+  fields.forEach(f=>{ if(f.c) return; if(f.v==null) f.c='fehlt'; else f.c=heuristic.has(f.k)?'mittel':'hoch'; });
+  // Pflichtfelder je Typ
+  const required = type==='Vertrag' ? ['Datum'] : ['Beleg-Nr.','Datum','Betrag (brutto)'];
+  const missing = required.filter(k=>{ const f=fields.find(x=>x.k===k); return !f||f.v==null; });
+  return {type, fields, missing, ok:missing.length===0};
+}
+
+let lastResult=null, lastName='';
+async function process(){
+  const t=$('doc').value.trim();
+  if(!t){ $('doc').focus(); return; }
+  const stages=['in','ex','ch','ar'];
+  document.querySelectorAll('.stage').forEach(s=>{s.className='stage';s.querySelector('.st').textContent='—';});
+  const res=extract(t);
+  const labels={in:'empfangen',ex:res.fields.filter(f=>f.v!=null).length+' Felder',ch:res.ok?'vollständig':res.missing.length+' offen',ar:res.ok?'archiviert':'wartet'};
+  for(let i=0;i<stages.length;i++){
+    const el=document.querySelector('.stage[data-s="'+stages[i]+'"]');
+    el.classList.add('active');
+    await sleep(420);
+    el.classList.remove('active'); el.classList.add('done');
+    el.querySelector('.st').textContent=labels[stages[i]];
+    if(stages[i]==='ch' && !res.ok){ el.classList.remove('done'); el.style.borderColor='rgba(255,204,85,.5)'; }
+  }
+  lastResult=res; lastName=detectName(t,res);
+  renderResult(res);
+  if(res.ok) addToArchive(res, lastName);
+}
+function detectName(t,res){
+  const num=res.fields.find(f=>f.k==='Beleg-Nr.').v;
+  const base=res.type+(num?('_'+num):('_'+Date.now().toString().slice(-4)));
+  return base.replace(/\s+/g,'')+'.txt';
+}
+function renderResult(res){
+  $('resultArea').innerHTML =
+    '<div class="verdict '+(res.ok?'ok':'review')+'">'+(res.ok?'&#10003; Vollständig extrahiert &amp; archiviert':'&#9888; Prüfung nötig: '+res.missing.join(', ')+' fehlt')+'</div>'
+    +'<div class="fields">'+res.fields.map(f=>(
+        '<div class="field"><span class="k">'+f.k+'</span>'
+        +'<span class="val'+(f.v==null?' miss':'')+'">'+(f.v==null?'nicht gefunden':esc(f.v))+'</span>'
+        +'<span class="conf '+f.c+'">'+f.c+'</span></div>'
+      )).join('')+'</div>';
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function sleep(ms){return reduce?Promise.resolve():new Promise(r=>setTimeout(r,ms));}
+
+/* Archiv (localStorage) */
+function getArch(){try{return JSON.parse(localStorage.getItem('aiwm_docflow')||'[]')}catch(e){return[]}}
+function setArch(a){try{localStorage.setItem('aiwm_docflow',JSON.stringify(a))}catch(e){} renderArch();}
+function addToArchive(res,name){
+  const a=getArch();
+  const get=k=>{const f=res.fields.find(x=>x.k===k);return f?f.v:null;};
+  a.unshift({name,type:res.type,num:get('Beleg-Nr.'),date:get('Datum'),amount:get('Betrag (brutto)'),fields:res.fields,ts:Date.now()});
+  if(a.length>50)a.pop();
+  setArch(a);
+}
+function renderArch(){
+  const a=getArch();
+  $('archBadge').textContent=a.length+' archiviert';
+  $('archActions').hidden=a.length===0;
+  if(!a.length){$('arch').innerHTML='<div class="empty">Archiv ist leer.</div>';return;}
+  $('arch').innerHTML=a.map((d,i)=>(
+    '<div class="arch-item" data-i="'+i+'"><span class="ty">'+esc(d.type)+'</span>'
+    +'<div class="meta"><b>'+esc(d.num||d.name)+'</b><span>'+esc(d.date||'ohne Datum')+'</span></div>'
+    +'<span class="am">'+esc(d.amount||'—')+'</span>'
+    +'<button class="x" data-del="'+i+'" aria-label="Löschen">&times;</button></div>'
+  )).join('');
+  document.querySelectorAll('.arch-item').forEach(el=>el.addEventListener('click',e=>{
+    if(e.target.dataset.del!=null) return;
+    const d=getArch()[+el.dataset.i]; if(d){ lastResult={type:d.type,fields:d.fields,missing:[],ok:true}; renderResult(lastResult); window.scrollTo({top:0,behavior:reduce?'auto':'smooth'}); }
+  }));
+  document.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();const a=getArch();a.splice(+b.dataset.del,1);setArch(a);}));
+}
+
+/* UI */
+Object.keys(SAMPLES).forEach(k=>{
+  const b=document.createElement('button');b.type='button';
+  b.textContent={rechnung:'Rechnung',lieferschein:'Lieferschein',vertrag:'Vertrag / NDA'}[k];
+  b.addEventListener('click',()=>{$('doc').value=SAMPLES[k];});
+  $('samples').appendChild(b);
+});
+$('doc').value=SAMPLES.rechnung;
+$('procBtn').addEventListener('click',process);
+$('clearBtn').addEventListener('click',()=>{$('doc').value='';$('doc').focus();});
+$('wipeBtn').addEventListener('click',()=>{localStorage.removeItem('aiwm_docflow');renderArch();});
+$('exportBtn').addEventListener('click',()=>{
+  const blob=new Blob([JSON.stringify(getArch(),null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='docflow-archiv.json';a.click();URL.revokeObjectURL(url);
+});
+renderArch();
+</script>
+</body>
+</html>

@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#05060c" />
+<meta name="robots" content="noindex" />
+<title>AI with Maris · KI-Agenten-Workflow — Live-Demo</title>
+<meta name="description" content="Interaktive Demo: ein Multi-Agenten-Workflow von AI with Maris, der eingehende Kundenanfragen automatisch triagiert, beantwortet und einer QA-Prüfung unterzieht." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3CradialGradient id='g' cx='32%25' cy='30%25' r='75%25'%3E%3Cstop offset='0' stop-color='%23ffffff'/%3E%3Cstop offset='0.42' stop-color='%235ef0ff'/%3E%3Cstop offset='1' stop-color='%237c5cff'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='7' fill='%2305060c'/%3E%3Ccircle cx='16' cy='16' r='9' fill='url(%23g)'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05060c;--bg2:#080a14;--panel:rgba(255,255,255,.035);
+  --cyan:#5ef0ff;--violet:#7c5cff;--indigo:#4d6bff;--pink:#ff5ea8;--green:#5cff9d;--amber:#ffcc55;--red:#ff6b8b;
+  --text:#eef1fa;--muted:rgba(238,241,250,.62);--line:rgba(238,241,250,.10);--focus:#5ef0ff;
+  --display:'Sora',sans-serif;--body:'Manrope',sans-serif;--mono:'Space Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--bg);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;min-height:100vh;
+  background-image:radial-gradient(closest-side at 12% 0%,rgba(124,92,255,.14),transparent 60%),radial-gradient(closest-side at 90% 8%,rgba(94,240,255,.10),transparent 60%);}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:6px}
+h2{font-family:var(--display);font-weight:700;font-size:1.02rem;letter-spacing:.01em}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+
+/* Topbar */
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:18px;
+  padding:14px 22px;background:rgba(5,6,12,.72);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.back{color:var(--muted);text-decoration:none;font-size:.86rem;font-weight:600;white-space:nowrap;transition:color .2s ease}
+.back:hover{color:var(--cyan)}
+.ttl{font-family:var(--display);font-weight:700;font-size:1.04rem;display:flex;align-items:center;gap:10px;letter-spacing:.02em}
+.ttl .sub{color:var(--muted);font-weight:400;font-size:.86rem}
+.orb{width:13px;height:13px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,var(--cyan) 40%,var(--violet));box-shadow:0 0 16px var(--cyan)}
+.tb-right{display:flex;align-items:center;gap:10px}
+.pill{font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;padding:8px 14px;border-radius:30px;border:1px solid var(--line);background:var(--panel);color:var(--text);cursor:pointer;transition:border-color .2s ease,background .2s ease}
+.pill:hover{border-color:rgba(94,240,255,.4)}
+.pill[data-mode="live"]{border-color:rgba(92,255,157,.5);color:var(--green);background:rgba(92,255,157,.06)}
+.iconbtn{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--text);font-size:1.05rem;cursor:pointer;display:grid;place-items:center;transition:border-color .2s ease}
+.iconbtn:hover{border-color:rgba(94,240,255,.4)}
+
+/* Layout */
+.layout{display:grid;grid-template-columns:330px 1fr 380px;gap:18px;padding:18px 22px 30px;max-width:1500px;margin:0 auto;align-items:start}
+@media(max-width:1180px){.layout{grid-template-columns:1fr 1fr}.result{grid-column:1/-1}}
+@media(max-width:760px){.layout{grid-template-columns:1fr}}
+.col{background:linear-gradient(165deg,rgba(255,255,255,.045),rgba(255,255,255,.01));border:1px solid var(--line);border-radius:18px;padding:20px;backdrop-filter:blur(10px)}
+.col>h2{margin-bottom:6px}
+.hint{color:var(--muted);font-size:.84rem;font-weight:300;margin-bottom:14px}
+
+/* Inbox */
+.samples{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+.samples button{font-family:var(--mono);font-size:.7rem;padding:7px 11px;border-radius:20px;border:1px solid var(--line);background:var(--panel);color:var(--muted);cursor:pointer;transition:color .2s ease,border-color .2s ease}
+.samples button:hover{color:var(--text);border-color:rgba(94,240,255,.4)}
+.samples button.active{color:#04050a;background:linear-gradient(110deg,var(--cyan),var(--violet));border-color:transparent}
+.lbl{display:block;font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;color:var(--muted);margin-bottom:7px}
+textarea{width:100%;font-family:var(--body);font-size:.92rem;color:var(--text);background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;padding:13px;resize:vertical;line-height:1.55}
+textarea:focus{outline:none;border-color:rgba(94,240,255,.5);background:rgba(94,240,255,.04)}
+.run-row{display:flex;gap:9px;margin:14px 0 10px;flex-wrap:wrap}
+.btn{font-family:var(--body);font-weight:600;font-size:.88rem;padding:11px 18px;border-radius:30px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:transform .2s ease,box-shadow .2s ease,background .2s ease,border-color .2s ease}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-primary{color:#04050a;background:linear-gradient(110deg,var(--cyan),var(--violet));box-shadow:0 0 24px rgba(94,240,255,.25)}
+.btn-primary:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 0 36px rgba(124,92,255,.45)}
+.btn-ghost{color:var(--text);border:1px solid var(--line);background:var(--panel)}
+.btn-ghost:not(:disabled):hover{border-color:rgba(94,240,255,.5)}
+.speed{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-top:6px}
+.speed input{flex:1;accent-color:var(--cyan)}
+.legend{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);font-size:.8rem;color:var(--muted);font-weight:300}
+.legend b{color:var(--text);font-weight:600}
+.legend ol{margin:8px 0 0 18px;display:grid;gap:3px}
+
+/* Pipeline */
+.pl-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.proc-state{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+.proc-state[data-s="running"]{color:var(--cyan)}.proc-state[data-s="done"]{color:var(--green)}
+.progress{height:4px;border-radius:4px;background:rgba(255,255,255,.07);overflow:hidden;margin-bottom:16px}
+.progress i{display:block;height:100%;width:0;border-radius:4px;background:linear-gradient(90deg,var(--cyan),var(--violet));transition:width .5s cubic-bezier(.2,.7,.2,1)}
+.nodes{display:grid;gap:12px}
+.node{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.022);overflow:hidden;transition:border-color .3s ease,box-shadow .3s ease}
+.node[data-status="running"]{border-color:rgba(94,240,255,.55);box-shadow:0 0 0 1px rgba(94,240,255,.25),0 12px 40px rgba(94,240,255,.10)}
+.node[data-status="done"]{border-color:rgba(92,255,157,.3)}
+.node[data-status="error"]{border-color:rgba(255,107,139,.5)}
+.node-h{display:flex;align-items:center;gap:12px;padding:13px 15px}
+.node-ic{width:34px;height:34px;flex-shrink:0;border-radius:10px;display:grid;place-items:center;background:linear-gradient(150deg,rgba(94,240,255,.16),rgba(124,92,255,.16));border:1px solid var(--line)}
+.node-ic svg{width:18px;height:18px;stroke:var(--cyan);fill:none;stroke-width:1.7}
+.node[data-status="done"] .node-ic svg{stroke:var(--green)}
+.node-t{flex:1;min-width:0}.node-t b{font-family:var(--display);font-weight:600;font-size:.92rem;display:block}
+.node-t span{font-size:.76rem;color:var(--muted)}
+.node-badge{font-family:var(--mono);font-size:.64rem;letter-spacing:.04em;text-transform:uppercase;padding:4px 9px;border-radius:20px;background:rgba(255,255,255,.06);color:var(--muted);white-space:nowrap}
+.node[data-status="running"] .node-badge{background:rgba(94,240,255,.14);color:var(--cyan)}
+.node[data-status="done"] .node-badge{background:rgba(92,255,157,.12);color:var(--green)}
+.node[data-status="error"] .node-badge{background:rgba(255,107,139,.14);color:var(--red)}
+.node-time{font-family:var(--mono);font-size:.64rem;color:var(--muted);min-width:42px;text-align:right}
+.node-log{display:none;padding:0 15px 14px 61px;font-family:var(--mono);font-size:.74rem;line-height:1.7;max-height:200px;overflow:auto}
+.node-log.show{display:block}
+.node-log .ln{color:rgba(238,241,250,.66)}
+.node-log .ln.ok{color:var(--green)}.node-log .ln.warn{color:var(--amber)}.node-log .ln.err{color:var(--red)}
+.node-log .ln.info{color:#9fd8ff}.node-log .ln.src{color:#c9b8ff}.node-log .ln.strong{color:var(--text);font-weight:700}
+.node-log .tool{color:var(--cyan);background:rgba(94,240,255,.06);border:1px solid rgba(94,240,255,.18);border-radius:8px;padding:4px 9px;margin:3px 0;display:block}
+.node-log .tool b{color:#fff}
+.cursor-blink::after{content:"▍";color:var(--cyan);animation:bl 1s steps(2) infinite}
+@keyframes bl{50%{opacity:0}}
+
+/* Result */
+.result h2{margin-bottom:14px}
+.res-block{margin-bottom:16px}
+.res-label{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.res-empty{color:rgba(238,241,250,.3);font-style:italic;font-size:.86rem}
+.chip{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:.7rem;padding:5px 10px;border-radius:20px;border:1px solid var(--line);margin:0 6px 6px 0;color:var(--muted)}
+.chip.cat{color:#04050a;background:linear-gradient(110deg,var(--cyan),var(--violet));border-color:transparent;font-weight:700}
+.chip.prio-high{color:var(--amber);border-color:rgba(255,204,85,.4);background:rgba(255,204,85,.08)}
+.src-chip{display:inline-flex;align-items:center;gap:7px;font-size:.76rem;padding:7px 11px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.03);margin:0 6px 6px 0;cursor:default}
+.src-chip i{font-family:var(--mono);font-size:.66rem;color:var(--cyan);font-style:normal;background:rgba(94,240,255,.1);padding:1px 6px;border-radius:6px}
+.answer{white-space:pre-wrap;font-size:.9rem;line-height:1.62;color:rgba(238,241,250,.92);background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:15px;min-height:54px}
+.qa-row{display:flex;gap:16px;align-items:center}
+.qa-ring{width:74px;height:74px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;background:conic-gradient(rgba(255,255,255,.08) 0deg,rgba(255,255,255,.08) 360deg)}
+.qa-ring::before{content:"";position:absolute;width:58px;height:58px;border-radius:50%;background:var(--bg2)}
+.qa-ring span{position:relative;font-family:var(--display);font-weight:800;font-size:1.4rem}
+.qa-block ul{list-style:none;font-size:.8rem;display:grid;gap:5px;flex:1}
+.qa-block li{padding-left:18px;position:relative;color:var(--muted)}
+.qa-block li::before{position:absolute;left:0}
+.qa-block li.ok{color:var(--green)}.qa-block li.ok::before{content:"✓"}
+.qa-block li.warn{color:var(--amber)}.qa-block li.warn::before{content:"⚠"}
+.qa-block li.crit{color:var(--red)}.qa-block li.crit::before{content:"✗"}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:4px}
+.sent-msg{margin-top:14px;padding:13px 15px;border-radius:12px;background:rgba(92,255,157,.1);border:1px solid rgba(92,255,157,.3);color:#7dffb0;font-size:.86rem}
+.revtag{display:inline-block;font-family:var(--mono);font-size:.64rem;color:var(--amber);background:rgba(255,204,85,.1);border:1px solid rgba(255,204,85,.3);border-radius:20px;padding:3px 10px;margin-bottom:8px}
+
+/* Dialog */
+dialog{max-width:520px;width:92%;padding:0;border:1px solid var(--line);border-radius:18px;background:var(--bg2);color:var(--text)}
+dialog::backdrop{background:rgba(3,4,9,.7);backdrop-filter:blur(5px)}
+.dlg-h{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid var(--line)}
+.dlg-h h3{font-family:var(--display);font-weight:700;font-size:1.1rem}
+.dlg-b{padding:20px 22px}
+.dlg-b p{font-size:.85rem;color:var(--muted);font-weight:300;margin-bottom:16px}
+.dlg-b label{display:block;font-family:var(--mono);font-size:.72rem;color:var(--muted);margin:12px 0 6px}
+.dlg-b input{width:100%;font-family:var(--body);font-size:.9rem;color:var(--text);background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+.dlg-b input:focus{outline:none;border-color:rgba(94,240,255,.5)}
+.dlg-foot{display:flex;justify-content:flex-end;gap:9px;padding:16px 22px;border-top:1px solid var(--line)}
+.lg-close{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);font-size:1.2rem;cursor:pointer}
+
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="back" href="../beispiele.html">&larr; Zurück zu AI with Maris</a>
+  <div class="ttl"><span class="orb" aria-hidden="true"></span> KI-Agenten-Workflow <span class="sub">· Kundenanfrage-Triage</span></div>
+  <div class="tb-right">
+    <button id="modeBtn" class="pill" data-mode="simulation">Modus: Simulation</button>
+    <button id="cfgBtn" class="iconbtn" aria-label="Live-Modus konfigurieren">&#9881;</button>
+  </div>
+</header>
+
+<main class="layout">
+  <!-- LINKS: Eingang -->
+  <section class="col inbox" aria-label="Eingang">
+    <h2>1 · Eingang</h2>
+    <p class="hint">Wähle eine Beispiel-Anfrage oder schreibe eine eigene. Der Workflow verarbeitet echten Text.</p>
+    <div class="samples" id="samples"></div>
+    <label class="lbl" for="msg">Kundenanfrage</label>
+    <textarea id="msg" rows="7" aria-label="Kundenanfrage"></textarea>
+    <div class="run-row">
+      <button id="runBtn" class="btn btn-primary">&#9654; Workflow starten</button>
+      <button id="stepBtn" class="btn btn-ghost">Schritt &rsaquo;</button>
+      <button id="resetBtn" class="btn btn-ghost">Reset</button>
+    </div>
+    <div class="speed"><label for="spd">Tempo</label><input type="range" id="spd" min="0.5" max="3" step="0.5" value="1" aria-label="Ausführungstempo"><span id="spdv">1&times;</span></div>
+    <div class="legend">
+      <b>Realer Prozess:</b> Inbound-Anfrage automatisch beantworten — mit menschlicher Freigabe.
+      <ol>
+        <li>Triage &amp; Extraktion</li>
+        <li>Klassifizierung &amp; Priorität</li>
+        <li>Wissensabruf (Tool)</li>
+        <li>Antwort-Entwurf</li>
+        <li>QA &amp; Compliance &rarr; Revision</li>
+        <li>Freigabe (Mensch)</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- MITTE: Pipeline -->
+  <section class="col pipeline" aria-label="Agenten-Pipeline">
+    <div class="pl-head"><h2>2 · Agenten-Pipeline</h2><span class="proc-state" id="procState" data-s="idle" aria-live="polite">bereit</span></div>
+    <div class="progress" aria-hidden="true"><i id="prog"></i></div>
+    <div class="nodes" id="nodes"></div>
+  </section>
+
+  <!-- RECHTS: Ergebnis -->
+  <section class="col result" aria-label="Ergebnis">
+    <h2>3 · Ergebnis</h2>
+    <div class="res-block"><div class="res-label">Klassifizierung</div><div id="classification" class="res-empty">noch nichts verarbeitet</div></div>
+    <div class="res-block"><div class="res-label">Genutzte Wissensquellen</div><div id="sources" class="res-empty">&mdash;</div></div>
+    <div class="res-block"><div class="res-label">Antwort-Entwurf</div><div id="answer" class="answer res-empty">&mdash;</div></div>
+    <div class="res-block qa-block" id="qaBlock" hidden><div class="res-label">QA &amp; Compliance</div><div class="qa-row"><div class="qa-ring" id="qaRing"><span id="qaScore">0</span></div><ul id="qaIssues"></ul></div></div>
+    <div class="actions" id="actions" hidden>
+      <button class="btn btn-primary" id="approveBtn">&#10003; Freigeben &amp; senden</button>
+      <button class="btn btn-ghost" id="copyBtn">Kopieren</button>
+    </div>
+    <div class="sent-msg" id="sentMsg" hidden></div>
+  </section>
+</main>
+
+<dialog id="cfgDlg" aria-labelledby="cfgT">
+  <div class="dlg-h"><h3 id="cfgT">Live-Modus (eigener LLM)</h3><button class="lg-close" data-close aria-label="Schließen">&times;</button></div>
+  <div class="dlg-b">
+    <p>Optional: Verbinde ein echtes Sprachmodell (OpenAI-kompatibler <code>/chat/completions</code>-Endpoint). Ohne Eintrag läuft die Demo vollständig regelbasiert (Simulation). Schlüssel bleiben nur lokal im Browser.</p>
+    <label for="cfgEndpoint">Endpoint-URL</label>
+    <input id="cfgEndpoint" type="url" placeholder="https://api.openai.com/v1/chat/completions" />
+    <label for="cfgModel">Modell</label>
+    <input id="cfgModel" type="text" placeholder="gpt-4o-mini" />
+    <label for="cfgKey">API-Key</label>
+    <input id="cfgKey" type="password" placeholder="sk-…" autocomplete="off" />
+  </div>
+  <div class="dlg-foot">
+    <button class="btn btn-ghost" data-close>Abbrechen</button>
+    <button class="btn btn-primary" id="cfgSave">Speichern &amp; aktivieren</button>
+  </div>
+</dialog>
+
+<script>
+"use strict";
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ===== Konfiguration (mit lokaler Persistenz) ===== */
+const CONFIG = { mode:'simulation', speed:1, live:{ endpoint:'', model:'gpt-4o-mini', apiKey:'' } };
+try{ const s=JSON.parse(localStorage.getItem('aiwm_agentflow')||'{}'); Object.assign(CONFIG,s); if(s.live)CONFIG.live=Object.assign(CONFIG.live,s.live); }catch(e){}
+function saveCfg(){ try{ localStorage.setItem('aiwm_agentflow',JSON.stringify(CONFIG)); }catch(e){} }
+
+/* ===== Wissensbasis (AI with Maris-Domäne) ===== */
+const KB = [
+ {id:'cloud', title:'Cloud & Datenhoheit', tags:['cloud','azure','aws','google','on-premise','daten','speicher','speichern','gespeichert','eu','region','hosting','wo','liegen'], text:'Deine Software läuft in deiner eigenen Cloud-Umgebung — Azure, AWS, Google Cloud oder on-premise. Du behältst volle Datenhoheit, DSGVO-konform mit wählbarer EU-Region.'},
+ {id:'dsgvo', title:'DSGVO & Compliance', tags:['dsgvo','gdpr','datenschutz','compliance','eu','sicher','vertraulich','daten'], text:'Daten bleiben in deiner Umgebung, EU-Region wählbar, Verarbeitung DSGVO-konform.'},
+ {id:'preise-coaching', title:'Preise · KI-Coaching', tags:['coaching','schulen','schulung','workshop','training','team','preis','preise','kosten','kostet','enablement'], text:'Einzel-Coaching ab 180 € / 60 Min, Team-Workshop ab 1.900 € / Tag (bis 12 Personen), Enablement-Programm ab 3.900 € / Monat.'},
+ {id:'preise-software', title:'Preise · Software', tags:['software','projekt','preis','preise','kosten','kostet','festpreis','entwicklung','app','automatisieren'], text:'Software-Projekte liegen typischerweise zwischen 15.000 und 60.000 €; den Festpreis legen wir nach dem Discovery-Sprint (2.500 €) verbindlich fest.'},
+ {id:'discovery', title:'Discovery-Sprint', tags:['discovery','konzept','start','dauer','dauert','lange','angebot','roadmap','prototyp','wochen'], text:'Der Discovery-Sprint bringt dich in 1–2 Wochen von der Idee zum belastbaren Konzept mit Festpreis-Angebot, Cloud-Architektur und klickbarem Prototyp.'},
+ {id:'lockin', title:'Code-Übergabe & kein Lock-in', tags:['lock-in','lockin','code','übergabe','eigentum','wartung','betrieb','sla'], text:'Du erhältst den vollständigen Quellcode samt Dokumentation. Betrieb & Wartung ab 690 € / Monat — oder dein Team übernimmt selbst.'},
+ {id:'support', title:'Betrieb, Monitoring & Support', tags:['support','betrieb','monitoring','wartung','fehler','ausfall','dashboard','sensor','sensordaten','daten','störung','problem','funktioniert','mqtt','gateway'], text:'Für betriebene Lösungen bieten wir Monitoring, Updates und definierte Reaktionszeiten (SLA). Bei Störungen prüfen wir zuerst Datenquelle, Verbindung (z. B. MQTT/Gateway) und Schwellwerte.'},
+ {id:'kontakt', title:'Erstgespräch & Kontakt', tags:['kontakt','erstgespräch','termin','gespräch','beratung','anfrage'], text:'Das Erstgespräch (30 Min) ist kostenlos und unverbindlich — hallo@aiwithmaris.com oder über das Kontaktformular.'}
+];
+
+/* ===== Beispiel-Anfragen ===== */
+const SAMPLES = [
+ {id:'s1', label:'Vertrieb', lang:'de', text:'Hallo, wir sind ein Maschinenbauer mit rund 80 Mitarbeitern und überlegen, unsere Angebotserstellung zu automatisieren. Was würde so ein Projekt ungefähr kosten und wie lange dauert es?'},
+ {id:'s2', label:'Support', lang:'de', text:'Bei unserem Dashboard werden seit heute Morgen keine neuen Sensordaten mehr angezeigt. Das ist dringend, die Produktion schaut da drauf. Woran kann das liegen?'},
+ {id:'s3', label:'Recht', lang:'de', text:'Wo genau werden unsere Daten gespeichert? Aus Compliance-Gründen dürfen sie die EU nicht verlassen.'},
+ {id:'s4', label:'Coaching', lang:'de', text:'Wir würden gern unser Team im Umgang mit KI schulen. Bietet ihr Workshops an und was kostet das ungefähr?'},
+ {id:'s5', label:'English', lang:'en', text:'Hi, do you also build on AWS or only Azure? We are an EU-based company and need everything to stay GDPR-compliant.'}
+];
+
+/* ===== Domänen-Logik (rechnet wirklich auf dem Input) ===== */
+const CATS = {
+  vertrieb:{label:'Vertrieb',kw:['angebot','kosten','kostet','preis','kaufen','projekt','automatisieren','interessiert','lösung','entwickeln']},
+  support:{label:'Support',kw:['fehler','störung','ausfall','funktioniert','dashboard','sensor','sensordaten','problem','keine daten','geht nicht','angezeigt']},
+  recht:{label:'Recht & Compliance',kw:['dsgvo','gdpr','compliance','gespeichert','speichern','datenschutz','vertrag','eu verlassen']},
+  coaching:{label:'Coaching',kw:['schulen','schulung','workshop','training','coaching','lernen','team schulen']}
+};
+function detectLang(t){
+  const en=(t.match(/\b(the|you|we|your|with|and|for|are|will|reach|call|company|need|data|only|do)\b/gi)||[]).length;
+  const de=(t.match(/\b(und|der|die|das|wir|du|dein|mit|für|sind|wird|daten|gern|gespräch|hallo|kosten|werden)\b/gi)||[]).length;
+  return en>de ? 'en' : 'de';
+}
+function runIntakeLogic(text){
+  const m=text.match(/(\d{2,4})\s*(mitarbeiter|mitarbeitende|ma\b|personen|employees|people)/i);
+  return {
+    language:detectLang(text),
+    companySize:m?m[1]:null,
+    hasContact:/[\w.+-]+@[\w-]+\.[\w.-]+|\+?\d[\d ()\/-]{6,}/.test(text),
+    urgency:/(dringend|sofort|ausfall|seit heute|kritisch|asap|steht still|produktion)/i.test(text)?'hoch':'normal',
+    chars:text.length
+  };
+}
+function classify(text){
+  const t=text.toLowerCase();
+  let best={cat:'vertrieb',score:0}, total=0;
+  for(const [cat,def] of Object.entries(CATS)){
+    let s=0; def.kw.forEach(k=>{ if(t.includes(k)) s++; });
+    total+=s; if(s>best.score) best={cat,score:s};
+  }
+  const conf = total ? Math.round(best.score/total*100) : 45;
+  const urgent=/(dringend|sofort|ausfall|seit heute|kritisch|asap|steht still|produktion)/i.test(text);
+  return {category:best.cat,label:CATS[best.cat].label,confidence:Math.max(conf,48),priority:urgent?'Hoch':'Normal'};
+}
+function retrieve(text,ctx){
+  const t=(text+' '+(ctx&&ctx.classification?ctx.classification.label:'')).toLowerCase();
+  const scored=KB.map(e=>{ let s=0; e.tags.forEach(tag=>{ if(t.includes(tag)) s++; }); return {id:e.id,title:e.title,text:e.text,score:s}; })
+                 .filter(e=>e.score>0).sort((a,b)=>b.score-a.score);
+  const top=scored.slice(0,3);
+  if(!top.length){ const k=KB.find(e=>e.id==='kontakt'); top.push({id:k.id,title:k.title,text:k.text,score:1}); }
+  return top;
+}
+const tx=(de,en,lang)=>lang==='en'?en:de;
+function generateDraftSim(ctx,feedback){
+  const lang=ctx.intake.language, cat=ctx.classification.category, src=ctx.sources;
+  const find=id=>{const s=src.find(x=>x.id===id);return s?s.text:'';};
+  const greet=tx('Hallo,','Hi,',lang), sign=tx('Beste Grüße\nDein AI with Maris-Team','Best regards,\nYour AI with Maris team',lang);
+  let body=[];
+  if(cat==='vertrieb'){
+    body.push(tx('danke für dein Interesse! '+(find('preise-software')||'Software-Projekte liegen meist zwischen 15.000 und 60.000 €.'),
+      'thanks for your interest! Software projects typically range from €15,000 to €60,000, with the fixed price set after a Discovery Sprint (€2,500).',lang));
+    body.push(tx('Die Dauer hängt vom Umfang ab — der Discovery-Sprint schafft in 1–2 Wochen Klarheit.','Timelines depend on scope — the Discovery Sprint creates clarity within 1–2 weeks.',lang));
+  } else if(cat==='support'){
+    body.push(tx('danke für die Meldung. Wenn keine neuen Daten ankommen, prüfen wir erfahrungsgemäß zuerst die Datenquelle, die Verbindung (z. B. MQTT-Broker/Gateway) und die Schwellwerte.',
+      'thanks for flagging this. When no new data arrives, we first check the data source, the connection (e.g. MQTT broker/gateway) and the thresholds.',lang));
+  } else if(cat==='recht'){
+    body.push(tx('gute Frage — Datenschutz ist Teil unseres Designs: '+(find('cloud')||find('dsgvo')),
+      'great question — data protection is part of our design: your software runs in your own cloud environment with a selectable EU region, fully GDPR-compliant.',lang));
+  } else if(cat==='coaching'){
+    body.push(tx('sehr gern! '+(find('preise-coaching')||'Wir bieten Team-Workshops ab 1.900 € pro Tag.'),
+      'absolutely! We offer team workshops starting at €1,900 per day, plus ongoing enablement.',lang));
+  } else {
+    body.push(tx('danke für deine Nachricht — wir schauen uns das gern an.','thanks for your message — we are happy to look into it.',lang));
+  }
+  // CTA: erste Support-Antwort vergisst sie bewusst -> QA löst Revision aus
+  const wantCTA = !(cat==='support' && !feedback);
+  if(wantCTA) body.push(tx('Am schnellsten kommen wir in einem kostenlosen 30-Minuten-Erstgespräch weiter — du erreichst uns unter hallo@aiwithmaris.com.',
+                          'The quickest next step is a free 30-minute intro call — reach us at hallo@aiwithmaris.com.',lang));
+  // Feedback: DSGVO ergänzen, falls gefordert und fehlt
+  if(feedback && /dsgvo|eu|datenhoheit|gdpr/i.test(feedback) && !/eu|dsgvo|gdpr|datenhoheit/i.test(body.join(' ')))
+    body.push(tx('Deine Daten bleiben dabei vollständig in deiner eigenen Umgebung (EU-Region wählbar, DSGVO-konform).',
+                 'Your data stays entirely in your own environment (selectable EU region, GDPR-compliant).',lang));
+  return greet+'\n\n'+body.join(' ')+'\n\n'+sign;
+}
+async function generateDraft(ctx,feedback){
+  if(CONFIG.mode==='live' && CONFIG.live.endpoint){
+    try{ return await generateDraftLive(ctx,feedback); }
+    catch(e){ log('draft','Live-Modell nicht erreichbar ('+e.message+') → Simulation','warn'); return generateDraftSim(ctx,feedback); }
+  }
+  return generateDraftSim(ctx,feedback);
+}
+async function generateDraftLive(ctx,feedback){
+  const sys='Du bist der Antwort-Agent von AI with Maris (KI-Coaching & maßgeschneiderte Software). Antworte freundlich, präzise und in der SPRACHE DER ANFRAGE. Nutze ausschließlich die gelieferten Wissens-Snippets, keine erfundenen Fakten, keine Garantien/Überversprechen. Schließe mit einem konkreten nächsten Schritt (kostenloses 30-Min-Erstgespräch, hallo@aiwithmaris.com).';
+  const kb=ctx.sources.map(s=>'- '+s.title+': '+s.text).join('\n');
+  const user='Anfrage:\n'+ctx.input+'\n\nKategorie: '+ctx.classification.label+'\nWissen:\n'+kb+(feedback?('\n\nDiese QA-Punkte beheben: '+feedback):'');
+  const r=await fetch(CONFIG.live.endpoint,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+CONFIG.live.apiKey},
+    body:JSON.stringify({model:CONFIG.live.model||'gpt-4o-mini',temperature:0.4,messages:[{role:'system',content:sys},{role:'user',content:user}]})});
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  const j=await r.json();
+  const out=j&&j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content;
+  return (out||'').trim() || generateDraftSim(ctx,feedback);
+}
+function runQAChecks(ctx){
+  const d=ctx.draft||'', reqLang=ctx.intake.language, drLang=detectLang(d);
+  const issues=[]; let score=100;
+  const langOk = drLang===reqLang;
+  if(!langOk){ issues.push({sev:'crit',msg:'Sprachabgleich fehlgeschlagen (Antwort '+drLang.toUpperCase()+', Anfrage '+reqLang.toUpperCase()+')'}); score-=30; }
+  const ctaOk = /erstgespräch|gespräch|termin|hallo@aiwithmaris\.com|kontaktformular|intro call|call/i.test(d);
+  if(!ctaOk){ issues.push({sev:'crit',msg:'Kein klarer nächster Schritt (CTA) enthalten'}); score-=25; }
+  if(/(garantiert|100\s*%\s*sicher|für immer kostenlos|in einem tag fertig|beste der welt)/i.test(d)){ issues.push({sev:'warn',msg:'Mögliches Überversprechen'}); score-=15; }
+  const asksData = ctx.classification.category==='recht' || /dsgvo|gdpr|gespeichert|daten.*(eu|verlassen)|where.*data/i.test(ctx.input);
+  const gdprOk = !asksData || /eu|dsgvo|gdpr|datenhoheit|datenschutz/i.test(d);
+  if(!gdprOk){ issues.push({sev:'warn',msg:'Datenstandort/DSGVO nicht adressiert, obwohl gefragt'}); score-=15; }
+  if(!(d.length>=180 && d.length<=1500)){ issues.push({sev:'warn',msg:'Länge außerhalb Zielbereich (180–1500)'}); score-=8; }
+  score=Math.max(0,score);
+  return {score,issues,pass:(score>=85 && langOk && ctaOk),feedback:issues.map(i=>i.msg).join('; ')};
+}
+
+/* ===== Icons ===== */
+const ICON={
+ scan:'<svg viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/></svg>',
+ tag:'<svg viewBox="0 0 24 24"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.2"/></svg>',
+ book:'<svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+ pen:'<svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>',
+ shield:'<svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg>'
+};
+
+/* ===== Agenten ===== */
+const AGENTS=[
+ {id:'intake', name:'Intake-Agent', role:'Triage & Extraktion', icon:ICON.scan, run:async(ctx)=>{
+    log('intake','Lese Nachricht, extrahiere Metadaten …'); await sleep(620);
+    ctx.intake=runIntakeLogic(ctx.input);
+    log('intake','Sprache erkannt: '+ctx.intake.language.toUpperCase(),'info');
+    if(ctx.intake.companySize) log('intake','Unternehmensgröße: ~'+ctx.intake.companySize+' Mitarbeiter');
+    log('intake','Kontaktdaten vorhanden: '+(ctx.intake.hasContact?'ja':'nein'));
+    log('intake','Dringlichkeit: '+ctx.intake.urgency, ctx.intake.urgency==='hoch'?'warn':'ok');
+    await sleep(160);
+ }},
+ {id:'classify', name:'Classifier-Agent', role:'Kategorie & Priorität', icon:ICON.tag, run:async(ctx)=>{
+    log('classify','Gleiche Schlüsselbegriffe gegen Kategorien ab …'); await sleep(640);
+    ctx.classification=classify(ctx.input);
+    log('classify','Kategorie: '+ctx.classification.label+'  ('+ctx.classification.confidence+'% Konfidenz)','ok');
+    log('classify','Priorität: '+ctx.classification.priority, ctx.classification.priority==='Hoch'?'warn':'info');
+    renderResult(); await sleep(150);
+ }},
+ {id:'retrieve', name:'Retrieval-Agent', role:'Wissensabruf (Tool)', icon:ICON.book, run:async(ctx)=>{
+    log('retrieve','Rufe Werkzeug auf …');
+    tool('retrieve','knowledge_base.search','{ query: "'+shorten(ctx.input,44)+'" }');
+    await sleep(700);
+    ctx.sources=retrieve(ctx.input,ctx);
+    ctx.sources.forEach(s=>log('retrieve','· '+s.title+'  (Relevanz '+s.score+')','src'));
+    log('retrieve',ctx.sources.length+' relevante Quelle(n) gefunden','ok');
+    renderResult(); await sleep(150);
+ }},
+ {id:'draft', name:'Drafting-Agent', role:'Antwort-Entwurf', icon:ICON.pen, run:async(ctx)=>{
+    const rev=ctx.revisions>0;
+    log('draft', rev?'Überarbeite Entwurf anhand des QA-Feedbacks …':'Formuliere Antwort aus Kontext + Quellen …', rev?'warn':'');
+    log('draft','Generierung über: '+((CONFIG.mode==='live'&&CONFIG.live.endpoint)?'Live-Modell':'Simulation (regelbasiert)'),'info');
+    await sleep(480);
+    const text=await generateDraft(ctx,ctx.qaFeedback); ctx.draft=text;
+    await streamInto(answerEl,text);
+    log('draft','Entwurf erstellt ('+text.length+' Zeichen)','ok');
+ }},
+ {id:'qa', name:'QA & Compliance-Agent', role:'Prüfung & Freigabe-Empfehlung', icon:ICON.shield, run:async(ctx)=>{
+    log('qa','Prüfe Sprache, Tonalität, CTA, DSGVO, Länge …'); await sleep(660);
+    ctx.qa=runQAChecks(ctx);
+    if(!ctx.qa.issues.length) log('qa','Keine Beanstandungen','ok');
+    ctx.qa.issues.forEach(i=>log('qa',(i.sev==='crit'?'✗ ':'⚠ ')+i.msg, i.sev==='crit'?'err':'warn'));
+    log('qa','Qualitäts-Score: '+ctx.qa.score+'/100', ctx.qa.pass?'ok':'warn');
+    log('qa', ctx.qa.pass?'Empfehlung: zur Freigabe ✓':'Empfehlung: Revision ↻','strong');
+    renderResult(); await sleep(160);
+ }}
+];
+
+/* ===== DOM-Referenzen ===== */
+const $=id=>document.getElementById(id);
+const nodesEl=$('nodes'), inputEl=$('msg'), answerEl=$('answer'), classificationEl=$('classification'),
+      sourcesEl=$('sources'), qaBlock=$('qaBlock'), qaScoreEl=$('qaScore'), qaRing=$('qaRing'), qaIssues=$('qaIssues'),
+      actionsEl=$('actions'), sentMsg=$('sentMsg'), procState=$('procState'), prog=$('prog'),
+      runBtn=$('runBtn'), stepBtn=$('stepBtn'), resetBtn=$('resetBtn'), modeBtn=$('modeBtn');
+
+/* ===== Hilfen ===== */
+function sleep(ms){ if(reduce) return Promise.resolve(); return new Promise(r=>setTimeout(r, Math.max(0,ms/(CONFIG.speed||1)))); }
+function shorten(s,n){ s=s.replace(/\s+/g,' ').trim(); return s.length>n? s.slice(0,n)+'…':s; }
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function logEl(id){ return document.querySelector('#node-'+id+' .node-log'); }
+function log(id,text,type){
+  const el=logEl(id); if(!el) return;
+  const d=document.createElement('div'); d.className='ln'+(type?(' '+type):''); d.textContent=text;
+  el.classList.add('show'); el.appendChild(d); el.scrollTop=el.scrollHeight;
+}
+function tool(id,name,args){
+  const el=logEl(id); if(!el) return;
+  const d=document.createElement('div'); d.className='tool'; d.innerHTML='&#128296; <b>'+esc(name)+'</b> '+esc(args);
+  el.classList.add('show'); el.appendChild(d); el.scrollTop=el.scrollHeight;
+}
+async function streamInto(el,text){
+  el.classList.remove('res-empty'); el.textContent='';
+  if(reduce){ el.textContent=text; return; }
+  el.classList.add('cursor-blink');
+  const parts=text.split(/(\s+)/);
+  for(const p of parts){ el.textContent+=p; await sleep(16); }
+  el.classList.remove('cursor-blink');
+}
+function setStatus(id,status){
+  const n=$('node-'+id); if(!n) return;
+  n.dataset.status=status;
+  const badge=n.querySelector('.node-badge');
+  badge.textContent={pending:'wartet',running:'läuft …',done:'fertig',error:'Fehler'}[status]||status;
+  if(status==='running' && !reduce) n.scrollIntoView({block:'nearest'});
+  updateProgress();
+}
+function setTiming(id,ms){ const t=document.querySelector('#node-'+id+' .node-time'); if(t)t.textContent=ms+' ms'; }
+function updateProgress(){ const done=document.querySelectorAll('.node[data-status="done"]').length; prog.style.width=(done/AGENTS.length*100)+'%'; }
+function setProc(s){ procState.dataset.s=s; procState.textContent={idle:'bereit',running:'läuft …',done:'abgeschlossen'}[s]||s; }
+
+/* ===== Ergebnis rendern ===== */
+function chip(t,cls){ return '<span class="chip'+(cls?' '+cls:'')+'">'+esc(t)+'</span>'; }
+function renderResult(){
+  if(ctx&&ctx.classification){
+    classificationEl.classList.remove('res-empty');
+    classificationEl.innerHTML = chip(ctx.classification.label,'cat')
+      + chip('Priorität: '+ctx.classification.priority, ctx.classification.priority==='Hoch'?'prio-high':'')
+      + chip(ctx.classification.confidence+'% Konfidenz')
+      + (ctx.intake?chip('Sprache: '+ctx.intake.language.toUpperCase()):'')
+      + (ctx.intake&&ctx.intake.companySize?chip('~'+ctx.intake.companySize+' MA'):'');
+  }
+  if(ctx&&ctx.sources){
+    sourcesEl.classList.remove('res-empty');
+    sourcesEl.innerHTML = ctx.sources.map(s=>'<span class="src-chip" title="'+esc(s.text)+'">'+esc(s.title)+' <i>'+s.score+'</i></span>').join('');
+  }
+  if(ctx&&ctx.qa){
+    qaBlock.hidden=false; qaScoreEl.textContent=ctx.qa.score;
+    const col=ctx.qa.pass?'var(--green)':'var(--amber)';
+    qaRing.style.background='conic-gradient('+col+' '+(ctx.qa.score*3.6)+'deg, rgba(255,255,255,.08) 0deg)';
+    qaIssues.innerHTML = ctx.qa.issues.length ? ctx.qa.issues.map(i=>'<li class="'+i.sev+'">'+esc(i.msg)+'</li>').join('') : '<li class="ok">Keine Beanstandungen</li>';
+  }
+  if(ctx&&ctx.qa&&stage>=AGENTS.length) actionsEl.hidden=false;
+}
+
+/* ===== Orchestrator (Run + Step + Revisions-Schleife) ===== */
+let ctx=null, stage=0, started=false, running=false;
+function buildNodes(){
+  nodesEl.innerHTML = AGENTS.map(a=>(
+    '<article class="node" data-status="pending" id="node-'+a.id+'">'
+    +'<div class="node-h"><span class="node-ic">'+a.icon+'</span>'
+    +'<div class="node-t"><b>'+a.name+'</b><span>'+a.role+'</span></div>'
+    +'<span class="node-badge">wartet</span><span class="node-time"></span></div>'
+    +'<div class="node-log"></div></article>'
+  )).join('');
+}
+function initRun(){
+  const input=inputEl.value.trim();
+  if(!input){ inputEl.focus(); return false; }
+  ctx={input,revisions:0}; stage=0; started=true;
+  buildNodes(); answerEl.textContent='—'; answerEl.classList.add('res-empty');
+  classificationEl.textContent='verarbeite …'; classificationEl.classList.add('res-empty');
+  sourcesEl.innerHTML='—'; sourcesEl.classList.add('res-empty');
+  qaBlock.hidden=true; actionsEl.hidden=true; sentMsg.hidden=true;
+  setProc('running'); updateProgress();
+  return true;
+}
+async function runOneStage(){
+  if(stage>=AGENTS.length){ setProc('done'); return false; }
+  const a=AGENTS[stage]; setStatus(a.id,'running');
+  const t0=performance.now();
+  try{ await a.run(ctx); }
+  catch(e){ setStatus(a.id,'error'); log(a.id,'Fehler: '+e.message,'err'); running=false; return false; }
+  setTiming(a.id, Math.round(performance.now()-t0)); setStatus(a.id,'done'); stage++;
+  // Revisions-Schleife nach QA (einmalig)
+  if(a.id==='qa' && ctx.qa && !ctx.qa.pass && ctx.revisions<1){
+    ctx.revisions++; ctx.qaFeedback=ctx.qa.feedback;
+    const di=AGENTS.findIndex(x=>x.id==='draft');
+    setStatus('draft','pending'); setStatus('qa','pending');
+    document.querySelector('#node-draft .node-log').innerHTML='';
+    document.querySelector('#node-qa .node-log').innerHTML='';
+    const prevTag=document.querySelector('#node-draft .revtag'); if(prevTag) prevTag.remove();
+    const tag=document.createElement('div'); tag.className='revtag'; tag.textContent='↻ Revision '+ctx.revisions;
+    document.querySelector('#node-draft .node-h').insertAdjacentElement('afterend',tag);
+    stage=di;
+  }
+  renderResult();
+  return true;
+}
+async function runAll(){
+  if(!started){ if(!initRun()) return; }
+  running=true; updateControls();
+  while(running){ const cont=await runOneStage(); if(!cont) break; await sleep(420); }
+  running=false; updateControls();
+}
+async function stepOnce(){
+  if(running) return;
+  if(!started){ if(!initRun()) return; }
+  await runOneStage(); updateControls();
+}
+function resetAll(){
+  running=false; started=false; stage=0; ctx=null;
+  buildNodes(); answerEl.textContent='—'; answerEl.classList.add('res-empty');
+  classificationEl.textContent='noch nichts verarbeitet'; classificationEl.classList.add('res-empty');
+  sourcesEl.innerHTML='—'; sourcesEl.classList.add('res-empty');
+  qaBlock.hidden=true; actionsEl.hidden=true; sentMsg.hidden=true; prog.style.width='0'; setProc('idle'); updateControls();
+}
+function updateControls(){
+  runBtn.disabled=running;
+  stepBtn.disabled=running || (started && stage>=AGENTS.length);
+  runBtn.innerHTML = (started && stage>0 && stage<AGENTS.length && !running) ? '&#9654; Weiter (auto)' : '&#9654; Workflow starten';
+}
+
+/* ===== UI-Verdrahtung ===== */
+SAMPLES.forEach(s=>{
+  const b=document.createElement('button'); b.type='button'; b.textContent=s.label; b.dataset.id=s.id;
+  b.addEventListener('click',()=>{ document.querySelectorAll('.samples button').forEach(x=>x.classList.remove('active')); b.classList.add('active'); inputEl.value=s.text; resetAll(); });
+  $('samples').appendChild(b);
+});
+inputEl.value=SAMPLES[0].text; document.querySelector('.samples button').classList.add('active');
+inputEl.addEventListener('input',()=>{ document.querySelectorAll('.samples button').forEach(x=>x.classList.remove('active')); if(started&&!running) resetAll(); });
+runBtn.addEventListener('click',runAll);
+stepBtn.addEventListener('click',stepOnce);
+resetBtn.addEventListener('click',resetAll);
+$('spd').addEventListener('input',e=>{ CONFIG.speed=parseFloat(e.target.value); $('spdv').textContent=CONFIG.speed+'×'; saveCfg(); });
+$('spd').value=CONFIG.speed; $('spdv').textContent=CONFIG.speed+'×';
+
+$('approveBtn').addEventListener('click',()=>{ sentMsg.hidden=false; sentMsg.textContent='✓ Antwort freigegeben und zum Versand übergeben (Demo) — im Live-Betrieb ginge sie an die Kund:in bzw. ins Ticketsystem.'; });
+$('copyBtn').addEventListener('click',async()=>{ try{ await navigator.clipboard.writeText(answerEl.textContent); $('copyBtn').textContent='✓ Kopiert'; setTimeout(()=>$('copyBtn').textContent='Kopieren',1500); }catch(e){} });
+
+/* Modus + Live-Konfiguration */
+function applyModeUI(){ modeBtn.dataset.mode=CONFIG.mode; modeBtn.textContent='Modus: '+(CONFIG.mode==='live'?'Live':'Simulation'); }
+modeBtn.addEventListener('click',()=>{
+  if(CONFIG.mode==='simulation'){
+    if(!CONFIG.live.endpoint){ openCfg(); return; }
+    CONFIG.mode='live';
+  } else CONFIG.mode='simulation';
+  saveCfg(); applyModeUI();
+});
+const cfgDlg=$('cfgDlg');
+function openCfg(){ $('cfgEndpoint').value=CONFIG.live.endpoint; $('cfgModel').value=CONFIG.live.model; $('cfgKey').value=CONFIG.live.apiKey; if(cfgDlg.showModal)cfgDlg.showModal(); }
+$('cfgBtn').addEventListener('click',openCfg);
+$('cfgSave').addEventListener('click',()=>{
+  CONFIG.live.endpoint=$('cfgEndpoint').value.trim(); CONFIG.live.model=$('cfgModel').value.trim()||'gpt-4o-mini'; CONFIG.live.apiKey=$('cfgKey').value.trim();
+  CONFIG.mode = CONFIG.live.endpoint ? 'live' : 'simulation';
+  saveCfg(); applyModeUI(); cfgDlg.close();
+});
+cfgDlg.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>cfgDlg.close()));
+cfgDlg.addEventListener('click',e=>{ if(e.target===cfgDlg) cfgDlg.close(); });
+
+/* Init */
+buildNodes(); applyModeUI(); updateControls();
+</script>
+</body>
+</html>

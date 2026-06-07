@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#05060c" />
+
+<title>AI with Maris — KI-Coaching &amp; maßgeschneiderte Software in deiner Cloud</title>
+<meta name="description" content="AI with Maris verbindet persönliches KI-Coaching mit maßgeschneiderter Software-Entwicklung. Wir automatisieren deine Abläufe — datensouverän in deiner eigenen Cloud (Azure, AWS, Google Cloud oder on-premise)." />
+<meta name="author" content="AI with Maris" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="https://aiwithmaris.com/" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="de_DE" />
+<meta property="og:site_name" content="AI with Maris" />
+<meta property="og:url" content="https://aiwithmaris.com/" />
+<meta property="og:title" content="AI with Maris — KI-Coaching &amp; maßgeschneiderte Software in deiner Cloud" />
+<meta property="og:description" content="Persönliches KI-Coaching plus maßgeschneiderte Software, die deine Abläufe automatisiert — datensouverän in deiner eigenen Cloud." />
+<meta property="og:image" content="./assets/og-axon.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="AI with Maris — KI-Coaching &amp; maßgeschneiderte Software" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="AI with Maris — KI-Coaching &amp; maßgeschneiderte Software in deiner Cloud" />
+<meta name="twitter:description" content="Persönliches KI-Coaching plus maßgeschneiderte Software, die deine Abläufe automatisiert — datensouverän in deiner eigenen Cloud." />
+<meta name="twitter:image" content="./assets/og-axon.png" />
+
+<link rel="icon" type="image/png" href="./assets/logo-axon.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Manrope:wght@300;400;500;600&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+<canvas id="scene"></canvas>
+<div class="bg-glow"></div><div class="grain"></div><div class="vignette"></div>
+<div class="cursor-ring"></div><div class="cursor-dot"></div>
+
+<a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+<nav id="nav" aria-label="Hauptnavigation">
+  <div class="nav-inner">
+    <a class="logo" href="index.html" aria-label="AI with Maris — zur Startseite"><img src="./assets/logo-axon.png" alt="" />AI with Maris</a>
+    <div class="nav-links" id="navlinks">
+      <a href="leistungen.html">Leistungen</a>
+      <a href="loesungen.html">Lösungen</a>
+      <a href="beispiele.html">Beispiele</a>
+      <a href="ueber-uns.html">Über uns</a>
+      <a href="preise.html">Preise &amp; FAQ</a>
+      <a href="kontakt.html" class="nav-cta">Erstgespräch</a>
+    </div>
+    <button class="burger" id="burger" type="button" aria-label="Menü öffnen" aria-expanded="false" aria-controls="navlinks"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="wrap">
+<main id="main" tabindex="-1">
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container hero-grid">
+    <div>
+      <div class="dual-badge reveal"><span>KI-Coaching</span><span>Software-Entwicklung</span><span>Cloud-nativ</span></div>
+      <h1 class="reveal d1">KI verstehen.<br>Software, die <span class="grad">für dich arbeitet.</span></h1>
+      <p class="lead reveal d2">AI with Maris verbindet persönliches KI-Coaching mit maßgeschneiderter
+        Software-Entwicklung. Wir automatisieren deine Abläufe und speichern alles sicher in der
+        Cloud — in deiner eigenen Umgebung, egal ob Azure, AWS, Google Cloud oder on-premise.</p>
+      <div class="hero-actions reveal d3">
+        <a href="kontakt.html" class="btn btn-primary" data-hover>Kostenloses Erstgespräch <span class="arrow">→</span></a>
+        <a href="leistungen.html" class="btn btn-ghost" data-hover>Leistungen entdecken</a>
+      </div>
+    </div>
+    <div class="reveal d3">
+      <div class="holo-panel" id="tiltPanel">
+        <div class="panel-head"><div class="dot-row"><i></i><i></i><i></i></div><span class="label">AI with Maris · IMPACT</span></div>
+        <div class="metric"><div><div class="k">Automatisierte Prozesse</div><div class="bar"><i style="width:82%"></i></div></div><div class="v">82<small>%</small></div></div>
+        <div class="metric"><div><div class="k">Zeitersparnis / Woche</div><div class="bar"><i style="width:68%"></i></div></div><div class="v">9.2<small>h</small></div></div>
+        <div class="metric"><div><div class="k">Datenhoheit (eigene Cloud)</div><div class="bar"><i style="width:100%"></i></div></div><div class="v">100<small>%</small></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>Scroll</span><span class="line"></span></div>
+</header>
+
+<!-- ZWEI SÄULEN OVERVIEW -->
+<section id="leistungen" class="section-pad">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Zwei Säulen, ein Ziel</span>
+      <h2>Wir machen dich KI-souverän — und bauen die Software dazu.</h2>
+      <p>Coaching bringt das Wissen ins Team. Eigene Software bringt es in den Alltag. Beides aus einer Hand, beides maßgeschneidert.</p>
+    </div>
+    <div class="pillars">
+      <div class="pillar coach reveal d1">
+        <div class="pillar-visual">
+          <img src="./assets/coach-visual.png" alt="KI-Coaching &amp; AI-Brain von AI with Maris" />
+        </div>
+        <span class="tag">Säule 01 · Befähigen</span>
+        <h3>KI-Coaching</h3>
+        <p>Damit dein Team KI nicht nur ausprobiert, sondern souverän einsetzt.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>1:1 &amp; Team-Coaching</b> — an euren echten Aufgaben</span></li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>Prompt Engineering</b> &amp; wiederverwendbare Bibliotheken</span></li>
+        </ul>
+        <a href="leistungen.html" class="btn btn-ghost" style="margin-top:20px; width:100%; justify-content:center">Mehr erfahren</a>
+      </div>
+      <div class="pillar dev reveal d2">
+        <div class="pillar-visual">
+          <img src="./assets/dev-visual.png" alt="Cloud-native Software-Entwicklung Drahtgitter-Kubus von AI with Maris" />
+        </div>
+        <span class="tag">Säule 02 · Bauen</span>
+        <h3>Software-Entwicklung</h3>
+        <p>Maßgeschneiderte Anwendungen, die automatisieren und in deiner Cloud laufen.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>Custom Web- &amp; Cloud-Apps</b> auf modernem Stack</span></li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>Prozess-Automatisierung</b> mit KI-Agenten</span></li>
+        </ul>
+        <a href="leistungen.html" class="btn btn-primary" style="margin-top:20px; width:100%; justify-content:center">Mehr erfahren</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOUD NEUTRAL TEASER -->
+<section id="cloud" class="section-pad" style="padding-top:0">
+  <div class="container">
+    <div class="cloud reveal">
+      <div class="cloud-grid">
+        <div>
+          <span class="eyebrow">Deine Infrastruktur, deine Regeln</span>
+          <h2>Cloud-agnostisch entwickelt. Du bestimmst, wo deine Daten liegen.</h2>
+          <p>Wir bauen unabhängig vom Anbieter. Deine Software läuft dort, wo deine Daten hingehören — zum Beispiel in deiner <b>eigenen Azure-Umgebung</b>, genauso aber in AWS, Google Cloud oder on-premise.</p>
+          <div class="cloud-options" style="margin-top:20px">
+            <span class="opt lead">Microsoft Azure</span>
+            <span class="opt">AWS</span>
+            <span class="opt">Google Cloud</span>
+          </div>
+        </div>
+        <div class="cloud-pts">
+          <div class="pt"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg><div><b>Volle Datenhoheit</b><span>dsgvo-konform in deiner Cloud.</span></div></div>
+          <div class="pt"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg><div><b>Kein Vendor-Lock-in</b><span>Quellcode gehört vollständig dir.</span></div></div>
+        </div>
+        <div class="cloud-visual">
+          <img src="./assets/cloud-network.png" alt="Futuristisches Cloud-neutrales dezentrales Netzwerk-Design von AI with Maris" />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="section-pad" style="padding-top:0">
+  <div class="container">
+    <div class="stats reveal">
+      <div class="stat"><div class="n" data-count="240">0</div><div class="l">Coaching-Sessions</div></div>
+      <div class="stat"><div class="n" data-count="32">0</div><div class="l">Software-Projekte</div></div>
+      <div class="stat"><div class="n" data-count="9" data-suffix="h">0</div><div class="l">Zeitersparnis / Woche</div></div>
+      <div class="stat"><div class="n" data-count="100" data-suffix="%">0</div><div class="l">Daten in deiner Cloud</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL TEASER -->
+<section id="referenzen" class="section-pad" style="padding-top:0">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Referenzen</span>
+      <h2>Ergebnisse, keine Versprechen.</h2>
+    </div>
+    <div class="tgrid">
+      <figure class="tcard reveal d1" style="margin:0">
+        <div class="t-result"><span class="t-metric">−14&nbsp;h</span><span class="t-label">manuelle Arbeit / Woche</span></div>
+        <blockquote class="quote" style="border:0;margin:0">„Unsere Angebotserstellung lief vorher komplett per Hand. Heute zieht die Software die Daten selbst zusammen — wir gewinnen fast zwei Arbeitstage pro Woche zurück."</blockquote>
+        <figcaption class="who"><span class="av" aria-hidden="true">MB</span><span><span class="nm">M. Berger</span><span class="ro">Vertriebsleitung · Maschinenbau</span></span></figcaption>
+      </figure>
+      <figure class="tcard reveal d2" style="margin:0">
+        <div class="t-result"><span class="t-metric">3&nbsp;Wochen</span><span class="t-label">bis zum Go-Live</span></div>
+        <blockquote class="quote" style="border:0;margin:0">„Vom Erstgespräch bis zum laufenden Dashboard waren es drei Wochen. Und das Beste: Alles läuft in unserer eigenen Azure-Umgebung."</blockquote>
+        <figcaption class="who"><span class="av" aria-hidden="true">SK</span><span><span class="nm">S. Klein</span><span class="ro">IT-Leitung · Energieversorger</span></span></figcaption>
+      </figure>
+      <figure class="tcard reveal d3" style="margin:0">
+        <div class="t-result"><span class="t-metric">100&nbsp;%</span><span class="t-label">Team an Bord</span></div>
+        <blockquote class="quote" style="border:0;margin:0">„Das Coaching hat bei uns den Knoten gelöst. Nach zwei Workshops nutzt das ganze Team KI im Alltag — ohne Angst, etwas falsch zu machen."</blockquote>
+        <figcaption class="who"><span class="av" aria-hidden="true">AW</span><span><span class="nm">A. Weber</span><span class="ro">Geschäftsführung · Agentur</span></span></figcaption>
+      </figure>
+    </div>
+    <div style="text-align: center; margin-top: 40px;" class="reveal">
+      <a href="beispiele.html" class="btn btn-ghost" data-hover>Interaktive Beispiele ansehen</a>
+    </div>
+  </div>
+</section>
+
+<!-- CALL TO ACTION -->
+<section class="section-pad" style="padding-top:0">
+  <div class="container">
+    <div class="cta reveal">
+      <h2>Bereit für den nächsten Schritt?</h2>
+      <p>Lass uns in einem unverbindlichen Erstgespräch klären, wie KI &amp; Automatisierung bei dir den schnellsten Mehrwert bringen.</p>
+      <a href="kontakt.html" class="btn btn-primary" data-hover>Erstgespräch vereinbaren <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div><div class="logo" style="margin-bottom:16px"><img src="./assets/logo-axon.png" alt="" />AI with Maris</div>
+        <p>KI-Coaching &amp; maßgeschneiderte Software-Entwicklung — cloud-neutral, datensouverän, ohne Lock-in.</p></div>
+      <div class="foot-links">
+        <div class="foot-col"><h4>Angebot</h4><a href="leistungen.html">Leistungen</a><a href="loesungen.html">Lösungen</a><a href="beispiele.html">Beispiele</a><a href="preise.html">Preise</a></div>
+        <div class="foot-col"><h4>Kontakt</h4><a href="mailto:hallo@aiwithmaris.com">hallo@aiwithmaris.com</a><a href="kontakt.html">Erstgespräch</a></div>
+        <div class="foot-col"><h4>Rechtliches</h4><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a><a href="agb.html">AGB</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 AI with Maris</span><span>Made in Germany · Cloud-neutral · Powered by AI</span></div>
+  </div>
+</footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="./main.js"></script>
+</body>
+</html>
