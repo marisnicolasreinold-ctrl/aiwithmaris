@@ -683,6 +683,43 @@ nav.scrolled {
   font-size: .72rem;
   color: rgba(238, 241, 250, .25);
 }
+a.card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+}
+a.card h3 {
+  color: var(--text);
+}
+.demo-open {
+  margin-top: 16px;
+  color: var(--cyan);
+  font-family: var(--mono);
+  font-size: .82rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.lang-toggle {
+  margin-left: 6px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, .04);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  cursor: pointer;
+  transition: border-color .25s, background .25s;
+}
+.lang-toggle:hover {
+  border-color: rgba(94, 240, 255, .5);
+  background: rgba(94, 240, 255, .08);
+}
 .dept-note {
   display: inline-flex;
   align-items: center;

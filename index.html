@@ -55,6 +55,7 @@
       <a href="ueber-uns.html">Über uns</a>
       <a href="preise.html">Preise &amp; FAQ</a>
       <a href="kontakt.html" class="nav-cta">Kontakt</a>
+      <button class="lang-toggle" id="langToggle" type="button">EN</button>
     </div>
     <button class="burger" id="burger" type="button" aria-label="Menü öffnen" aria-expanded="false" aria-controls="navlinks"><span></span><span></span><span></span></button>
   </div>
@@ -155,16 +156,48 @@
   </div>
 </section>
 
-<!-- BEISPIELE TEASER -->
+<!-- BEISPIELE / SHOWCASE -->
 <section id="referenzen" class="section-pad" style="padding-top:0">
   <div class="container">
     <div class="sec-head reveal">
       <span class="eyebrow">Spielwiese</span>
       <h2>Lieber zeigen als behaupten.</h2>
-      <p>Statt großer Versprechen findest du hier echte, klickbare Mini-Apps, die ich gebaut habe — von Live-Dashboards bis zu KI-Agenten. Probier sie einfach aus.</p>
+      <p>Statt großer Versprechen findest du hier echte, klickbare Mini-Apps, die ich gebaut habe — alle laufen live im Browser, ganz ohne Login.</p>
     </div>
-    <div style="text-align: center; margin-top: 32px;" class="reveal">
-      <a href="beispiele.html" class="btn btn-primary" data-hover>Interaktive Beispiele ansehen <span class="arrow">→</span></a>
+    <div class="cards">
+      <a class="card reveal d1" data-tilt href="apps/agent-flow.html">
+        <span class="num">01</span>
+        <h3>KI-Agenten-Workflow</h3>
+        <p>Eine Kundenanfrage wird automatisch eingeordnet, beantwortet und geprüft — mit echtem Revisions-Loop und menschlicher Freigabe.</p>
+        <span class="demo-open">Live-Demo öffnen <span class="arrow">↗</span></span>
+      </a>
+      <a class="card reveal d2" data-tilt href="apps/atlas.html">
+        <span class="num">02</span>
+        <h3>ATLAS Produktions-Cockpit</h3>
+        <p>Ein sprechender KI-Assistent im „Jarvis"-Stil brieft dich morgens: überfällige Aufträge, Engpässe und To-dos auf einen Blick.</p>
+        <span class="demo-open">Live-Demo öffnen <span class="arrow">↗</span></span>
+      </a>
+      <a class="card reveal d3" data-tilt href="apps/flowops.html">
+        <span class="num">03</span>
+        <h3>FlowOps IoT-Monitoring</h3>
+        <p>Live-Überwachung von Maschinen- und Sensordaten mit Schwellwert-Alarmen und automatischer Eskalation.</p>
+        <span class="demo-open">Live-Demo öffnen <span class="arrow">↗</span></span>
+      </a>
+      <a class="card reveal d1" data-tilt href="apps/docflow.html">
+        <span class="num">04</span>
+        <h3>DocFlow Dokumenten-Automatisierung</h3>
+        <p>Eingehende PDFs werden von einem Sprachmodell gelesen, geprüft und revisionssicher archiviert.</p>
+        <span class="demo-open">Live-Demo öffnen <span class="arrow">↗</span></span>
+      </a>
+      <a class="card reveal d2" data-tilt href="apps/pulsecrm.html">
+        <span class="num">05</span>
+        <h3>PulseCRM Vertriebs-Cockpit</h3>
+        <p>Leads, Angebote und Umsätze in einer Pipeline — KI fasst die Historie zusammen und schlägt den nächsten Schritt vor.</p>
+        <span class="demo-open">Live-Demo öffnen <span class="arrow">↗</span></span>
+      </a>
+    </div>
+    <div style="text-align: center; margin-top: 40px;" class="reveal">
+      <a href="beispiele.html" class="btn btn-ghost" data-hover>Alle Beispiele ansehen <span class="arrow">→</span></a>
     </div>
   </div>
 </section>
@@ -201,5 +234,6 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="./main.js"></script>
+<script src="./i18n.js"></script>
 </body>
 </html>

@@ -37,6 +37,7 @@
       <a href="ueber-uns.html">Über uns</a>
       <a href="preise.html">Preise &amp; FAQ</a>
       <a href="kontakt.html" class="active">Kontakt</a>
+      <button class="lang-toggle" id="langToggle" type="button">EN</button>
     </div>
     <button class="burger" id="burger" type="button" aria-label="Menü öffnen" aria-expanded="false" aria-controls="navlinks"><span></span><span></span><span></span></button>
   </div>
@@ -126,6 +127,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="./main.js"></script>
+<script src="./i18n.js"></script>
 
 <!-- PAGE-SPECIFIC CONTACT VALIDATION SCRIPT -->
 <script>
@@ -145,6 +147,9 @@
   const WEB3FORMS_KEY = '';
 
   const MAILTO = 'marisnicolasreinold@gmail.com';
+
+  // Übersetzt eine Status-Meldung, falls die Seite gerade auf Englisch steht.
+  const L = de => (window.aiwmLang && window.aiwmLang() === 'en' && window.AIWM_EN && window.AIWM_EN[de]) || de;
 
   const $ = id => document.getElementById(id);
   const status = $('formStatus');
@@ -191,7 +196,7 @@
 
     if (firstBad) {
       firstBad.focus();
-      showStatus('Bitte prüfe die markierten Felder.', false);
+      showStatus(L('Bitte prüfe die markierten Felder.'), false);
       return;
     }
 
@@ -206,7 +211,7 @@
 
     const btn = form.querySelector('button[type="submit"]');
     btn.disabled = true;
-    showStatus('Wird gesendet …', true);
+    showStatus(L('Wird gesendet …'), true);
 
     try {
       // 1) Anfrage in Supabase speichern
@@ -243,9 +248,9 @@
       form.reset();
       fields.forEach(f => setErr(f, false));
       consentErr.classList.remove('show');
-      showStatus('Danke! Deine Nachricht ist angekommen — ich melde mich. ✦', true);
+      showStatus(L('Danke! Deine Nachricht ist angekommen — ich melde mich. ✦'), true);
     } catch (err) {
-      showStatus('Hmm, das hat gerade nicht geklappt. Schreib mir gern direkt an ' + MAILTO + '.', false);
+      showStatus(L('Hmm, das hat gerade nicht geklappt. Schreib mir gern direkt an') + ' ' + MAILTO + '.', false);
     }
     btn.disabled = false;
   });
