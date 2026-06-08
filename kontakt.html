@@ -140,11 +140,10 @@
   const SUPABASE_KEY = 'sb_publishable_nfzmqaa3_DHdS7ijNwURVA_5xtSAu40';
   const SUPABASE_ENDPOINT = SUPABASE_URL + '/rest/v1/kontaktanfragen';
 
-  // === E-Mail-Benachrichtigung (optional) ===
-  // Gratis Access-Key auf https://web3forms.com holen (mit marisnicolasreinold@gmail.com
-  // anmelden) und hier einsetzen — dann bekommst du bei jeder Anfrage eine Mail.
-  // Bleibt das Feld leer, wird die Anfrage trotzdem in Supabase gespeichert.
-  const WEB3FORMS_KEY = '';
+  // === E-Mail-Benachrichtigung an Maris (via FormSubmit — kein Account, kein Key) ===
+  // Bei jeder Anfrage geht zusätzlich eine Mail an diese Adresse. Beim allerersten Mal
+  // schickt FormSubmit einen Bestätigungslink dorthin — einmal klicken, dann läuft's dauerhaft.
+  const NOTIFY_EMAIL = 'marisnicolasreinold@gmail.com';
 
   const MAILTO = 'marisnicolasreinold@gmail.com';
 
@@ -227,23 +226,22 @@
       });
       if (!r.ok) throw new Error('Supabase ' + r.status);
 
-      // 2) Optional: E-Mail an Maris via Web3Forms (nur wenn Key gesetzt ist)
-      if (WEB3FORMS_KEY) {
-        fetch('https://api.web3forms.com/submit', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify({
-            access_key: WEB3FORMS_KEY,
-            subject: 'Neue Anfrage über aiwithmaris.com — ' + (data.firma || data.name),
-            from_name: 'aiwithmaris.com',
-            name: data.name,
-            email: data.email,
-            Firma: data.firma || '—',
-            Telefon: data.telefon || '—',
-            Nachricht: data.nachricht
-          })
-        }).catch(() => {});
-      }
+      // 2) E-Mail-Benachrichtigung an Maris (FormSubmit, kein Key nötig)
+      fetch('https://formsubmit.co/ajax/' + NOTIFY_EMAIL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          _subject: 'Neue Anfrage über aiwithmaris.com — ' + (data.firma || data.name),
+          _template: 'table',
+          _captcha: 'false',
+          _replyto: data.email,
+          Name: data.name,
+          'E-Mail': data.email,
+          Firma: data.firma || '—',
+          Telefon: data.telefon || '—',
+          Nachricht: data.nachricht
+        })
+      }).catch(() => {});
 
       form.reset();
       fields.forEach(f => setErr(f, false));
