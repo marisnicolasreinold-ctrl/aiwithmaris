@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#05060c" />
+<meta name="robots" content="noindex" />
+<title>APEX · KI-Trainingscoach (Garmin) — AI with Maris-Demo</title>
+<meta name="description" content="Interaktive Demo: Ein KI-Coach liest deine Garmin-Werte (Trainingsbereitschaft, HRV, Schlaf, VO2max) und erstellt daraus ein tagesaktuelles Training." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2305060c'/%3E%3Cpath d='M4 18h5l2-7 4 13 3-9h6' fill='none' stroke='%235ef0ff' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05060c;--bg2:#0a0e16;--cyan:#5ef0ff;--violet:#7c5cff;--green:#5cff9d;--amber:#ffcc55;--red:#ff6b8b;--pink:#ff5ea8;
+  --text:#eef1fa;--muted:rgba(238,241,250,.62);--line:rgba(238,241,250,.10);--focus:#5ef0ff;
+  --display:'Sora',sans-serif;--body:'Manrope',sans-serif;--mono:'Space Mono',monospace;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--body);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(closest-side at 8% 0%,rgba(94,240,255,.12),transparent 60%),radial-gradient(closest-side at 94% 4%,rgba(124,92,255,.12),transparent 60%)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:6px}
+a{color:inherit}
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 22px;background:rgba(5,6,12,.74);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.back{color:var(--muted);text-decoration:none;font-size:.86rem;font-weight:600;white-space:nowrap}.back:hover{color:var(--cyan)}
+.ttl{font-family:var(--display);font-weight:700;font-size:1.04rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ttl .sub{color:var(--muted);font-weight:400;font-size:.84rem}
+.tools{display:flex;align-items:center;gap:10px}
+.badge{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:.7rem;color:var(--green);letter-spacing:.04em;white-space:nowrap}
+.badge i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:blink 1.6s infinite}
+@keyframes blink{50%{opacity:.35}}
+.lang{font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.08em;padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;transition:border-color .2s,background .2s}
+.lang:hover{border-color:rgba(94,240,255,.5);background:rgba(94,240,255,.08)}
+.wrap{max-width:1180px;margin:0 auto;padding:22px 22px 50px}
+.intro{font-size:.9rem;color:var(--muted);font-weight:300;max-width:760px;margin-bottom:20px}
+.grid{display:grid;grid-template-columns:340px 1fr;gap:18px;align-items:start}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.card{padding:18px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(160deg,rgba(255,255,255,.045),rgba(255,255,255,.012));backdrop-filter:blur(12px)}
+.card h2{font-family:var(--display);font-weight:700;font-size:.96rem;margin-bottom:3px}
+.card .csub{font-size:.76rem;color:var(--muted);margin-bottom:14px}
+.ring-wrap{display:flex;align-items:center;gap:16px;margin-bottom:8px}
+.ring{position:relative;width:104px;height:104px;flex-shrink:0}
+.ring svg{transform:rotate(-90deg)}
+.ring .rv{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring .rv b{font-family:var(--display);font-weight:800;font-size:1.7rem;line-height:1}
+.ring .rv span{font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.08em;margin-top:3px}
+.readlabel{font-family:var(--display);font-weight:700;font-size:1.05rem}
+.readsub{font-size:.8rem;color:var(--muted)}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.m{padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.025)}
+.m .mn{font-size:.66rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.m .mv{font-family:var(--display);font-weight:700;font-size:1.15rem;margin-top:3px;font-variant-numeric:tabular-nums}
+.m .mv small{font-size:.7rem;color:var(--muted);font-weight:600}
+.m .ms{font-family:var(--mono);font-size:.6rem;margin-top:2px}
+.ms.good{color:var(--green)}.ms.ok{color:var(--cyan)}.ms.warn{color:var(--amber)}.ms.low{color:var(--red)}
+.controls{margin-top:16px;display:flex;flex-direction:column;gap:10px}
+.btn{font-family:var(--body);font-weight:600;font-size:.86rem;padding:11px 16px;border-radius:28px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;transition:border-color .2s,background .2s,transform .15s;text-align:center}
+.btn:hover{border-color:rgba(94,240,255,.5)}.btn:active{transform:scale(.98)}
+.btn.primary{color:#04050a;background:linear-gradient(110deg,var(--cyan),var(--violet));border-color:transparent;font-weight:700}
+.goalbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.chip{font-family:var(--body);font-size:.82rem;font-weight:600;padding:9px 14px;border-radius:24px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--muted);cursor:pointer;transition:all .2s}
+.chip:hover{border-color:rgba(94,240,255,.4);color:var(--text)}
+.chip.on{color:#04050a;background:linear-gradient(110deg,var(--cyan),var(--violet));border-color:transparent}
+.plan-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.session{display:flex;align-items:center;gap:14px;margin:14px 0 6px}
+.s-ic{width:54px;height:54px;border-radius:15px;display:grid;place-items:center;flex-shrink:0;background:linear-gradient(150deg,rgba(94,240,255,.18),rgba(124,92,255,.18));border:1px solid var(--line);font-size:1.5rem}
+.s-tt{font-family:var(--display);font-weight:700;font-size:1.2rem}
+.s-meta{font-size:.82rem;color:var(--muted);margin-top:2px}
+.tag{display:inline-block;font-family:var(--mono);font-size:.62rem;padding:3px 9px;border-radius:20px;letter-spacing:.06em;text-transform:uppercase}
+.tag.hard{background:rgba(255,107,139,.16);color:var(--red)}
+.tag.mod{background:rgba(255,204,85,.16);color:var(--amber)}
+.tag.easy{background:rgba(92,255,157,.14);color:var(--green)}
+.tag.rest{background:rgba(124,92,255,.16);color:#c3b6ff}
+.steps{list-style:none;margin:14px 0 0;display:grid;gap:8px}
+.steps li{display:flex;gap:10px;align-items:baseline;font-size:.9rem;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.025);border:1px solid var(--line)}
+.steps li b{font-family:var(--mono);font-size:.72rem;color:var(--cyan);white-space:nowrap}
+.why{list-style:none;margin:8px 0 0;display:grid;gap:9px}
+.why li{display:flex;gap:10px;font-size:.88rem;color:var(--muted)}
+.why li svg{width:17px;height:17px;flex-shrink:0;stroke:var(--cyan);fill:none;stroke-width:1.8;margin-top:2px}
+.why li b{color:var(--text);font-weight:600}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:6px}
+@media(max-width:680px){.week{grid-template-columns:repeat(2,1fr)}}
+.day{padding:11px 10px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.025);min-height:96px;display:flex;flex-direction:column;gap:6px}
+.day.today{border-color:rgba(94,240,255,.55);box-shadow:0 0 0 1px rgba(94,240,255,.2)}
+.day .dn{font-family:var(--mono);font-size:.66rem;color:var(--muted);letter-spacing:.06em;display:flex;justify-content:space-between;align-items:center}
+.day .dn em{font-style:normal;color:var(--cyan);font-size:.58rem}
+.day .dt{font-size:.84rem;font-weight:600;line-height:1.25}
+.day .dd{font-size:.72rem;color:var(--muted);margin-top:auto}
+.gap{margin-top:18px}
+.note{margin-top:22px;font-size:.78rem;color:var(--muted);font-weight:300;line-height:1.6}
+.note b{color:var(--text);font-weight:600}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="back" id="backLink" href="../beispiele.html">&larr; Zurück zu AI with Maris</a>
+  <div class="ttl">APEX <span class="sub" id="subTtl">· KI-Trainingscoach</span></div>
+  <div class="tools">
+    <span class="badge" id="badge"><i></i>Garmin · verbunden via MCP</span>
+    <button class="lang" id="langToggle" type="button">EN</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <p class="intro" id="intro"></p>
+
+  <div class="goalbar" id="goalbar"></div>
+
+  <div class="grid">
+    <!-- LEFT: Garmin-Werte -->
+    <div class="card">
+      <h2 id="todayH">Heute · deine Garmin-Werte</h2>
+      <div class="csub" id="todaySub">Live aus Garmin Connect</div>
+      <div class="ring-wrap">
+        <div class="ring">
+          <svg width="104" height="104" viewBox="0 0 104 104">
+            <circle cx="52" cy="52" r="46" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="9"/>
+            <circle id="ringArc" cx="52" cy="52" r="46" fill="none" stroke="url(#rg)" stroke-width="9" stroke-linecap="round" stroke-dasharray="289" stroke-dashoffset="289"/>
+            <defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5ef0ff"/><stop offset="1" stop-color="#7c5cff"/></linearGradient></defs>
+          </svg>
+          <div class="rv"><b id="rNum">0</b><span id="rCap">READINESS</span></div>
+        </div>
+        <div>
+          <div class="readlabel" id="rLabel">—</div>
+          <div class="readsub" id="rDesc">—</div>
+        </div>
+      </div>
+      <div class="metrics" id="metrics"></div>
+      <div class="controls">
+        <button class="btn" id="simBtn">Anderen Tag simulieren</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: KI-Plan -->
+    <div>
+      <div class="card">
+        <div class="plan-head">
+          <div><h2 id="planH">Dein Plan für heute</h2><div class="csub" id="planSub">Vom KI-Coach generiert</div></div>
+          <button class="btn primary" id="genBtn">Plan neu erzeugen</button>
+        </div>
+        <div class="session">
+          <div class="s-ic" id="sIc">🏃</div>
+          <div>
+            <div class="s-tt" id="sTitle">—</div>
+            <div class="s-meta"><span class="tag" id="sTag">—</span> <span id="sMeta">—</span></div>
+          </div>
+        </div>
+        <ul class="steps" id="steps"></ul>
+      </div>
+
+      <div class="card gap">
+        <h2 id="whyH">Warum dieser Plan?</h2>
+        <div class="csub" id="whySub">Die KI begründet ihre Empfehlung anhand deiner Werte</div>
+        <ul class="why" id="why"></ul>
+      </div>
+
+      <div class="card gap">
+        <h2 id="weekH">7-Tage-Plan</h2>
+        <div class="csub" id="weekSub">Passt sich an dein Ziel und deine Erholung an</div>
+        <div class="week" id="week"></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="note" id="note"></p>
+</div>
+
+<script>
+"use strict";
+
+/* ===== Sprache (synchron mit der Hauptseite über localStorage) ===== */
+function getLang(){ try{ return localStorage.getItem('aiwm_lang')||'de'; }catch(e){ return 'de'; } }
+function setLang(l){ try{ localStorage.setItem('aiwm_lang',l); }catch(e){} }
+let lang = getLang();
+
+/* ===== Statische Texte ===== */
+const S = {
+  de:{
+    back:"← Zurück zu AI with Maris", sub:"· KI-Trainingscoach", badge:"Garmin · verbunden via MCP",
+    intro:"Diese Demo zeigt, was passiert, wenn man Garmin und KI verbindet: Der Coach liest deine Tageswerte — Trainingsbereitschaft, HRV, Schlaf, Body Battery, Ruhepuls und VO₂max — und baut daraus genau das Training, das heute zu dir passt. Wähle ein Ziel und simuliere verschiedene Tage.",
+    todayH:"Heute · deine Garmin-Werte", todaySub:"Live aus Garmin Connect", readiness:"READINESS",
+    sim:"Anderen Tag simulieren", planH:"Dein Plan für heute", planSub:"Vom KI-Coach generiert", gen:"Plan neu erzeugen",
+    whyH:"Warum dieser Plan?", whySub:"Die KI begründet ihre Empfehlung anhand deiner Werte",
+    weekH:"7-Tage-Plan", weekSub:"Passt sich an dein Ziel und deine Erholung an",
+    goalLabel:"Dein Ziel",
+    note:"<b>Demo:</b> Die Werte sind beispielhaft und werden im Browser simuliert. Im echten Betrieb liest die KI deine Garmin-Daten live über den <b>Garmin-MCP-Server</b> (Trainingsbereitschaft, HRV, Schlaf, VO₂max, letzte Aktivitäten) und passt den Plan jeden Morgen automatisch an.",
+    mLabels:{hrv:"HRV",sleep:"Schlaf",battery:"Body Battery",rhr:"Ruhepuls",vo2:"VO₂max",load:"Akut-Load"},
+    units:{ms:"ms",bpm:"bpm",pts:""},
+    rLabels:{high:"Topfit – grünes Licht",mod:"Solide – dosiert belasten",low:"Müde – Erholung priorisieren"},
+    rDesc:{high:"Dein Körper ist bereit für eine harte Einheit.",mod:"Moderate Belastung ist heute ideal.",low:"Heute zählt Regeneration mehr als Reize."},
+    mStatus:{good:"gut",ok:"ok",balanced:"ausgeglichen",high:"hoch",low:"niedrig",unbalanced:"unausgeglichen"},
+    days:["Mo","Di","Mi","Do","Fr","Sa","So"], todayTag:"heute",
+    goals:{fivek:"5K-Bestzeit",marathon:"Marathon-Aufbau",recovery:"Erholungswoche",strength:"Kraft & Stabilität",fitness:"Allgemeine Fitness"}
+  },
+  en:{
+    back:"← Back to AI with Maris", sub:"· AI Training Coach", badge:"Garmin · connected via MCP",
+    intro:"This demo shows what happens when you connect Garmin and AI: the coach reads your daily metrics — training readiness, HRV, sleep, Body Battery, resting heart rate and VO₂max — and builds exactly the workout that fits you today. Pick a goal and simulate different days.",
+    todayH:"Today · your Garmin data", todaySub:"Live from Garmin Connect", readiness:"READINESS",
+    sim:"Simulate another day", planH:"Your plan for today", planSub:"Generated by the AI coach", gen:"Regenerate plan",
+    whyH:"Why this plan?", whySub:"The AI explains its recommendation based on your metrics",
+    weekH:"7-day plan", weekSub:"Adapts to your goal and recovery",
+    goalLabel:"Your goal",
+    note:"<b>Demo:</b> The values are illustrative and simulated in the browser. In real use the AI reads your Garmin data live via the <b>Garmin MCP server</b> (training readiness, HRV, sleep, VO₂max, recent activities) and adapts the plan automatically every morning.",
+    mLabels:{hrv:"HRV",sleep:"Sleep",battery:"Body Battery",rhr:"Resting HR",vo2:"VO₂max",load:"Acute load"},
+    units:{ms:"ms",bpm:"bpm",pts:""},
+    rLabels:{high:"Prime – green light",mod:"Solid – train in moderation",low:"Tired – prioritise recovery"},
+    rDesc:{high:"Your body is ready for a hard session.",mod:"A moderate load is ideal today.",low:"Recovery matters more than stimulus today."},
+    mStatus:{good:"good",ok:"ok",balanced:"balanced",high:"high",low:"low",unbalanced:"unbalanced"},
+    days:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"], todayTag:"today",
+    goals:{fivek:"5K personal best",marathon:"Marathon base",recovery:"Recovery week",strength:"Strength & stability",fitness:"General fitness"}
+  }
+};
+
+/* ===== Zustand ===== */
+let goal = "fivek";
+let state = { readiness:71, hrv:62, sleep:84, battery:76, rhr:47, vo2:53, load:"optimal" };
+
+function rnd(a,b){ return Math.round(a+Math.random()*(b-a)); }
+function simulate(){
+  const r = rnd(34,93);
+  state.readiness = r;
+  state.hrv  = Math.max(38, Math.round(40 + r*0.42 + (Math.random()*10-5)));
+  state.sleep= Math.max(50, Math.min(98, Math.round(58 + r*0.4 + (Math.random()*12-6))));
+  state.battery = Math.max(15, Math.min(100, Math.round(r + (Math.random()*22-11))));
+  state.rhr  = Math.round(54 - r*0.09 + (Math.random()*3-1.5));
+  state.vo2  = 53;
+}
+function bucket(){ return state.readiness>=75?"high":state.readiness>=50?"mod":"low"; }
+
+/* ===== Trainingslogik ===== */
+// Session-Bausteine je Ziel und Bereitschaft. Rückgabe: {ic,title,tag,dur,steps:[[label,text],...]}
+function buildSession(g,b,T){
+  const Z=(n)=>T===S.de?("Zone "+n):("Zone "+n);
+  const lib = {
+    fivek:{
+      high:{ic:"🔥",title:T.de_?"":"",t:{de:"Intervalle 6×800 m",en:"Intervals 6×800 m"},tag:"hard",dur:{de:"~55 Min · Zone 4–5",en:"~55 min · zone 4–5"},
+        steps:{de:[["15 Min","Einlaufen locker (Zone 2) + 4 Steigerungen"],["6×800 m","im 5K-Renntempo, Zone 4–5"],["400 m","Trabpause zwischen den Intervallen"],["10 Min","Auslaufen + Mobility"]],
+               en:[["15 min","Easy warm-up (zone 2) + 4 strides"],["6×800 m","at 5K race pace, zone 4–5"],["400 m","jog recovery between reps"],["10 min","cool-down + mobility"]]}},
+      mod:{ic:"⚡",t:{de:"Tempo-Dauerlauf",en:"Tempo run"},tag:"mod",dur:{de:"~45 Min · Zone 3–4",en:"~45 min · zone 3–4"},
+        steps:{de:[["15 Min","locker einlaufen"],["20 Min","an der Schwelle (Zone 3–4), gleichmäßig"],["10 Min","locker auslaufen"]],
+               en:[["15 min","easy warm-up"],["20 min","at threshold (zone 3–4), steady"],["10 min","easy cool-down"]]}},
+      low:{ic:"🌱",t:{de:"Lockerer Zone-2-Lauf",en:"Easy zone-2 run"},tag:"easy",dur:{de:"~35 Min · Zone 2",en:"~35 min · zone 2"},
+        steps:{de:[["35 Min","ganz locker, Gesprächstempo"],["danach","5 Min Dehnen / Mobility"]],
+               en:[["35 min","very easy, conversational pace"],["after","5 min stretching / mobility"]]}}
+    },
+    marathon:{
+      high:{ic:"🏅",t:{de:"Langer Lauf mit Marathon-Tempo",en:"Long run with marathon pace"},tag:"hard",dur:{de:"~95 Min",en:"~95 min"},
+        steps:{de:[["30 Min","locker (Zone 2)"],["3×10 Min","im Marathon-Tempo (Zone 3)"],["je 5 Min","locker dazwischen"],["10 Min","auslaufen"]],
+               en:[["30 min","easy (zone 2)"],["3×10 min","at marathon pace (zone 3)"],["5 min each","easy between blocks"],["10 min","cool-down"]]}},
+      mod:{ic:"👟",t:{de:"Ruhiger langer Lauf",en:"Steady long run"},tag:"mod",dur:{de:"~75 Min · Zone 2",en:"~75 min · zone 2"},
+        steps:{de:[["75 Min","gleichmäßig in Zone 2"],["letzte 10 Min","leicht zügiger, aber kontrolliert"]],
+               en:[["75 min","steady in zone 2"],["last 10 min","slightly quicker, controlled"]]}},
+      low:{ic:"🌱",t:{de:"Lockerer Lauf + Mobility",en:"Easy run + mobility"},tag:"easy",dur:{de:"~40 Min · Zone 2",en:"~40 min · zone 2"},
+        steps:{de:[["40 Min","locker, Gesprächstempo"],["15 Min","Mobility & Core"]],
+               en:[["40 min","easy, conversational"],["15 min","mobility & core"]]}}
+    },
+    recovery:{
+      high:{ic:"🚶",t:{de:"Lockerer Wohlfühl-Lauf",en:"Easy feel-good run"},tag:"easy",dur:{de:"~30 Min · Zone 2",en:"~30 min · zone 2"},
+        steps:{de:[["30 Min","ganz locker, ohne Druck"],["danach","Mobility-Routine"]],en:[["30 min","very easy, no pressure"],["after","mobility routine"]]}},
+      mod:{ic:"🧘",t:{de:"Mobility & Spaziergang",en:"Mobility & walk"},tag:"easy",dur:{de:"~40 Min",en:"~40 min"},
+        steps:{de:[["25 Min","zügiger Spaziergang (Zone 1)"],["15 Min","Dehnen & Mobility"]],en:[["25 min","brisk walk (zone 1)"],["15 min","stretching & mobility"]]}},
+      low:{ic:"🛌",t:{de:"Vollständige Ruhe",en:"Full rest"},tag:"rest",dur:{de:"Pausentag",en:"Rest day"},
+        steps:{de:[["heute","kein Training — dein Körper repariert sich"],["optional","10 Min sanftes Dehnen, viel trinken"]],en:[["today","no training — your body is repairing"],["optional","10 min gentle stretching, hydrate"]]}}
+    },
+    strength:{
+      high:{ic:"🏋️",t:{de:"Ganzkörper-Kraft + Plyo",en:"Full-body strength + plyo"},tag:"hard",dur:{de:"~60 Min",en:"~60 min"},
+        steps:{de:[["10 Min","Mobilisation & Aktivierung"],["4×5","Kniebeugen / Kreuzheben schwer"],["3×8","Druck- & Zugübungen"],["3 Runden","Plyometrie (Box Jumps, Sprünge)"]],
+               en:[["10 min","mobilisation & activation"],["4×5","heavy squats / deadlifts"],["3×8","push & pull movements"],["3 rounds","plyometrics (box jumps, bounds)"]]}},
+      mod:{ic:"💪",t:{de:"Kraft-Grundprogramm",en:"Strength base session"},tag:"mod",dur:{de:"~45 Min",en:"~45 min"},
+        steps:{de:[["10 Min","Aufwärmen"],["3×10","Beine, Rücken, Brust kontrolliert"],["3×12","Core & Stabilität"]],en:[["10 min","warm-up"],["3×10","legs, back, chest controlled"],["3×12","core & stability"]]}},
+      low:{ic:"🧘",t:{de:"Mobility & Core",en:"Mobility & core"},tag:"easy",dur:{de:"~30 Min",en:"~30 min"},
+        steps:{de:[["30 Min","sanfte Mobility, Core, Atmung"]],en:[["30 min","gentle mobility, core, breathing"]]}}
+    },
+    fitness:{
+      high:{ic:"🔥",t:{de:"Cardio-Intervalle (frei wählbar)",en:"Cardio intervals (your choice)"},tag:"hard",dur:{de:"~40 Min · Zone 4",en:"~40 min · zone 4"},
+        steps:{de:[["10 Min","Aufwärmen"],["8×1 Min","intensiv (Lauf, Rad oder Rudern)"],["je 1 Min","locker dazwischen"],["8 Min","auslaufen"]],en:[["10 min","warm-up"],["8×1 min","hard (run, bike or row)"],["1 min each","easy between"],["8 min","cool-down"]]}},
+      mod:{ic:"⚡",t:{de:"Zone-2-Cardio + Steigerungen",en:"Zone-2 cardio + strides"},tag:"mod",dur:{de:"~40 Min",en:"~40 min"},
+        steps:{de:[["35 Min","gleichmäßig Zone 2"],["6×20 s","Steigerungen am Ende"]],en:[["35 min","steady zone 2"],["6×20 s","strides at the end"]]}},
+      low:{ic:"🚶",t:{de:"Spaziergang oder Yoga",en:"Walk or yoga"},tag:"easy",dur:{de:"~30 Min",en:"~30 min"},
+        steps:{de:[["30 Min","Spaziergang an der frischen Luft oder lockeres Yoga"]],en:[["30 min","a walk outdoors or gentle yoga"]]}}
+    }
+  };
+  return lib[g][b];
+}
+
+// Wochenplan-Vorlage je Ziel: Typen pro Wochentag (Mo..So)
+const WEEK = {
+  fivek:    ["mod","easy","hard","easy","rest","hard","easy"],
+  marathon: ["easy","mod","easy","mod","rest","hard","easy"],
+  recovery: ["easy","easy","rest","easy","easy","rest","easy"],
+  strength: ["hard","easy","mod","easy","hard","easy","rest"],
+  fitness:  ["mod","easy","hard","easy","mod","easy","rest"]
+};
+const WTXT = {
+  de:{hard:"Intensiv",mod:"Moderat",easy:"Locker",rest:"Ruhetag",
+      hardd:"harte Einheit",modd:"Tempo / Kraft",easyd:"Zone 2 / Mobility",restd:"Regeneration"},
+  en:{hard:"Hard",mod:"Moderate",easy:"Easy",rest:"Rest day",
+      hardd:"hard session",modd:"tempo / strength",easyd:"zone 2 / mobility",restd:"recovery"}
+};
+
+/* ===== Rendering ===== */
+const $=id=>document.getElementById(id);
+
+function mStatus(T){
+  const st=(k)=>T.mStatus[k];
+  return {
+    hrv: state.hrv>=60?{c:"good",t:st("balanced")}: state.hrv>=50?{c:"ok",t:st("ok")}:{c:"warn",t:st("low")},
+    sleep: state.sleep>=80?{c:"good",t:st("good")}: state.sleep>=65?{c:"ok",t:st("ok")}:{c:"low",t:st("low")},
+    battery: state.battery>=70?{c:"good",t:st("high")}: state.battery>=40?{c:"ok",t:st("ok")}:{c:"low",t:st("low")},
+    rhr: state.rhr<=50?{c:"good",t:st("good")}:{c:"ok",t:st("ok")},
+    vo2: {c:"ok",t:st("good")}
+  };
+}
+
+function render(){
+  const T=S[lang];
+  document.documentElement.lang=lang;
+  // Kopf / statische Texte
+  $('backLink').textContent=T.back;
+  $('subTtl').textContent=T.sub;
+  $('badge').innerHTML='<i></i>'+T.badge;
+  $('langToggle').textContent= lang==='en'?'DE':'EN';
+  $('intro').textContent=T.intro;
+  $('todayH').textContent=T.todayH; $('todaySub').textContent=T.todaySub; $('rCap').textContent=T.readiness;
+  $('simBtn').textContent=T.sim; $('planH').textContent=T.planH; $('planSub').textContent=T.planSub; $('genBtn').textContent=T.gen;
+  $('whyH').textContent=T.whyH; $('whySub').textContent=T.whySub; $('weekH').textContent=T.weekH; $('weekSub').textContent=T.weekSub;
+  $('note').innerHTML=T.note;
+
+  // Ziel-Chips
+  $('goalbar').innerHTML=Object.keys(T.goals).map(k=>
+    '<button class="chip'+(k===goal?' on':'')+'" data-g="'+k+'">'+T.goals[k]+'</button>').join('');
+  document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{ goal=c.dataset.g; render(); }));
+
+  // Readiness-Ring
+  const b=bucket();
+  const circ=289, off=circ-(state.readiness/100)*circ;
+  $('ringArc').setAttribute('stroke-dashoffset',off);
+  $('rNum').textContent=state.readiness;
+  $('rLabel').textContent=T.rLabels[b];
+  $('rDesc').textContent=T.rDesc[b];
+
+  // Metriken
+  const ms=mStatus(T);
+  const cells=[
+    {nm:T.mLabels.hrv,v:state.hrv,u:T.units.ms,s:ms.hrv},
+    {nm:T.mLabels.sleep,v:state.sleep,u:T.units.pts,s:ms.sleep},
+    {nm:T.mLabels.battery,v:state.battery,u:T.units.pts,s:ms.battery},
+    {nm:T.mLabels.rhr,v:state.rhr,u:T.units.bpm,s:ms.rhr},
+    {nm:T.mLabels.vo2,v:state.vo2,u:T.units.pts,s:ms.vo2}
+  ];
+  $('metrics').innerHTML=cells.map(c=>
+    '<div class="m"><div class="mn">'+c.nm+'</div><div class="mv">'+c.v+(c.u?' <small>'+c.u+'</small>':'')+'</div><div class="ms '+c.s.c+'">'+c.s.t+'</div></div>'
+  ).join('');
+
+  // Session
+  const sess=buildSession(goal,b,T);
+  $('sIc').textContent=sess.ic;
+  $('sTitle').textContent=sess.t[lang];
+  $('sTag').className='tag '+sess.tag;
+  $('sTag').textContent=WTXT[lang][sess.tag];
+  $('sMeta').textContent=sess.dur[lang];
+  $('steps').innerHTML=sess.steps[lang].map(s=>'<li><b>'+s[0]+'</b><span>'+s[1]+'</span></li>').join('');
+
+  // Why
+  $('why').innerHTML=buildWhy(b,T).map(w=>
+    '<li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>'+w+'</span></li>').join('');
+
+  // Woche
+  const today=(new Date().getDay()+6)%7; // Mo=0
+  const tmpl=WEEK[goal].slice();
+  tmpl[today]=sess.tag; // heutiger Slot = generierte Einheit
+  $('week').innerHTML=tmpl.map((tp,i)=>
+    '<div class="day'+(i===today?' today':'')+'"><div class="dn">'+T.days[i]+(i===today?' <em>'+T.todayTag+'</em>':'')+'</div>'
+    +'<div class="dt">'+WTXT[lang][tp]+'</div><div class="dd">'+WTXT[lang][tp+'d']+'</div></div>').join('');
+}
+
+function buildWhy(b,T){
+  const en = lang==='en';
+  const out=[];
+  if(b==='high') out.push(en?"<b>Readiness "+state.readiness+"/100</b> — your body signals it can take a real stimulus today.":"<b>Readiness "+state.readiness+"/100</b> — dein Körper signalisiert, dass heute ein echter Reiz drin ist.");
+  else if(b==='mod') out.push(en?"<b>Readiness "+state.readiness+"/100</b> — a measured load keeps you progressing without digging a hole.":"<b>Readiness "+state.readiness+"/100</b> — eine dosierte Belastung bringt Fortschritt, ohne dich auszubrennen.");
+  else out.push(en?"<b>Readiness "+state.readiness+"/100</b> — the numbers say back off; recovery beats another hard day.":"<b>Readiness "+state.readiness+"/100</b> — die Werte sagen: zurückschalten. Erholung schlägt heute den nächsten harten Tag.");
+  out.push(en?"<b>HRV "+state.hrv+" ms</b> and <b>resting HR "+state.rhr+" bpm</b> "+(state.hrv>=58?"are in a good range — nervous system is recovered.":"are a touch low — a sign of accumulated fatigue."):"<b>HRV "+state.hrv+" ms</b> und <b>Ruhepuls "+state.rhr+" bpm</b> "+(state.hrv>=58?"liegen im guten Bereich — Nervensystem ist erholt.":"sind leicht erniedrigt — ein Zeichen für Restmüdigkeit."));
+  out.push(en?"<b>Sleep "+state.sleep+"</b> and <b>Body Battery "+state.battery+"</b> "+(state.sleep>=78&&state.battery>=65?"give you the energy budget for it.":"suggest keeping intensity in check today."):"<b>Schlaf "+state.sleep+"</b> und <b>Body Battery "+state.battery+"</b> "+(state.sleep>=78&&state.battery>=65?"liefern das nötige Energiebudget dafür.":"sprechen dafür, die Intensität heute im Zaum zu halten."));
+  out.push(en?"Matched to your goal “"+T.goals[goal]+"” and balanced against the rest of your week.":"Abgestimmt auf dein Ziel „"+T.goals[goal]+"“ und ausbalanciert mit dem Rest deiner Woche.");
+  return out;
+}
+
+/* ===== Events ===== */
+$('simBtn').addEventListener('click',()=>{ simulate(); render(); });
+$('genBtn').addEventListener('click',()=>{ render(); });
+$('langToggle').addEventListener('click',()=>{ lang=(lang==='en'?'de':'en'); setLang(lang); render(); });
+
+render();
+</script>
+</body>
+</html>
