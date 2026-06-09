@@ -720,6 +720,62 @@ a.card h3 {
   border-color: rgba(94, 240, 255, .5);
   background: rgba(94, 240, 255, .08);
 }
+.video-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+}
+.video-modal[hidden] {
+  display: none;
+}
+.vm-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(3, 4, 9, .86);
+  backdrop-filter: blur(8px);
+}
+.vm-inner {
+  position: relative;
+  width: min(1100px, 100%);
+  max-height: 92vh;
+}
+.vm-video {
+  width: 100%;
+  height: auto;
+  max-height: 92vh;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, .6);
+  background: #000;
+  display: block;
+}
+.vm-close {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(10, 14, 22, .95);
+  color: var(--text);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+  transition: border-color .2s, background .2s;
+}
+.vm-close:hover {
+  border-color: rgba(94, 240, 255, .6);
+  background: rgba(94, 240, 255, .1);
+}
+@media (max-width: 640px) {
+  .vm-close { top: -8px; right: -8px; width: 38px; height: 38px; }
+}
 .dept-note {
   display: inline-flex;
   align-items: center;

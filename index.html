@@ -76,6 +76,7 @@
       <div class="hero-actions reveal d3">
         <a href="kontakt.html" class="btn btn-primary" data-hover>Sag Hallo <span class="arrow">→</span></a>
         <a href="beispiele.html" class="btn btn-ghost" data-hover>Beispiele ansehen</a>
+        <button type="button" class="btn btn-ghost" id="introBtn" data-hover><span aria-hidden="true">▶</span>&nbsp;Intro ansehen</button>
       </div>
     </div>
     <div class="reveal d3">
@@ -238,8 +239,34 @@
 
 </div>
 
+<!-- INTRO VIDEO OVERLAY -->
+<div class="video-modal" id="videoModal" hidden>
+  <div class="vm-backdrop" data-vmclose></div>
+  <div class="vm-inner">
+    <button class="vm-close" id="videoClose" type="button" aria-label="Schließen">&times;</button>
+    <video id="introVideo" class="vm-video" controls playsinline preload="none" poster="./assets/intro-poster.png">
+      <source src="./assets/intro.mp4" type="video/mp4" />
+    </video>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="./main.js"></script>
 <script src="./i18n.js"></script>
+<script>
+(function(){
+  var modal=document.getElementById('videoModal'), vid=document.getElementById('introVideo'),
+      openBtn=document.getElementById('introBtn'), closeBtn=document.getElementById('videoClose');
+  if(!modal||!vid||!openBtn) return;
+  function open(){ modal.hidden=false; document.body.style.overflow='hidden';
+    try{ vid.currentTime=0; vid.play(); }catch(e){} }
+  function close(){ modal.hidden=true; document.body.style.overflow='';
+    try{ vid.pause(); }catch(e){} }
+  openBtn.addEventListener('click',open);
+  if(closeBtn) closeBtn.addEventListener('click',close);
+  modal.querySelectorAll('[data-vmclose]').forEach(function(el){ el.addEventListener('click',close); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hidden) close(); });
+})();
+</script>
 </body>
 </html>

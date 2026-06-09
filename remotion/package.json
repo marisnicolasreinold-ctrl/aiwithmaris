@@ -1,0 +1,23 @@
+{
+  "name": "aiwithmaris-video",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Remotion brand intro video for AI with Maris",
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render Intro out/intro.mp4 --codec=h264",
+    "render-web": "remotion render Intro ../assets/intro.mp4 --codec=h264",
+    "poster": "remotion still Intro ../assets/intro-poster.png --frame=235"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.0",
+    "@remotion/google-fonts": "^4.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "typescript": "^5.5.0"
+  }
+}

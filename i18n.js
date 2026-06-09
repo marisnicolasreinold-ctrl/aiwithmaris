@@ -47,6 +47,7 @@
     "Hi, ich bin Maris. Ich experimentiere mit KI und baue Software, die echte Arbeit abnimmt — von kleinen Automatisierungen bis zu Apps, die sicher in der Cloud laufen. Hier zeige ich, was damit so geht.": "Hi, I'm Maris. I experiment with AI and build software that takes real work off your plate — from small automations to apps that run safely in the cloud. Here's a taste of what's possible.",
     "Sag Hallo": "Say hello",
     "Beispiele ansehen": "See examples",
+    "Intro ansehen": "Watch intro",
     "Automatisierte Prozesse": "Automated processes",
     "Zeitersparnis / Woche": "Time saved / week",
     "Datenhoheit (eigene Cloud)": "Data ownership (your cloud)",
