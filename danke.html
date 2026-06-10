@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#05060c" />
+
+<title>Danke für deinen Kauf — AI with Maris</title>
+<meta name="description" content="Dein Download steht bereit." />
+<meta name="robots" content="noindex, nofollow" />
+<link rel="canonical" href="https://aiwithmaris.com/danke.html" />
+
+<link rel="icon" type="image/png" href="./assets/logo-axon.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Manrope:wght@300;400;500;600&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+<canvas id="scene"></canvas>
+<div class="bg-glow"></div><div class="grain"></div><div class="vignette"></div>
+<div class="cursor-ring"></div><div class="cursor-dot"></div>
+
+<a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+<nav id="nav" aria-label="Hauptnavigation">
+  <div class="nav-inner">
+    <a class="logo" href="index.html" aria-label="AI with Maris — zur Startseite"><img src="./assets/logo-axon.png" alt="" />AI with Maris</a>
+    <div class="nav-links" id="navlinks">
+      <a href="leistungen.html">Leistungen</a>
+      <a href="loesungen.html">Lösungen</a>
+      <a href="beispiele.html">Beispiele</a>
+      <a href="guide.html">KI-Guide</a>
+      <a href="ueber-uns.html">Über uns</a>
+      <a href="preise.html">Preise &amp; FAQ</a>
+      <a href="kontakt.html" class="nav-cta">Kontakt</a>
+      <button class="lang-toggle" id="langToggle" type="button">EN</button>
+    </div>
+    <button class="burger" id="burger" type="button" aria-label="Menü öffnen" aria-expanded="false" aria-controls="navlinks"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="wrap">
+<main id="main" tabindex="-1">
+
+<section class="hero" style="min-height:80vh;padding-top:140px">
+  <div class="container">
+    <div class="dl-card reveal" id="dlCard">
+      <span class="eyebrow" style="justify-content:center">Dein Download</span>
+      <h1 id="dlTitle" style="font-family:var(--display);font-size:clamp(28px,4vw,40px);margin-top:14px">Einen Moment …</h1>
+      <p id="dlText" style="color:var(--muted);margin-top:12px">Wir prüfen gerade deine Zahlung.</p>
+      <div id="dlButtons"></div>
+      <p id="dlHint" style="display:none;color:var(--muted);font-size:13px;margin-top:18px">Tipp: Speichere die Datei direkt ab. Die Rechnung kommt separat per E-Mail. Bei Problemen schreib mir an <a href="mailto:marisnicolasreinold@gmail.com" style="color:var(--cyan)">marisnicolasreinold@gmail.com</a>.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div><div class="logo" style="margin-bottom:16px"><img src="./assets/logo-axon.png" alt="" />AI with Maris</div>
+        <p>KI-Coaching &amp; maßgeschneiderte Software-Entwicklung — cloud-neutral, datensouverän, ohne Lock-in.</p></div>
+      <div class="foot-links">
+        <div class="foot-col"><h4>Angebot</h4><a href="leistungen.html">Leistungen</a><a href="loesungen.html">Lösungen</a><a href="beispiele.html">Beispiele</a><a href="guide.html">KI-Guide</a><a href="preise.html">Preise</a></div>
+        <div class="foot-col"><h4>Kontakt</h4><a href="mailto:marisnicolasreinold@gmail.com">marisnicolasreinold@gmail.com</a><a href="kontakt.html">Kontakt</a></div>
+        <div class="foot-col"><h4>Rechtliches</h4><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a><a href="agb.html">AGB</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 AI with Maris</span><span>Made in Germany · Cloud-neutral · Powered by AI</span></div>
+  </div>
+</footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="./main.js"></script>
+<script src="./i18n.js"></script>
+<script>
+(function () {
+  var lang = (window.aiwmLang && window.aiwmLang()) || 'de';
+  var T = lang === 'en' ? {
+    ready: 'Thank you! Your download is ready.',
+    readyTxt: 'Click below to download your PDF. The link stays valid — bookmark this page if you like.',
+    de: 'Download: Leitfaden (German, PDF)',
+    en: 'Download: Guide (English, PDF)',
+    fail: 'We could not verify this purchase.',
+    failTxt: 'If you just paid, wait a few seconds and reload this page. Otherwise check the link from your confirmation — or email me and I will sort it out.',
+    missing: 'No order found.',
+    missingTxt: 'This page only works with the link you get right after checkout.'
+  } : {
+    ready: 'Danke! Dein Download steht bereit.',
+    readyTxt: 'Klick unten, um dein PDF herunterzuladen. Der Link bleibt gültig — du kannst dir diese Seite auch merken.',
+    de: 'Download: Leitfaden (Deutsch, PDF)',
+    en: 'Download: Guide (Englisch, PDF)',
+    fail: 'Wir konnten diesen Kauf nicht bestätigen.',
+    failTxt: 'Wenn du gerade erst bezahlt hast, warte ein paar Sekunden und lade die Seite neu. Sonst prüfe den Link aus deiner Bestätigung — oder schreib mir, dann klären wir das.',
+    missing: 'Keine Bestellung gefunden.',
+    missingTxt: 'Diese Seite funktioniert nur mit dem Link direkt nach dem Kauf.'
+  };
+
+  var title = document.getElementById('dlTitle');
+  var text = document.getElementById('dlText');
+  var btns = document.getElementById('dlButtons');
+  var hint = document.getElementById('dlHint');
+
+  var sessionId = new URLSearchParams(location.search).get('session_id') || '';
+  if (!/^cs_(test|live)_[A-Za-z0-9]+$/.test(sessionId)) {
+    title.textContent = T.missing;
+    text.textContent = T.missingTxt;
+    return;
+  }
+
+  fetch('/api/download?session_id=' + encodeURIComponent(sessionId) + '&info=1')
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      if (!d.paid || !d.files || !d.files.length) throw new Error('unpaid');
+      title.textContent = T.ready;
+      text.textContent = T.readyTxt;
+      d.files.forEach(function (f) {
+        var a = document.createElement('a');
+        a.className = 'btn ' + (d.files.length === 1 || f === 'de' ? 'btn-primary' : 'btn-ghost');
+        a.href = '/api/download?session_id=' + encodeURIComponent(sessionId) + '&file=' + f;
+        a.textContent = T[f] || f;
+        btns.appendChild(a);
+      });
+      hint.style.display = 'block';
+    })
+    .catch(function () {
+      title.textContent = T.fail;
+      text.textContent = T.failTxt;
+    });
+})();
+</script>
+</body>
+</html>
