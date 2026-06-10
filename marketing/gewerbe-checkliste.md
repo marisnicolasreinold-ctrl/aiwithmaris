@@ -3,8 +3,13 @@
 Stand: 2026-06-10 · Interner Ordner, wird nicht deployt.
 
 ## Schritt 1: Gewerbeanmeldung Stadt Dortmund
-- [ ] Online: „Gewerbeanmeldung Dortmund online" suchen (Wirtschafts-Service-Portal NRW)
-      oder persönlich bei der Gewerbemeldestelle. Kosten ca. 25–35 €. Personalausweis reicht.
+- [ ] **NUR über die offizielle Seite dortmund.de** („Gewerbeanmeldung" suchen)!
+      Offizielle Gebühr: **26 € für Einzelunternehmer**. Wege: Online-Portal der Stadt,
+      per E-Mail an gewerbe@stadtdo.de, oder Termin bei der Gewerbemeldestelle
+      (Ordnungsamt). Personalausweis reicht.
+- [ ] ⚠️ ABZOCK-FALLE: Seiten wie „gewerbeanmeldung.de" / „gewerbe-anmelden.info"
+      sind PRIVATE Vermittler und verlangen ~80 € (50 € Servicegebühr für nichts).
+      Erkennbar: offizielle Behördenseiten enden auf dortmund.de.
 - [ ] Tätigkeitsbeschreibung (deckt Coaching + Software + PDF-Verkauf ab):
       „Dienstleistungen im Bereich Software-Entwicklung, IT-Beratung und Coaching zu
       Künstlicher Intelligenz sowie Vertrieb digitaler Produkte (PDF-Leitfäden) über
