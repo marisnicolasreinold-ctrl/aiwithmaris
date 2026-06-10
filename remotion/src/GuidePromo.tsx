@@ -294,14 +294,14 @@ const Stat: React.FC<{
         opacity: s,
         transform: `translateY(${interpolate(s, [0, 1], [36, 0])}px)`,
         textAlign: "center",
-        width: 330,
+        width: 272,
       }}
     >
       <div
         style={{
           fontFamily: SORA,
           fontWeight: 800,
-          fontSize: 120,
+          fontSize: 84,
           letterSpacing: -2,
           ...gradText,
         }}
@@ -311,8 +311,8 @@ const Stat: React.FC<{
       <div
         style={{
           fontFamily: MONO,
-          fontSize: 22,
-          letterSpacing: 2,
+          fontSize: 15,
+          letterSpacing: 1.2,
           color: MUTED,
           textTransform: "uppercase",
           marginTop: 6,
@@ -360,7 +360,7 @@ export const GuidePromo: React.FC<GuidePromoProps> = ({ lang }) => {
 
   /* Scene D — chapter roll */
   const chapOp = fade(frame, CHAP_IN, CHAP_IN + 12, CHAP_OUT - 14, CHAP_OUT);
-  const ROW = 86;
+  const ROW = 70;
   const roll = interpolate(
     frame,
     [CHAP_IN + 8, CHAP_OUT - 10],
@@ -394,11 +394,11 @@ export const GuidePromo: React.FC<GuidePromoProps> = ({ lang }) => {
           <div
             style={{
               fontFamily: MONO,
-              fontSize: 24,
-              letterSpacing: 10,
+              fontSize: 20,
+              letterSpacing: 8,
               color: CYAN,
               textTransform: "uppercase",
-              marginBottom: 30,
+              marginBottom: 26,
               opacity: hook1In,
             }}
           >
@@ -408,7 +408,7 @@ export const GuidePromo: React.FC<GuidePromoProps> = ({ lang }) => {
             style={{
               fontFamily: SORA,
               fontWeight: 800,
-              fontSize: 110,
+              fontSize: 88,
               letterSpacing: -2,
               lineHeight: 1.06,
               opacity: hook1In,
@@ -421,7 +421,7 @@ export const GuidePromo: React.FC<GuidePromoProps> = ({ lang }) => {
             style={{
               fontFamily: SORA,
               fontWeight: 800,
-              fontSize: 110,
+              fontSize: 88,
               letterSpacing: -2,
               lineHeight: 1.06,
               opacity: hook2In,
@@ -440,16 +440,16 @@ export const GuidePromo: React.FC<GuidePromoProps> = ({ lang }) => {
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "center",
-          gap: 110,
+          gap: 72,
         }}
       >
         <BookCover t={t} progress={bookProgress} settleTilt={settleTilt} />
-        <div style={{ opacity: authorOp, maxWidth: 620 }}>
+        <div style={{ opacity: authorOp, maxWidth: 540 }}>
           <div
             style={{
               fontFamily: SORA,
               fontWeight: 800,
-              fontSize: 64,
+              fontSize: 52,
               letterSpacing: -1,
               lineHeight: 1.14,
             }}
@@ -459,12 +459,12 @@ export const GuidePromo: React.FC<GuidePromoProps> = ({ lang }) => {
           <div
             style={{
               fontFamily: MONO,
-              fontSize: 24,
-              letterSpacing: 1.5,
+              fontSize: 18,
+              letterSpacing: 1.2,
               color: MUTED,
-              marginTop: 30,
+              marginTop: 26,
               borderLeft: `3px solid ${CYAN}`,
-              paddingLeft: 22,
+              paddingLeft: 20,
             }}
           >
             {t.author}
@@ -483,7 +483,7 @@ export const GuidePromo: React.FC<GuidePromoProps> = ({ lang }) => {
         <div
           style={{
             display: "flex",
-            gap: 60,
+            gap: 24,
             alignItems: "flex-start",
           }}
         >
@@ -529,18 +529,19 @@ export const GuidePromo: React.FC<GuidePromoProps> = ({ lang }) => {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    gap: 26,
+                    gap: 20,
                     fontFamily: SORA,
                     fontWeight: center ? 800 : 400,
-                    fontSize: center ? 52 : 38,
+                    fontSize: center ? 40 : 28,
                     color: center ? TEXT : "rgba(238,241,250,.3)",
+                    whiteSpace: "nowrap",
                     transition: "none",
                   }}
                 >
                   <span
                     style={{
                       fontFamily: MONO,
-                      fontSize: 22,
+                      fontSize: 17,
                       color: center ? CYAN : "rgba(94,240,255,.35)",
                     }}
                   >
@@ -566,8 +567,8 @@ export const GuidePromo: React.FC<GuidePromoProps> = ({ lang }) => {
           <div
             style={{
               fontFamily: MONO,
-              fontSize: 26,
-              letterSpacing: 6,
+              fontSize: 20,
+              letterSpacing: 4,
               color: MUTED,
               textTransform: "uppercase",
             }}
@@ -578,9 +579,9 @@ export const GuidePromo: React.FC<GuidePromoProps> = ({ lang }) => {
             style={{
               fontFamily: SORA,
               fontWeight: 800,
-              fontSize: 130,
+              fontSize: 104,
               letterSpacing: -2,
-              marginTop: 18,
+              marginTop: 16,
               transform: `scale(${interpolate(ctaIn, [0, 1], [0.85, 1])})`,
               ...gradText,
               filter: "drop-shadow(0 0 50px rgba(124,92,255,.3))",
@@ -591,10 +592,10 @@ export const GuidePromo: React.FC<GuidePromoProps> = ({ lang }) => {
           <div
             style={{
               fontFamily: MONO,
-              fontSize: 30,
-              letterSpacing: 5,
+              fontSize: 24,
+              letterSpacing: 4,
               color: TEXT,
-              marginTop: 26,
+              marginTop: 22,
               opacity: interpolate(frame, [CTA_IN + 12, CTA_IN + 26], [0, 1], clamp),
             }}
           >
