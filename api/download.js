@@ -1,17 +1,18 @@
 // GET /api/download?session_id=cs_...&info=1   -> JSON { paid, files, email }
 // GET /api/download?session_id=cs_...&file=de  -> liefert das gekaufte PDF aus
 // Gibt Dateien nur heraus, wenn die Stripe-Session tatsächlich bezahlt ist.
+// Die PDFs liegen in einem privaten Supabase-Storage-Bucket ("guides"),
+// nicht im Repo — Zugriff nur serverseitig über den Service-Role-Key.
 
-const fs = require('fs');
-const path = require('path');
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://amrdmnnijbfwtrjcpocl.supabase.co';
 
 const FILES = {
   de: {
-    path: path.join(process.cwd(), 'api', '_files', 'ki-leitfaden-de.pdf'),
+    object: 'ki-leitfaden-de.pdf',
     name: 'KI-im-Mittelstand-Leitfaden-DE.pdf'
   },
   en: {
-    path: path.join(process.cwd(), 'api', '_files', 'ai-guide-en.pdf'),
+    object: 'ai-guide-en.pdf',
     name: 'AI-in-Mid-Sized-Companies-Guide-EN.pdf'
   }
 };
@@ -69,12 +70,24 @@ module.exports = async (req, res) => {
   }
 
   const file = FILES[fileKey];
+  const sbKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!sbKey) {
+    return res.status(500).json({ error: 'SUPABASE_SERVICE_ROLE_KEY is not configured' });
+  }
+
   let data;
   try {
-    data = fs.readFileSync(file.path);
+    const fr = await fetch(SUPABASE_URL + '/storage/v1/object/guides/' + file.object, {
+      headers: { Authorization: 'Bearer ' + sbKey }
+    });
+    if (!fr.ok) {
+      console.error('[download] storage error:', fr.status);
+      return res.status(500).json({ error: 'File unavailable, please contact support' });
+    }
+    data = Buffer.from(await fr.arrayBuffer());
   } catch (err) {
-    console.error('[download] file missing:', err.message);
-    return res.status(500).json({ error: 'File unavailable, please contact support' });
+    console.error('[download] storage unreachable:', err.message);
+    return res.status(502).json({ error: 'File storage unreachable, please try again' });
   }
 
   res.setHeader('Content-Type', 'application/pdf');

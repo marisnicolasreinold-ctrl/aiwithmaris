@@ -34,8 +34,13 @@ Umgebungsvariablen (`STRIPE_PRICE_DE/EN/BUNDLE`) überschrieben werden.
 ## Was du noch tun musst (einmalig)
 
 1. **Vercel → Project → Settings → Environment Variables:**
-   `STRIPE_SECRET_KEY` = dein Stripe **Secret Key** (Test: `sk_test_…`).
-   Den Key niemals committen — `.env` ist in `.gitignore`, Vorlage in `.env.example`.
+   - `STRIPE_SECRET_KEY` = dein Stripe **Secret Key** (Test: `sk_test_…`).
+   - `SUPABASE_SERVICE_ROLE_KEY` = Service-Role-Key aus dem Supabase-Dashboard
+     (Project Settings → API Keys). Die Kauf-PDFs liegen im **privaten**
+     Storage-Bucket `guides` des Projekts `aiwithmaris` — nicht mehr im Repo,
+     damit sie im öffentlichen GitHub-Repo nicht frei abgreifbar sind.
+   - Optional `SUPABASE_URL` (Default ist im Code hinterlegt).
+   Keys niemals committen — `.env` ist in `.gitignore`, Vorlage in `.env.example`.
 2. Deployen und einen Testkauf machen: Karte `4242 4242 4242 4242`,
    beliebiges Zukunftsdatum, beliebige CVC.
 3. **Vor dem Live-Gang:**
