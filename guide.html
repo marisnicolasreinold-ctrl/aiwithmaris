@@ -298,7 +298,7 @@
       btn.disabled = true;
       btn.innerHTML = '…';
       var lang = (window.aiwmLang && window.aiwmLang()) || 'de';
-      fetch('/api/checkout', {
+      fetch('https://amrdmnnijbfwtrjcpocl.supabase.co/functions/v1/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ product: btn.dataset.product, lang: lang })
