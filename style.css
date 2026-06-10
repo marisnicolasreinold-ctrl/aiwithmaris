@@ -2979,6 +2979,11 @@ dialog.legal .lg-body .todo {
   gap: 48px;
   align-items: center;
 }
+.about-teaser-grid > *,
+.guide-teaser-grid > *,
+.cloud-grid > * {
+  min-width: 0;
+}
 .about-teaser-grid h2 {
   font-family: var(--display);
   font-weight: 700;
@@ -3023,6 +3028,7 @@ dialog.legal .lg-body .todo {
   letter-spacing: .6px;
   color: var(--muted);
   text-transform: uppercase;
+  overflow-wrap: anywhere;
 }
 .about-stats-wide {
   grid-template-columns: repeat(4, 1fr);
@@ -3035,6 +3041,21 @@ dialog.legal .lg-body .todo {
   }
   .about-stats-wide {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .cloud {
+    padding: 32px 22px;
+  }
+  .about-stats {
+    gap: 10px;
+  }
+  .about-stats .stat {
+    padding: 16px 12px;
+  }
+  .about-stats .stat span {
+    font-size: 10.5px;
+    letter-spacing: .4px;
   }
 }
 
