@@ -7,3 +7,12 @@ marketing
 
 # Altes Single-File-Backup — nicht öffentlich ausliefern.
 axon-final.backup.html
+
+# Blog-Automation: Generator, Workflow und interne Dateien nicht deployen.
+scripts
+.github
+blog/README.md
+blog/styleguide.md
+blog/topics.md
+blog/template.html
+blog/posts.json

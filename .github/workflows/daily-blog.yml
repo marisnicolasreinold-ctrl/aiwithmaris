@@ -1,0 +1,85 @@
+# Veröffentlicht jeden Morgen automatisch einen neuen Blog-Artikel.
+# Voraussetzung: Repository-Secret ANTHROPIC_API_KEY
+# (Settings → Secrets and variables → Actions → New repository secret).
+#
+# Manuell testen: Actions → "Täglicher Blog-Artikel" → Run workflow
+# (optional mit mode=news oder mode=evergreen).
+
+name: Täglicher Blog-Artikel
+
+on:
+  schedule:
+    # 04:30 UTC = 06:30 deutscher Sommerzeit / 05:30 Winterzeit
+    - cron: "30 4 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Artikel-Typ (auto = nach Wochentag: Di+Fr News, sonst Evergreen)"
+        type: choice
+        options: [auto, evergreen, news]
+        default: auto
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: daily-blog
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Abhängigkeiten installieren
+        run: npm install --no-audit --no-fund --prefix scripts
+
+      - name: Artikel generieren
+        id: generate
+        run: node scripts/generate-blog-post.mjs
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          BLOG_MODE: ${{ github.event.inputs.mode != 'auto' && github.event.inputs.mode || '' }}
+
+      - name: Committen und pushen
+        env:
+          TITLE: ${{ steps.generate.outputs.title }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "blog: ${TITLE:-Täglicher Artikel} (auto-publish)"
+          for delay in 2 4 8 16 0; do
+            if git push; then exit 0; fi
+            if [ "$delay" = "0" ]; then exit 1; fi
+            sleep "$delay"
+            git pull --rebase
+          done
+
+      - name: Bei Fehler ein Issue anlegen
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const date = new Date().toISOString().slice(0, 10);
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Täglicher Blog-Artikel fehlgeschlagen (${date})`,
+              body: [
+                "Der automatische Blog-Workflow ist fehlgeschlagen — heute wurde kein Artikel veröffentlicht.",
+                "",
+                `Details: ${runUrl}`,
+                "",
+                "Häufige Ursachen: ANTHROPIC_API_KEY fehlt/abgelaufen, API-Kontingent erschöpft, Netzwerkfehler.",
+                "Der Workflow läuft morgen automatisch wieder; manuell erneut starten geht über Actions → Run workflow.",
+              ].join("\n"),
+              labels: ["blog-automation"],
+            });

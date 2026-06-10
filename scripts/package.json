@@ -1,0 +1,9 @@
+{
+  "name": "aiwithmaris-blog-scripts",
+  "private": true,
+  "type": "module",
+  "description": "Generator für den täglichen Blog-Artikel (läuft in GitHub Actions, nicht auf Vercel).",
+  "dependencies": {
+    "@anthropic-ai/sdk": "latest"
+  }
+}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="de" data-blog-lang="de" data-alt-url="/blog/en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#05060c" />
+
+<title>Blog — AI with Maris</title>
+<meta name="description" content="Täglich ein neuer Artikel über KI im Mittelstand: praktisch, ehrlich, ohne Buzzwords. Von Maris Reinold." />
+<meta name="author" content="Maris Reinold" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://aiwithmaris.com/blog" />
+<link rel="alternate" hreflang="de" href="https://aiwithmaris.com/blog" />
+<link rel="alternate" hreflang="en" href="https://aiwithmaris.com/blog/en" />
+<link rel="alternate" type="application/rss+xml" title="AI with Maris — Blog" href="https://aiwithmaris.com/blog/feed.xml" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Blog — AI with Maris" />
+<meta property="og:description" content="Täglich ein neuer Artikel über KI im Mittelstand: praktisch, ehrlich, ohne Buzzwords." />
+<meta property="og:url" content="https://aiwithmaris.com/blog" />
+<meta property="og:image" content="https://aiwithmaris.com/assets/og-axon.png" />
+
+<link rel="icon" type="image/png" href="/assets/logo-axon.png" />
+<link rel="stylesheet" href="/assets/fonts/fonts.css" />
+<link rel="stylesheet" href="/style.css" />
+<script src="/blog/blog-lang.js"></script>
+
+<style>
+.blog-list{display:grid;gap:18px;margin-top:40px}
+.blog-card{display:block;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:24px 26px;background:rgba(255,255,255,.03);text-decoration:none;transition:border-color .2s ease,background .2s ease}
+.blog-card:hover{border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.05)}
+.blog-card time{color:var(--muted);font-size:.85rem}
+.blog-card h2{font-family:var(--display);font-weight:700;color:var(--text);font-size:clamp(1.15rem,2.2vw,1.45rem);letter-spacing:-.01em;line-height:1.25;margin:8px 0 8px}
+.blog-card p{color:var(--muted);font-weight:300;margin:0 0 12px;line-height:1.6}
+.blog-card .more{color:var(--text);font-size:.9rem}
+.blog-empty{border:1px dashed rgba(255,255,255,.15);border-radius:16px;padding:34px;color:var(--muted);text-align:center;margin-top:40px}
+</style>
+</head>
+<body>
+
+<canvas id="scene"></canvas>
+<div class="bg-glow"></div><div class="grain"></div><div class="vignette"></div>
+<div class="cursor-ring"></div><div class="cursor-dot"></div>
+
+<a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+<nav id="nav" aria-label="Hauptnavigation">
+  <div class="nav-inner">
+    <a class="logo" href="/index.html" aria-label="AI with Maris — zur Startseite"><img src="/assets/logo-axon.png" alt="" />AI with Maris</a>
+    <div class="nav-links" id="navlinks">
+      <a href="/leistungen.html">Leistungen</a>
+      <a href="/beispiele.html">Beispiele</a>
+      <a href="/guide.html">KI-Guide<span class="nav-pill">PDF</span></a>
+      <a href="/blog" class="active">Blog</a>
+      <a href="/ueber-uns.html">Über mich</a>
+      <a href="/kontakt.html" class="nav-cta">Kontakt</a>
+      <button class="lang-toggle" id="langToggle" type="button">EN</button>
+    </div>
+    <button class="burger" id="burger" type="button" aria-label="Menü öffnen" aria-expanded="false" aria-controls="navlinks"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="wrap">
+<main id="main" tabindex="-1">
+
+<section class="section-pad" style="padding-top:140px">
+  <div class="container" style="max-width:840px">
+    <span class="eyebrow">Blog</span>
+    <h1 style="font-family:var(--display);font-weight:700;font-size:clamp(1.9rem,4vw,2.9rem);letter-spacing:-.02em;line-height:1.1;margin:16px 0 18px">Jeden Tag ein Gedanke zu KI im Mittelstand.</h1>
+    <p style="color:var(--muted);font-weight:300;max-width:640px">Praktisch, ehrlich, ohne Buzzwords — kurze Artikel über das, was KI im Unternehmensalltag wirklich verändert. <a href="/blog/feed.xml" style="color:var(--text)">RSS-Feed</a></p>
+
+    <div class="blog-list">
+<!-- BLOG:LIST:START -->
+      <div class="blog-empty">Der erste Artikel erscheint in Kürze — schau morgen wieder vorbei.</div>
+<!-- BLOG:LIST:END -->
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div><div class="logo" style="margin-bottom:16px"><img src="/assets/logo-axon.png" alt="" />AI with Maris</div>
+        <p>KI-Coaching &amp; maßgeschneiderte Software-Entwicklung — cloud-neutral, datensouverän, ohne Lock-in.</p></div>
+      <div class="foot-links">
+        <div class="foot-col"><h4>Angebot</h4><a href="/leistungen.html">Leistungen</a><a href="/beispiele.html">Beispiele</a><a href="/guide.html">KI-Guide</a><a href="/blog">Blog</a><a href="/ueber-uns.html">Über mich</a></div>
+        <div class="foot-col"><h4>Kontakt</h4><a href="mailto:marisnicolasreinold@gmail.com">marisnicolasreinold@gmail.com</a><a href="/kontakt.html">Kontakt</a></div>
+        <div class="foot-col"><h4>Rechtliches</h4><a href="/impressum.html">Impressum</a><a href="/datenschutz.html">Datenschutz</a><a href="/agb.html">AGB</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 AI with Maris</span><span>Made in Germany · Cloud-neutral · Powered by AI</span></div>
+  </div>
+</footer>
+
+</div>
+
+<script src="/vendor/three.min.js"></script>
+<script src="/main.js"></script>
+<script src="/i18n.js"></script>
+</body>
+</html>
