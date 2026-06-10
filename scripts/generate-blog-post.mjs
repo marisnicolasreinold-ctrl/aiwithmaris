@@ -1,16 +1,17 @@
 // Täglicher Blog-Generator für aiwithmaris.com
 //
-// Läuft in GitHub Actions (.github/workflows/daily-blog.yml). Ablauf:
-//   1. Modus bestimmen: Di + Fr = News-Kommentar (mit Websuche),
-//      sonst Evergreen-Thema aus blog/topics.md (leere Liste wird per KI nachgefüllt)
-//   2. Artikel schreiben (DE + EN in einem Aufruf, strukturierte Ausgabe)
-//   3. Qualitäts-Check gegen den Styleguide, bei Beanstandung eine Überarbeitung
-//   4. HTML-Seiten, Blog-Index (DE/EN), RSS-Feeds und Sitemap erzeugen
-//   5. topics.md und posts.json fortschreiben — der Commit passiert im Workflow
+// Läuft in GitHub Actions (.github/workflows/daily-blog.yml). Drei Modi:
+//   queue     (Standard, KEIN API-Key nötig): veröffentlicht den ältesten
+//             vorbereiteten Artikel aus blog/queue/*.json — die Entwürfe
+//             entstehen wöchentlich im Claude-Chat und werden dort freigegeben
+//   evergreen (braucht ANTHROPIC_API_KEY): schreibt selbst einen Artikel zum
+//             obersten offenen Thema aus blog/topics.md
+//   news      (braucht ANTHROPIC_API_KEY): sucht eine aktuelle KI-Nachricht
+//             per Websuche und schreibt eine Einordnung
 //
-// Benötigt: ANTHROPIC_API_KEY. Optional: BLOG_MODE=news|evergreen (sonst nach Wochentag).
+// Veröffentlichen heißt immer: HTML-Seiten (DE+EN), Blog-Index, RSS-Feeds und
+// Sitemap erzeugen, topics.md/posts.json fortschreiben — Commit macht der Workflow.
 
-import Anthropic from "@anthropic-ai/sdk";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -19,7 +20,16 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = "https://aiwithmaris.com";
 const MODEL = "claude-opus-4-8";
 
-const client = new Anthropic();
+// SDK nur laden, wenn ein KI-Modus es braucht — der Queue-Modus läuft ohne
+// Abhängigkeiten und ohne API-Key.
+let _client;
+async function getClient() {
+  if (!_client) {
+    const { default: Anthropic } = await import("@anthropic-ai/sdk");
+    _client = new Anthropic();
+  }
+  return _client;
+}
 
 const read = (p) => fs.readFileSync(path.join(ROOT, p), "utf8");
 const write = (p, c) => {
@@ -75,6 +85,7 @@ function readingMinutes(html) {
 // Server-Tools (Websuche) können mit stop_reason "pause_turn" pausieren —
 // dann denselben Verlauf erneut senden, die API macht weiter.
 async function createWithContinuation(params, maxContinuations = 6) {
+  const client = await getClient();
   let messages = params.messages;
   let response = await client.messages.create({ ...params, messages });
   let rounds = 0;
@@ -143,12 +154,21 @@ const TOPICS_SCHEMA = {
 
 const now = new Date();
 const weekday = now.getDay(); // 0=So … 6=Sa
+// Standard ist "queue" (kein API-Key nötig). "auto" wählt nach Wochentag
+// zwischen den KI-Modi (Di+Fr News, sonst Evergreen).
+const requested = process.env.BLOG_MODE || "queue";
 const mode =
-  process.env.BLOG_MODE === "news" || process.env.BLOG_MODE === "evergreen"
-    ? process.env.BLOG_MODE
-    : weekday === 2 || weekday === 5
+  requested === "auto"
+    ? weekday === 2 || weekday === 5
       ? "news"
-      : "evergreen";
+      : "evergreen"
+    : requested;
+
+function ghOutput(key, value) {
+  if (process.env.GITHUB_OUTPUT) {
+    fs.appendFileSync(process.env.GITHUB_OUTPUT, `${key}=${value}\n`);
+  }
+}
 
 const recentTitles = postsDb.posts.slice(0, 20).map((p) => p.de.title);
 
@@ -161,7 +181,7 @@ function parseOpenTopics(topicsMd) {
 
 async function refillTopics(topicsMd) {
   console.log("Themenliste leer — generiere Nachschub …");
-  const response = await client.messages.create({
+  const response = await (await getClient()).messages.create({
     model: MODEL,
     max_tokens: 4000,
     thinking: { type: "adaptive" },
@@ -216,6 +236,7 @@ const WRITER_SYSTEM =
   `- Die englische Fassung ist derselbe Artikel im selben Ton, kein Wort-für-Wort-Übersetzungston.`;
 
 async function writeArticle(assignment, feedback = "") {
+  const client = await getClient();
   const stream = client.messages.stream({
     model: MODEL,
     max_tokens: 32000,
@@ -239,7 +260,7 @@ async function writeArticle(assignment, feedback = "") {
 }
 
 async function reviewArticle(article) {
-  const response = await client.messages.create({
+  const response = await (await getClient()).messages.create({
     model: MODEL,
     max_tokens: 4000,
     thinking: { type: "adaptive" },
@@ -426,6 +447,26 @@ async function main() {
     return;
   }
 
+  // Queue-Modus: ältesten vorbereiteten Artikel aus blog/queue/ veröffentlichen.
+  // Die JSON-Dateien entstehen wöchentlich im Claude-Chat nach Freigabe.
+  if (mode === "queue") {
+    const qdir = path.join(ROOT, "blog/queue");
+    const files = fs.existsSync(qdir)
+      ? fs.readdirSync(qdir).filter((f) => f.endsWith(".json")).sort()
+      : [];
+    ghOutput("remaining", String(Math.max(0, files.length - 1)));
+    if (files.length === 0) {
+      console.log("Warteschlange leer — heute erscheint kein Artikel.");
+      ghOutput("published", "false");
+      return;
+    }
+    const article = JSON.parse(fs.readFileSync(path.join(qdir, files[0]), "utf8"));
+    publish(article, topicsMd, article.topic || "Aus der Warteschlange");
+    fs.unlinkSync(path.join(qdir, files[0]));
+    console.log(`Noch ${files.length - 1} Artikel in der Warteschlange.`);
+    return;
+  }
+
   if (mode === "news") {
     const research = await researchNews();
     topicLabel = "News-Kommentar";
@@ -491,18 +532,17 @@ function publish(article, topicsMd, topicLabel) {
   write("blog/en/feed.xml", renderFeed(postsDb.posts, "en"));
   write("sitemap.xml", renderSitemap(postsDb.posts));
 
-  // Thema in topics.md als veröffentlicht markieren
+  // Thema in topics.md als veröffentlicht markieren. Das Abhaken greift,
+  // wenn topicLabel ein offenes Thema ist (Evergreen oder Queue-Artikel mit
+  // "topic"-Feld) — sonst läuft das replace ins Leere.
   const publishedLine = `- ${now.toISOString().slice(0, 10)} — ${post.de.title} (${mode === "news" ? "News" : topicLabel})`;
-  if (mode === "evergreen") {
-    topicsMd = topicsMd.replace(`- [ ] ${topicLabel}\n`, "");
-  }
+  topicsMd = topicsMd.replace(`- [ ] ${topicLabel}\n`, "");
   topicsMd = topicsMd.replace("## Veröffentlicht", `## Veröffentlicht\n\n${publishedLine}`);
   write("blog/topics.md", topicsMd);
 
-  // Titel an den Workflow durchreichen (für die Commit-Message)
-  if (process.env.GITHUB_OUTPUT) {
-    fs.appendFileSync(process.env.GITHUB_OUTPUT, `title=${post.de.title.replace(/\n/g, " ")}\n`);
-  }
+  // An den Workflow durchreichen (Commit-Message + Commit-Bedingung)
+  ghOutput("title", post.de.title.replace(/\n/g, " "));
+  ghOutput("published", "true");
   console.log(`Fertig: /blog/${slug} + /blog/en/${slug}`);
 }
 

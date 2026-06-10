@@ -1,9 +1,13 @@
-# Veröffentlicht jeden Morgen automatisch einen neuen Blog-Artikel.
-# Voraussetzung: Repository-Secret ANTHROPIC_API_KEY
-# (Settings → Secrets and variables → Actions → New repository secret).
+# Veröffentlicht jeden Morgen automatisch den nächsten Artikel aus der
+# Warteschlange (blog/queue/*.json) — KEIN API-Key nötig.
 #
-# Manuell testen: Actions → "Täglicher Blog-Artikel" → Run workflow
-# (optional mit mode=news oder mode=evergreen).
+# Die Warteschlange wird wöchentlich gefüllt: Claude-Chat öffnen,
+# „Neue Blog-Runde" sagen, 5 Entwürfe freigeben — Claude reiht sie ein.
+# Ist die Warteschlange fast leer, legt der Workflow als Erinnerung
+# automatisch ein GitHub-Issue an.
+#
+# Optional gibt es weiter die KI-Modi (brauchen das Secret ANTHROPIC_API_KEY):
+# Actions → Run workflow → mode=evergreen oder mode=news.
 
 name: Täglicher Blog-Artikel
 
@@ -14,10 +18,10 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "Artikel-Typ (auto = nach Wochentag: Di+Fr News, sonst Evergreen)"
+        description: "queue = nächster Artikel aus der Warteschlange (ohne API-Key); evergreen/news schreiben per Claude API"
         type: choice
-        options: [auto, evergreen, news]
-        default: auto
+        options: [queue, evergreen, news]
+        default: queue
 
 permissions:
   contents: write
@@ -37,17 +41,19 @@ jobs:
         with:
           node-version: 22
 
-      - name: Abhängigkeiten installieren
+      - name: Abhängigkeiten installieren (nur KI-Modi)
+        if: github.event.inputs.mode == 'evergreen' || github.event.inputs.mode == 'news'
         run: npm install --no-audit --no-fund --prefix scripts
 
-      - name: Artikel generieren
+      - name: Artikel veröffentlichen
         id: generate
         run: node scripts/generate-blog-post.mjs
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          BLOG_MODE: ${{ github.event.inputs.mode != 'auto' && github.event.inputs.mode || '' }}
+          BLOG_MODE: ${{ github.event.inputs.mode || 'queue' }}
 
       - name: Committen und pushen
+        if: steps.generate.outputs.published == 'true'
         env:
           TITLE: ${{ steps.generate.outputs.title }}
         run: |
@@ -61,6 +67,38 @@ jobs:
             sleep "$delay"
             git pull --rebase
           done
+
+      - name: Nachschub-Erinnerung anlegen, wenn Warteschlange fast leer
+        if: steps.generate.outputs.remaining != '' && fromJSON(steps.generate.outputs.remaining) <= 1
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: open } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: "open",
+              labels: "blog-nachschub",
+            });
+            if (open.length > 0) return; // Erinnerung existiert schon
+            const remaining = ${{ steps.generate.outputs.remaining || 0 }};
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: "Blog-Nachschub: Zeit für 5 neue Artikel",
+              body: [
+                `Die Artikel-Warteschlange ist fast leer (noch ${remaining} Artikel).`,
+                "",
+                "So füllst du sie auf (ca. 10 Minuten):",
+                "1. Neuen Claude-Code-Chat für dieses Repo öffnen",
+                "2. Schreiben: **„Neue Blog-Runde — schreib mir 5 Artikel-Vorschläge"**",
+                "3. Entwürfe lesen, freigeben (oder Änderungen wünschen)",
+                "4. Claude reiht die freigegebenen Artikel in `blog/queue/` ein — fertig",
+                "",
+                "Danach erscheint wieder jeden Morgen automatisch ein Artikel.",
+                "Dieses Issue kannst du schließen, sobald die Runde durch ist.",
+              ].join("\n"),
+              labels: ["blog-nachschub"],
+            });
 
       - name: Bei Fehler ein Issue anlegen
         if: failure()
@@ -78,7 +116,6 @@ jobs:
                 "",
                 `Details: ${runUrl}`,
                 "",
-                "Häufige Ursachen: ANTHROPIC_API_KEY fehlt/abgelaufen, API-Kontingent erschöpft, Netzwerkfehler.",
                 "Der Workflow läuft morgen automatisch wieder; manuell erneut starten geht über Actions → Run workflow.",
               ].join("\n"),
               labels: ["blog-automation"],

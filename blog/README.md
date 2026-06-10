@@ -1,43 +1,54 @@
-# Automatischer Tagesblog — so funktioniert er
+# Blog — so funktioniert er (ohne API-Key)
 
 Jeden Morgen (06:30 Sommerzeit / 05:30 Winterzeit) veröffentlicht GitHub
-Actions automatisch einen neuen Artikel auf Deutsch und Englisch. Vercel
-deployt den Commit, der Artikel ist sofort live. Du musst nichts tun.
+Actions automatisch den nächsten vorbereiteten Artikel aus der Warteschlange
+`blog/queue/` — auf Deutsch und Englisch. Vercel deployt den Commit, der
+Artikel ist sofort live. **Es wird kein Anthropic-API-Key benötigt.**
 
-## Einmalige Einrichtung (ein Handgriff)
+## Der Wochenrhythmus
 
-1. Anthropic-API-Key besorgen: https://platform.claude.com → API Keys
-2. In GitHub hinterlegen: Repo → **Settings → Secrets and variables →
-   Actions → New repository secret** → Name `ANTHROPIC_API_KEY`,
-   Wert = der Key.
+1. **Erinnerung:** Ist die Warteschlange fast leer, legt der Workflow
+   automatisch ein GitHub-Issue an („Blog-Nachschub: Zeit für 5 neue
+   Artikel") — davon bekommst du eine E-Mail.
+2. **Schreiben im Chat:** Neuen Claude-Code-Chat für dieses Repo öffnen und
+   sagen: **„Neue Blog-Runde — schreib mir 5 Artikel-Vorschläge."**
+   Claude schreibt 5 Entwürfe im Maris-Stil (nach `styleguide.md`, Themen
+   aus `topics.md`).
+3. **Freigeben:** Du liest die Entwürfe im Chat, wünschst Änderungen oder
+   gibst frei.
+4. **Einreihen:** Claude legt die freigegebenen Artikel als JSON-Dateien in
+   `blog/queue/` ab und pusht. Ab dann erscheint automatisch jeden Morgen
+   einer davon — eine Woche Tagesrhythmus aus einer Freigabe-Runde.
 
-Fertig. Der erste Artikel erscheint am nächsten Morgen — oder sofort per
-**Actions → „Täglicher Blog-Artikel" → Run workflow**.
+## Format der Queue-Dateien
 
-## Ablauf pro Tag
+`blog/queue/2026-06-11-mein-slug.json` (Dateiname bestimmt die Reihenfolge,
+älteste zuerst):
 
-1. **Thema:** Mo/Mi/Do/Sa/So nimmt das Skript das oberste offene Thema aus
-   `topics.md`. Di + Fr sucht es per Websuche eine aktuelle KI-Nachricht
-   und schreibt eine Einordnung dazu. Leere Themenliste füllt sich selbst.
-2. **Schreiben:** Claude (Opus) schreibt den Artikel in DE + EN — streng
-   nach dem Stilprofil in `styleguide.md`.
-3. **Lektorat:** Ein zweiter KI-Durchlauf prüft Stiltreue, Faktentreue und
-   HTML. Bei Beanstandung wird einmal überarbeitet.
-4. **Veröffentlichen:** Artikelseiten, Blog-Übersicht (DE/EN), RSS-Feeds
-   und Sitemap werden aktualisiert und auf `main` gepusht → Vercel deployt.
-5. **Absicherung:** Schlägt der Lauf fehl, legt der Workflow automatisch
-   ein GitHub-Issue an, damit es nicht unbemerkt bleibt.
+```json
+{
+  "slug": "mein-slug",
+  "topic": "Exakter Wortlaut des Themas aus topics.md (optional, wird abgehakt)",
+  "de": { "title": "…", "teaser": "max. 160 Zeichen", "html": "<p>…</p>" },
+  "en": { "title": "…", "teaser": "max. 160 characters", "html": "<p>…</p>" }
+}
+```
+
+Erlaubte HTML-Tags im Artikeltext: `<p> <h2> <h3> <ul> <ol> <li> <strong> <em> <a>`.
 
 ## Stellschrauben
 
 | Was du ändern willst | Wo |
 | --- | --- |
-| Schreibstil | `blog/styleguide.md` — wirkt ab dem nächsten Artikel |
-| Themen | `blog/topics.md` — oberstes offenes Thema kommt als Nächstes |
-| News-Tage / Uhrzeit | `.github/workflows/daily-blog.yml` (Cron) bzw. `scripts/generate-blog-post.mjs` (Wochentage) |
-| Artikel löschen | `blog/<slug>.html` + `blog/en/<slug>.html` löschen und den Eintrag aus `blog/posts.json` entfernen, dann committen (Index/Feed werden beim nächsten Lauf neu erzeugt) |
+| Schreibstil | `blog/styleguide.md` — Grundlage jeder Chat-Runde |
+| Themen | `blog/topics.md` — oberste offene Themen kommen zuerst dran |
+| Reihenfolge der Queue | Dateinamen in `blog/queue/` (alphabetisch = Reihenfolge) |
+| Uhrzeit | Cron in `.github/workflows/daily-blog.yml` |
+| Artikel löschen | `blog/<slug>.html` + `blog/en/<slug>.html` löschen und Eintrag aus `blog/posts.json` entfernen, committen |
 
-## Kosten
+## Optional: vollautomatischer KI-Modus
 
-Ein Artikel/Tag mit Claude Opus: grob 5–15 Cent pro Tag, je nach Länge und
-News-Recherche — also wenige Euro im Monat.
+Der Generator kann Artikel auch selbst schreiben (Claude API). Dafür das
+Repo-Secret `ANTHROPIC_API_KEY` hinterlegen und den Workflow manuell mit
+`mode=evergreen` oder `mode=news` starten (Actions → Run workflow). Der
+tägliche Zeitplan nutzt das nicht — er bedient nur die Warteschlange.
