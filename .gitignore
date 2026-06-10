@@ -32,3 +32,6 @@ npm-debug.log*
 # Backup files
 *.backup.*
 axon-final.backup.html
+
+# Temporaere Commit-Message-Datei
+.git-commit-msg.txt
