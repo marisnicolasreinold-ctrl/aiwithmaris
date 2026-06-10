@@ -108,7 +108,7 @@ body.cursor-custom select {
   border-color: rgba(124, 92, 255, .8);
   background: rgba(124, 92, 255, .06);
 }
-@media (max-width: 860px) {
+@media (max-width: 860px), (hover: none) {
   .cursor-dot,
   .cursor-ring {
     display: none;
@@ -149,7 +149,8 @@ nav {
   transition: background-color .4s ease, border-color .4s ease;
 }
 nav.scrolled {
-  background: rgba(5, 6, 12, .6);
+  background: rgba(5, 6, 12, .82);
+  -webkit-backdrop-filter: blur(18px);
   backdrop-filter: blur(18px);
   border-bottom: 1px solid var(--line);
 }
@@ -247,6 +248,7 @@ nav.scrolled {
     flex-direction: column;
     justify-content: center;
     background: rgba(5, 6, 12, .97);
+    -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(20px);
     transform: translateX(100%);
     transition: transform .4s ease;
@@ -262,6 +264,7 @@ nav.scrolled {
 }
 .hero {
   min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   align-items: center;
   padding-top: 90px;
@@ -355,6 +358,7 @@ nav.scrolled {
   color: var(--text);
   border: 1px solid var(--line);
   background: var(--glass);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
 .btn-ghost:hover {
@@ -373,6 +377,7 @@ nav.scrolled {
   border-radius: 24px;
   background: linear-gradient(160deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .015));
   border: 1px solid var(--line);
+  -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   box-shadow: 0 30px 80px rgba(0, 0, 0, .5), inset 0 1px 0 rgba(255, 255, 255, .08);
   animation: float 6s ease-in-out infinite;
@@ -515,6 +520,14 @@ nav.scrolled {
 .section-pad {
   padding: 130px 0;
 }
+@media (max-width: 640px) {
+  .section-pad {
+    padding: 84px 0;
+  }
+  .sec-head {
+    margin-bottom: 40px;
+  }
+}
 .pillars {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -531,6 +544,7 @@ nav.scrolled {
   border-radius: 26px;
   border: 1px solid var(--line);
   background: linear-gradient(165deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .012));
+  -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   overflow: hidden;
 }
@@ -622,6 +636,7 @@ nav.scrolled {
   border-radius: 20px;
   border: 1px solid var(--line);
   background: linear-gradient(160deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .012));
+  -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   transition: transform .4s cubic-bezier(.2, .7, .2, 1), border-color .4s;
   transform-style: preserve-3d;
@@ -736,6 +751,7 @@ a.card h3 {
   position: absolute;
   inset: 0;
   background: rgba(3, 4, 9, .86);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
 .vm-inner {
@@ -817,6 +833,7 @@ a.card h3 {
   border-radius: 18px;
   border: 1px solid var(--line);
   background: linear-gradient(160deg, rgba(255, 255, 255, .045), rgba(255, 255, 255, .01));
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   transition: transform .35s ease, border-color .35s ease;
   overflow: hidden;
@@ -883,6 +900,7 @@ a.card h3 {
   border-radius: 28px;
   border: 1px solid var(--line);
   background: linear-gradient(120deg, rgba(77, 107, 255, .1), rgba(94, 240, 255, .05));
+  -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   overflow: hidden;
 }
@@ -1014,6 +1032,7 @@ a.card h3 {
   color: var(--muted);
   cursor: pointer;
   transition: color .3s ease, border-color .3s ease, background .3s ease, box-shadow .3s ease;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
 @media (max-width: 860px) {
@@ -1101,6 +1120,7 @@ a.card h3 {
   border-radius: 18px;
   border: 1px solid rgba(94, 240, 255, .25);
   background: linear-gradient(120deg, rgba(94, 240, 255, .08), rgba(124, 92, 255, .06));
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
 }
 .demo-band .db-ic {
@@ -1507,6 +1527,7 @@ a.card h3 {
   border-radius: 24px;
   border: 1px solid var(--line);
   background: linear-gradient(120deg, rgba(124, 92, 255, .08), rgba(94, 240, 255, .05));
+  -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
 }
 @media (max-width: 760px) {
@@ -1630,6 +1651,7 @@ a.card h3 {
   border-radius: 24px;
   border: 1px solid var(--line);
   background: linear-gradient(165deg, rgba(255, 255, 255, .045), rgba(255, 255, 255, .01));
+  -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   transition: transform .35s ease, border-color .35s ease;
 }
@@ -1943,6 +1965,7 @@ h3,
   border-radius: 22px;
   border: 1px solid var(--line);
   background: linear-gradient(160deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .012));
+  -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   transition: transform .35s ease, border-color .35s ease;
 }
@@ -2235,6 +2258,7 @@ h3,
   border-radius: 24px;
   border: 1px solid var(--line);
   background: linear-gradient(165deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .012));
+  -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
 }
 .field {
@@ -2354,6 +2378,7 @@ dialog.legal {
 }
 dialog.legal::backdrop {
   background: rgba(3, 4, 9, .78);
+  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
 }
 dialog.legal .lg-head {
@@ -2503,6 +2528,7 @@ dialog.legal .lg-body .todo {
   border-radius: 28px;
   border: 1px solid var(--line);
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+  -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   margin-top: 40px;
   position: relative;
@@ -2513,6 +2539,9 @@ dialog.legal .lg-body .todo {
   grid-template-columns: 1fr 1.2fr;
   gap: 40px;
   align-items: start;
+}
+.prompt-grid > * {
+  min-width: 0;
 }
 @media(max-width: 860px) {
   .prompt-grid {
@@ -2550,13 +2579,21 @@ dialog.legal .lg-body .todo {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   border-bottom: 1px solid #1a1e2e;
   padding-bottom: 12px;
+  padding-right: 88px;
   margin-bottom: 16px;
   color: var(--muted);
   font-size: 0.72rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+.console-head span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 .console-dots {
   display: flex;
@@ -2575,7 +2612,7 @@ dialog.legal .lg-body .todo {
 .console-body {
   flex: 1;
   white-space: pre-wrap;
-  word-break: break-all;
+  overflow-wrap: break-word;
 }
 .console-body .c-sys { color: #ff7b72; }
 .console-body .c-ctx { color: #79c0ff; }
@@ -2607,6 +2644,7 @@ dialog.legal .lg-body .todo {
   position: absolute;
   inset: 0;
   background: rgba(6, 7, 13, 0.85);
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
   border-radius: 16px;
   color: var(--cyan);
