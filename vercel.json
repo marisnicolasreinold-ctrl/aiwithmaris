@@ -4,6 +4,12 @@
   "rewrites": [
     { "source": "/apps/:path*", "destination": "/apps/:path*" }
   ],
+  "redirects": [
+    { "source": "/loesungen", "destination": "/leistungen#abteilungen", "permanent": true },
+    { "source": "/loesungen.html", "destination": "/leistungen#abteilungen", "permanent": true },
+    { "source": "/preise", "destination": "/guide", "permanent": true },
+    { "source": "/preise.html", "destination": "/guide", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/(.*)",

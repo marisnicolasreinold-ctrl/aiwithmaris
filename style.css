@@ -2888,3 +2888,114 @@ dialog.legal .lg-body .todo {
     order: -1;
   }
 }
+
+/* === Site-Umbau: Nav-Pill, Promo-Video, About-Stats === */
+.nav-pill {
+  display: inline-block;
+  margin-left: 7px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--cyan);
+  border: 1px solid rgba(94, 240, 255, .4);
+  background: rgba(94, 240, 255, .08);
+  vertical-align: 2px;
+}
+
+.promo-video {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(94, 240, 255, .25);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, .5), 0 0 60px rgba(124, 92, 255, .14);
+  background: var(--bg2);
+}
+.pv-video,
+.vb-video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.pv-link {
+  position: absolute;
+  inset: 0;
+}
+.pv-link:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+
+.video-band {
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  box-shadow: 0 36px 90px rgba(0, 0, 0, .5), 0 0 70px rgba(94, 240, 255, .08);
+  background: var(--bg2);
+}
+
+.about-teaser-grid {
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  gap: 48px;
+  align-items: center;
+}
+.about-teaser-grid h2 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+  letter-spacing: -.02em;
+  line-height: 1.12;
+  margin: 14px 0 14px;
+}
+.about-teaser-grid p {
+  color: var(--muted);
+  font-weight: 300;
+}
+
+.about-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+.about-stats .stat {
+  background: var(--glass);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 22px 20px;
+  text-align: center;
+}
+.about-stats .stat b {
+  display: block;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  letter-spacing: -.02em;
+  background: linear-gradient(110deg, var(--cyan), var(--violet) 60%, #ffd479);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.about-stats .stat span {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .6px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.about-stats-wide {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 900px) {
+  .about-teaser-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .about-stats-wide {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
