@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" data-blog-lang="en" data-alt-url="/blog/halluzinationen-verstehen">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#05060c" />
+
+<title>Understanding hallucinations: why AI confidently makes things up — AI with Maris</title>
+<meta name="description" content="AI models sometimes invent facts — with full conviction. Why that’s not a bug, when it gets dangerous and how to protect yourself." />
+<meta name="author" content="Maris Reinold" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://aiwithmaris.com/blog/en/halluzinationen-verstehen" />
+<link rel="alternate" hreflang="de" href="https://aiwithmaris.com/blog/halluzinationen-verstehen" />
+<link rel="alternate" hreflang="en" href="https://aiwithmaris.com/blog/en/halluzinationen-verstehen" />
+<link rel="alternate" type="application/rss+xml" title="AI with Maris — Blog" href="https://aiwithmaris.com/blog/en/feed.xml" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Understanding hallucinations: why AI confidently makes things up" />
+<meta property="og:description" content="AI models sometimes invent facts — with full conviction. Why that’s not a bug, when it gets dangerous and how to protect yourself." />
+<meta property="og:url" content="https://aiwithmaris.com/blog/en/halluzinationen-verstehen" />
+<meta property="og:image" content="https://aiwithmaris.com/assets/og-axon.png" />
+<meta property="article:published_time" content="2026-05-31T06:30:00.000Z" />
+<meta property="article:author" content="Maris Reinold" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Understanding hallucinations: why AI confidently makes things up",
+  "description": "AI models sometimes invent facts — with full conviction. Why that’s not a bug, when it gets dangerous and how to protect yourself.",
+  "datePublished": "2026-05-31T06:30:00.000Z",
+  "inLanguage": "en",
+  "url": "https://aiwithmaris.com/blog/en/halluzinationen-verstehen",
+  "author": { "@type": "Person", "name": "Maris Reinold", "url": "https://aiwithmaris.com/ueber-uns.html" },
+  "publisher": { "@type": "Organization", "name": "AI with Maris", "url": "https://aiwithmaris.com" }
+}
+</script>
+
+<link rel="icon" type="image/png" href="/assets/logo-axon.png" />
+<link rel="stylesheet" href="/assets/fonts/fonts.css" />
+<link rel="stylesheet" href="/style.css" />
+<script src="/blog/blog-lang.js"></script>
+
+<style>
+.blog-prose{color:var(--muted);font-weight:300;font-size:1.04rem;line-height:1.75}
+.blog-prose p{margin:0 0 18px}
+.blog-prose h2{font-family:var(--display);font-weight:700;color:var(--text);font-size:clamp(1.3rem,2.4vw,1.7rem);letter-spacing:-.01em;line-height:1.25;margin:42px 0 14px}
+.blog-prose h3{color:var(--text);font-size:1.1rem;margin:30px 0 10px}
+.blog-prose ul,.blog-prose ol{margin:0 0 18px;padding-left:22px}
+.blog-prose li{margin-bottom:8px}
+.blog-prose strong{color:var(--text);font-weight:600}
+.blog-prose a{color:var(--text)}
+.blog-meta{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:.9rem;margin:18px 0 36px}
+.blog-back{display:inline-block;color:var(--muted);text-decoration:none;font-size:.92rem;margin-bottom:26px}
+.blog-back:hover{color:var(--text)}
+.blog-cta{margin-top:48px;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:26px 28px;background:rgba(255,255,255,.03)}
+.blog-cta h2{font-family:var(--display);font-weight:700;font-size:1.25rem;margin:0 0 8px}
+.blog-cta p{color:var(--muted);font-weight:300;margin:0 0 16px}
+</style>
+</head>
+<body>
+
+<canvas id="scene"></canvas>
+<div class="bg-glow"></div><div class="grain"></div><div class="vignette"></div>
+<div class="cursor-ring"></div><div class="cursor-dot"></div>
+
+<a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+<nav id="nav" aria-label="Hauptnavigation">
+  <div class="nav-inner">
+    <a class="logo" href="/index.html" aria-label="AI with Maris — zur Startseite"><img src="/assets/logo-axon.png" alt="" />AI with Maris</a>
+    <div class="nav-links" id="navlinks">
+      <a href="/leistungen.html">Leistungen</a>
+      <a href="/beispiele.html">Beispiele</a>
+      <a href="/guide.html">KI-Guide<span class="nav-pill">PDF</span></a>
+      <a href="/blog/en" class="active">Blog</a>
+      <a href="/ueber-uns.html">Über mich</a>
+      <a href="/kontakt.html" class="nav-cta">Kontakt</a>
+      <button class="lang-toggle" id="langToggle" type="button">DE</button>
+    </div>
+    <button class="burger" id="burger" type="button" aria-label="Menü öffnen" aria-expanded="false" aria-controls="navlinks"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="wrap">
+<main id="main" tabindex="-1">
+
+<section class="section-pad" style="padding-top:140px">
+  <div class="container" style="max-width:780px">
+    <a class="blog-back" href="/blog/en">← All articles</a>
+    <div><span class="eyebrow">Blog</span></div>
+    <h1 style="font-family:var(--display);font-weight:700;font-size:clamp(1.9rem,4vw,2.7rem);letter-spacing:-.02em;line-height:1.15;margin:16px 0 0">Understanding hallucinations: why AI confidently makes things up</h1>
+    <div class="blog-meta">
+      <time datetime="2026-05-31T06:30:00.000Z">31 May 2026</time>
+      <span>·</span>
+      <span>2 min read</span>
+      <span>·</span>
+      <span>Maris Reinold</span>
+    </div>
+
+    <article class="blog-prose">
+<p>Imagine asking an AI about a court ruling on employment law — and getting a convincing answer with case number, date and quote. It all sounds credible. Except: the ruling doesn’t exist. The AI invented it. Without hesitation, without a warning label.</p><p>This behaviour is called hallucination, and anyone deploying AI in a company should understand it — not to get scared, but to build the right guardrails.</p><h2>Why does this happen at all?</h2><p>A language model is not a reference book. It has no database of facts to look things up in. It has learned which words plausibly follow each other in which context — and that is exactly what it produces: <strong>plausible text</strong>. Most of the time, plausible is also correct. But when the model doesn’t know something, it still generates the most likely answer — and that answer sounds just as confident as a correct one.</p><p>So hallucinating is not a flaw in the system. It is the system. Models are getting better at admitting uncertainty — but you shouldn’t rely on it.</p><h2>Where it’s harmless — and where it isn’t</h2><p>The risk question isn’t “does the AI hallucinate?” but “what happens when it does?”</p><ul><li><strong>Harmless:</strong> draft texts, brainstorming, summaries that an expert reviews. An invented detail gets noticed and cut.</li><li><strong>Risky:</strong> numbers, legal matters, medical content, commitments to customers — anything that leaves the building unchecked or triggers decisions.</li></ul><h2>Four guardrails for practice</h2><ul><li><strong>Require sources:</strong> connect the AI to your real documents and have it answer from them — with a pointer to the passage. Then every statement can be verified.</li><li><strong>Human before send:</strong> everything that reaches customers is seen by a person first. Generating becomes checking — still far faster than writing from scratch.</li><li><strong>Ban the delicate questions:</strong> define the areas where the AI shouldn’t answer at all (legal advice, price commitments) but refer to a human instead.</li><li><strong>Ask instead of believe:</strong> the simplest check takes one second: “How do you know that?” Shaky sources get looked up.</li></ul><p>AI is a brilliant, fast colleague with one weakness: it never likes admitting it doesn’t know something. Know that, build your processes around it, and you get the benefit — <strong>without the nasty surprises</strong>.</p>
+    </article>
+
+    <div class="blog-cta reveal">
+      <h2>Want to go deeper?</h2>
+      <p>My AI guide “Start where it counts” lays out the full roadmap — from the first use case to scaling. Or just drop me a line.</p>
+      <a href="/guide.html" class="btn btn-primary" data-hover>Get the AI guide <span class="arrow">→</span></a>
+      &nbsp;
+      <a href="/kontakt.html" class="btn" data-hover>Contact</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div><div class="logo" style="margin-bottom:16px"><img src="/assets/logo-axon.png" alt="" />AI with Maris</div>
+        <p>KI-Coaching &amp; maßgeschneiderte Software-Entwicklung — cloud-neutral, datensouverän, ohne Lock-in.</p></div>
+      <div class="foot-links">
+        <div class="foot-col"><h4>Angebot</h4><a href="/leistungen.html">Leistungen</a><a href="/beispiele.html">Beispiele</a><a href="/guide.html">KI-Guide</a><a href="/blog/en">Blog</a><a href="/newsletter.html">Newsletter</a><a href="/ueber-uns.html">Über mich</a></div>
+        <div class="foot-col"><h4>Kontakt</h4><a href="mailto:marisnicolasreinold@gmail.com">marisnicolasreinold@gmail.com</a><a href="/kontakt.html">Kontakt</a></div>
+        <div class="foot-col"><h4>Rechtliches</h4><a href="/impressum.html">Impressum</a><a href="/datenschutz.html">Datenschutz</a><a href="/agb.html">AGB</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 AI with Maris</span><span>Made in Germany · Cloud-neutral · Powered by AI</span></div>
+  </div>
+</footer>
+
+</div>
+
+<script src="/vendor/three.min.js"></script>
+<script src="/main.js"></script>
+<script src="/i18n.js"></script>
+</body>
+</html>

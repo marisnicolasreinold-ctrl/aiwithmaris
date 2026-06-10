@@ -12,5 +12,33 @@
       <pubDate>Wed, 10 Jun 2026 20:00:39 GMT</pubDate>
       <description>Die meisten KI-Projekte scheitern nicht an der Technik. Sie scheitern an der Reihenfolge. Woran du das richtige erste Projekt erkennst.</description>
     </item>
+    <item>
+      <title>Halluzinationen verstehen: Warum KI selbstbewusst Unsinn erzählt</title>
+      <link>https://aiwithmaris.com/blog/halluzinationen-verstehen</link>
+      <guid>https://aiwithmaris.com/blog/halluzinationen-verstehen</guid>
+      <pubDate>Sun, 31 May 2026 06:30:00 GMT</pubDate>
+      <description>KI-Modelle erfinden manchmal Fakten — mit voller Überzeugung. Warum das kein Bug ist, wann es gefährlich wird und wie du dich schützt.</description>
+    </item>
+    <item>
+      <title>Warum dein Team KI-Tools nicht nutzt — und was Coaching daran ändert</title>
+      <link>https://aiwithmaris.com/blog/warum-dein-team-ki-nicht-nutzt</link>
+      <guid>https://aiwithmaris.com/blog/warum-dein-team-ki-nicht-nutzt</guid>
+      <pubDate>Wed, 27 May 2026 06:30:00 GMT</pubDate>
+      <description>Das Tool ist gekauft, die Lizenzen laufen — und keiner nutzt es. Woran das wirklich liegt und warum eine Schulung allein nichts ändert.</description>
+    </item>
+    <item>
+      <title>Make-or-Buy bei KI: Wann eigene Software, wann fertiges Tool?</title>
+      <link>https://aiwithmaris.com/blog/make-or-buy-bei-ki</link>
+      <guid>https://aiwithmaris.com/blog/make-or-buy-bei-ki</guid>
+      <pubDate>Fri, 22 May 2026 06:30:00 GMT</pubDate>
+      <description>Fertiges Tool kaufen oder selbst bauen lassen? Die Antwort hängt an einer einzigen Frage — und die hat nichts mit Technik zu tun.</description>
+    </item>
+    <item>
+      <title>Eigene Cloud oder US-Anbieter? Datenhoheit ohne Dogma</title>
+      <link>https://aiwithmaris.com/blog/datenhoheit-ohne-dogma</link>
+      <guid>https://aiwithmaris.com/blog/datenhoheit-ohne-dogma</guid>
+      <pubDate>Mon, 18 May 2026 06:30:00 GMT</pubDate>
+      <description>Zwischen „alles zu Big Tech“ und „alles selbst hosten“ liegt ein vernünftiger Mittelweg. Eine Entscheidungshilfe ohne Glaubenskrieg.</description>
+    </item>
   </channel>
 </rss>

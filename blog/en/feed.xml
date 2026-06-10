@@ -12,5 +12,33 @@
       <pubDate>Wed, 10 Jun 2026 20:00:39 GMT</pubDate>
       <description>Most AI projects don’t fail because of the technology. They fail because of the order of things. How to spot the right first project.</description>
     </item>
+    <item>
+      <title>Understanding hallucinations: why AI confidently makes things up</title>
+      <link>https://aiwithmaris.com/blog/en/halluzinationen-verstehen</link>
+      <guid>https://aiwithmaris.com/blog/en/halluzinationen-verstehen</guid>
+      <pubDate>Sun, 31 May 2026 06:30:00 GMT</pubDate>
+      <description>AI models sometimes invent facts — with full conviction. Why that’s not a bug, when it gets dangerous and how to protect yourself.</description>
+    </item>
+    <item>
+      <title>Why your team doesn’t use AI tools — and what coaching changes</title>
+      <link>https://aiwithmaris.com/blog/en/warum-dein-team-ki-nicht-nutzt</link>
+      <guid>https://aiwithmaris.com/blog/en/warum-dein-team-ki-nicht-nutzt</guid>
+      <pubDate>Wed, 27 May 2026 06:30:00 GMT</pubDate>
+      <description>The tool is bought, the licences are running — and nobody uses it. What’s really behind it, and why a single training session changes nothing.</description>
+    </item>
+    <item>
+      <title>Make or buy in AI: when to build custom software, when a ready-made tool will do</title>
+      <link>https://aiwithmaris.com/blog/en/make-or-buy-bei-ki</link>
+      <guid>https://aiwithmaris.com/blog/en/make-or-buy-bei-ki</guid>
+      <pubDate>Fri, 22 May 2026 06:30:00 GMT</pubDate>
+      <description>Buy a finished tool or have one built? The answer hangs on a single question — and it has nothing to do with technology.</description>
+    </item>
+    <item>
+      <title>Your own cloud or US providers? Data sovereignty without dogma</title>
+      <link>https://aiwithmaris.com/blog/en/datenhoheit-ohne-dogma</link>
+      <guid>https://aiwithmaris.com/blog/en/datenhoheit-ohne-dogma</guid>
+      <pubDate>Mon, 18 May 2026 06:30:00 GMT</pubDate>
+      <description>Between “hand everything to Big Tech” and “host everything yourself” lies a sensible middle ground. A decision guide without the holy war.</description>
+    </item>
   </channel>
 </rss>

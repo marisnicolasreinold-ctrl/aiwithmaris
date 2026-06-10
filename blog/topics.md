@@ -18,15 +18,11 @@ oberste offene Thema ist immer das nächste.
 - [ ] Dokumenten-Automatisierung konkret: Was passiert eigentlich, wenn niemand mehr Rechnungen abtippt?
 - [ ] KI-Agent im Posteingang: Welche Anfragen sich automatisch beantworten lassen — und welche besser nicht
 - [ ] DSGVO und KI: Was du wirklich beachten musst, bevor das erste Tool live geht
-- [ ] Eigene Cloud oder US-Anbieter? Datenhoheit bei KI-Projekten ohne Dogma erklärt
-- [ ] Make-or-Buy bei KI: Wann sich eigene Software lohnt und wann ein fertiges Tool reicht
 - [ ] Die fünf Fragen, mit denen du jeden KI-Use-Case in zehn Minuten bewertest
-- [ ] Warum dein Team KI-Tools nicht nutzt — und was Coaching daran ändert
 - [ ] Prompt-Wissen fürs Team: Die Basics, die in jedem Unternehmen sitzen sollten
 - [ ] Frühwarn-Cockpit statt Bauchgefühl: KI für Kennzahlen im Tagesgeschäft
 - [ ] KI im Vertrieb: Vom Lead bis zum Angebot — wo Automatisierung wirklich Zeit spart
 - [ ] KI in der Buchhaltung: Der Papierberg als perfekter erster Use Case
-- [ ] Halluzinationen verstehen: Warum KI selbstbewusst Unsinn erzählt und wie du damit umgehst
 - [ ] Klein anfangen heißt nicht klein denken: Vom ersten Use Case zur KI-Roadmap
 - [ ] Was ein KI-Pilotprojekt kosten darf — eine ehrliche Rechnung
 - [ ] Schatten-KI im Unternehmen: Dein Team nutzt längst ChatGPT — was jetzt?
@@ -40,6 +36,14 @@ oberste offene Thema ist immer das nächste.
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-05-31 — Halluzinationen verstehen: Warum KI selbstbewusst Unsinn erzählt (Halluzinationen verstehen: Warum KI selbstbewusst Unsinn erzählt und wie du damit umgehst)
+
+- 2026-05-27 — Warum dein Team KI-Tools nicht nutzt — und was Coaching daran ändert (Warum dein Team KI-Tools nicht nutzt — und was Coaching daran ändert)
+
+- 2026-05-22 — Make-or-Buy bei KI: Wann eigene Software, wann fertiges Tool? (Make-or-Buy bei KI: Wann sich eigene Software lohnt und wann ein fertiges Tool reicht)
+
+- 2026-05-18 — Eigene Cloud oder US-Anbieter? Datenhoheit ohne Dogma (Eigene Cloud oder US-Anbieter? Datenhoheit bei KI-Projekten ohne Dogma erklärt)
 
 - 2026-06-10 — Warum die meisten KI-Projekte im Mittelstand am falschen Ende anfangen (Warum die meisten KI-Projekte im Mittelstand am falschen Ende anfangen — und wie du das richtige findest)
 

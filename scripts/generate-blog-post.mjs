@@ -152,7 +152,9 @@ const TOPICS_SCHEMA = {
 
 // ---------------------------------------------------------------- Themenwahl
 
-const now = new Date();
+// BLOG_DATE erlaubt rückdatierte Veröffentlichungen (z. B. beim Befüllen
+// des Archivs); ohne Angabe gilt der aktuelle Zeitpunkt.
+const now = process.env.BLOG_DATE ? new Date(process.env.BLOG_DATE) : new Date();
 const weekday = now.getDay(); // 0=So … 6=Sa
 // Standard ist "queue" (kein API-Key nötig). "auto" wählt nach Wochentag
 // zwischen den KI-Modi (Di+Fr News, sonst Evergreen).
@@ -443,7 +445,7 @@ async function main() {
   // vorgefertigten Artikel durch die komplette Render-Pipeline.
   if (process.env.BLOG_FAKE_ARTICLE) {
     const article = JSON.parse(fs.readFileSync(process.env.BLOG_FAKE_ARTICLE, "utf8"));
-    publish(article, topicsMd, "Testlauf");
+    publish(article, topicsMd, article.topic || "Direktveröffentlichung");
     return;
   }
 
@@ -523,8 +525,10 @@ function publish(article, topicsMd, topicLabel) {
   write(`blog/${slug}.html`, renderArticlePage(post, "de"));
   write(`blog/en/${slug}.html`, renderArticlePage(post, "en"));
 
-  // Registry, Index-Seiten, Feeds, Sitemap
+  // Registry, Index-Seiten, Feeds, Sitemap — immer neueste zuerst,
+  // auch wenn rückdatiert veröffentlicht wird
   postsDb.posts.unshift(post);
+  postsDb.posts.sort((a, b) => new Date(b.date) - new Date(a.date));
   write("blog/posts.json", JSON.stringify(postsDb, null, 2) + "\n");
   updateIndexPage("blog/index.html", renderIndexCards(postsDb.posts, "de"));
   updateIndexPage("blog/en/index.html", renderIndexCards(postsDb.posts, "en"));
