@@ -85,6 +85,9 @@ const isMobile = window.innerWidth < 860;
   ring.rotation.x = Math.PI * 0.5;
   scene.add(ring);
 
+  // Szene für scroll-getriebene Farbreise nach außen reichen (motion.js)
+  window.AXON_SCENE = { points, mesh, core, ring };
+
   let mx = 0, my = 0, tx = 0, ty = 0, sy = 0;
   addEventListener('mousemove', e => {
     tx = e.clientX / innerWidth - 0.5;

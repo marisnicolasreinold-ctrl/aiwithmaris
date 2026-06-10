@@ -2999,3 +2999,374 @@ dialog.legal .lg-body .todo {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* ============================================================
+   Scroll-Motion-System (motion.js) + Die lebende Firma (firma.js)
+   ============================================================ */
+
+/* Scroll-Fortschrittsbalken */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 120;
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, var(--cyan), var(--violet), var(--pink));
+  pointer-events: none;
+}
+
+/* Horizontale Showcase-Galerie (aktiviert per JS ab 981px) */
+#referenzen.hscroll {
+  overflow: hidden;
+}
+#referenzen.hscroll .cards {
+  display: flex;
+  gap: 22px;
+  width: max-content;
+  padding-right: 10vw;
+}
+#referenzen.hscroll .card {
+  flex: 0 0 400px;
+  min-height: 230px;
+}
+
+/* === Die lebende Firma === */
+#firma {
+  padding: 70px 0;
+}
+.firma-wrap {
+  display: grid;
+  grid-template-columns: 0.85fr 1.5fr;
+  gap: 48px;
+  align-items: center;
+  min-height: 80vh;
+}
+.firma-story h2 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(1.7rem, 2.6vw, 2.4rem);
+  line-height: 1.12;
+  letter-spacing: -.01em;
+  margin: 14px 0 20px;
+}
+.firma-steps {
+  position: relative;
+  min-height: 200px;
+}
+.firma-step {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .5s ease, transform .5s ease;
+  pointer-events: none;
+}
+.firma-step.active {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.firma-step-num {
+  font-family: var(--mono);
+  font-size: .66rem;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--violet);
+}
+.firma-step h3 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin: 10px 0 10px;
+}
+.firma-step p {
+  color: var(--muted);
+  font-size: .95rem;
+  font-weight: 300;
+}
+.firma-dots {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0 22px;
+}
+.firma-dots i {
+  width: 28px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(238, 241, 250, .14);
+  transition: background .4s ease;
+}
+.firma-dots i.on {
+  background: linear-gradient(90deg, var(--cyan), var(--violet));
+}
+.firma-kpis {
+  display: flex;
+  gap: 14px;
+}
+.kpi {
+  flex: 1;
+  border: 1px solid var(--line);
+  background: var(--glass);
+  border-radius: 14px;
+  padding: 12px 16px;
+}
+.kpi-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: .6rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.kpi-value {
+  font-size: .92rem;
+  color: var(--muted);
+}
+.kpi-value b {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--cyan);
+}
+.firma-hint {
+  margin-top: 18px;
+  font-family: var(--mono);
+  font-size: .66rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: .7;
+}
+.firma-live {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+.btn-sm {
+  padding: 11px 22px;
+  font-size: .88rem;
+}
+.btn.cooling {
+  opacity: .45;
+  pointer-events: none;
+}
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: .68rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  background: var(--glass);
+  border-radius: 30px;
+  padding: 7px 14px;
+}
+.live-badge b {
+  color: var(--text);
+}
+.live-badge i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 8px rgba(74, 222, 128, .8);
+  animation: livePulse 2s ease-in-out infinite;
+}
+@keyframes livePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .35; }
+}
+#firmaSvg .token.live rect {
+  fill: url(#liveGrad);
+}
+.firma-scene svg {
+  width: 100%;
+  height: auto;
+  max-height: 76vh;
+  display: block;
+}
+
+/* SVG-Szene */
+#firmaSvg .floor {
+  fill: rgba(255, 255, 255, .02);
+  stroke: rgba(238, 241, 250, .08);
+}
+#firmaSvg .way {
+  fill: none;
+  stroke: rgba(94, 240, 255, .15);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 7;
+  stroke-linecap: round;
+}
+#firmaSvg .main-way {
+  stroke: rgba(94, 240, 255, .22);
+  stroke-width: 2;
+}
+#firmaSvg .room-bg {
+  fill: rgba(255, 255, 255, .035);
+  stroke: rgba(238, 241, 250, .14);
+}
+#firmaSvg .room-glow {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 1.5;
+  transition: stroke .6s ease;
+}
+#firmaSvg .room-label {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  fill: rgba(238, 241, 250, .78);
+}
+#firmaSvg .room-dot { fill: var(--cyan); }
+#roomEinkauf .room-dot { fill: var(--violet); }
+#roomLager .room-dot { fill: var(--indigo); }
+#roomBuchhaltung .room-dot { fill: var(--pink); }
+#roomVersand .room-dot { fill: #62ffd9; }
+#firmaSvg .desk {
+  fill: rgba(238, 241, 250, .10);
+}
+#firmaSvg .screen {
+  fill: rgba(94, 240, 255, .45);
+}
+#firmaSvg .crate {
+  fill: rgba(124, 92, 255, .18);
+  stroke: rgba(124, 92, 255, .4);
+}
+#firmaSvg .fig-head {
+  fill: rgba(238, 241, 250, .92);
+}
+#firmaSvg .fig-body {
+  fill: rgba(238, 241, 250, .38);
+}
+#firmaSvg .carry {
+  fill: rgba(94, 240, 255, .6);
+}
+#firmaSvg .paper {
+  fill: rgba(238, 241, 250, .5);
+}
+#firmaSvg .token rect {
+  fill: url(#tokenGrad);
+}
+#firmaSvg .token path {
+  stroke: rgba(4, 5, 10, .85);
+  stroke-width: 1.4;
+  fill: none;
+  stroke-linecap: round;
+}
+#firmaSvg .chip-bg {
+  fill: rgba(8, 10, 20, .9);
+  stroke: rgba(94, 240, 255, .45);
+}
+#firmaSvg .chip-led {
+  fill: var(--cyan);
+}
+#firmaSvg .chip-label {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .1em;
+  fill: var(--text);
+}
+#firmaSvg .hud-track {
+  fill: rgba(238, 241, 250, .12);
+}
+#firmaSvg .hud-fill {
+  fill: url(#tokenGrad);
+}
+#firmaSvg .bolt {
+  fill: var(--cyan);
+  opacity: 0;
+}
+#firmaSvg .io-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  fill: rgba(238, 241, 250, .5);
+}
+#firmaSvg .io-arrow {
+  stroke: rgba(238, 241, 250, .4);
+  stroke-width: 1.5;
+  fill: none;
+  stroke-linecap: round;
+}
+#boltLayer {
+  transition: opacity .5s ease;
+}
+#firmaSvg:not(.s2):not(.s3) #boltLayer {
+  opacity: 0;
+}
+
+/* Stage 0: Stress-Puls in Vertrieb & Buchhaltung */
+#firmaSvg.s0 #roomVertrieb .room-glow,
+#firmaSvg.s0 #roomBuchhaltung .room-glow {
+  stroke: rgba(255, 94, 122, .55);
+  animation: firmaStress 1.6s ease-in-out infinite;
+}
+@keyframes firmaStress {
+  0%, 100% { opacity: .35; }
+  50% { opacity: 1; }
+}
+/* Module aktiv: Räume leuchten cyan */
+#firmaSvg.s1 #roomBuchhaltung .room-glow,
+#firmaSvg.s2 #roomBuchhaltung .room-glow,
+#firmaSvg.s2 #roomVertrieb .room-glow {
+  stroke: rgba(94, 240, 255, .5);
+}
+#firmaSvg.s3 .room-glow {
+  stroke: rgba(94, 240, 255, .55);
+}
+
+/* Statische Variante (Reduced Motion / ohne GSAP) */
+#firma.firma-static .firma-steps {
+  min-height: 0;
+}
+#firma.firma-static .firma-step {
+  position: static;
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 980px) {
+  .firma-wrap {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    gap: 28px;
+  }
+  .firma-steps {
+    min-height: 170px;
+  }
+  .firma-scene svg {
+    max-height: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+  #firmaSvg.s0 #roomVertrieb .room-glow,
+  #firmaSvg.s0 #roomBuchhaltung .room-glow {
+    animation: none;
+  }
+  .live-badge i {
+    animation: none;
+  }
+}
