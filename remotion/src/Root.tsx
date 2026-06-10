@@ -1,16 +1,37 @@
 import React from "react";
 import { Composition } from "remotion";
 import { Intro } from "./Intro";
+import { GuidePromo } from "./GuidePromo";
 
 export const RemotionRoot: React.FC = () => {
   return (
-    <Composition
-      id="Intro"
-      component={Intro}
-      durationInFrames={420}
-      fps={30}
-      width={1920}
-      height={1080}
-    />
+    <>
+      <Composition
+        id="Intro"
+        component={Intro}
+        durationInFrames={420}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="GuidePromoDe"
+        component={GuidePromo}
+        durationInFrames={440}
+        fps={30}
+        width={1280}
+        height={720}
+        defaultProps={{ lang: "de" as const }}
+      />
+      <Composition
+        id="GuidePromoEn"
+        component={GuidePromo}
+        durationInFrames={440}
+        fps={30}
+        width={1280}
+        height={720}
+        defaultProps={{ lang: "en" as const }}
+      />
+    </>
   );
 };

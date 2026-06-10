@@ -220,7 +220,28 @@
     // --- Über mich ---
     "Über mich": "About me",
     "Eine Person, kein Konzern.": "One person, not a corporation.",
-    "Hinter „AI with Maris“ steckt genau eine Person: ich. Ich bin von KI begeistert, baue Software und probiere ständig aus, was sich automatisieren lässt. Du sprichst also direkt mit dem, der baut und coacht — kein Account-Management-Pingpong, keine Blackbox. Aktuell ist das vor allem Spielwiese und Lernprojekt: ehrlich, neugierig, ohne großes Brimborium.": "Behind “AI with Maris” there's exactly one person: me. I'm passionate about AI, I build software and I'm constantly trying out what can be automated. So you talk directly to the person who builds and coaches — no account-management ping-pong, no black box. Right now it's mostly a playground and learning project: honest, curious, without the fuss.",
+    "Hinter „AI with Maris\" steckt genau eine Person: ich — Maris Reinold, Ingenieur (M. Eng.) mit 17 Jahren Berufserfahrung, gesammelt in mehreren Unternehmen, Abteilungen und Funktionen. Ich bin von KI begeistert, baue Software und probiere ständig aus, was sich automatisieren lässt. Du sprichst also direkt mit dem, der baut und coacht — kein Account-Management-Pingpong, keine Blackbox.": "Behind “AI with Maris” there's exactly one person: me — Maris Reinold, an engineer (M. Eng.) with 17 years of professional experience gathered across several companies, departments and roles. I'm passionate about AI, I build software and I'm constantly trying out what can be automated. So you talk directly to the person who builds and coaches — no account-management ping-pong, no black box.",
+    "Aus diesem breiten Blick auf Technik, Prozesse und Menschen ist auch mein KI-Leitfaden für den Mittelstand entstanden — mein Motto steht auf dem Cover:": "That broad view of technology, processes and people is also where my AI guide for mid-sized companies comes from — my motto is right on the cover:",
+    "„Anfangen, wo es zählt.\"": "“Start where it counts.”",
+    "Ingenieur (M. Eng.) · KI & Software": "Engineer (M. Eng.) · AI & software",
+    "Jahre Berufserfahrung": "Years of professional experience",
+    "Live-Demos zum Ausprobieren": "Live demos to try out",
+    "KI-Leitfaden — DE & EN": "AI guide — DE & EN",
+    "Sprachen — Deutsch & Englisch": "Languages — German & English",
+
+    // --- Startseite: Persona-Teaser ---
+    "Wer dahinter steckt": "Who's behind this",
+    "Ingenieur. Macher. Eine Person.": "Engineer. Maker. One person.",
+    "Ich bin Maris Reinold — Ingenieur (M. Eng.) mit 17 Jahren Berufserfahrung, gesammelt in mehreren Unternehmen, Abteilungen und Funktionen. Aus diesem Blick auf Technik, Prozesse und Menschen entstehen diese Seite, die Demos und der KI-Guide.": "I'm Maris Reinold — an engineer (M. Eng.) with 17 years of professional experience gathered across several companies, departments and roles. That view of technology, processes and people is what this site, the demos and the AI guide grow out of.",
+    "Mehr über mich": "More about me",
+
+    // --- Guide: Video-Band ---
+    "In 15 Sekunden": "In 15 seconds",
+    "Der Guide im Schnelldurchlauf.": "The guide, fast-forwarded.",
+    "KI-Guide Video-Vorschau": "AI guide video preview",
+
+    // --- Leistungen: Abteilungs-Sektion (ehemals Lösungen) ---
+    "Automatisierung für jede deiner Abteilungen.": "Automation for every one of your departments.",
     "Hands-on statt Hochglanz": "Hands-on, not glossy",
     "Ich baue lieber lauffähige kleine Dinge als perfekte Foliensätze.": "I'd rather build small working things than perfect slide decks.",
     "Datenschutz von Anfang an": "Privacy from day one",
@@ -307,6 +328,10 @@
     // --- Beispiele: Live-Embeds ---
     "Live-Demo hier laden": "Load live demo here",
     "agent-flow · direkt eingebettet": "agent-flow · embedded right here",
+    "atlas · direkt eingebettet": "atlas · embedded right here",
+    "apex · direkt eingebettet": "apex · embedded right here",
+    "Das komplette Produktions-Cockpit samt sprechendem KI-Assistenten läuft direkt hier auf der Seite. Lade die Demo und lass dich briefen.": "The complete production cockpit including the talking AI assistant runs right here on the page. Load the demo and get your briefing.",
+    "Der Garmin-KI-Coach läuft direkt hier auf der Seite — Trainingsbereitschaft, HRV und Schlaf werden zu deinem Tagesplan. Lade die Demo und probier es aus.": "The Garmin AI coach runs right here on the page — training readiness, HRV and sleep become your plan for the day. Load the demo and try it.",
     "Der komplette KI-Agenten-Workflow läuft direkt hier auf der Seite — Anfrage triagieren, Antwort entwerfen, prüfen, freigeben. Lade die Demo und probier es selbst aus.": "The complete AI agent workflow runs right here on the page — triage the request, draft the reply, review, approve. Load the demo and try it yourself.",
 
     // --- Guide-Seite ---
@@ -437,9 +462,24 @@
     if (EN[dt] !== undefined) document.title = EN[dt];
   }
 
+  // Promo-Videos: bei Englisch die EN-Fassung laden
+  function swapPromoVideos(lang) {
+    if (lang !== 'en') return;
+    document.querySelectorAll('video[data-promo-video]').forEach(function (v) {
+      var s = v.querySelector('source');
+      if (s && s.getAttribute('src').indexOf('guide-promo-de') !== -1) {
+        s.setAttribute('src', s.getAttribute('src').replace('guide-promo-de', 'guide-promo-en'));
+        v.load();
+        var p = v.play();
+        if (p && p.catch) p.catch(function () {});
+      }
+    });
+  }
+
   function applyLang(lang) {
     document.documentElement.lang = lang;
     if (lang === 'en') translate(document.body);
+    swapPromoVideos(lang);
     var btn = document.getElementById('langToggle');
     if (btn) {
       btn.textContent = lang === 'en' ? 'DE' : 'EN';

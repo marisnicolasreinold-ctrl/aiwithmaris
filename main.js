@@ -248,3 +248,13 @@ document.querySelectorAll('svg').forEach(s => {
   s.setAttribute('aria-hidden', 'true');
   s.setAttribute('focusable', 'false');
 });
+
+// Promo-Videos: bei reduzierter Bewegung nicht automatisch abspielen
+(function () {
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('video[data-promo-video]').forEach(function (v) {
+    v.removeAttribute('autoplay');
+    v.setAttribute('controls', '');
+    try { v.pause(); } catch (e) {}
+  });
+})();
