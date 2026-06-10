@@ -31,22 +31,38 @@ Account: `acct_1TgeQIAPD9ukdtqR` („Aiwithmaris Sandbox")
 Die Price-IDs sind als Default in `api/checkout.js` hinterlegt und können per
 Umgebungsvariablen (`STRIPE_PRICE_DE/EN/BUNDLE`) überschrieben werden.
 
-## Was du noch tun musst (einmalig)
+## Stand 10.06.2026 — was schon erledigt ist
 
-1. **Nichts konfigurieren!** Checkout & Download laufen als Supabase Edge
-   Functions; der Stripe-Key liegt verschlüsselt im Supabase Vault, die PDFs
-   im privaten Storage-Bucket `guides`. Vercel braucht keine Env-Variablen.
-2. Deployen und einen Testkauf machen: Karte `4242 4242 4242 4242`,
-   beliebiges Zukunftsdatum, beliebige CVC.
-3. **Vor dem Live-Gang:**
-   - Im Stripe-Dashboard auf Live-Modus umstellen, Produkte/Preise dort neu
-     anlegen (oder per Dashboard kopieren) und die Live-`price_…`-IDs als
-     `STRIPE_PRICE_*`-Env-Vars setzen; `STRIPE_SECRET_KEY` auf `sk_live_…` tauschen.
-   - Da der Test-Secret-Key im Chat geteilt wurde: im Stripe-Dashboard unter
-     „API-Schlüssel" **rotieren** (gute Hygiene, auch wenn es nur ein Test-Key ist).
-   - Impressum mit echten Daten füllen (Pflicht beim Verkauf!) und die
-     AGB (§ 7 Digitale Inhalte, Widerrufsverzicht) rechtlich gegenprüfen lassen.
-   - Steuer: Einnahmen anmelden (Kleinunternehmer § 19 UStG prüfen).
+- ✅ **Gewerbe angemeldet** (Wirtschafts-Service-Portal.NRW, Bestätigung vom
+  10.06.2026 — Verkauf darf ab sofort starten).
+- ✅ **Impressum** mit echten Daten gefüllt (Maris Reinold, Kortental 10,
+  44149 Dortmund, § 19 UStG-Hinweis).
+- ✅ **§ 19 UStG-Rechnungssatz** („Gemäß § 19 UStG wird keine Umsatzsteuer
+  berechnet.") fest in der checkout-Edge-Function als Rechnungs-Footer
+  (DE + EN) — gilt automatisch auch im Live-Betrieb.
+- ✅ **Live-Umschaltung ohne Code-Deploy vorbereitet:** Die checkout-Function
+  liest optionale Price-Overrides aus dem Vault-Secret `stripe_price_overrides`
+  (JSON: `{"de":"price_…","en":"price_…","bundle":"price_…"}`). Fehlt das
+  Secret, gelten die Sandbox-Preise.
+
+## Was noch fehlt für den Live-Gang (nur Maris kann das)
+
+1. **Stripe-Live-Account aktivieren:** dashboard.stripe.com → Live-Modus →
+   Identitätsprüfung + Bankkonto (IBAN) hinterlegen. Geschäftsangaben:
+   Einzelunternehmer, „AI with Maris", Dortmund.
+2. **Live-Secret-Key an Claude geben** (oder selbst im Supabase-Vault das
+   Secret `stripe_secret_key` auf `sk_live_…` tauschen).
+3. Claude übernimmt dann: Live-Produkte/-Preise anlegen,
+   `stripe_price_overrides` im Vault setzen, Testkauf mit echter Karte
+   (z. B. 1 €-Testpreis) verifizieren.
+4. **ELSTER:** Fragebogen zur steuerlichen Erfassung mit
+   Kleinunternehmerregelung § 19 UStG (siehe marketing/gewerbe-checkliste.md).
+5. Optional: AGB § 7 (Widerrufsverzicht) rechtlich gegenprüfen lassen.
+
+## Testkauf (Sandbox, jederzeit)
+
+Karte `4242 4242 4242 4242`, beliebiges Zukunftsdatum, beliebige CVC.
+Die Rechnung muss im Footer den § 19-Satz zeigen.
 
 ## Rückgabe / Widerruf
 
