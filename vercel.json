@@ -13,5 +13,8 @@
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "api/download.js": { "includeFiles": "api/_files/**" }
+  }
 }
