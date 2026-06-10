@@ -5,5 +5,12 @@
     <link>https://aiwithmaris.com/blog/en</link>
     <description>A new article every day about AI in small and mid-sized businesses.</description>
     <language>en</language>
+    <item>
+      <title>Why most AI projects in mid-sized companies start at the wrong end</title>
+      <link>https://aiwithmaris.com/blog/en/ki-projekte-am-falschen-ende</link>
+      <guid>https://aiwithmaris.com/blog/en/ki-projekte-am-falschen-ende</guid>
+      <pubDate>Wed, 10 Jun 2026 20:00:39 GMT</pubDate>
+      <description>Most AI projects don’t fail because of the technology. They fail because of the order of things. How to spot the right first project.</description>
+    </item>
   </channel>
 </rss>
