@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#05060c" />
+<title>Verkaufs-Report — AI with Maris (intern)</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="icon" type="image/png" href="./assets/logo-axon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css" />
+<style>
+  .report-wrap { max-width: 1080px; margin: 0 auto; padding: 130px 28px 80px; position: relative; z-index: 5; }
+  .report-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
+  .report-head h1 { font-family: var(--display); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; }
+  .report-meta { font-family: var(--mono); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .testmode-banner { border: 1px solid rgba(255, 200, 94, .45); background: rgba(255, 200, 94, .08); color: #ffd98a; border-radius: 14px; padding: 14px 18px; font-size: .92rem; margin-bottom: 24px; }
+  .report-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+  @media (max-width: 860px) { .report-kpis { grid-template-columns: 1fr 1fr; } }
+  .rkpi { border: 1px solid var(--line); background: var(--glass); border-radius: 16px; padding: 18px 20px; }
+  .rkpi .lbl { font-family: var(--mono); font-size: .62rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; display: block; }
+  .rkpi .val { font-family: var(--display); font-size: 1.9rem; font-weight: 700; color: var(--cyan); line-height: 1.1; }
+  .rkpi .val small { font-size: .9rem; color: var(--muted); font-weight: 400; }
+  .report-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 14px; margin-bottom: 28px; }
+  @media (max-width: 860px) { .report-grid { grid-template-columns: 1fr; } }
+  .rpanel { border: 1px solid var(--line); background: var(--glass); border-radius: 16px; padding: 20px 22px; }
+  .rpanel h2 { font-family: var(--display); font-size: 1.02rem; font-weight: 600; margin-bottom: 16px; }
+  .rchart { display: flex; align-items: flex-end; gap: 4px; height: 140px; }
+  .rchart .col { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; }
+  .rchart .col i { display: block; background: linear-gradient(180deg, var(--cyan), var(--violet)); border-radius: 3px 3px 0 0; min-height: 2px; }
+  .rchart-labels { display: flex; justify-content: space-between; font-family: var(--mono); font-size: .6rem; color: var(--muted); margin-top: 8px; }
+  .rprod { display: flex; flex-direction: column; gap: 12px; }
+  .rprod .row { display: flex; justify-content: space-between; align-items: center; font-size: .92rem; }
+  .rprod .row b { font-family: var(--mono); color: var(--cyan); }
+  .rtable { width: 100%; border-collapse: collapse; font-size: .88rem; }
+  .rtable th { font-family: var(--mono); font-size: .62rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  .rtable td { padding: 10px; border-bottom: 1px solid var(--line); color: var(--text); }
+  .rtable td.amount { font-family: var(--mono); color: var(--cyan); }
+  .rempty { color: var(--muted); font-size: .92rem; padding: 18px 0; }
+  .keygate { max-width: 420px; margin: 0 auto; text-align: center; }
+  .keygate input { width: 100%; padding: 14px 18px; border-radius: 12px; border: 1px solid var(--line); background: rgba(255,255,255,.04); color: var(--text); font-family: var(--mono); font-size: .9rem; margin: 18px 0 14px; }
+  .keygate input:focus-visible { outline: 2px solid var(--focus); }
+  .rerror { color: #ff8aa6; font-size: .9rem; margin-top: 12px; min-height: 1.4em; }
+  .report-actions { display: flex; gap: 10px; }
+  .report-actions .btn { padding: 10px 18px; font-size: .82rem; }
+</style>
+</head>
+<body>
+<div class="bg-glow"></div><div class="grain"></div><div class="vignette"></div>
+
+<nav id="nav" class="scrolled" aria-label="Hauptnavigation">
+  <div class="nav-inner">
+    <a class="logo" href="index.html"><img src="./assets/logo-axon.png" alt="" />AI with Maris</a>
+    <div class="nav-links"><a href="guide.html">Zum Guide</a></div>
+  </div>
+</nav>
+
+<main class="report-wrap">
+
+  <!-- Key-Eingabe -->
+  <section id="gate" class="keygate" hidden>
+    <h1 style="font-family:var(--display); font-size:1.6rem; margin-bottom:8px">Verkaufs-Report</h1>
+    <p style="color:var(--muted); font-size:.95rem">Interner Bereich — bitte Report-Key eingeben.</p>
+    <input type="password" id="keyInput" placeholder="rpt_…" autocomplete="off" />
+    <button class="btn btn-primary" id="keySubmit" type="button" style="width:100%; justify-content:center">Report laden</button>
+    <p class="rerror" id="gateError"></p>
+  </section>
+
+  <!-- Report -->
+  <section id="report" hidden>
+    <div class="report-head">
+      <h1>Verkaufs-Report · KI-Guide</h1>
+      <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap">
+        <span class="report-meta" id="generatedAt"></span>
+        <div class="report-actions">
+          <button class="btn btn-ghost" id="refreshBtn" type="button">Aktualisieren</button>
+          <button class="btn btn-ghost" id="logoutBtn" type="button">Key wechseln</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="testmode-banner" id="testBanner" hidden>
+      ⚠️ <b>Stripe läuft im Test-Modus (Sandbox).</b> Alle Zahlen hier sind Testdaten —
+      echte Käufe sind erst möglich, wenn der Stripe-Account live geschaltet ist.
+    </div>
+
+    <div class="report-kpis">
+      <div class="rkpi"><span class="lbl">Bezahlte Käufe</span><span class="val" id="kPaid">–</span></div>
+      <div class="rkpi"><span class="lbl">Umsatz</span><span class="val" id="kRevenue">–</span></div>
+      <div class="rkpi"><span class="lbl">Checkouts gestartet</span><span class="val" id="kStarted">–</span></div>
+      <div class="rkpi"><span class="lbl">Conversion</span><span class="val" id="kConv">–</span></div>
+    </div>
+
+    <div class="report-grid">
+      <div class="rpanel">
+        <h2>Käufe — letzte 30 Tage</h2>
+        <div class="rchart" id="chart"></div>
+        <div class="rchart-labels"><span id="chartFrom"></span><span>heute</span></div>
+      </div>
+      <div class="rpanel">
+        <h2>Nach Produkt</h2>
+        <div class="rprod" id="prodList"><p class="rempty">Noch keine Käufe.</p></div>
+      </div>
+    </div>
+
+    <div class="rpanel">
+      <h2>Letzte Käufe</h2>
+      <div style="overflow-x:auto">
+        <table class="rtable" id="recentTable" hidden>
+          <thead><tr><th>Datum</th><th>Produkt</th><th>Betrag</th><th>E-Mail</th></tr></thead>
+          <tbody id="recentBody"></tbody>
+        </table>
+      </div>
+      <p class="rempty" id="recentEmpty">Noch keine Käufe — sobald der erste reinkommt, steht er hier. 🤞</p>
+    </div>
+  </section>
+</main>
+
+<script>
+(function () {
+  var FN_URL = 'https://amrdmnnijbfwtrjcpocl.supabase.co/functions/v1/sales-report';
+  var KEY_STORE = 'aiwm_report_key';
+  var gate = document.getElementById('gate'), report = document.getElementById('report');
+  var gateError = document.getElementById('gateError');
+
+  function fmtMoney(cents, cur) {
+    return (cents / 100).toLocaleString('de-DE', { style: 'currency', currency: cur || 'EUR' });
+  }
+  function fmtDate(unix) {
+    return new Date(unix * 1000).toLocaleString('de-DE', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' });
+  }
+
+  function showGate(msg) {
+    gate.hidden = false; report.hidden = true;
+    gateError.textContent = msg || '';
+    document.getElementById('keyInput').focus();
+  }
+
+  function render(d) {
+    gate.hidden = true; report.hidden = false;
+    document.getElementById('testBanner').hidden = d.livemode;
+    document.getElementById('generatedAt').textContent = 'Stand: ' + new Date(d.generatedAt).toLocaleString('de-DE');
+    document.getElementById('kPaid').textContent = d.paidCount;
+    var revParts = Object.keys(d.revenue).map(function (c) { return fmtMoney(d.revenue[c], c); });
+    document.getElementById('kRevenue').textContent = revParts.length ? revParts.join(' + ') : '0 €';
+    document.getElementById('kStarted').textContent = d.startedCount;
+    document.getElementById('kConv').textContent = d.conversion + ' %';
+
+    // Chart: letzte 30 Tage
+    var chart = document.getElementById('chart');
+    chart.innerHTML = '';
+    var days = [], max = 1;
+    for (var i = 29; i >= 0; i--) {
+      var day = new Date(Date.now() - i * 86400000).toISOString().slice(0, 10);
+      var n = d.perDay[day] || 0;
+      days.push(n); if (n > max) max = n;
+    }
+    days.forEach(function (n) {
+      var col = document.createElement('div'); col.className = 'col';
+      var bar = document.createElement('i');
+      bar.style.height = Math.round((n / max) * 100) + '%';
+      if (!n) bar.style.opacity = '.18';
+      bar.title = n + ' Käufe';
+      col.appendChild(bar); chart.appendChild(col);
+    });
+    document.getElementById('chartFrom').textContent = new Date(Date.now() - 29 * 86400000).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
+
+    // Produkte
+    var prodList = document.getElementById('prodList');
+    var prods = Object.keys(d.byProduct);
+    if (prods.length) {
+      prodList.innerHTML = '';
+      prods.sort(function (a, b) { return d.byProduct[b] - d.byProduct[a]; }).forEach(function (p) {
+        var row = document.createElement('div'); row.className = 'row';
+        row.innerHTML = '<span></span><b></b>';
+        row.firstChild.textContent = p;
+        row.lastChild.textContent = d.byProduct[p] + '×';
+        prodList.appendChild(row);
+      });
+    } else {
+      prodList.innerHTML = '<p class="rempty">Noch keine Käufe.</p>';
+    }
+
+    // Letzte Käufe
+    var table = document.getElementById('recentTable'), body = document.getElementById('recentBody'),
+        empty = document.getElementById('recentEmpty');
+    body.innerHTML = '';
+    if (d.recent.length) {
+      table.hidden = false; empty.hidden = true;
+      d.recent.forEach(function (r) {
+        var tr = document.createElement('tr');
+        ['', '', '', ''].forEach(function () { tr.appendChild(document.createElement('td')); });
+        tr.children[0].textContent = fmtDate(r.created);
+        tr.children[1].textContent = r.product;
+        tr.children[2].textContent = fmtMoney(r.amount, r.currency);
+        tr.children[2].className = 'amount';
+        tr.children[3].textContent = r.email || '—';
+        body.appendChild(tr);
+      });
+    } else {
+      table.hidden = true; empty.hidden = false;
+    }
+  }
+
+  function load(key) {
+    fetch(FN_URL, { headers: { 'x-report-key': key } })
+      .then(function (r) {
+        if (r.status === 401) { localStorage.removeItem(KEY_STORE); throw new Error('Key ungültig.'); }
+        if (!r.ok) throw new Error('Fehler beim Laden (' + r.status + ').');
+        return r.json();
+      })
+      .then(function (d) {
+        try { localStorage.setItem(KEY_STORE, key); } catch (e) {}
+        render(d);
+      })
+      .catch(function (e) { showGate(e.message); });
+  }
+
+  document.getElementById('keySubmit').addEventListener('click', function () {
+    var k = document.getElementById('keyInput').value.trim();
+    if (k) load(k);
+  });
+  document.getElementById('keyInput').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') document.getElementById('keySubmit').click();
+  });
+  document.getElementById('refreshBtn').addEventListener('click', function () {
+    var k = localStorage.getItem(KEY_STORE); if (k) load(k); else showGate();
+  });
+  document.getElementById('logoutBtn').addEventListener('click', function () {
+    localStorage.removeItem(KEY_STORE);
+    document.getElementById('keyInput').value = '';
+    showGate();
+  });
+
+  var saved = null;
+  try { saved = localStorage.getItem(KEY_STORE); } catch (e) {}
+  if (saved) load(saved); else showGate();
+})();
+</script>
+</body>
+</html>
