@@ -113,7 +113,8 @@
     return;
   }
 
-  fetch('/api/download?session_id=' + encodeURIComponent(sessionId) + '&info=1')
+  var API = 'https://amrdmnnijbfwtrjcpocl.supabase.co/functions/v1/download';
+  fetch(API + '?session_id=' + encodeURIComponent(sessionId) + '&info=1')
     .then(function (r) { return r.json(); })
     .then(function (d) {
       if (!d.paid || !d.files || !d.files.length) throw new Error('unpaid');
@@ -122,7 +123,7 @@
       d.files.forEach(function (f) {
         var a = document.createElement('a');
         a.className = 'btn ' + (d.files.length === 1 || f === 'de' ? 'btn-primary' : 'btn-ghost');
-        a.href = '/api/download?session_id=' + encodeURIComponent(sessionId) + '&file=' + f;
+        a.href = API + '?session_id=' + encodeURIComponent(sessionId) + '&file=' + f;
         a.textContent = T[f] || f;
         btns.appendChild(a);
       });
