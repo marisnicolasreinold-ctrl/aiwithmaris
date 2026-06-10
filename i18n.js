@@ -113,6 +113,7 @@
     "Scroll — und installier die KI-Module ↓": "Scroll — and install the AI modules ↓",
     "Auftrag einwerfen": "Drop in an order",
     "live dabei": "watching live",
+    "Alle Preise sind Endpreise. Gemäß § 19 UStG wird keine Umsatzsteuer ausgewiesen.": "All prices are final. In accordance with Sec. 19 of the German VAT Act (UStG), no VAT is shown.",
     "Vertrieb": "Sales",
     "Einkauf": "Purchasing",
     "Lager": "Warehouse",

@@ -8,12 +8,12 @@ Stand: 2026-06-10 · Dieser Ordner wird NICHT deployt (.vercelignore).
    Dashboard → „Aktivieren": Identität verifizieren + Bankkonto hinterlegen.
    Danach den Live-Secret-Key im Supabase-Vault ersetzen (Secret `stripe_secret_key`)
    und die drei Live-Price-IDs in der Edge Function `checkout` eintragen.
-2. **Impressum mit echten Daten** — steht noch auf Platzhalter. Bei einer
-   Verkaufsseite in DE ist das abmahnfähig. Name + ladungsfähige Anschrift rein.
-3. **Gewerbe/Steuer** — Einnahmen anmelden; für den Anfang reicht meist die
-   Kleinunternehmerregelung (§19 UStG). Kurz mit dem Finanzamt/Steuerberater klären.
+2. ~~Impressum mit echten Daten~~ — ✅ erledigt am 2026-06-10 (Maris Reinold,
+   Kortental 10, 44149 Dortmund, in Impressum/Datenschutz/AGB inkl. §19-UStG-Klausel).
+3. **Gewerbe/Steuer** — Gewerbe anmelden (Stadt Dortmund, geht online) und beim
+   Finanzamt die Kleinunternehmerregelung (§19 UStG) im Fragebogen ankreuzen.
 
-Ohne 1–3 bleibt alles im Testmodus — die Technik ist fertig und wartet.
+Ohne 1 und 3 bleibt alles im Testmodus — die Technik ist fertig und wartet.
 
 ## Kanäle (Empfehlung in dieser Reihenfolge)
 
