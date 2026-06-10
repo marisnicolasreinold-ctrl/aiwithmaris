@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#05060c" />
+
+<title>Newsletter — AI with Maris</title>
+<meta name="description" content="Der Blog ins Postfach: täglich oder einmal pro Woche ein Artikel über KI im Mittelstand. Kostenlos, jederzeit abbestellbar." />
+<meta name="author" content="AI with Maris" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://aiwithmaris.com/newsletter" />
+
+<link rel="icon" type="image/png" href="./assets/logo-axon.png" />
+<link rel="stylesheet" href="./assets/fonts/fonts.css" />
+<link rel="stylesheet" href="./style.css" />
+
+<style>
+.nl-form{border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:30px 28px;background:rgba(255,255,255,.03);max-width:560px}
+.nl-form label{display:block;color:var(--muted);font-size:.9rem;margin:18px 0 6px}
+.nl-form label:first-child{margin-top:0}
+.nl-form input[type=text],.nl-form input[type=email]{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:12px 14px;color:var(--text);font:inherit}
+.nl-form input:focus{outline:none;border-color:rgba(255,255,255,.4)}
+.nl-freq{display:grid;gap:10px;margin-top:6px}
+.nl-freq label{display:flex;gap:10px;align-items:flex-start;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px 14px;margin:0;cursor:pointer;color:var(--text);font-size:.95rem}
+.nl-freq label:has(input:checked){border-color:rgba(255,255,255,.45);background:rgba(255,255,255,.05)}
+.nl-freq input{margin-top:3px}
+.nl-hint{color:var(--muted);font-size:.8rem;margin-top:16px;line-height:1.5}
+.nl-hint a{color:var(--text)}
+.nl-msg{display:none;border-radius:10px;padding:14px 16px;margin-bottom:22px;font-size:.95rem}
+.nl-msg.ok{display:block;border:1px solid rgba(120,220,150,.4);background:rgba(120,220,150,.08);color:#b8eccB}
+.nl-msg.err{display:block;border:1px solid rgba(240,140,140,.4);background:rgba(240,140,140,.08);color:#f3c0c0}
+.nl-hp{position:absolute;left:-9999px;opacity:0;height:0;overflow:hidden}
+</style>
+</head>
+<body>
+
+<canvas id="scene"></canvas>
+<div class="bg-glow"></div><div class="grain"></div><div class="vignette"></div>
+<div class="cursor-ring"></div><div class="cursor-dot"></div>
+
+<a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+<nav id="nav" aria-label="Hauptnavigation">
+  <div class="nav-inner">
+    <a class="logo" href="index.html" aria-label="AI with Maris — zur Startseite"><img src="./assets/logo-axon.png" alt="" />AI with Maris</a>
+    <div class="nav-links" id="navlinks">
+      <a href="leistungen.html">Leistungen</a>
+      <a href="beispiele.html">Beispiele</a>
+      <a href="guide.html">KI-Guide<span class="nav-pill">PDF</span></a>
+      <a href="blog">Blog</a>
+      <a href="ueber-uns.html">Über mich</a>
+      <a href="kontakt.html" class="nav-cta">Kontakt</a>
+      <button class="lang-toggle" id="langToggle" type="button">EN</button>
+    </div>
+    <button class="burger" id="burger" type="button" aria-label="Menü öffnen" aria-expanded="false" aria-controls="navlinks"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="wrap">
+<main id="main" tabindex="-1">
+
+<section class="hero" style="min-height:70vh;padding-top:140px">
+  <div class="container">
+    <span class="eyebrow">Newsletter</span>
+    <h1 style="font-family:var(--display);font-weight:700;font-size:clamp(1.9rem,4vw,2.9rem);letter-spacing:-.02em;line-height:1.1;margin:16px 0 18px">Der Blog ins Postfach.</h1>
+    <p style="color:var(--muted);font-weight:300;max-width:620px;margin-bottom:34px">Jeden Tag erscheint hier ein Artikel über KI im Mittelstand — praktisch, ehrlich, ohne Buzzwords. Du entscheidest, wie oft du Post bekommst. Kostenlos und jederzeit mit einem Klick abbestellbar.</p>
+
+    <div id="nlMsg" class="nl-msg" role="status"></div>
+
+    <form id="nlForm" class="nl-form" novalidate>
+      <label for="nlEmail">E-Mail-Adresse*</label>
+      <input id="nlEmail" name="email" type="email" required autocomplete="email" />
+
+      <label for="nlName">Name (optional)</label>
+      <input id="nlName" name="name" type="text" autocomplete="name" />
+
+      <label for="nlCompany">Firma (optional)</label>
+      <input id="nlCompany" name="company" type="text" autocomplete="organization" />
+
+      <label>Wie oft?</label>
+      <div class="nl-freq">
+        <label><input type="radio" name="frequency" value="taeglich" checked /><span>Jeden Werktag den neuen Artikel</span></label>
+        <label><input type="radio" name="frequency" value="woechentlich" /><span>Einmal pro Woche die Zusammenfassung</span></label>
+      </div>
+
+      <div class="nl-hp" aria-hidden="true">
+        <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+      </div>
+
+      <p style="margin-top:24px"><button type="submit" class="btn btn-primary" data-hover id="nlSubmit">Anmelden <span class="arrow">→</span></button></p>
+
+      <p class="nl-hint">Mit deiner Anmeldung stimmst du zu, dass wir deine Angaben zum Versand des Newsletters speichern. Du bekommst zuerst eine Bestätigungs-Mail — erst nach deinem Klick darin geht es los. Abmelden geht jederzeit über den Link in jeder Mail. Details in der <a href="datenschutz.html">Datenschutzerklärung</a>.</p>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div><div class="logo" style="margin-bottom:16px"><img src="./assets/logo-axon.png" alt="" />AI with Maris</div>
+        <p>KI-Coaching &amp; maßgeschneiderte Software-Entwicklung — cloud-neutral, datensouverän, ohne Lock-in.</p></div>
+      <div class="foot-links">
+        <div class="foot-col"><h4>Angebot</h4><a href="leistungen.html">Leistungen</a><a href="beispiele.html">Beispiele</a><a href="guide.html">KI-Guide</a><a href="blog">Blog</a><a href="newsletter.html">Newsletter</a><a href="ueber-uns.html">Über mich</a></div>
+        <div class="foot-col"><h4>Kontakt</h4><a href="mailto:marisnicolasreinold@gmail.com">marisnicolasreinold@gmail.com</a><a href="kontakt.html">Kontakt</a></div>
+        <div class="foot-col"><h4>Rechtliches</h4><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a><a href="agb.html">AGB</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 AI with Maris</span><span>Made in Germany · Cloud-neutral · Powered by AI</span></div>
+  </div>
+</footer>
+
+</div>
+
+<script>
+// Newsletter-Formular: Anmeldung über die Supabase Edge Function + Status-Banner
+(function () {
+  var ENDPOINT = "https://amrdmnnijbfwtrjcpocl.supabase.co/functions/v1/newsletter-subscribe";
+  var lang = "de";
+  try { lang = localStorage.getItem("aiwm_lang") === "en" ? "en" : "de"; } catch (e) {}
+
+  var T = {
+    de: {
+      bestaetigt: ["ok", "Anmeldung bestätigt — willkommen an Bord! Die nächste Ausgabe landet automatisch in deinem Postfach."],
+      abgemeldet: ["ok", "Du bist abgemeldet. Schade — du kannst dich hier jederzeit wieder anmelden."],
+      ungueltig: ["err", "Dieser Link ist ungültig oder abgelaufen. Melde dich einfach unten neu an."],
+      pruefen: ["ok", "Fast geschafft! Wir haben dir eine Bestätigungs-Mail geschickt — bitte klick auf den Link darin."],
+      aktualisiert: ["ok", "Du bist schon angemeldet — wir haben deine Einstellungen aktualisiert."],
+      fehler: ["err", "Das hat leider nicht geklappt. Bitte versuch es später noch einmal."],
+      sendet: "Wird gesendet …"
+    },
+    en: {
+      bestaetigt: ["ok", "Subscription confirmed — welcome aboard! The next issue will land in your inbox automatically."],
+      abgemeldet: ["ok", "You are unsubscribed. You can re-subscribe here any time."],
+      ungueltig: ["err", "This link is invalid or expired. Just sign up again below."],
+      pruefen: ["ok", "Almost done! We sent you a confirmation email — please click the link inside."],
+      aktualisiert: ["ok", "You are already subscribed — we updated your preferences."],
+      fehler: ["err", "That didn't work, sorry. Please try again later."],
+      sendet: "Sending …"
+    }
+  };
+
+  var msg = document.getElementById("nlMsg");
+  function show(key, customText) {
+    var entry = T[lang][key] || T[lang].fehler;
+    msg.className = "nl-msg " + entry[0];
+    msg.textContent = customText || entry[1];
+  }
+
+  var status = new URLSearchParams(location.search).get("status");
+  if (status && T[lang][status]) show(status);
+
+  var form = document.getElementById("nlForm");
+  var btn = document.getElementById("nlSubmit");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var data = new FormData(form);
+    var original = btn.innerHTML;
+    btn.disabled = true;
+    btn.textContent = T[lang].sendet;
+    fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: data.get("email"),
+        name: data.get("name"),
+        company: data.get("company"),
+        frequency: data.get("frequency"),
+        website: data.get("website"),
+        language: lang
+      })
+    }).then(function (res) { return res.json().then(function (j) { return { ok: res.ok, j: j }; }); })
+      .then(function (r) {
+        if (r.ok && r.j.ok) {
+          show(r.j.state === "aktualisiert" ? "aktualisiert" : "pruefen");
+          form.reset();
+        } else {
+          show("fehler", r.j && r.j.error);
+        }
+      })
+      .catch(function () { show("fehler"); })
+      .finally(function () { btn.disabled = false; btn.innerHTML = original; });
+  });
+})();
+</script>
+<script src="./vendor/three.min.js"></script>
+<script src="./main.js"></script>
+<script src="./i18n.js"></script>
+</body>
+</html>

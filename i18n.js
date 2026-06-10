@@ -28,6 +28,19 @@
     "Datenschutz": "Privacy",
     "AGB": "Terms",
 
+    // --- Newsletter ---
+    "Der Blog ins Postfach.": "The blog, in your inbox.",
+    "Jeden Tag erscheint hier ein Artikel über KI im Mittelstand — praktisch, ehrlich, ohne Buzzwords. Du entscheidest, wie oft du Post bekommst. Kostenlos und jederzeit mit einem Klick abbestellbar.": "A new article about AI in business appears here every day — practical, honest, no buzzwords. You decide how often you hear from us. Free, unsubscribe any time with one click.",
+    "E-Mail-Adresse*": "Email address*",
+    "Name (optional)": "Name (optional)",
+    "Firma (optional)": "Company (optional)",
+    "Wie oft?": "How often?",
+    "Jeden Werktag den neuen Artikel": "The new article every weekday",
+    "Einmal pro Woche die Zusammenfassung": "A weekly summary",
+    "Anmelden": "Subscribe",
+    "Mit deiner Anmeldung stimmst du zu, dass wir deine Angaben zum Versand des Newsletters speichern. Du bekommst zuerst eine Bestätigungs-Mail — erst nach deinem Klick darin geht es los. Abmelden geht jederzeit über den Link in jeder Mail. Details in der": "By signing up you agree that we store your details to send the newsletter. You'll first receive a confirmation email — nothing is sent until you click the link inside. Unsubscribe any time via the link in every email. Details in the",
+    "Datenschutzerklärung": "privacy policy",
+
     // --- Seitentitel (document.title) ---
     "AI with Maris — KI-Coaching & maßgeschneiderte Software in deiner Cloud": "AI with Maris — AI coaching & custom software in your cloud",
     "Kontakt — AI with Maris": "Contact — AI with Maris",
