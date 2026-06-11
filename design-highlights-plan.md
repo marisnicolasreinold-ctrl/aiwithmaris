@@ -103,18 +103,18 @@ mit reduzierter Bewegung sauber degradiert und beide Sprachen abgedeckt sind. �
 
 ## Workstream 3 — KI-Agent „Frag Maris" (~4 Tage)
 
-> **Stand 11.06.2026: gebaut, wartet auf den API-Key.** Backend, Widget,
-> Rate-Limits und Datenschutz sind fertig. **Ein Schritt fehlt — der
-> kostenlose Weg:** auf https://aistudio.google.com einen (kostenlosen)
-> Gemini-API-Key erzeugen und als Vault-Secret `google_api_key` hinterlegen
-> (gleiches Muster wie `stripe_secret_key`). Die Funktion nutzt dann
-> automatisch Gemini 2.5 Flash im Free Tier (~250 Anfragen/Tag gratis,
-> Tageslimit der Funktion: 240). Alternativ funktioniert weiterhin ein
-> Anthropic-Key als `anthropic_api_key` (kostenpflichtig, Claude).
+> **Stand 11.06.2026: live getestet und funktionsfähig — läuft kostenlos
+> über Google Gemini.** Der Gemini-Key (Free Tier, AI Studio) liegt als
+> Vault-Secret `google_api_key`; die Funktion nutzt Gemini 2.5 Flash
+> (~250 Anfragen/Tag gratis, Tageslimit der Funktion: 240). Live-Tests
+> bestanden: Preisfragen korrekt, Englisch, Off-Topic-Zurücklenkung,
+> Prompt-Injection abgewehrt; Prompt nachgeschärft (duzen, Listen mit
+> Gedankenstrich, nur echte Seitenpfade verlinken). Alternativ greift
+> weiterhin ein `anthropic_api_key` (Claude) als Fallback.
 > Hinweis Free Tier: Google darf Gratis-Anfragen zur Verbesserung nutzen —
-> steht so in der Datenschutzerklärung, Widget warnt vor persönlichen Daten.
-> Bis ein Key da ist, zeigt das Widget eine freundliche
-> „gerade nicht verfügbar"-Meldung mit Kontakt-Hinweis.
+> steht in der Datenschutzerklärung, Widget warnt vor persönlichen Daten.
+> Letzter Schritt: Branch mergen, damit das Widget auf aiwithmaris.com
+> erscheint (Backend ist bereits live).
 
 **Ziel:** Die Seite führt selbst vor, was sie verkauft: ein Chat-Assistent,
 der Besucher zu Leistungen, Guide und Demos berät und zur Kontaktaufnahme führt.
