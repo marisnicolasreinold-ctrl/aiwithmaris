@@ -50,7 +50,7 @@
       <h1 id="dlTitle" style="font-family:var(--display);font-size:clamp(28px,4vw,40px);margin-top:14px">Einen Moment …</h1>
       <p id="dlText" style="color:var(--muted);margin-top:12px">Wir prüfen gerade deine Zahlung.</p>
       <div id="dlButtons"></div>
-      <p id="dlHint" style="display:none;color:var(--muted);font-size:13px;margin-top:18px">Tipp: Speichere die Datei direkt ab. Die Rechnung kommt separat per E-Mail. Bei Problemen schreib mir an <a href="mailto:marisnicolasreinold@gmail.com" style="color:var(--cyan)">marisnicolasreinold@gmail.com</a>.</p>
+      <p id="dlHint" style="display:none;color:var(--muted);font-size:13px;margin-top:18px">Tipp: Speichere die Dateien direkt ab. Deine Rechnung findest du oben als eigenen Button. Bei Problemen schreib mir an <a href="mailto:marisnicolasreinold@gmail.com" style="color:var(--cyan)">marisnicolasreinold@gmail.com</a>.</p>
     </div>
   </div>
 </section>
@@ -91,6 +91,7 @@
     'dsgvo-en': 'Download: GDPR & AI (English, PDF)',
     'makeorbuy-de': 'Download: Make or Buy (German, PDF)',
     'makeorbuy-en': 'Download: Make or Buy (English, PDF)',
+    invoice: 'Download invoice (PDF)',
     fail: 'We could not verify this purchase.',
     failTxt: 'If you just paid, wait a few seconds and reload this page. Otherwise check the link from your confirmation — or email me and I will sort it out.',
     missing: 'No order found.',
@@ -106,6 +107,7 @@
     'dsgvo-en': 'Download: GDPR & AI (Englisch, PDF)',
     'makeorbuy-de': 'Download: Make or Buy (Deutsch, PDF)',
     'makeorbuy-en': 'Download: Make or Buy (Englisch, PDF)',
+    invoice: 'Rechnung herunterladen (PDF)',
     fail: 'Wir konnten diesen Kauf nicht bestätigen.',
     failTxt: 'Wenn du gerade erst bezahlt hast, warte ein paar Sekunden und lade die Seite neu. Sonst prüfe den Link aus deiner Bestätigung — oder schreib mir, dann klären wir das.',
     missing: 'Keine Bestellung gefunden.',
@@ -138,6 +140,16 @@
         a.textContent = T[f] || f;
         btns.appendChild(a);
       });
+      var invUrl = d.invoice_pdf || d.invoice_url;
+      if (invUrl) {
+        var inv = document.createElement('a');
+        inv.className = 'btn btn-ghost';
+        inv.href = invUrl;
+        inv.target = '_blank';
+        inv.rel = 'noopener';
+        inv.textContent = T.invoice;
+        btns.appendChild(inv);
+      }
       hint.style.display = 'block';
     })
     .catch(function () {

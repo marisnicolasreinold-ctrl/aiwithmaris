@@ -110,9 +110,21 @@ checkout-Edge-Function hinterlegt, werden aber durch das Vault-Secret
    Checkout-Dialog hat funktioniert (damit ist der ganze Live-Flow
    Dialog → Stripe → Download end-to-end bestätigt). Falls noch nicht
    geschehen: Betrag im Stripe-Dashboard an sich selbst erstatten.
-2. **ELSTER:** Fragebogen zur steuerlichen Erfassung mit
+2. **Stripe-E-Mails einschalten (Live-Dashboard):** Beim Testkauf kam keine
+   Rechnungs-Mail an — Stripe ERSTELLT die Rechnung zwar (invoice_creation in
+   der checkout-Function, § 19-Footer), VERSCHICKT sie aber nur, wenn im
+   Dashboard aktiviert. Zwei Schalter:
+   - Settings → Customer emails → **Successful payments** (Zahlungsbeleg)
+   - Settings → Billing/Invoicing → **Email finalized invoices to customers**
+   Hinweis Apple Pay: Die Mail geht an die im Apple-Wallet hinterlegte
+   Adresse (oft iCloud) — im Dashboard beim Payment unter „Customer" sichtbar.
+   **Workaround ist live (11.06.2026):** Die Danke-Seite zeigt jetzt einen
+   eigenen „Rechnung herunterladen (PDF)"-Button (download-Function v3 liefert
+   `invoice_pdf`/`invoice_url` via `expand[]=invoice`) — funktioniert auch
+   rückwirkend für alte danke-Links.
+3. **ELSTER:** Fragebogen zur steuerlichen Erfassung mit
    Kleinunternehmerregelung § 19 UStG (siehe marketing/gewerbe-checkliste.md).
-3. Optional: AGB § 7 (Widerrufsverzicht) rechtlich gegenprüfen lassen.
+4. Optional: AGB § 7 (Widerrufsverzicht) rechtlich gegenprüfen lassen.
 
 ## Testkauf (Sandbox, jederzeit)
 

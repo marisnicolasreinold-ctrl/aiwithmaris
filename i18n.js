@@ -436,7 +436,7 @@
     "4 Leitfäden · PDF": "4 guides · PDF",
     "Zum Shop — ab 12 €": "To the shop — from €12",
     "Wähle deinen Leitfaden.": "Choose your guide.",
-    "Vier Titel als PDF — jeweils auf Deutsch und Englisch. Sichere Zahlung über Stripe, Download direkt nach dem Kauf, Rechnung per E-Mail.": "Four titles as PDFs — each in German and English. Secure payment via Stripe, download right after purchase, invoice by email.",
+    "Vier Titel als PDF — jeweils auf Deutsch und Englisch. Sichere Zahlung über Stripe — Download und Rechnung direkt nach dem Kauf.": "Four titles as PDFs — each in German and English. Secure payment via Stripe — download and invoice right after purchase.",
     "Der Hauptguide": "The main guide",
     "Der Leitfaden zur KI-Einführung im Mittelstand — klein anfangen, Nutzen beweisen, dann skalieren.": "The guide to adopting AI in mid-sized companies — start small, prove the value, then scale.",
     "90-Tage-Pilotplan & ROI-Rechenhilfe": "90-day pilot plan & ROI worksheet",
@@ -502,7 +502,7 @@
     "Gut zu wissen": "Good to know",
     "Kurze Antworten vor dem Kauf.": "Quick answers before you buy.",
     "Wie bekomme ich das PDF nach dem Kauf?": "How do I get the PDF after purchase?",
-    "Direkt nach der Zahlung wirst du auf eine Download-Seite weitergeleitet. Dort lädst du dein PDF (beim Bundle beide) sofort herunter. Zusätzlich bekommst du eine Rechnung an deine E-Mail-Adresse.": "Right after payment you are redirected to a download page where you can download your PDF (both, if you bought the bundle). You also receive an invoice by email.",
+    "Direkt nach der Zahlung wirst du auf eine Download-Seite weitergeleitet. Dort lädst du dein PDF (beim Paket alle) sofort herunter — und deine Rechnung gleich mit.": "Right after payment you are redirected to a download page where you can download your PDF (all of them, if you bought a package) right away — along with your invoice.",
     "Kann ich den Kauf zurückgeben?": "Can I return my purchase?",
     "Nein. Es handelt sich um ein digitales Produkt mit Sofort-Download. Mit deiner ausdrücklichen Zustimmung vor dem Kauf erlischt dein Widerrufsrecht — eine Rückgabe oder Erstattung ist deshalb ausgeschlossen. Sollte die Datei defekt sein, bekommst du selbstverständlich Ersatz.": "No. This is a digital product with an instant download. With your express consent before purchase your right of withdrawal expires — returns and refunds are therefore excluded. If the file is ever defective, you will of course get a replacement.",
     "Darf ich das PDF im Team weitergeben?": "May I share the PDF with my team?",
@@ -518,7 +518,7 @@
     "Dein Download": "Your download",
     "Einen Moment …": "One moment …",
     "Wir prüfen gerade deine Zahlung.": "We're verifying your payment.",
-    "Tipp: Speichere die Datei direkt ab. Die Rechnung kommt separat per E-Mail. Bei Problemen schreib mir an": "Tip: save the file right away. The invoice arrives separately by email. If anything goes wrong, email me at"
+    "Tipp: Speichere die Dateien direkt ab. Deine Rechnung findest du oben als eigenen Button. Bei Problemen schreib mir an": "Tip: save the files right away. You'll find your invoice as its own button above. If anything goes wrong, email me at"
   };
 
   function getLang() {
