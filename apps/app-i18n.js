@@ -112,7 +112,37 @@
     "Dringlichkeit: hoch":"Urgency: high","Dringlichkeit: normal":"Urgency: normal",
     "✓ Freigeben & senden":"✓ Approve & send",
     "✓ Antwort freigegeben und zum Versand übergeben (Demo) — im Live-Betrieb ginge sie an die Kund:in bzw. ins Ticketsystem.":"✓ Reply approved and handed off for sending (demo) — in production it would go to the customer or into the ticket system.",
-    "✓ Kopiert":"✓ Copied"
+    "✓ Kopiert":"✓ Copied",
+
+    /* NOVA (Spiel-Demo) */
+    "· KI-Space-Patrouille":"· AI space patrol",
+    "DIRECTOR-KI:":"DIRECTOR AI:",
+    "kalibriert…":"calibrating…","ausgewogen":"balanced","fordert dich":"pushing you","entlastet dich":"easing off",
+    "Ton: aus":"Sound: off","Ton: an":"Sound: on",
+    "SCHILD":"SHIELD","FEUER":"FIRE","KI-COPILOT":"AI COPILOT",
+    "Patrouille":"Patrol",
+    "Ein Neon-Shooter mit eingebauter Director-KI: Sie beobachtet, wie gut du fliegst, und passt die Gegner live an dein Können an. Dein KI-Copilot funkt dir Lagemeldungen.":"A neon shooter with a built-in director AI: it watches how well you fly and adapts the enemies to your skill in real time. Your AI copilot radios in status reports.",
+    "steuern":"steer","feuern":"fire",
+    "Mission starten":"Start mission",
+    "Schiff":"Ship","verloren":"lost",
+    "Die Director-KI merkt sich das — der nächste Anflug wird sanfter beginnen.":"The director AI remembers this — your next run will start out gentler.",
+    "PUNKTE":"SCORE","REKORD":"BEST",
+    "Nochmal fliegen":"Fly again",
+    "Sektor":"Sector","gesichert":"secured",
+    "Boss zerstört, Patrouille abgeschlossen. So fühlt sich Software an, die mitdenkt — die Director-KI hat das ganze Spiel über deine Schwierigkeit geregelt.":"Boss destroyed, patrol complete. This is what software that thinks along feels like — the director AI tuned your difficulty throughout the whole game.",
+    "Systeme online. Ich beobachte dein Flugverhalten und passe die Gegner an — viel Erfolg!":"Systems online. I'm watching how you fly and will adapt the enemies — good luck!",
+    "Welle gesichert. Zweite Welle im Anflug — bleib in Bewegung.":"Wave cleared. Second wave incoming — keep moving.",
+    "Stark! Letzte Welle, dann sehen wir uns den Brocken an.":"Strong flying! One last wave, then we'll deal with the big one.",
+    "Achtung: großes Signal voraus. Das ist der Wächter — zerstör die pinken Kerne!":"Heads up: large signal ahead. That's the Warden — destroy the pink cores!",
+    "Du fliegst stark — ich gebe den Gegnern mehr Schub.":"You're flying strong — I'm giving the enemies more thrust.",
+    "Ich nehme etwas Tempo raus, bis die Schilde stehen.":"I'm easing the pace until your shields recover.",
+    "Schilde unter 35 % — weich aus, ich regle die Regeneration hoch.":"Shields below 35% — evade, I'm boosting regeneration.",
+    "Sechs Abschüsse in Serie — saubere Arbeit!":"Six kills in a row — clean work!",
+    "Panzerung bricht — er wird jetzt aggressiver. Weiter so!":"Armor's breaking — he'll get more aggressive now. Keep it up!",
+    "Kern liegt frei! Volle Feuerkraft auf die Mitte!":"Core exposed! Full firepower on the centre!",
+    "Sektor gesichert. Saubere Patrouille, Pilot!":"Sector secured. Clean patrol, pilot!",
+    "BOSS · DER WÄCHTER":"BOSS · THE WARDEN",
+    "WELLE 1 / 3":"WAVE 1 / 3","WELLE 2 / 3":"WAVE 2 / 3","WELLE 3 / 3":"WAVE 3 / 3"
   };
 
   // Regeln für Texte mit eingesetzten Werten (Zahlen etc.)

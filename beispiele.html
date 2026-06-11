@@ -80,6 +80,12 @@
             <p>Eine Kundenanfrage wird automatisch eingeordnet, beantwortet und geprüft — mit echtem Revisions-Loop und menschlicher Freigabe.</p>
             <span class="cine-open">Live-Demo öffnen <span class="arrow">↗</span></span>
           </a>
+          <a class="cine-tile" data-col="3" data-row="0" href="apps/nova.html">
+            <img src="./assets/img/kv-nova-800.webp" width="800" height="500" alt="" loading="lazy" decoding="async" />
+            <h3>NOVA — Space-Patrouille</h3>
+            <p>Spielbare Mini-Game-Demo: Neon-Shooter, dessen Director-KI die Schwierigkeit live an dein Können anpasst.</p>
+            <span class="cine-open">Live-Demo öffnen <span class="arrow">↗</span></span>
+          </a>
           <a class="cine-tile" data-col="0" data-row="1" href="apps/flowops.html">
             <img src="./assets/img/kv-flowops-800.webp" width="800" height="500" alt="" loading="lazy" decoding="async" />
             <h3>FlowOps IoT-Monitoring</h3>
@@ -97,6 +103,12 @@
             <h3>PulseCRM Vertriebs-Cockpit</h3>
             <p>Leads, Angebote und Umsätze in einer Pipeline — KI fasst die Historie zusammen und schlägt den nächsten Schritt vor.</p>
             <span class="cine-open">Live-Demo öffnen <span class="arrow">↗</span></span>
+          </a>
+          <a class="cine-tile" data-col="3" data-row="1" href="kontakt.html">
+            <img src="./assets/img/kv-orbit-800.webp" width="800" height="500" alt="" loading="lazy" decoding="async" />
+            <h3>Dein Projekt hier?</h3>
+            <p>So etwas baue ich auch für deinen Anwendungsfall — von der Idee bis zur fertigen App in deiner Cloud.</p>
+            <span class="cine-open">Sag Hallo <span class="arrow">→</span></span>
           </a>
 
         </div>
@@ -152,15 +164,16 @@
   var tiles = Array.prototype.slice.call(document.querySelectorAll('.cine-tile'));
   if (!cine || !world || !tiles.length) return;
 
-  var COLS = 3, ROWS = 2;
-  var col = 1, row = 0; // Start: Mitte oben
+  var COLS = 4, ROWS = 2;
+  var CENTER = (COLS - 1) / 2; // 4 Spalten -> Saalmitte zwischen Spalte 1 und 2
+  var col = 1, row = 0; // Start: zweite Spalte oben
 
   // Geometrie je nach Viewport (Handy: enger Saal, kleinere Kacheln)
   function geo() {
     var narrow = window.innerWidth < 760;
     return narrow
-      ? { angle: 42, radius: 360, rowY: 150, rowTilt: 7 }
-      : { angle: 36, radius: 640, rowY: 215, rowTilt: 8 };
+      ? { angle: 38, radius: 400, rowY: 150, rowTilt: 7 }
+      : { angle: 27, radius: 760, rowY: 215, rowTilt: 8 };
   }
 
   function render() {
@@ -171,12 +184,12 @@
     world.style.transform =
       'translateY(' + ((row === 0 ? 1 : -1) * g.rowY) + 'px)' +
       ' rotateX(' + ((row === 0 ? -1 : 1) * g.rowTilt) + 'deg)' +
-      ' rotateY(' + ((col - 1) * g.angle) + 'deg)';
+      ' rotateY(' + ((col - CENTER) * g.angle) + 'deg)';
     tiles.forEach(function (t) {
       var c = +t.dataset.col, r = +t.dataset.row;
       var active = c === col && r === row;
       t.style.transform =
-        'rotateY(' + (-(c - 1) * g.angle) + 'deg) translateZ(' + (-g.radius) + 'px)' +
+        'rotateY(' + (-(c - CENTER) * g.angle) + 'deg) translateZ(' + (-g.radius) + 'px)' +
         ' translateY(' + ((r === 0 ? -1 : 1) * g.rowY) + 'px)' +
         ' rotateX(' + ((r === 0 ? 1 : -1) * g.rowTilt) + 'deg)' +
         (active ? ' scale(1.12)' : '');
