@@ -136,6 +136,11 @@ der Besucher zu Leistungen, Guide und Demos berät und zur Kontaktaufnahme führ
 - [x] Verhaltensregeln: kurz antworten, passende Seiten verlinken,
       Off-Topic zurücklenken, keine Preise erfinden, keine Rechtsberatung,
       Prompt-Injection-Versuche ignorieren.
+- [x] Stabile Antwortsprache (Function v5): Die Website-Sprache aus dem
+      Widget (`lang`) ist die verbindliche Standard-Antwortsprache;
+      gewechselt wird nur, wenn der Nutzer eindeutig in der anderen
+      Sprache schreibt. Getestet: kurze/mehrdeutige Fragen bleiben in der
+      Website-Sprache, englische Frage bei deutscher Seite → Englisch.
 - [ ] Testfragen auf der Live-Seite durchgehen, sobald der Key im Vault ist
       (DE/EN, Preisfragen, Off-Topic, Injection-Versuche).
 
