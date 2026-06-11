@@ -2,18 +2,20 @@
 
 Stand: 2026-06-10 · Dieser Ordner wird NICHT deployt (.vercelignore).
 
-## ⚠️ Bevor echtes Geld fließen kann (MUSS, alles Maris)
+## 🟢 Der Shop ist LIVE (seit 11.06.2026)
 
-1. **Stripe live schalten** — Account ist noch Sandbox („Aiwithmaris Sandbox").
-   Dashboard → „Aktivieren": Identität verifizieren + Bankkonto hinterlegen.
-   Danach den Live-Secret-Key im Supabase-Vault ersetzen (Secret `stripe_secret_key`)
-   und die drei Live-Price-IDs in der Edge Function `checkout` eintragen.
+1. ~~Stripe live schalten~~ — ✅ erledigt am 2026-06-11: Live-Account aktiviert,
+   Live-Produkte/-Preise angelegt, Vault-Secrets umgeschaltet, Live-Checkout
+   verifiziert. Details + Payment Links in `pdf-verkauf-todo.md`.
 2. ~~Impressum mit echten Daten~~ — ✅ erledigt am 2026-06-10 (Maris Reinold,
    Kortental 10, 44149 Dortmund, in Impressum/Datenschutz/AGB inkl. §19-UStG-Klausel).
-3. **Gewerbe/Steuer** — Gewerbe anmelden (Stadt Dortmund, geht online) und beim
-   Finanzamt die Kleinunternehmerregelung (§19 UStG) im Fragebogen ankreuzen.
+3. ~~Gewerbe anmelden~~ — ✅ bestätigt am 2026-06-10. **Noch offen:** ELSTER-Fragebogen
+   zur steuerlichen Erfassung mit Kleinunternehmerregelung (§19 UStG).
 
-Ohne 1 und 3 bleibt alles im Testmodus — die Technik ist fertig und wartet.
+**Teilbare Payment Links** (für LinkedIn-Profil, E-Mail-Signatur etc.):
+- Leitfaden DE (19 €): https://buy.stripe.com/dRmcN43PoggQ5KXdjHfYY00
+- Guide EN (19 €): https://buy.stripe.com/cNi6oGclU3u4c9l0wVfYY01
+- Bundle DE+EN (29 €): https://buy.stripe.com/4gM14m2Lk1lWa1d3J7fYY02
 
 ## Kanäle (Empfehlung in dieser Reihenfolge)
 
@@ -41,5 +43,6 @@ Formataufwand), Udemy (anderes Format).
 
 - Leseprobe-PDF (1 Kapitel) + Lead-Magnet-Flow bauen
 - Eigenes OG-Bild für guide.html (aktuell generisches og-axon.png)
-- Stripe Payment Link erstellen, sobald der Account live ist
-  (teilbarer Kauf-Link für Social-Profile, ohne Website-Umweg)
+- ~~Stripe Payment Link erstellen~~ — ✅ erledigt 2026-06-11 (alle drei
+  Produkte, Links siehe oben; Rechnung + Widerrufshinweis inklusive,
+  Download-Auslieferung über /danke funktioniert auch hier)

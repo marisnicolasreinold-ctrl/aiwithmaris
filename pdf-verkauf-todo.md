@@ -1,5 +1,11 @@
 # PDF-Verkauf — Status & Setup
 
+> **🟢 LIVE seit 11.06.2026.** Stripe-Live-Account ist aktiviert (Zahlungen +
+> Auszahlungen freigeschaltet), Live-Produkte/-Preise angelegt, Vault-Secrets
+> (`stripe_secret_key` auf `sk_live_…`, `stripe_price_overrides` mit den
+> Live-Price-IDs) gesetzt und per Live-Checkout-Session verifiziert.
+> Der Shop nimmt echtes Geld an.
+
 > **Stand: umgesetzt.** Der Shop ist eingebaut: `guide.html` (Verkaufsseite),
 > `danke.html` (Download nach Zahlung), `api/checkout.js` + `api/download.js`
 > (Stripe Checkout & abgesicherte Auslieferung). Die PDFs liegen in `api/_files/`
@@ -18,9 +24,26 @@
    Session bezahlt ist und welche Dateien zum Kauf gehören — erst dann wird
    das PDF ausgeliefert.
 
-## Stripe (Sandbox / Test-Modus)
+## Stripe LIVE (aktiv seit 11.06.2026)
 
-Account: `acct_1TgeQIAPD9ukdtqR` („Aiwithmaris Sandbox")
+Account: `acct_1TgeQ8AYfMthwvew` — charges_enabled ✅, payouts_enabled ✅
+
+| Produkt | Live-Price-ID | Preis | Payment Link |
+|---|---|---|---|
+| Leitfaden DE | `price_1Th2MFAYfMthwvewldk10B2o` | 19 € | https://buy.stripe.com/dRmcN43PoggQ5KXdjHfYY00 |
+| Guide EN | `price_1Th2MGAYfMthwvewKLHTiiH8` | 19 € | https://buy.stripe.com/cNi6oGclU3u4c9l0wVfYY01 |
+| Bundle DE+EN | `price_1Th2MGAYfMthwvewpNw0OH7X` | 29 € | https://buy.stripe.com/4gM14m2Lk1lWa1d3J7fYY02 |
+
+Die Live-Price-IDs liegen im Vault-Secret `stripe_price_overrides` und
+überschreiben die Sandbox-Defaults in der checkout-Edge-Function — kein
+Code-Deploy nötig. Die Payment Links sind teilbar (Social-Profile, E-Mail),
+setzen `metadata[files]`, leiten nach Zahlung auf `/danke?session_id=…`
+(Download funktioniert wie beim Website-Checkout) und enthalten Rechnung
+mit § 19-Footer + Widerrufsverzicht-Hinweis.
+
+## Stripe (Sandbox / Test-Modus — historisch)
+
+Sandbox-Account: `acct_1TgeQIAPD9ukdtqR` („Aiwithmaris Sandbox")
 
 | Produkt | Product-ID | Price-ID | Preis |
 |---|---|---|---|
@@ -28,8 +51,9 @@ Account: `acct_1TgeQIAPD9ukdtqR` („Aiwithmaris Sandbox")
 | Guide EN | `prod_Ug19mIxhym0fmH` | `price_1Tgf7mAPD9ukdtqRkoLBzXTx` | 19 € |
 | Bundle DE+EN | `prod_Ug196VyIsNZTv5` | `price_1Tgf7mAPD9ukdtqRSf0s9cTO` | 29 € |
 
-Die Price-IDs sind als Default in `api/checkout.js` hinterlegt und können per
-Umgebungsvariablen (`STRIPE_PRICE_DE/EN/BUNDLE`) überschrieben werden.
+Diese Sandbox-Price-IDs sind weiterhin als Default im Code der
+checkout-Edge-Function hinterlegt, werden aber durch das Vault-Secret
+`stripe_price_overrides` (live) überschrieben.
 
 ## Stand 10.06.2026 — was schon erledigt ist
 
@@ -45,19 +69,26 @@ Umgebungsvariablen (`STRIPE_PRICE_DE/EN/BUNDLE`) überschrieben werden.
   (JSON: `{"de":"price_…","en":"price_…","bundle":"price_…"}`). Fehlt das
   Secret, gelten die Sandbox-Preise.
 
-## Was noch fehlt für den Live-Gang (nur Maris kann das)
+## Live-Gang am 11.06.2026 — was erledigt wurde
 
-1. **Stripe-Live-Account aktivieren:** dashboard.stripe.com → Live-Modus →
-   Identitätsprüfung + Bankkonto (IBAN) hinterlegen. Geschäftsangaben:
-   Einzelunternehmer, „AI with Maris", Dortmund.
-2. **Live-Secret-Key an Claude geben** (oder selbst im Supabase-Vault das
-   Secret `stripe_secret_key` auf `sk_live_…` tauschen).
-3. Claude übernimmt dann: Live-Produkte/-Preise anlegen,
-   `stripe_price_overrides` im Vault setzen, Testkauf mit echter Karte
-   (z. B. 1 €-Testpreis) verifizieren.
-4. **ELSTER:** Fragebogen zur steuerlichen Erfassung mit
+1. ✅ **Stripe-Live-Account aktiviert** (Maris): Identität + IBAN hinterlegt,
+   charges_enabled und payouts_enabled bestätigt.
+2. ✅ **Live-Produkte/-Preise angelegt** (Claude, per temporärer
+   Supabase-Edge-Function — inzwischen stillgelegt).
+3. ✅ **Vault umgeschaltet:** `stripe_secret_key` → `sk_live_…`,
+   `stripe_price_overrides` mit den drei Live-Price-IDs gesetzt.
+4. ✅ **Verifiziert:** Live-Checkout-Session (`cs_live_…`) erfolgreich über
+   die checkout-Edge-Function erstellt.
+5. ✅ **Payment Links** für alle drei Produkte erstellt (siehe Tabelle oben).
+
+## Was noch offen ist (nur Maris kann das)
+
+1. **Echter Testkauf** mit eigener Karte (19 €-Produkt), prüfen: Download
+   funktioniert, Rechnung zeigt den § 19-Satz im Footer. Betrag kann danach
+   im Stripe-Dashboard an sich selbst erstattet werden.
+2. **ELSTER:** Fragebogen zur steuerlichen Erfassung mit
    Kleinunternehmerregelung § 19 UStG (siehe marketing/gewerbe-checkliste.md).
-5. Optional: AGB § 7 (Widerrufsverzicht) rechtlich gegenprüfen lassen.
+3. Optional: AGB § 7 (Widerrufsverzicht) rechtlich gegenprüfen lassen.
 
 ## Testkauf (Sandbox, jederzeit)
 
