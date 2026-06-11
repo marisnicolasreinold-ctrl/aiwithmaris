@@ -147,7 +147,7 @@
         inv.href = invUrl;
         inv.target = '_blank';
         inv.rel = 'noopener';
-        inv.textContent = T.invoice;
+        inv.textContent = T.invoice + (d.invoice_number ? ' — Nr. ' + d.invoice_number : '');
         btns.appendChild(inv);
       }
       hint.style.display = 'block';

@@ -54,10 +54,28 @@ Markdown, gesetzt mit `scripts/og/render-ebook.mjs`.
 
 | Produkt (product-Key) | Preis | Live-Price-ID | Payment Link |
 |---|---|---|---|
-| Prompt-Werkzeugkasten (`prompts`) | 12 € | `price_1Th4fzAYfMthwvewLi7hCOBS` | https://buy.stripe.com/aFa9ASdpYfcMddp7ZnfYY03 |
-| DSGVO & KI (`dsgvo`) | 29 € | `price_1Th4g0AYfMthwvewHswam7tF` | https://buy.stripe.com/cNi5kCdpY1lW0qD0wVfYY04 |
-| Make or Buy (`makeorbuy`) | 29 € | `price_1Th4g0AYfMthwvewKlOa2DIR` | https://buy.stripe.com/4gM00ify6fcMa1d1AZfYY05 |
+| Prompt-Werkzeugkasten Bundle (`prompts`) | 12 € | `price_1Th4fzAYfMthwvewLi7hCOBS` | https://buy.stripe.com/aFa9ASdpYfcMddp7ZnfYY03 |
+| Prompt-Werkzeugkasten DE (`prompts-de`) | 8 € | `price_1Th7dAAYfMthwvewI8WFdSC7` | — (nur Website) |
+| Prompt-Werkzeugkasten EN (`prompts-en`) | 8 € | `price_1Th7dBAYfMthwvew20QT2jjy` | — (nur Website) |
+| DSGVO & KI Bundle (`dsgvo`) | 29 € | `price_1Th4g0AYfMthwvewHswam7tF` | https://buy.stripe.com/cNi5kCdpY1lW0qD0wVfYY04 |
+| DSGVO & KI DE (`dsgvo-de`) | 19 € | `price_1Th7dBAYfMthwvewROelRC6f` | — (nur Website) |
+| DSGVO & KI EN (`dsgvo-en`) | 19 € | `price_1Th7dCAYfMthwvew4Z3sDzRu` | — (nur Website) |
+| Make or Buy Bundle (`makeorbuy`) | 29 € | `price_1Th4g0AYfMthwvewKlOa2DIR` | https://buy.stripe.com/4gM00ify6fcMa1d1AZfYY05 |
+| Make or Buy DE (`makeorbuy-de`) | 19 € | `price_1Th7dCAYfMthwvewKOzSB3eJ` | — (nur Website) |
+| Make or Buy EN (`makeorbuy-en`) | 19 € | `price_1Th7dDAYfMthwvewu8aCQKG3` | — (nur Website) |
 | KI-Bibliothek, alle 4 (`library`) | 59 € | `price_1Th4g1AYfMthwvew4k7tl8F7` | https://buy.stripe.com/fZueVc0DcggQddp1AZfYY06 |
+
+Einzelsprach-Editionen (11.06.2026): angelegt per temporärer Edge-Function
+`admin-setup-editions` (stillgelegt, antwortet 410). Preislogik wie beim
+Hauptguide (einzeln ≈ ⅔ vom Bundle). Auf guide.html haben alle 4 Karten
+denselben Ausgaben-Wähler (Deutsch / Englisch / Beide).
+
+**Rechnungsnummern:** Stripe vergibt automatisch eine Nummer beim
+Finalisieren (steht auf jedem Rechnungs-PDF; die Danke-Seite zeigt sie am
+Rechnungs-Button mit an). Standard ist KUNDEN-bezogene Nummerierung
+(z. B. `ABC123-0001`). Für klassische fortlaufende Nummern über alle Kunden:
+Dashboard → Settings → Billing/Invoicing → Invoice numbering →
+**Sequentially across your account** umstellen (geht nicht per API).
 
 Datei-Schlüssel in `metadata[files]` (Download-Function):
 `prompts-de`, `prompts-en`, `dsgvo-de`, `dsgvo-en`, `makeorbuy-de`,

@@ -63,6 +63,14 @@
     },
     {
       "@type": "Offer",
+      "name": "Der Prompt-Werkzeugkasten (DE oder EN)",
+      "price": "8.00",
+      "priceCurrency": "EUR",
+      "availability": "https://schema.org/InStock",
+      "url": "https://aiwithmaris.com/guide.html#kaufen"
+    },
+    {
+      "@type": "Offer",
       "name": "Der Prompt-Werkzeugkasten (DE + EN)",
       "price": "12.00",
       "priceCurrency": "EUR",
@@ -71,8 +79,24 @@
     },
     {
       "@type": "Offer",
+      "name": "DSGVO & KI — Der Praxisleitfaden (DE oder EN)",
+      "price": "19.00",
+      "priceCurrency": "EUR",
+      "availability": "https://schema.org/InStock",
+      "url": "https://aiwithmaris.com/guide.html#kaufen"
+    },
+    {
+      "@type": "Offer",
       "name": "DSGVO & KI — Der Praxisleitfaden (DE + EN)",
       "price": "29.00",
+      "priceCurrency": "EUR",
+      "availability": "https://schema.org/InStock",
+      "url": "https://aiwithmaris.com/guide.html#kaufen"
+    },
+    {
+      "@type": "Offer",
+      "name": "Make or Buy — KI-Software entscheiden (DE oder EN)",
+      "price": "19.00",
       "priceCurrency": "EUR",
       "availability": "https://schema.org/InStock",
       "url": "https://aiwithmaris.com/guide.html#kaufen"
@@ -137,7 +161,7 @@
       <h1 class="reveal d1">Anfangen,<br><span class="grad">wo es zählt.</span></h1>
       <p class="lead reveal d2">Der umfassende Leitfaden, wie ein mittelständisches Unternehmen KI einführt, ohne sich zu verzetteln: klein anfangen, wo es am meisten klemmt, den Nutzen beweisen — und erst dann in die Breite gehen.</p>
       <div class="hero-actions reveal d3">
-        <a href="#kaufen" class="btn btn-primary" data-hover>Zum Shop — ab 12 € <span class="arrow">→</span></a>
+        <a href="#kaufen" class="btn btn-primary" data-hover>Zum Shop — ab 8 € <span class="arrow">→</span></a>
         <a href="#inhalt" class="btn btn-ghost" data-hover>Was drin steckt</a>
       </div>
       <div class="book-badges reveal d3">
@@ -198,48 +222,72 @@
         <fieldset class="edition-picker">
           <legend>Ausgabe wählen</legend>
           <div class="edition-options">
-            <label><input type="radio" name="mainEdition" value="de" data-price="19 €" data-btn="PDF kaufen (DE)" checked /><span>Deutsch</span></label>
-            <label><input type="radio" name="mainEdition" value="en" data-price="19 €" data-btn="PDF kaufen (EN)" /><span>Englisch</span></label>
-            <label><input type="radio" name="mainEdition" value="bundle" data-price="29 €" data-btn="Bundle kaufen" /><span>Beide (DE + EN)</span></label>
+            <label><input type="radio" name="ed-main" value="de" data-price="19 €" data-btn="PDF kaufen (DE)" checked /><span>Deutsch</span></label>
+            <label><input type="radio" name="ed-main" value="en" data-price="19 €" data-btn="PDF kaufen (EN)" /><span>Englisch</span></label>
+            <label><input type="radio" name="ed-main" value="bundle" data-price="29 €" data-btn="Bundle kaufen" /><span>Beide (DE + EN)</span></label>
           </div>
         </fieldset>
-        <button class="btn btn-primary buy-btn" id="mainBuyBtn" data-product="de" data-price="19 €" data-hover type="button">PDF kaufen (DE) <span class="arrow">→</span></button>
+        <button class="btn btn-primary buy-btn" data-product="de" data-price="19 €" data-hover type="button">PDF kaufen (DE) <span class="arrow">→</span></button>
       </div>
       <div class="plan reveal d2">
-        <span class="tag">Vertiefung · DE + EN</span>
+        <span class="tag">Vertiefung</span>
         <h3>Der Prompt-Werkzeugkasten</h3>
-        <div class="price"><b>12 €</b><span> einmalig</span></div>
+        <div class="price"><b>8 €</b><span> einmalig</span></div>
         <p class="desc">50 erprobte KI-Vorlagen für den Alltag — von Vertrieb bis Buchhaltung.</p>
         <ul>
           <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>50 Copy-Paste-Vorlagen in 8 Abteilungen</li>
           <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Mit Anpassungstipps &amp; Stolperfallen</li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Deutsch + Englisch im Paket</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Sofort-Download</li>
         </ul>
-        <button class="btn btn-ghost buy-btn" data-product="prompts" data-price="12 €" data-hover type="button">Werkzeugkasten kaufen <span class="arrow">→</span></button>
+        <fieldset class="edition-picker">
+          <legend>Ausgabe wählen</legend>
+          <div class="edition-options">
+            <label><input type="radio" name="ed-prompts" value="prompts-de" data-price="8 €" data-btn="PDF kaufen (DE)" checked /><span>Deutsch</span></label>
+            <label><input type="radio" name="ed-prompts" value="prompts-en" data-price="8 €" data-btn="PDF kaufen (EN)" /><span>Englisch</span></label>
+            <label><input type="radio" name="ed-prompts" value="prompts" data-price="12 €" data-btn="Bundle kaufen" /><span>Beide (DE + EN)</span></label>
+          </div>
+        </fieldset>
+        <button class="btn btn-ghost buy-btn" data-product="prompts-de" data-price="8 €" data-hover type="button">PDF kaufen (DE) <span class="arrow">→</span></button>
       </div>
       <div class="plan reveal d2">
-        <span class="tag">Vertiefung · DE + EN</span>
+        <span class="tag">Vertiefung</span>
         <h3>DSGVO &amp; KI — Der Praxisleitfaden</h3>
-        <div class="price"><b>29 €</b><span> einmalig</span></div>
+        <div class="price"><b>19 €</b><span> einmalig</span></div>
         <p class="desc">KI einführen, ohne den Datenschutz zu verlieren — mit fertiger KI-Richtlinie für dein Team.</p>
         <ul>
           <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Daten-Ampel &amp; AVV-Checkliste</li>
           <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>KI-Richtlinie als Vorlage + EU AI Act in Klartext</li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Deutsch + Englisch im Paket</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Sofort-Download</li>
         </ul>
-        <button class="btn btn-ghost buy-btn" data-product="dsgvo" data-price="29 €" data-hover type="button">Leitfaden kaufen <span class="arrow">→</span></button>
+        <fieldset class="edition-picker">
+          <legend>Ausgabe wählen</legend>
+          <div class="edition-options">
+            <label><input type="radio" name="ed-dsgvo" value="dsgvo-de" data-price="19 €" data-btn="PDF kaufen (DE)" checked /><span>Deutsch</span></label>
+            <label><input type="radio" name="ed-dsgvo" value="dsgvo-en" data-price="19 €" data-btn="PDF kaufen (EN)" /><span>Englisch</span></label>
+            <label><input type="radio" name="ed-dsgvo" value="dsgvo" data-price="29 €" data-btn="Bundle kaufen" /><span>Beide (DE + EN)</span></label>
+          </div>
+        </fieldset>
+        <button class="btn btn-ghost buy-btn" data-product="dsgvo-de" data-price="19 €" data-hover type="button">PDF kaufen (DE) <span class="arrow">→</span></button>
       </div>
       <div class="plan reveal d3">
-        <span class="tag">Vertiefung · DE + EN</span>
+        <span class="tag">Vertiefung</span>
         <h3>Make or Buy — KI-Software entscheiden</h3>
-        <div class="price"><b>29 €</b><span> einmalig</span></div>
+        <div class="price"><b>19 €</b><span> einmalig</span></div>
         <p class="desc">Fertig kaufen, anpassen oder bauen lassen? Das Framework für die teuerste Entscheidung deines Projekts.</p>
         <ul>
           <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Scoring-Framework &amp; 3-Jahres-Kostenmodell</li>
           <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>10 Anbieter-Fragen &amp; Ausschreibungs-Vorlage</li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Deutsch + Englisch im Paket</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Sofort-Download</li>
         </ul>
-        <button class="btn btn-ghost buy-btn" data-product="makeorbuy" data-price="29 €" data-hover type="button">Entscheidungshilfe kaufen <span class="arrow">→</span></button>
+        <fieldset class="edition-picker">
+          <legend>Ausgabe wählen</legend>
+          <div class="edition-options">
+            <label><input type="radio" name="ed-makeorbuy" value="makeorbuy-de" data-price="19 €" data-btn="PDF kaufen (DE)" checked /><span>Deutsch</span></label>
+            <label><input type="radio" name="ed-makeorbuy" value="makeorbuy-en" data-price="19 €" data-btn="PDF kaufen (EN)" /><span>Englisch</span></label>
+            <label><input type="radio" name="ed-makeorbuy" value="makeorbuy" data-price="29 €" data-btn="Bundle kaufen" /><span>Beide (DE + EN)</span></label>
+          </div>
+        </fieldset>
+        <button class="btn btn-ghost buy-btn" data-product="makeorbuy-de" data-price="19 €" data-hover type="button">PDF kaufen (DE) <span class="arrow">→</span></button>
       </div>
     </div>
 
@@ -440,16 +488,20 @@
     return tEN('Weiter zur Kasse') + ' <span class="arrow">→</span>';
   }
 
-  /* Ausgaben-Wahl beim Hauptguide */
-  var mainBtn = document.getElementById('mainBuyBtn');
-  var mainPrice = document.querySelector('#mainPrice b');
-  document.querySelectorAll('input[name="mainEdition"]').forEach(function (radio) {
-    radio.addEventListener('change', function () {
-      if (!radio.checked) return;
-      mainBtn.dataset.product = radio.value;
-      mainBtn.dataset.price = radio.dataset.price;
-      mainPrice.textContent = radio.dataset.price;
-      mainBtn.innerHTML = tEN(radio.dataset.btn) + ' <span class="arrow">→</span>';
+  /* Ausgaben-Wahl in den Karten (Hauptguide + Vertiefungen) */
+  document.querySelectorAll('.plan').forEach(function (plan) {
+    var radios = plan.querySelectorAll('.edition-picker input[type="radio"]');
+    if (!radios.length) return;
+    var btn = plan.querySelector('.buy-btn');
+    var priceEl = plan.querySelector('.price b');
+    radios.forEach(function (radio) {
+      radio.addEventListener('change', function () {
+        if (!radio.checked) return;
+        btn.dataset.product = radio.value;
+        btn.dataset.price = radio.dataset.price;
+        priceEl.textContent = radio.dataset.price;
+        btn.innerHTML = tEN(radio.dataset.btn) + ' <span class="arrow">→</span>';
+      });
     });
   });
 
@@ -459,8 +511,9 @@
       var box = btn.closest('.plan, .library-banner');
       var h3 = box ? box.querySelector('h3') : null;
       var name = h3 ? h3.textContent.replace(/\s+/g, ' ').trim() : '';
-      if (btn.id === 'mainBuyBtn') {
-        var checked = document.querySelector('input[name="mainEdition"]:checked');
+      var picker = box ? box.querySelector('.edition-picker') : null;
+      if (picker) {
+        var checked = picker.querySelector('input:checked');
         var lbl = checked ? checked.closest('label').textContent.replace(/\s+/g, ' ').trim() : '';
         if (lbl) name += ' — ' + lbl;
       }

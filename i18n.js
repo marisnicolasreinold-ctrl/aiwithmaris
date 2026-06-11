@@ -434,7 +434,8 @@
 
     // --- Guide-Seite: Shop-Neuaufbau ---
     "4 Leitfäden · PDF": "4 guides · PDF",
-    "Zum Shop — ab 12 €": "To the shop — from €12",
+    "Zum Shop — ab 8 €": "To the shop — from €8",
+    "Vertiefung": "Deep dive",
     "Wähle deinen Leitfaden.": "Choose your guide.",
     "Vier Titel als PDF — jeweils auf Deutsch und Englisch. Sichere Zahlung über Stripe — Download und Rechnung direkt nach dem Kauf.": "Four titles as PDFs — each in German and English. Secure payment via Stripe — download and invoice right after purchase.",
     "Der Hauptguide": "The main guide",
