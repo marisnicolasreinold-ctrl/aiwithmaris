@@ -125,35 +125,9 @@ const isMobile = window.innerWidth < 860;
   });
 })();
 
-// === 2. Custom Cursor Follow Ring (Desktop Only) ===
-(function () {
-  if (innerWidth < 860) return;
-  const dot = document.querySelector('.cursor-dot');
-  const ring = document.querySelector('.cursor-ring');
-  if (!dot || !ring) return;
-
-  document.body.classList.add('cursor-custom');
-  let rx = 0, ry = 0, dx = 0, dy = 0;
-  addEventListener('mousemove', e => {
-    dx = e.clientX;
-    dy = e.clientY;
-    dot.style.left = dx + 'px';
-    dot.style.top = dy + 'px';
-  });
-
-  (function loop() {
-    rx += (dx - rx) * 0.18;
-    ry += (dy - ry) * 0.18;
-    ring.style.left = rx + 'px';
-    ring.style.top = ry + 'px';
-    requestAnimationFrame(loop);
-  })();
-
-  document.querySelectorAll('a, button, [data-hover], [data-tilt], .card, .plan, .deal, .dept, .member').forEach(el => {
-    el.addEventListener('mouseenter', () => ring.classList.add('hover'));
-    el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
-  });
-})();
+// === 2. Custom Cursor: entfernt (11.06.2026) — die Maus bleibt der normale
+// Systemzeiger. Die .cursor-dot/.cursor-ring-Divs in den Seiten sind inert
+// und werden per CSS ausgeblendet.
 
 // === 3. Mobile Navigation Menü (Burger) ===
 const nav = document.getElementById('nav');

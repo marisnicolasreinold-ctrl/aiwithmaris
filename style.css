@@ -32,24 +32,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
-body.cursor-custom {
-  cursor: none;
-}
-body.cursor-custom a,
-body.cursor-custom button,
-body.cursor-custom [data-hover] {
-  cursor: none;
-}
-body.cursor-custom input,
-body.cursor-custom textarea,
-body.cursor-custom select {
-  cursor: auto;
-}
-@media (max-width: 860px) {
-  body {
-    cursor: auto;
-  }
-}
+/* Custom Cursor entfernt (11.06.2026): die Maus bleibt der Systemzeiger. */
 #scene {
   position: fixed;
   inset: 0;
@@ -80,39 +63,7 @@ body.cursor-custom select {
 }
 .cursor-dot,
 .cursor-ring {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 9999;
-  pointer-events: none;
-  border-radius: 50%;
-  mix-blend-mode: screen;
-}
-.cursor-dot {
-  width: 6px;
-  height: 6px;
-  background: var(--cyan);
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 12px var(--cyan);
-}
-.cursor-ring {
-  width: 38px;
-  height: 38px;
-  border: 1px solid rgba(94, 240, 255, .55);
-  transform: translate(-50%, -50%);
-  transition: width .25s, height .25s, border-color .25s, background .25s;
-}
-.cursor-ring.hover {
-  width: 64px;
-  height: 64px;
-  border-color: rgba(124, 92, 255, .8);
-  background: rgba(124, 92, 255, .06);
-}
-@media (max-width: 860px), (hover: none) {
-  .cursor-dot,
-  .cursor-ring {
-    display: none;
-  }
+  display: none;
 }
 .wrap {
   position: relative;
