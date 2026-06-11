@@ -15,32 +15,42 @@
 
 ## Workstream 1 — Echte Bildwelt (~2–3 Tage)
 
+> **Stand 11.06.2026: Tag 1 + 2 umgesetzt.** Die Key-Visuals werden
+> **generativ erzeugt** (`scripts/og/generate-keyvisuals.mjs`: SVG → resvg
+> → sharp, gleiche Pipeline-Idee wie die OG-Bilder) — Neon-Konstellationen
+> in der Marken-Farbreise, deterministisch reproduzierbar, 13–41 KB pro
+> Datei. Bewusste Abweichungen: die vorhandenen fotorealistischen Bilder
+> (`coach-visual`, `dev-visual`, `cloud-network`) bleiben unangetastet —
+> neue Visuals füllen die Lücken (Showcase-Karten, Demo-Cover, Über-mich).
+> Kein PNG-Fallback: AVIF + WebP decken alle relevanten Browser ab.
+
 **Ziel:** Die Seite lebt aktuell fast nur von UI-Mockups und Verläufen
 (`assets/` enthält ~6 Bilder). Eine einheitliche, hochwertige Bildwelt ist der
 größte sichtbare Hebel Richtung „Awwwards-Look".
 
 ### Tag 1 — Stil festlegen & Bildliste produzieren
-- [ ] Bildstil definieren, der zur bestehenden Farbreise passt
-      (dunkel, Cyan → Violett → Pink → Türkis, vgl. `motion.js` Farb-Stops).
-      Ein Stil-Prompt/Template festhalten, damit alle Bilder konsistent sind.
-- [ ] Bildliste produzieren (KI-generiert oder 3D-Rendering), pro Motiv
-      Quer- und Hochformat:
-      - 1 Hero-Key-Visual (Startseite)
-      - je 1 Key-Visual pro App: ATLAS, APEX/Garmin-Coach, Agent-Flow,
-        DocFlow, FlowOps, PulseCRM (für die Karten in `beispiele.html`)
-      - 1 Visual „Coaching" + 1 Visual „Software" (Zwei-Säulen-Sektion)
-      - 1–2 Szenen für `ueber-uns.html`
-- [ ] Auswahlrunde: pro Motiv 3–4 Varianten erzeugen, beste behalten.
+- [x] Bildstil definiert: dunkler Grund, Farbreise Cyan → Violett → Pink →
+      Türkis (vgl. `motion.js` Farb-Stops), Partikel, Netz-Meshes, Glows —
+      als Code-Template im Generator festgehalten.
+- [x] Bildliste produziert (7 Motive, je 1600/800 px):
+      - je 1 Key-Visual pro App: ATLAS (Jarvis-Kugel), APEX (Pulslinie),
+        Agent-Flow (Knoten-Pipeline), DocFlow (Dokumente → Felder),
+        FlowOps (Sensor-Mesh mit Alarm), PulseCRM (Pipeline-Trichter)
+      - 1 Orbit-Szene für `ueber-uns.html`
+- [x] Auswahlrunde: Sichtprüfung aller Motive; ATLAS und PulseCRM
+      nachgeschärft (mehr Leuchtkraft, klarerer Trichter).
 
 ### Tag 2 — Technisch sauber einbauen
-- [ ] Bilder als **AVIF/WebP** exportieren (Fallback PNG), Zielgröße
-      < 200 KB pro Bild; in `assets/img/` ablegen.
-- [ ] Einbau mit `loading="lazy"`, `srcset`/`sizes` für Mobile,
-      `width`/`height`-Attribute gegen Layout-Shift.
-- [ ] `beispiele.html`: Karten und Live-Demo-Cover mit den App-Visuals
-      hinterlegen (statt reiner Verläufe).
-- [ ] `index.html`: Hero- und Säulen-Sektion mit Visuals anreichern;
-      bestehende `reveal`-Klassen für den Einblend-Effekt weiterverwenden.
+- [x] Export als **AVIF + WebP** nach `assets/img/`, alle Dateien weit
+      unter 200 KB (13–41 KB).
+- [x] Einbau mit `loading="lazy"`, `srcset`/`sizes`,
+      `width`/`height`-Attributen gegen Layout-Shift.
+- [x] `beispiele.html`: alle 6 Live-Demo-Cover mit App-Visuals hinterlegt
+      (abgedunkelt, Button bleibt im Fokus).
+- [x] `index.html`: alle 6 Showcase-Karten mit Bildkopf (Hover-Zoom);
+      `ueber-uns.html` mit Orbit-Szene über den Stationen.
+- [x] Sichtprüfung per Headless-Chromium-Screenshots (Startseite,
+      Beispiele, Über mich).
 
 ### Tag 3 (optional) — Feinschliff & Meta
 - [ ] `og-axon.png` / `og-guide.png` im neuen Look neu erzeugen
