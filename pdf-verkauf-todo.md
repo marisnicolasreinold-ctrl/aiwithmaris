@@ -106,9 +106,10 @@ checkout-Edge-Function hinterlegt, werden aber durch das Vault-Secret
 
 ## Was noch offen ist (nur Maris kann das)
 
-1. **Echter Testkauf** mit eigener Karte (19 €-Produkt), prüfen: Download
-   funktioniert, Rechnung zeigt den § 19-Satz im Footer. Betrag kann danach
-   im Stripe-Dashboard an sich selbst erstattet werden.
+1. ✅ **Echter Testkauf erledigt (11.06.2026)** — Kauf über den neuen
+   Checkout-Dialog hat funktioniert (damit ist der ganze Live-Flow
+   Dialog → Stripe → Download end-to-end bestätigt). Falls noch nicht
+   geschehen: Betrag im Stripe-Dashboard an sich selbst erstatten.
 2. **ELSTER:** Fragebogen zur steuerlichen Erfassung mit
    Kleinunternehmerregelung § 19 UStG (siehe marketing/gewerbe-checkliste.md).
 3. Optional: AGB § 7 (Widerrufsverzicht) rechtlich gegenprüfen lassen.
