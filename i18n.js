@@ -107,6 +107,10 @@
     // --- Beispiele: 3D-Galerie ---
     "Das hier sind echte, klickbare Mini-Apps, die ich gebaut habe. Schau dich um wie im Kino — und klick die Demo in der Mitte an.": "These are real, clickable mini apps I've built. Look around like you're sitting in a cinema — and click the demo in the centre.",
     "Mit den Pfeilen (oder Pfeiltasten) umsehen — Klick auf die Karte in der Mitte öffnet die Demo.": "Look around with the arrows (or your arrow keys) — clicking the centre card opens the demo.",
+    "NOVA — Space-Patrouille": "NOVA — Space Patrol",
+    "Spielbare Mini-Game-Demo: Neon-Shooter, dessen Director-KI die Schwierigkeit live an dein Können anpasst.": "Playable mini-game demo: a neon shooter whose director AI adapts the difficulty to your skill in real time.",
+    "Dein Projekt hier?": "Your project here?",
+    "So etwas baue ich auch für deinen Anwendungsfall — von der Idee bis zur fertigen App in deiner Cloud.": "I build things like this for your use case too — from idea to finished app in your cloud.",
     "APEX Garmin-KI-Coach": "APEX Garmin AI Coach",
     "Liest deine Garmin-Werte (Trainingsbereitschaft, HRV, Schlaf, VO₂max) und baut daraus ein tagesaktuelles, auf dein Ziel abgestimmtes Training.": "Reads your Garmin data (training readiness, HRV, sleep, VO₂max) and builds a daily workout tailored to your goal.",
     // --- Scrollytelling: So entsteht dein Projekt ---

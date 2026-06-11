@@ -1,6 +1,9 @@
 # Spiel-Demo „NOVA" — moderner Space-Shooter fürs Showcase
 
-> **Stand: geplant.** Spielprinzip nach klassischem Weltraum-Shooter-Vorbild
+> **Stand: umgesetzt (auf dem Branch, noch nicht live).** Verifiziert per
+> Headless-Chromium: Spielstart, Kampf, Director-Kalibrierung, Game Over +
+> Neustart, Touch-Steuerung, Galerie 2×4 mit NOVA- und Kontakt-Kachel.
+> Ursprünglich: Spielprinzip nach klassischem Weltraum-Shooter-Vorbild
 > (Schiff in Draufsicht, Bodengeschütze, Ziel-Aufschaltung, Funk-Kommentare) —
 > aber im **modernen Look der Website**: Neon-Glow, weiche Partikel,
 > Glas-HUD. Kein Retro/Pixel. Wird die 7. Live-Demo in `apps/` und
@@ -85,21 +88,21 @@ gleiche Optik wie das ATLAS-Briefing.
 ## Tagesplan (~2 Tage)
 
 ### Tag 1 — Spielbarer Kern
-- [ ] Canvas-Setup (dpr-scharf), Glow-Rendering mit Offscreen-Caches,
+- [x] Canvas-Setup (dpr-scharf), Glow-Rendering mit Offscreen-Caches,
       Parallax-Sternenfeld + Nebel + Stationen-Generator
-- [ ] Schiff: Steuerung (Tastatur), Triebwerks-Glow mit Trail,
+- [x] Schiff: Steuerung (Tastatur), Triebwerks-Glow mit Trail,
       Schild-Bogen + Glas-HUD
-- [ ] Schießen + Objekt-Pools, Geschütz-Plattformen + Drohnen mit
+- [x] Schießen + Objekt-Pools, Geschütz-Plattformen + Drohnen mit
       einfachem Verhalten, Glow-Explosionen mit Partikeln, Punkte
-- [ ] Ziel-Aufschaltung (Holo-Reticle + Aim-Assist)
+- [x] Ziel-Aufschaltung (Holo-Reticle + Aim-Assist)
 
 ### Tag 2 — Spielgefühl & Einbau
-- [ ] 3 Wellen + Boss mit Phasen, Game Over/Restart, Highscore
-- [ ] Director-KI (Schwierigkeit) + Copilot-Comms-Feed mit
+- [x] 3 Wellen + Boss mit Phasen, Game Over/Restart, Highscore
+- [x] Director-KI (Schwierigkeit) + Copilot-Comms-Feed mit
       Typewriter-Effekt
-- [ ] WebAudio-Sounds (moderner Synth) + Ton-Button
-- [ ] Mobile-Steuerung (Touch-Stick + Feuer-Button)
-- [ ] Galerie auf 2×4, `kv-nova`-Visual, i18n, Verifikation per
+- [x] WebAudio-Sounds (moderner Synth) + Ton-Button
+- [x] Mobile-Steuerung (Touch-Stick + Feuer-Button)
+- [x] Galerie auf 2×4, `kv-nova`-Visual, i18n, Verifikation per
       Headless-Chromium (Desktop + Mobile, Steuerung, Game Over-Flow)
 
 **Fertig, wenn:** das Spiel auf Desktop und Handy flüssig läuft, die

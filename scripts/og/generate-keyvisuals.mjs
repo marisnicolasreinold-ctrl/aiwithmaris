@@ -370,6 +370,41 @@ function problem() {
     starfield(r, 70, ["#5a6486", C.rose, C.ink]) + g + vignette());
 }
 
+// 09 · NOVA (Spiel-Demo): Delta-Schiff mit Cyan-Triebwerks-Glow über dem
+// Sternenfeld, violette Station unten, Holo-Reticle auf einem Gegner.
+function nova() {
+  const r = rng(2077);
+  let g = "";
+  // violette Station unten links: gestapelte Plattform-Ellipsen mit Glow
+  g += `<ellipse cx="340" cy="860" rx="300" ry="90" fill="${C.violet}" fill-opacity=".14" filter="url(#haze)"/>`;
+  g += `<ellipse cx="340" cy="845" rx="230" ry="62" fill="#12102a" stroke="${C.violet}" stroke-opacity=".55" stroke-width="2.5"/>`;
+  g += `<ellipse cx="300" cy="822" rx="120" ry="34" fill="#171236" stroke="${C.lilac}" stroke-opacity=".5" stroke-width="2"/>`;
+  g += node(420, 826, 7, C.violet);
+  // Gegner-Drohne rechts oben mit Holo-Reticle (Ring + Eck-Ticks)
+  const ex = 1150, ey = 330;
+  g += `<g transform="rotate(18 ${ex} ${ey})"><rect x="${ex - 26}" y="${ey - 26}" width="52" height="52" rx="10" fill="#1d1030" stroke="${C.pink}" stroke-opacity=".85" stroke-width="2.6"/></g>`;
+  g += node(ex, ey, 6, C.pink);
+  g += `<circle cx="${ex}" cy="${ey}" r="74" fill="none" stroke="${C.cyan}" stroke-opacity=".7" stroke-width="2.4" stroke-dasharray="36 22"/>`;
+  [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sy]) => {
+    g += `<path d="M${ex + sx * 96} ${ey + sy * 64} h${-sx * 22} M${ex + sx * 96} ${ey + sy * 64} v${-sy * 22}" stroke="${C.cyan}" stroke-opacity=".85" stroke-width="3" fill="none"/>`;
+  });
+  // Spieler-Schiff: Delta-Form mittig-unten, Triebwerks-Glow + Schweif
+  const sx = 760, sy = 600;
+  g += `<ellipse cx="${sx}" cy="${sy + 96}" rx="34" ry="120" fill="url(#core)" filter="url(#soft)"/>`;
+  g += neon(`M${sx} ${sy + 70} L${sx} ${sy + 250}`, C.cyan, 4, .8);
+  g += `<g>
+    <path d="M${sx} ${sy - 90} L${sx + 58} ${sy + 62} L${sx + 16} ${sy + 40} L${sx} ${sy + 58} L${sx - 16} ${sy + 40} L${sx - 58} ${sy + 62} Z"
+      fill="#0e1428" stroke="${C.cyan}" stroke-opacity=".9" stroke-width="3"/>
+    <path d="M${sx} ${sy - 56} L${sx + 14} ${sy + 18} L${sx - 14} ${sy + 18} Z" fill="${C.cyan}" fill-opacity=".35"/>
+  </g>`;
+  g += node(sx, sy - 4, 6, C.cyan);
+  // Plasma-Schüsse des Schiffs Richtung Drohne
+  g += neon(`M${sx + 70} ${sy - 130} L${sx + 150} ${sy - 215}`, C.cyan, 4, .9);
+  g += neon(`M${sx + 180} ${sy - 248} L${sx + 260} ${sy - 333}`, C.cyan, 4, .7);
+  return wrap(defs(C.cyan, C.violet) + backdrop(sx, 320, 340, 900) +
+    starfield(r, 90, [C.blue, C.ink, C.lilac]) + g + vignette());
+}
+
 // --- Render & Export --------------------------------------------------------
 
 const MOTIFS = {
@@ -381,6 +416,7 @@ const MOTIFS = {
   "kv-pulsecrm": pulsecrm,
   "kv-orbit": orbit,
   "kv-problem": problem,
+  "kv-nova": nova,
 };
 
 await mkdir(OUT, { recursive: true });
