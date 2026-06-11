@@ -795,6 +795,186 @@ a.card h3 {
   background: var(--cyan);
 }
 
+/* === 3D-Galerie „Kinosaal" (Beispiele-Seite) === */
+.cine-wrap {
+  position: relative;
+}
+.cine {
+  position: relative;
+  height: clamp(480px, 66vh, 640px);
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 120%, rgba(124, 92, 255, .14), transparent 55%),
+    radial-gradient(ellipse at 50% -20%, rgba(94, 240, 255, .08), transparent 50%),
+    rgba(8, 10, 20, .55);
+}
+/* 3D-Modus wird per JS aktiviert — ohne JS bleibt unten das Grid-Fallback */
+.cine.is-3d {
+  perspective: 1100px;
+  perspective-origin: 50% 50%;
+}
+.cine.is-3d .cine-world {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform .7s cubic-bezier(.22, .9, .3, 1);
+  /* Die Weltebene liegt in 3D VOR den Kacheln (z=0 vs. -Radius) und würde
+     sonst alle Klicks abfangen — durchlassen, nur Kacheln fangen. */
+  pointer-events: none;
+}
+.cine.is-3d .cine-tile {
+  pointer-events: auto;
+}
+.cine.is-3d .cine-tile {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(400px, 74vw);
+  margin-top: -160px;
+  margin-left: calc(min(400px, 74vw) / -2);
+  backface-visibility: hidden;
+  transition: transform .7s cubic-bezier(.22, .9, .3, 1), opacity .5s, filter .5s;
+  opacity: .55;
+  filter: saturate(.7) brightness(.75);
+}
+.cine.is-3d .cine-tile.is-active {
+  opacity: 1;
+  filter: none;
+}
+.cine-tile {
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(13, 16, 32, .92);
+  color: var(--text);
+  text-decoration: none;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, .5);
+}
+.cine-tile.is-active {
+  border-color: rgba(94, 240, 255, .45);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .6), 0 0 50px rgba(94, 240, 255, .16);
+}
+.cine-tile img {
+  display: block;
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+.cine-tile h3 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.02rem;
+  letter-spacing: -.01em;
+  margin: 14px 16px 6px;
+}
+.cine-tile p {
+  margin: 0 16px 12px;
+  color: var(--muted);
+  font-size: .8rem;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.cine-open {
+  display: inline-block;
+  margin: 0 16px 14px;
+  font-family: var(--mono);
+  font-size: .72rem;
+  letter-spacing: .04em;
+  color: var(--cyan);
+  opacity: 0;
+  transition: opacity .4s;
+}
+.cine-tile.is-active .cine-open,
+.cine:not(.is-3d) .cine-open {
+  opacity: 1;
+}
+.cine-nav {
+  position: absolute;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: rgba(10, 12, 24, .8);
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color .25s, opacity .25s;
+}
+.cine-nav:hover:not(:disabled) {
+  border-color: var(--cyan);
+}
+.cine-nav:disabled {
+  opacity: .25;
+  cursor: default;
+}
+.cine-nav svg {
+  width: 20px;
+  height: 20px;
+}
+.cn-left  { left: 14px; top: 50%; transform: translateY(-50%); }
+.cn-right { right: 14px; top: 50%; transform: translateY(-50%); }
+.cn-up    { left: 50%; top: 14px; transform: translateX(-50%); }
+.cn-down  { left: 50%; bottom: 14px; transform: translateX(-50%); }
+.cine-hint {
+  margin: 14px 4px 0;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: .72rem;
+  letter-spacing: .03em;
+  color: var(--muted);
+}
+/* Fallback ohne JavaScript: normales Raster */
+.cine:not(.is-3d) {
+  height: auto;
+  padding: 20px;
+}
+.cine:not(.is-3d) .cine-world {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+.cine:not(.is-3d) ~ .cine-nav,
+.cine-wrap .cine:not(.is-3d) ~ button.cine-nav {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cine.is-3d .cine-world,
+  .cine.is-3d .cine-tile {
+    transition-duration: .01s;
+  }
+}
+@media (max-width: 760px) {
+  .cine {
+    height: clamp(420px, 70vh, 540px);
+  }
+  .cine.is-3d {
+    perspective: 800px;
+  }
+  .cine.is-3d .cine-tile {
+    width: min(270px, 76vw);
+    margin-top: -120px;
+    margin-left: calc(min(270px, 76vw) / -2);
+  }
+  .cine-tile img {
+    height: 110px;
+  }
+  .cine-tile p {
+    -webkit-line-clamp: 2;
+  }
+  .cine-nav {
+    width: 40px;
+    height: 40px;
+  }
+}
+
 /* === „Frag Maris" — KI-Chat-Widget === */
 .fm-root {
   position: fixed;

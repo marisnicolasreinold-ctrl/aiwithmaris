@@ -104,6 +104,9 @@
     "Leads, Angebote und Umsätze in einer Pipeline — KI fasst die Historie zusammen und schlägt den nächsten Schritt vor.": "Leads, quotes and revenue in one pipeline — AI summarizes the history and suggests the next step.",
     "Live-Demo öffnen": "Open live demo",
     "Alle Beispiele ansehen": "See all examples",
+    // --- Beispiele: 3D-Galerie ---
+    "Das hier sind echte, klickbare Mini-Apps, die ich gebaut habe. Schau dich um wie im Kino — und klick die Demo in der Mitte an.": "These are real, clickable mini apps I've built. Look around like you're sitting in a cinema — and click the demo in the centre.",
+    "Mit den Pfeilen (oder Pfeiltasten) umsehen — Klick auf die Karte in der Mitte öffnet die Demo.": "Look around with the arrows (or your arrow keys) — clicking the centre card opens the demo.",
     "APEX Garmin-KI-Coach": "APEX Garmin AI Coach",
     "Liest deine Garmin-Werte (Trainingsbereitschaft, HRV, Schlaf, VO₂max) und baut daraus ein tagesaktuelles, auf dein Ziel abgestimmtes Training.": "Reads your Garmin data (training readiness, HRV, sleep, VO₂max) and builds a daily workout tailored to your goal.",
     // --- Scrollytelling: So entsteht dein Projekt ---
