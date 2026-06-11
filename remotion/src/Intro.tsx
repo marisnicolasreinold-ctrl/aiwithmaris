@@ -1,8 +1,10 @@
 import React from "react";
 import {
   AbsoluteFill,
+  Audio,
   interpolate,
   spring,
+  staticFile,
   useCurrentFrame,
   useVideoConfig,
   Easing,
@@ -366,6 +368,8 @@ export const Intro: React.FC<IntroProps> = ({ lang }) => {
 
   return (
     <AbsoluteFill style={{ fontFamily: MANROPE, color: TEXT }}>
+      {/* Soundtrack: programmatisch erzeugt (make-music.mjs), lizenzfrei */}
+      <Audio src={staticFile("intro-music.wav")} />
       <Background />
       <Orb opacity={orbOpacity} scale={orbScale} y={orbY} />
 
