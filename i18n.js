@@ -431,6 +431,28 @@
     "Du willst verstehen, wo KI im Alltag hilft, welche Spielregeln gelten und wie ihr eure echten Schmerzpunkte einbringt.": "You want to understand where AI helps day to day, which ground rules apply and how to bring in your real pain points.",
     "Kaufen": "Buy",
     "Wähle deine Ausgabe.": "Choose your edition.",
+
+    // --- Guide-Seite: Shop-Neuaufbau ---
+    "4 Leitfäden · PDF": "4 guides · PDF",
+    "Zum Shop — ab 12 €": "To the shop — from €12",
+    "Wähle deinen Leitfaden.": "Choose your guide.",
+    "Vier Titel als PDF — jeweils auf Deutsch und Englisch. Sichere Zahlung über Stripe, Download direkt nach dem Kauf, Rechnung per E-Mail.": "Four titles as PDFs — each in German and English. Secure payment via Stripe, download right after purchase, invoice by email.",
+    "Der Hauptguide": "The main guide",
+    "Der Leitfaden zur KI-Einführung im Mittelstand — klein anfangen, Nutzen beweisen, dann skalieren.": "The guide to adopting AI in mid-sized companies — start small, prove the value, then scale.",
+    "90-Tage-Pilotplan & ROI-Rechenhilfe": "90-day pilot plan & ROI worksheet",
+    "Ausgabe wählen": "Choose edition",
+    "Englisch": "English",
+    "Beide (DE + EN)": "Both (DE + EN)",
+    "Vertiefung · DE + EN": "Deep dive · DE + EN",
+    "In 17 Sekunden": "In 17 seconds",
+    "Vier Leitfäden im Schnelldurchlauf.": "Four guides, fast-forwarded.",
+    "KI-Bibliothek Video-Vorschau": "AI library video preview",
+    "Was steckt in der KI-Bibliothek?": "What's in the AI Library?",
+    "Alle vier Leitfäden — „Anfangen, wo es zählt\", der Prompt-Werkzeugkasten, DSGVO & KI und Make or Buy — jeweils auf Deutsch und Englisch, also 8 PDFs. Du sparst 40 € gegenüber dem Einzelkauf.": "All four guides — “Start where it counts”, the Prompt Toolbox, GDPR & AI and Make or Buy — each in German and English, i.e. 8 PDFs. You save €40 compared to buying them separately.",
+    "Bestellung bestätigen": "Confirm your order",
+    "Abbrechen": "Cancel",
+    "Weiter zur Kasse": "Continue to checkout",
+    "Zahlung über Stripe · Download & Rechnung direkt danach": "Payment via Stripe · download & invoice right after",
     "Sichere Zahlung über Stripe. Direkt nach dem Kauf bekommst du deinen Download-Link — plus Rechnung per E-Mail.": "Secure payment via Stripe. Right after purchase you get your download link — plus an invoice by email.",
     "Ich verlange ausdrücklich, dass mit der Bereitstellung des Downloads sofort begonnen wird, und bestätige meine Kenntnis, dass mein Widerrufsrecht mit Beginn des Downloads erlischt. Da es sich um ein digitales Produkt handelt, ist eine Rückgabe oder Erstattung ausgeschlossen. Es gelten die": "I expressly request that delivery of the download begins immediately and confirm that I am aware that my right of withdrawal expires once the download begins. As this is a digital product, returns and refunds are excluded. Subject to the",
     "Deutsch": "German",
@@ -537,13 +559,13 @@
     if (EN[dt] !== undefined) document.title = EN[dt];
   }
 
-  // Promo-Videos: bei Englisch die EN-Fassung laden
+  // Promo-Videos: bei Englisch die EN-Fassung laden (…-de.mp4 → …-en.mp4)
   function swapPromoVideos(lang) {
     if (lang !== 'en') return;
     document.querySelectorAll('video[data-promo-video]').forEach(function (v) {
       var s = v.querySelector('source');
-      if (s && s.getAttribute('src').indexOf('guide-promo-de') !== -1) {
-        s.setAttribute('src', s.getAttribute('src').replace('guide-promo-de', 'guide-promo-en'));
+      if (s && /-de\.mp4$/.test(s.getAttribute('src'))) {
+        s.setAttribute('src', s.getAttribute('src').replace(/-de\.mp4$/, '-en.mp4'));
         v.load();
         var p = v.play();
         if (p && p.catch) p.catch(function () {});

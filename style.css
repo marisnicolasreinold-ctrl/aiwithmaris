@@ -3575,3 +3575,294 @@ dialog.legal .lg-body .todo {
     animation: none;
   }
 }
+
+/* ===================== GUIDE-SHOP (Neuaufbau) ===================== */
+
+/* 4er-Produktraster */
+.plans-4 {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+.plans-4 .plan {
+  padding: 28px 24px;
+}
+.plans-4 .plan h3 {
+  font-size: 1.18rem;
+  text-wrap: balance;
+}
+.plans-4 .plan .desc,
+.plans-4 .plan li {
+  text-wrap: pretty;
+}
+@media (max-width: 1240px) {
+  .plans-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .plans-4 {
+    grid-template-columns: 1fr;
+  }
+}
+.plan .price b,
+.lb-buy .price b {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Komplettpaket-Banner */
+.library-banner {
+  display: grid;
+  grid-template-columns: 1.5fr auto;
+  gap: 36px;
+  align-items: center;
+  padding: 32px 36px;
+  margin-bottom: 22px;
+  border-radius: 24px;
+  border: 1px solid rgba(124, 92, 255, .5);
+  background: linear-gradient(165deg, rgba(124, 92, 255, .14), rgba(94, 240, 255, .05));
+  box-shadow: 0 24px 70px rgba(124, 92, 255, .18);
+}
+.library-banner .tag {
+  font-family: var(--mono);
+  font-size: .7rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--pink);
+}
+.library-banner h3 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  margin: 12px 0 8px;
+  text-wrap: balance;
+}
+.library-banner p {
+  color: var(--muted);
+  font-size: .95rem;
+  font-weight: 300;
+  max-width: 56ch;
+  text-wrap: pretty;
+}
+.library-banner .lb-meta {
+  display: inline-block;
+  margin-top: 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.lb-buy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  text-align: right;
+}
+.lb-buy .price {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: 2.3rem;
+  line-height: 1.1;
+}
+.lb-buy .price b {
+  font-weight: 700;
+}
+.lb-buy .price span {
+  font-size: .95rem;
+  color: var(--muted);
+  font-weight: 400;
+}
+.lb-save {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+.lb-buy .btn {
+  margin-top: 10px;
+}
+@media (max-width: 860px) {
+  .library-banner {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    padding: 26px 24px;
+  }
+  .lb-buy {
+    align-items: flex-start;
+    text-align: left;
+  }
+  .lb-buy .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Ausgaben-Wahl (Hauptguide) */
+.edition-picker {
+  border: 0;
+  padding: 0;
+  margin: 0 0 18px;
+}
+.edition-picker legend {
+  font-family: var(--mono);
+  font-size: .66rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.edition-options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.edition-picker label {
+  position: relative;
+  cursor: pointer;
+}
+.edition-picker input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.edition-picker span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, .02);
+  font-size: .84rem;
+  color: var(--muted);
+  transition-property: border-color, color, background-color;
+  transition-duration: 150ms;
+  transition-timing-function: ease-out;
+}
+.edition-picker label:hover span {
+  border-color: rgba(94, 240, 255, .35);
+}
+.edition-picker input:checked + span {
+  border-color: rgba(94, 240, 255, .6);
+  background: rgba(94, 240, 255, .08);
+  color: var(--text);
+}
+.edition-picker input:focus-visible + span {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Checkout-Dialog */
+.checkout-modal {
+  width: min(480px, calc(100vw - 40px));
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--bg2);
+  color: var(--text);
+  padding: 26px 26px 22px;
+  box-shadow: 0 40px 120px rgba(0, 0, 0, .6), 0 0 80px rgba(124, 92, 255, .12);
+}
+.checkout-modal::backdrop {
+  background: rgba(5, 6, 12, .72);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.checkout-modal[open] {
+  animation: cmIn .26s ease-out;
+}
+@keyframes cmIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .checkout-modal[open] {
+    animation: none;
+  }
+}
+.checkout-modal h3 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-bottom: 16px;
+}
+.cm-product {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 13px 16px;
+  margin-bottom: 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .03);
+  font-size: .92rem;
+}
+.cm-product b {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.cm-consent {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 13px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(94, 240, 255, .25);
+  background: rgba(94, 240, 255, .05);
+}
+.cm-consent input {
+  margin-top: 3px;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--cyan);
+  flex: none;
+}
+.cm-consent label {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--muted);
+  cursor: pointer;
+}
+.cm-consent label a {
+  color: var(--cyan);
+}
+.cm-error {
+  margin-top: 13px;
+  color: #ff8a8a;
+  font-size: 13.5px;
+}
+.cm-error[hidden] {
+  display: none;
+}
+.cm-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+.cm-actions .btn {
+  flex: 1;
+  justify-content: center;
+}
+.checkout-modal .btn[disabled] {
+  opacity: .45;
+  pointer-events: none;
+}
+.cm-note {
+  margin-top: 14px;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}

@@ -2,6 +2,7 @@ import React from "react";
 import { Composition } from "remotion";
 import { Intro } from "./Intro";
 import { GuidePromo } from "./GuidePromo";
+import { LibraryPromo } from "./LibraryPromo";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -27,6 +28,24 @@ export const RemotionRoot: React.FC = () => {
         id="GuidePromoEn"
         component={GuidePromo}
         durationInFrames={440}
+        fps={30}
+        width={1280}
+        height={720}
+        defaultProps={{ lang: "en" as const }}
+      />
+      <Composition
+        id="LibraryPromoDe"
+        component={LibraryPromo}
+        durationInFrames={500}
+        fps={30}
+        width={1280}
+        height={720}
+        defaultProps={{ lang: "de" as const }}
+      />
+      <Composition
+        id="LibraryPromoEn"
+        component={LibraryPromo}
+        durationInFrames={500}
         fps={30}
         width={1280}
         height={720}

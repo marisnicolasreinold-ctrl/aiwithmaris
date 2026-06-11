@@ -14,8 +14,12 @@
 
 ## Wie es funktioniert
 
-1. Kunde wählt auf `/guide` eine Ausgabe (DE 19 €, EN 19 €, Bundle 29 €) und
-   bestätigt die Checkbox (Widerrufsverzicht bei Sofort-Download).
+1. Kunde wählt auf `/guide` ein Produkt: Hauptguide (DE/EN 19 €, Bundle 29 €
+   über die Ausgaben-Wahl in der Karte), Vertiefungs-Guides (12–29 €) oder
+   KI-Bibliothek (59 €, Banner ganz oben im Shop). Der Klick auf „Kaufen"
+   öffnet einen Bestätigungs-Dialog, in dem die Widerrufsverzicht-Checkbox
+   direkt neben „Weiter zur Kasse" sitzt (Shop-Neuaufbau 11.06.2026 — vorher
+   lag die Checkbox global über allen Karten und die Buttons waren deaktiviert).
 2. `POST /api/checkout` erstellt eine Stripe-Checkout-Session
    (inkl. Rechnung und Hinweistext zum Widerrufsverzicht) und leitet zu Stripe.
 3. Nach Zahlung leitet Stripe auf `/danke?session_id=…`.
