@@ -14,7 +14,6 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] Der 90-Tage-Test: Wie du ein KI-Projekt aufsetzt, das seinen Nutzen beweisen muss
 - [ ] Dokumenten-Automatisierung konkret: Was passiert eigentlich, wenn niemand mehr Rechnungen abtippt?
 - [ ] KI-Agent im Posteingang: Welche Anfragen sich automatisch beantworten lassen — und welche besser nicht
 - [ ] DSGVO und KI: Was du wirklich beachten musst, bevor das erste Tool live geht
@@ -36,6 +35,8 @@ oberste offene Thema ist immer das nächste.
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-06-11 — Der 90-Tage-Test: Wie du ein KI-Projekt aufsetzt, das seinen Nutzen beweisen muss (Der 90-Tage-Test: Wie du ein KI-Projekt aufsetzt, das seinen Nutzen beweisen muss)
 
 - 2026-05-31 — Halluzinationen verstehen: Warum KI selbstbewusst Unsinn erzählt (Halluzinationen verstehen: Warum KI selbstbewusst Unsinn erzählt und wie du damit umgehst)
 
