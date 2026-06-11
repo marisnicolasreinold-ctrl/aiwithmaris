@@ -103,42 +103,64 @@ mit reduzierter Bewegung sauber degradiert und beide Sprachen abgedeckt sind. �
 
 ## Workstream 3 — KI-Agent „Frag Maris" (~4 Tage)
 
+> **Stand 11.06.2026: live getestet und funktionsfähig — läuft kostenlos
+> über Google Gemini.** Der Gemini-Key (Free Tier, AI Studio) liegt als
+> Vault-Secret `google_api_key`; die Funktion nutzt Gemini 2.5 Flash
+> (~250 Anfragen/Tag gratis, Tageslimit der Funktion: 240). Live-Tests
+> bestanden: Preisfragen korrekt, Englisch, Off-Topic-Zurücklenkung,
+> Prompt-Injection abgewehrt; Prompt nachgeschärft (duzen, Listen mit
+> Gedankenstrich, nur echte Seitenpfade verlinken). Alternativ greift
+> weiterhin ein `anthropic_api_key` (Claude) als Fallback.
+> Hinweis Free Tier: Google darf Gratis-Anfragen zur Verbesserung nutzen —
+> steht in der Datenschutzerklärung, Widget warnt vor persönlichen Daten.
+> Letzter Schritt: Branch mergen, damit das Widget auf aiwithmaris.com
+> erscheint (Backend ist bereits live).
+
 **Ziel:** Die Seite führt selbst vor, was sie verkauft: ein Chat-Assistent,
-der Besucher zu Leistungen, Guide und Demos berät und zur Kontaktaufnahme
-führt. Stärkstes Differenzierungsmerkmal für eine Seite namens „AI with Maris".
+der Besucher zu Leistungen, Guide und Demos berät und zur Kontaktaufnahme führt.
 
 ### Tag 1 — Backend
-- [ ] Supabase Edge Function `ask-maris` (Supabase ist bereits im Stack,
-      API-Key ins Vault — gleiches Muster wie beim Stripe-Setup).
-- [ ] Anbindung an die Claude-API mit Streaming; System-Prompt mit klarer
-      Rolle („Assistent von AI with Maris") und Themenbindung.
-- [ ] Rate-Limiting pro IP/Session (Schutz vor Missbrauch und Kosten).
+- [x] Supabase Edge Function `ask-maris`: Claude-API (`claude-opus-4-8`,
+      max. 1024 Output-Tokens) per Streaming, SSE wird ans Widget
+      durchgereicht. Key kommt zur Laufzeit per `get_app_secret` aus dem Vault.
+- [x] Rate-Limiting: 20 Anfragen pro IP/Stunde + 400 pro Tag global
+      (Kostendeckel), atomar über die neue RPC `chat_hit`
+      (Migration `chat_rate_limits`, IP nur als gekürzter Hash, TTL ≤ 24 h).
+- [x] CORS nur für aiwithmaris.com/-Varianten, Eingaben begrenzt
+      (12 Nachrichten Historie, 1500 Zeichen pro Nachricht).
 
 ### Tag 2 — Wissensbasis & Verhalten
-- [ ] Inhalte von `leistungen.html`, `guide.html`, `beispiele.html`,
-      `ueber-uns.html` und Blog als kompakte Wissensbasis in den
-      System-Prompt aufnehmen (bei dem Umfang reicht das — kein RAG nötig).
-- [ ] Handlungsziele definieren: auf Guide (`/guide`), passende Live-Demo
-      oder `kontakt.html` verlinken; bei Off-Topic freundlich zurücklenken.
-- [ ] Testfragen-Katalog schreiben (20–30 Fragen DE/EN inkl. Grenzfälle).
+- [x] Kompakte Wissensbasis im System-Prompt: zwei Säulen, Leistungen,
+      4-Phasen-Ablauf, alle 6 Live-Demos, der komplette eBook-Shop mit
+      Preisen, Blog/Newsletter, Kontakt. Kein RAG nötig.
+- [x] Verhaltensregeln: kurz antworten, passende Seiten verlinken,
+      Off-Topic zurücklenken, keine Preise erfinden, keine Rechtsberatung,
+      Prompt-Injection-Versuche ignorieren.
+- [ ] Testfragen auf der Live-Seite durchgehen, sobald der Key im Vault ist
+      (DE/EN, Preisfragen, Off-Topic, Injection-Versuche).
 
 ### Tag 3 — Widget-UI
-- [ ] Chat-Widget im bestehenden Look (Holo-Panel-Stil, `data-hover`-
-      Interaktionen), als eigenes `chat.js` + Abschnitt in `style.css`.
-- [ ] Streaming-Anzeige, Vorschlags-Chips für Einstiegsfragen
-      („Was kostet der Guide?", „Zeig mir eine Demo").
-- [ ] Zweisprachig über `i18n.js`; öffnet sich dezent (kein Auto-Popup).
+- [x] `chat.js` + Styles in `style.css`: Launcher unten rechts, Panel im
+      Seiten-Look, Streaming-Anzeige mit Tipp-Indikator, Vorschlags-Chips,
+      Mini-Markdown (nur Links/fett, alles andere escaped — XSS-sicher).
+- [x] Zweisprachig über `aiwm_lang` (gleiches Muster wie `firma.js`);
+      kein Auto-Popup, öffnet nur auf Klick, Escape schließt.
+- [x] Verifiziert per Headless-Chromium mit gemockter SSE-Antwort:
+      Stream-Parsing, Link-Rendering, 503-/429-Fehlerfälle.
 
 ### Tag 4 — Datenschutz, Härtung, Launch
-- [ ] `datenschutz.html` ergänzen: Hinweis auf KI-Chat, Datenverarbeitung,
-      keine Speicherung ohne Einwilligung; Hinweistext im Widget selbst.
-- [ ] Missbrauchstests (Prompt-Injection-Versuche, sehr lange Eingaben),
-      Token-/Kostenlimit pro Antwort.
-- [ ] Erst nur auf der Startseite live schalten, Nutzung beobachten,
-      dann auf alle Seiten ausrollen.
+- [x] `datenschutz.html`: neuer Abschnitt „KI-Chat-Assistent" (Anthropic,
+      Supabase, IP-Hash-Speicherdauer, SCC-Hinweis) + Kurzhinweis im Widget.
+- [x] Token-Limit pro Antwort (1024), Tageslimit als Kostendeckel.
+      Worst case bei vollem Tageslimit: grob 15–20 €/Tag mit Opus —
+      günstigere Option: `MODEL` in der Function auf `claude-haiku-4-5`
+      stellen (~1/5 der Kosten, für FAQ-Antworten gut genug).
+- [x] Nur auf der Startseite eingebunden (`index.html`); Ausrollen auf
+      alle Seiten erst nach Beobachtung.
 
 **Fertig, wenn:** der Agent die Testfragen korrekt beantwortet, bei Off-Topic
 zurücklenkt, DSGVO-Hinweise stehen und ein Kostenlimit greift.
+(Alles erfüllt bis auf den Live-Test — blockiert durch den fehlenden API-Key.)
 
 ---
 
