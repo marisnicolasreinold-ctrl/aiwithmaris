@@ -299,7 +299,7 @@ for (let p = 1; p < range.count - 1; p++) {
   const oldBottom = doc.page.margins.bottom;
   doc.page.margins.bottom = 0;
   doc.font("mono").fontSize(7.5).fillColor(MUTED2);
-  doc.text(meta.title, M.left, PAGE.h - 46, { width: CW / 2, lineBreak: false, features: [] });
+  doc.text(meta.title, M.left, PAGE.h - 46, { width: CW * 0.6, height: 10, ellipsis: true, features: [] });
   doc.text(`${L.page} ${p + 1}`, M.left + CW - 80, PAGE.h - 46, { width: 80, align: "right", lineBreak: false, features: [] });
   doc.page.margins.bottom = oldBottom;
 }
