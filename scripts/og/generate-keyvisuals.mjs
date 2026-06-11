@@ -339,6 +339,37 @@ function orbit() {
     starfield(r, 130, [C.cyan, C.lilac, C.mint, C.ink]) + g + vignette());
 }
 
+// 08 · Problem (Scrollytelling Kapitel 1): verhedderte Fäden, gedämpfte
+// Farben — der Alltag ohne KI. Ein pinker Knoten markiert, wo es klemmt.
+function problem() {
+  const r = rng(88);
+  let g = "";
+  // wirres Geflecht aus Bezier-Fäden in gedeckten Tönen
+  for (let i = 0; i < 26; i++) {
+    const y0 = 120 + r() * 760, y1 = 120 + r() * 760;
+    const c1x = 300 + r() * 1000, c1y = 60 + r() * 880;
+    const c2x = 300 + r() * 1000, c2y = 60 + r() * 880;
+    const col = r() > 0.82 ? C.pink : r() > 0.5 ? "#5a6486" : "#3c4360";
+    const op = col === C.pink ? 0.55 : 0.5;
+    g += `<path d="M${f1(-40 + r() * 120)} ${f1(y0)} C ${f1(c1x)} ${f1(c1y)}, ${f1(c2x)} ${f1(c2y)}, ${f1(W + 40 - r() * 120)} ${f1(y1)}" fill="none" stroke="${col}" stroke-opacity="${op}" stroke-width="${f1(1.6 + r() * 2.2)}"/>`;
+  }
+  // der Knoten, an dem sich alles staut
+  const kx = 980, ky = 430;
+  for (let i = 0; i < 9; i++) {
+    const a0 = r() * Math.PI * 2, a1 = a0 + 2 + r() * 3;
+    const rr = 40 + r() * 80;
+    g += `<path d="M${f1(kx + Math.cos(a0) * rr)} ${f1(ky + Math.sin(a0) * rr * 0.8)} Q ${kx} ${ky}, ${f1(kx + Math.cos(a1) * rr)} ${f1(ky + Math.sin(a1) * rr * 0.8)}" fill="none" stroke="${C.pink}" stroke-opacity=".6" stroke-width="2.2"/>`;
+  }
+  g += `<circle cx="${kx}" cy="${ky}" r="90" fill="${C.pink}" fill-opacity=".16" filter="url(#haze)"/>`;
+  g += node(kx, ky, 13, C.pink);
+  // gestapelte, leicht gekippte "Zettel" unten links
+  for (let i = 0; i < 4; i++) {
+    g += `<g transform="rotate(${-9 + i * 5} ${300 + i * 26} ${720})"><rect x="${250 + i * 26}" y="${640 + i * 14}" width="170" height="120" rx="10" fill="#0d1020" fill-opacity=".9" stroke="#5a6486" stroke-opacity=".6" stroke-width="1.6"/></g>`;
+  }
+  return wrap(defs(C.pink, "#5a6486") + backdrop(980, 430, 350, 700) + grid("#5a6486") +
+    starfield(r, 70, ["#5a6486", C.rose, C.ink]) + g + vignette());
+}
+
 // --- Render & Export --------------------------------------------------------
 
 const MOTIFS = {
@@ -349,6 +380,7 @@ const MOTIFS = {
   "kv-docflow": docflow,
   "kv-pulsecrm": pulsecrm,
   "kv-orbit": orbit,
+  "kv-problem": problem,
 };
 
 await mkdir(OUT, { recursive: true });

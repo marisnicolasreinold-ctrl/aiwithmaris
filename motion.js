@@ -72,8 +72,50 @@
     });
   });
 
-  // --- 5. Horizontale Showcase-Galerie (nur Desktop mit Maus/Trackpad) ---
+  // --- 5. Scrollytelling „So entsteht dein Projekt" (nur Desktop) ---
+  // Mobile/ohne JS: die vier Schritte stehen einfach untereinander (CSS-Basis).
   const mm = gsap.matchMedia();
+  mm.add('(min-width: 981px)', () => {
+    const sec = document.getElementById('journey');
+    if (!sec) return;
+    const stage = sec.querySelector('.journey');
+    const steps = gsap.utils.toArray('.journey-step', stage);
+    const dots = gsap.utils.toArray('.journey-dots i', stage);
+    if (steps.length < 2) return;
+
+    stage.classList.add('pinned');
+    stage.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+    gsap.set(steps.slice(1), { autoAlpha: 0 });
+
+    const setDot = (i) => dots.forEach((d, j) => d.classList.toggle('active', j === i));
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: stage, start: 'top top',
+        end: '+=' + (steps.length * 85) + '%',
+        pin: true, scrub: 0.5, anticipatePin: 1,
+        // Die Journey liegt im Dokument VOR dem Firma-Pin (firma.js, früher
+        // registriert) — höhere Priorität + sort(), damit die Pin-Abstände
+        // in Dokument-Reihenfolge berechnet werden und sich nichts überlappt.
+        refreshPriority: 1,
+        onUpdate: (st) => setDot(Math.min(steps.length - 1, Math.floor(st.progress * steps.length)))
+      }
+    });
+    ScrollTrigger.sort();
+    steps.slice(1).forEach((step, i) => {
+      tl.to(steps[i], { autoAlpha: 0, y: -36, duration: 0.45, ease: 'power1.in' }, i + 0.55);
+      tl.fromTo(step, { autoAlpha: 0, y: 42 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power1.out' }, i + 1);
+    });
+    tl.set({}, {}, steps.length); // Halte-Zeit fürs letzte Kapitel
+
+    return () => {
+      stage.classList.remove('pinned');
+      tl.scrollTrigger && tl.scrollTrigger.kill();
+      tl.kill();
+      gsap.set(steps, { clearProps: 'all' });
+    };
+  });
+
+  // --- 6. Horizontale Showcase-Galerie (nur Desktop mit Maus/Trackpad) ---
   mm.add('(min-width: 981px)', () => {
     const sec = document.getElementById('referenzen');
     if (!sec) return;
@@ -97,7 +139,7 @@
     return () => { sec.classList.remove('hscroll'); tween.scrollTrigger && tween.scrollTrigger.kill(); tween.kill(); };
   });
 
-  // --- 6. CTA: leichtes Aufziehen ---
+  // --- 7. CTA: leichtes Aufziehen ---
   const cta = document.querySelector('.cta');
   if (cta) {
     gsap.from(cta, {

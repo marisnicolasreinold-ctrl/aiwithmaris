@@ -67,32 +67,37 @@ alle Bilder im einheitlichen Stil sind und Lighthouse-Performance stabil bleibt.
 
 ## Workstream 2 — Scrollytelling-Sektion „So entsteht dein Projekt" (~2 Tage)
 
+> **Stand 11.06.2026: umgesetzt.** Sektion `#journey` auf der Startseite
+> (zwischen Zwei-Säulen und „Lebende Firma"). Wichtig fürs nächste Mal:
+> Pins müssen in **Dokument-Reihenfolge** berechnet werden — die Journey
+> liegt vor dem Firma-Pin aus `firma.js`, wird aber später registriert,
+> daher `refreshPriority: 1` + `ScrollTrigger.sort()` in `motion.js`.
+
 **Ziel:** Eine gepinnte Sektion auf der Startseite, die beim Scrollen in
 4 Kapiteln erzählt: **Problem → Coaching → Software → läuft in deiner Cloud.**
-Das ist der Effekt der „ausgefallenen, geil animierten" Seiten — und GSAP
-ScrollTrigger liegt schon in `vendor/` (inkl. MotionPathPlugin).
 
 ### Tag 1 — Storyboard, Markup, statische Stufen
-- [ ] Storyboard: pro Kapitel eine Headline, 2 Sätze, 1 Visual
-      (aus Workstream 1) und eine Kennzahl/Aussage.
-- [ ] Neue Sektion in `index.html` zwischen Zwei-Säulen und Showcase:
-      gepinnter Container, 4 Panels, Fortschrittsanzeige (Kapitel-Punkte).
-- [ ] CSS in `style.css`: Layout steht auch **ohne** JavaScript sauber
-      untereinander (Fallback = normale Sektionen).
+- [x] Storyboard: 4 Kapitel mit Headline, 2 Sätzen, Visual und Kennzahl
+      (9+ h Routine · Tag 1 · 82 % · 100 % Datenhoheit). Kapitel 1 nutzt
+      das neue Motiv `kv-problem` (Fadengewirr mit pinkem Knoten),
+      Kapitel 2–4 die vorhandenen fotorealistischen Bilder.
+- [x] Neue Sektion in `index.html`: 4 Panels + Fortschritts-Punkte.
+- [x] CSS-Basis in `style.css`: ohne JavaScript stehen die vier Schritte
+      einfach untereinander (kein Pinning nötig).
 
 ### Tag 2 — Animation, Mobile, Zugänglichkeit
-- [ ] GSAP-Timeline in `motion.js`: Sektion pinnen (`pin: true`,
-      `scrub`), Panels per transform/opacity überblenden — Hausregel aus
-      `motion.js` beibehalten: **nur transform/opacity animieren**.
-- [ ] Die bestehende Farbreise der Three.js-Szene auf die 4 Kapitel
-      abstimmen (die Farb-Stops liegen schon in `motion.js`).
-- [ ] Mobile: leichte Variante ohne Pinning (einfache Reveals), wie beim
-      restlichen Motion-System.
-- [ ] `prefers-reduced-motion` respektieren (Mechanik existiert bereits).
-- [ ] Übersetzungen in `i18n.js` ergänzen (DE/EN).
+- [x] GSAP-Timeline in `motion.js`: Sektion gepinnt (`pin`, `scrub`),
+      Panels per transform/opacity überblendet, Dots zeigen das Kapitel.
+- [x] Farbreise läuft weiter über den Gesamt-Scroll (die Journey fügt
+      sich ein, eigene Stops waren nicht nötig).
+- [x] Mobile (< 981 px): kein Pinning, normale Abfolge mit Reveals.
+- [x] `prefers-reduced-motion`: motion.js steigt früh aus → Fallback.
+- [x] Übersetzungen in `i18n.js` ergänzt (DE/EN).
+- [x] Verifiziert per Headless-Chromium: alle 4 Kapitel auf Desktop,
+      Mobile-Fallback, Firma-Pin und Showcase-Galerie danach intakt.
 
 **Fertig, wenn:** die Sektion auf Desktop gepinnt durchläuft, auf Mobile und
-mit reduzierter Bewegung sauber degradiert und beide Sprachen abgedeckt sind.
+mit reduzierter Bewegung sauber degradiert und beide Sprachen abgedeckt sind. ✓
 
 ---
 

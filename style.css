@@ -685,6 +685,115 @@ a.card h3 {
   height: clamp(220px, 30vw, 380px);
   object-fit: cover;
 }
+
+/* === Scrollytelling: So entsteht dein Projekt === */
+.journey {
+  position: relative;
+  padding: 10px 0 60px;
+}
+.journey-step {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 52px;
+  align-items: center;
+  padding: 44px 0;
+}
+.journey-copy h3 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+  letter-spacing: -.01em;
+  margin: 14px 0 12px;
+}
+.journey-copy p {
+  color: var(--muted);
+  font-weight: 300;
+  max-width: 46ch;
+}
+.journey-fact {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-top: 24px;
+  border-left: 3px solid var(--cyan);
+  padding-left: 16px;
+}
+.journey-fact b {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 1.9rem;
+  letter-spacing: -.02em;
+  white-space: nowrap;
+}
+.journey-fact span {
+  color: var(--muted);
+  font-size: .9rem;
+  max-width: 32ch;
+}
+.journey-vis {
+  margin: 0;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .45);
+}
+.journey-vis img {
+  display: block;
+  width: 100%;
+  height: clamp(260px, 30vw, 420px);
+  object-fit: cover;
+}
+.journey-dots {
+  display: none;
+}
+@media (max-width: 860px) {
+  .journey-step {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .journey-vis img {
+    height: clamp(200px, 52vw, 300px);
+  }
+}
+
+/* Pin-Modus — wird per JS (motion.js) nur auf Desktop aktiviert */
+.journey.pinned {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+  padding: 0;
+}
+.journey.pinned > .container {
+  /* Im Flex-Kontext schrumpft .container (margin:auto) sonst auf Inhaltsbreite */
+  width: 100%;
+}
+.journey.pinned .journey-track {
+  position: relative;
+  height: min(560px, 68vh);
+}
+.journey.pinned .journey-step {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  will-change: transform, opacity;
+}
+.journey.pinned .journey-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 30px;
+}
+.journey.pinned .journey-dots i {
+  width: 28px;
+  height: 4px;
+  border-radius: 99px;
+  background: rgba(238, 241, 250, .16);
+  transition: background .3s;
+}
+.journey.pinned .journey-dots i.active {
+  background: var(--cyan);
+}
 .demo-open {
   margin-top: 16px;
   color: var(--cyan);
