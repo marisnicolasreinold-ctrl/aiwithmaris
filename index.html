@@ -192,13 +192,17 @@
         <div class="kpi"><span class="kpi-label">Durchlaufzeit</span><span class="kpi-value"><b id="kpiDur">14</b> Tage</span></div>
         <div class="kpi"><span class="kpi-label">Automatisch erledigt</span><span class="kpi-value"><b id="kpiAuto">12</b> %</span></div>
       </div>
+      <div class="firma-log" id="firmaLog" aria-live="polite" aria-label="Live-Ereignisse der Simulation"></div>
       <div class="firma-live">
         <button type="button" id="orderBtn" class="btn btn-primary btn-sm" data-hover><span aria-hidden="true">⚡</span> Auftrag einwerfen</button>
+        <button type="button" id="rushBtn" class="btn btn-ghost btn-sm" data-hover><span aria-hidden="true">🌊</span> Stoßzeit simulieren</button>
         <span class="live-badge" id="liveBadge" hidden><i aria-hidden="true"></i><b id="liveCount">1</b>&nbsp;<span>live dabei</span></span>
       </div>
       <p class="firma-hint">Scroll — und installier die KI-Module ↓</p>
+      <a id="firmaCta" class="firma-cta" href="kontakt.html" hidden>Welche Module braucht deine Firma? <b>Kostenloses Erstgespräch →</b></a>
     </div>
     <div class="firma-scene reveal d2">
+      <div class="firma-tip" id="firmaTip" hidden></div>
       <svg id="firmaSvg" class="s0" viewBox="0 0 1160 660" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Animierte Simulation einer Firma, in der KI-Module nach und nach die Abläufe automatisieren">
         <defs>
           <pattern id="floorGrid" width="42" height="42" patternUnits="userSpaceOnUse">
@@ -209,6 +213,15 @@
           </linearGradient>
           <linearGradient id="liveGrad" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stop-color="#ff5ea8"/><stop offset="1" stop-color="#7c5cff"/>
+          </linearGradient>
+          <linearGradient id="gradAnfrage" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#5ef0ff"/><stop offset="1" stop-color="#3a8cff"/>
+          </linearGradient>
+          <linearGradient id="gradRechnung" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ffd479"/><stop offset="1" stop-color="#ff9d5e"/>
+          </linearGradient>
+          <linearGradient id="gradLieferung" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#7c5cff"/><stop offset="1" stop-color="#b18cff"/>
           </linearGradient>
         </defs>
 
@@ -235,6 +248,7 @@
           <rect class="room-glow" x="80" y="120" width="230" height="150" rx="18"/>
           <circle class="room-dot" cx="103" cy="143" r="4"/>
           <text class="room-label" x="116" y="148">Vertrieb</text>
+          <g class="room-alert" transform="translate(294,136)"><circle r="9"/><text y="4">!</text></g>
           <rect class="desk" x="110" y="198" width="50" height="16" rx="5"/>
           <rect class="screen" x="120" y="186" width="14" height="9" rx="2"/>
           <g class="fig" transform="translate(176,210)"><circle class="fig-head" cx="0" cy="-14" r="5"/><rect class="fig-body" x="-5.5" y="-9" width="11" height="16" rx="5.5"/></g>
@@ -247,6 +261,7 @@
           <rect class="room-glow" x="465" y="100" width="230" height="140" rx="18"/>
           <circle class="room-dot" cx="488" cy="123" r="4"/>
           <text class="room-label" x="501" y="128">Einkauf</text>
+          <g class="room-alert" transform="translate(679,116)"><circle r="9"/><text y="4">!</text></g>
           <rect class="desk" x="496" y="176" width="50" height="16" rx="5"/>
           <rect class="screen" x="506" y="164" width="14" height="9" rx="2"/>
           <g class="fig" transform="translate(562,188)"><circle class="fig-head" cx="0" cy="-14" r="5"/><rect class="fig-body" x="-5.5" y="-9" width="11" height="16" rx="5.5"/></g>
@@ -259,6 +274,7 @@
           <rect class="room-glow" x="850" y="120" width="230" height="150" rx="18"/>
           <circle class="room-dot" cx="873" cy="143" r="4"/>
           <text class="room-label" x="886" y="148">Lager</text>
+          <g class="room-alert" transform="translate(1064,136)"><circle r="9"/><text y="4">!</text></g>
           <rect class="crate" x="880" y="196" width="22" height="22" rx="4"/>
           <rect class="crate" x="906" y="196" width="22" height="22" rx="4"/>
           <rect class="crate" x="893" y="172" width="22" height="22" rx="4"/>
@@ -272,6 +288,7 @@
           <rect class="room-glow" x="250" y="400" width="240" height="150" rx="18"/>
           <circle class="room-dot" cx="273" cy="423" r="4"/>
           <text class="room-label" x="286" y="428">Buchhaltung</text>
+          <g class="room-alert" transform="translate(474,416)"><circle r="9"/><text y="4">!</text></g>
           <rect class="desk" x="282" y="478" width="50" height="16" rx="5"/>
           <rect class="screen" x="292" y="466" width="14" height="9" rx="2"/>
           <g class="fig" transform="translate(348,490)"><circle class="fig-head" cx="0" cy="-14" r="5"/><rect class="fig-body" x="-5.5" y="-9" width="11" height="16" rx="5.5"/></g>
@@ -284,6 +301,7 @@
           <rect class="room-glow" x="640" y="400" width="240" height="150" rx="18"/>
           <circle class="room-dot" cx="663" cy="423" r="4"/>
           <text class="room-label" x="676" y="428">Versand</text>
+          <g class="room-alert" transform="translate(864,416)"><circle r="9"/><text y="4">!</text></g>
           <rect class="crate" x="672" y="486" width="22" height="22" rx="4"/>
           <rect class="crate" x="698" y="486" width="22" height="22" rx="4"/>
           <rect class="crate" x="685" y="462" width="22" height="22" rx="4"/>
