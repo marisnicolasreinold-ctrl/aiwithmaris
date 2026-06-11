@@ -839,6 +839,10 @@ a.card h3 {
   backdrop-filter: blur(14px);
   box-shadow: 0 30px 80px rgba(0, 0, 0, .6);
 }
+/* display:flex würde das hidden-Attribut sonst aushebeln — zu ist zu */
+.fm-panel[hidden] {
+  display: none;
+}
 .fm-head {
   display: flex;
   align-items: center;
