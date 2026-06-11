@@ -8,12 +8,22 @@ export const RemotionRoot: React.FC = () => {
   return (
     <>
       <Composition
-        id="Intro"
+        id="IntroDe"
         component={Intro}
-        durationInFrames={420}
+        durationInFrames={470}
         fps={30}
         width={1920}
         height={1080}
+        defaultProps={{ lang: "de" as const }}
+      />
+      <Composition
+        id="IntroEn"
+        component={Intro}
+        durationInFrames={470}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={{ lang: "en" as const }}
       />
       <Composition
         id="GuidePromoDe"

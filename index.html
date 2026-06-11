@@ -75,7 +75,7 @@
       <div class="hero-actions reveal d3">
         <a href="kontakt.html" class="btn btn-primary" data-hover>Sag Hallo <span class="arrow">→</span></a>
         <a href="beispiele.html" class="btn btn-ghost" data-hover>Beispiele ansehen</a>
-        <button type="button" class="btn btn-ghost" id="introBtn" data-hover><span aria-hidden="true">▶</span>&nbsp;Intro ansehen</button>
+        <button type="button" class="btn btn-ghost" id="introBtn" data-intro-open data-hover><span aria-hidden="true">▶</span>&nbsp;Intro ansehen</button>
       </div>
     </div>
     <div class="reveal d3">
@@ -89,6 +89,25 @@
   </div>
   <div class="scroll-hint"><span>Scroll</span><span class="line"></span></div>
 </header>
+
+<!-- INTRO VIDEO -->
+<section id="intro" class="section-pad" style="padding-top:0">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Das Intro</span>
+      <h2>In 15 Sekunden: wer hier baut.</h2>
+    </div>
+    <div class="video-band intro-band reveal d1">
+      <video class="vb-video" autoplay muted loop playsinline preload="metadata" poster="./assets/intro-poster.png" data-promo-video aria-label="AI with Maris Intro-Video">
+        <source src="./assets/intro-de.mp4" type="video/mp4" />
+      </video>
+      <button type="button" class="vb-sound" data-intro-open data-hover>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9 9 0 0 1 0 14"/></svg>
+        Mit Ton ansehen
+      </button>
+    </div>
+  </div>
+</section>
 
 <!-- GUIDE TEASER -->
 <section id="guide" class="section-pad" style="padding-top:0">
@@ -521,8 +540,8 @@
   <div class="vm-backdrop" data-vmclose></div>
   <div class="vm-inner">
     <button class="vm-close" id="videoClose" type="button" aria-label="Schließen">&times;</button>
-    <video id="introVideo" class="vm-video" controls playsinline preload="none" poster="./assets/intro-poster.png">
-      <source src="./assets/intro.mp4" type="video/mp4" />
+    <video id="introVideo" class="vm-video" controls playsinline preload="none" poster="./assets/intro-poster.png" data-promo-video>
+      <source src="./assets/intro-de.mp4" type="video/mp4" />
     </video>
   </div>
 </div>
@@ -541,13 +560,13 @@
 <script>
 (function(){
   var modal=document.getElementById('videoModal'), vid=document.getElementById('introVideo'),
-      openBtn=document.getElementById('introBtn'), closeBtn=document.getElementById('videoClose');
-  if(!modal||!vid||!openBtn) return;
+      closeBtn=document.getElementById('videoClose');
+  if(!modal||!vid) return;
   function open(){ modal.hidden=false; document.body.style.overflow='hidden';
     try{ vid.currentTime=0; vid.play(); }catch(e){} }
   function close(){ modal.hidden=true; document.body.style.overflow='';
     try{ vid.pause(); }catch(e){} }
-  openBtn.addEventListener('click',open);
+  document.querySelectorAll('[data-intro-open]').forEach(function(b){ b.addEventListener('click',open); });
   if(closeBtn) closeBtn.addEventListener('click',close);
   modal.querySelectorAll('[data-vmclose]').forEach(function(el){ el.addEventListener('click',close); });
   document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hidden) close(); });

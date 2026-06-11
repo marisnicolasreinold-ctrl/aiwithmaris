@@ -5,9 +5,9 @@
   "description": "Remotion brand intro video for AI with Maris",
   "scripts": {
     "studio": "remotion studio",
-    "render": "remotion render Intro out/intro.mp4 --codec=h264",
-    "render-web": "remotion render Intro ../assets/intro.mp4 --codec=h264",
-    "poster": "remotion still Intro ../assets/intro-poster.png --frame=235"
+    "render": "remotion render IntroDe out/intro-de.mp4 --codec=h264",
+    "render-web": "remotion render IntroDe ../assets/intro-de.mp4 --codec=h264 && remotion render IntroEn ../assets/intro-en.mp4 --codec=h264",
+    "poster": "remotion still IntroDe ../assets/intro-poster.png --frame=165"
   },
   "dependencies": {
     "@remotion/cli": "^4.0.0",

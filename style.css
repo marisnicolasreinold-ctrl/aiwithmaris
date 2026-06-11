@@ -3866,3 +3866,48 @@ dialog.legal .lg-body .todo {
   text-transform: uppercase;
   color: var(--muted);
 }
+
+/* Intro-Band (Startseite): Autoplay-Video mit Ton-Button */
+.intro-band {
+  position: relative;
+}
+.vb-sound {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(94, 240, 255, .45);
+  background: rgba(5, 6, 12, .72);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: var(--text);
+  font-size: .88rem;
+  cursor: pointer;
+  transition-property: border-color, background-color, transform;
+  transition-duration: 150ms;
+  transition-timing-function: ease-out;
+}
+.vb-sound:hover {
+  border-color: var(--cyan);
+  background: rgba(5, 6, 12, .86);
+}
+.vb-sound:active {
+  transform: scale(.96);
+}
+.vb-sound:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+.vb-sound svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--cyan);
+  fill: none;
+  stroke-width: 2;
+  flex: none;
+}

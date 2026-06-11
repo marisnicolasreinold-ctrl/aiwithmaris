@@ -367,6 +367,12 @@
     // --- Navigation: Guide ---
     "KI-Guide": "AI Guide",
 
+    // --- Startseite: Intro-Band ---
+    "Das Intro": "The intro",
+    "In 15 Sekunden: wer hier baut.": "15 seconds: who's building here.",
+    "Mit Ton ansehen": "Watch with sound",
+    "AI with Maris Intro-Video": "AI with Maris intro video",
+
     // --- Startseite: Guide-Teaser ---
     "Neu · Als PDF kaufen": "New · Buy as PDF",
     "Der KI-Guide für den Mittelstand: Anfangen, wo es zählt.": "The AI guide for mid-sized companies: start where it counts.",
