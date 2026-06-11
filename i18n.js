@@ -126,6 +126,7 @@
     "Scroll — und installier die KI-Module ↓": "Scroll — and install the AI modules ↓",
     "Auftrag einwerfen": "Drop in an order",
     "Stoßzeit simulieren": "Simulate rush hour",
+    "Reklamation einwerfen": "Drop in a complaint",
     "live dabei": "watching live",
     "Welche Module braucht deine Firma?": "Which modules does your company need?",
     "Kostenloses Erstgespräch →": "Free intro call →",

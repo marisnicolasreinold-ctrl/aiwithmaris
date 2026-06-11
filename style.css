@@ -3412,10 +3412,28 @@ dialog.legal .lg-body .todo {
   stroke: rgba(94, 240, 255, .55);
 }
 
-/* Auftragstypen: Anfrage (blau), Rechnung (gold), Lieferung (violett) */
+/* Auftragstypen: Anfrage (blau), Rechnung (gold), Lieferung (violett), Reklamation (rot) */
 #firmaSvg .token.t-anfrage rect { fill: url(#gradAnfrage); }
 #firmaSvg .token.t-rechnung rect { fill: url(#gradRechnung); }
 #firmaSvg .token.t-lieferung rect { fill: url(#gradLieferung); }
+#firmaSvg .token.t-reklamation rect { fill: url(#gradReklamation); }
+
+/* Räume & Modul-Chips sind Links zu den Live-Demos */
+#firmaSvg .linked { cursor: pointer; }
+#firmaSvg .room.linked:hover .room-bg,
+#firmaSvg .room.linked:focus-visible .room-bg {
+  stroke: rgba(94, 240, 255, .5);
+  fill: rgba(94, 240, 255, .05);
+}
+#firmaSvg .chip.linked:hover .chip-bg,
+#firmaSvg .chip.linked:focus-visible .chip-bg {
+  stroke: rgba(94, 240, 255, .85);
+}
+.firma-tip .tip-link {
+  display: block;
+  margin-top: 4px;
+  color: var(--cyan);
+}
 
 /* Stage-Atmosphäre: Stress flackert, Ruhe glüht */
 #firmaSvg.s0 .screen {

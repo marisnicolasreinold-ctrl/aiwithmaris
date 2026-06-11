@@ -38,9 +38,12 @@
       logInstall: { 1: 'Modul installiert: DocFlow', 2: 'Modul installiert: KI-Agent', 3: 'Modul installiert: ATLAS Cockpit' },
       modManual: 'manuell', modAuto: 'automatisiert',
       tipQueue: (q) => q === 0 ? 'keine Wartenden' : (q === 1 ? '1 Auftrag wartet' : `${q} Aufträge warten`),
+      logReklIn: () => `Reklamation eingeworfen — Priorität: hoch`,
+      logRekl: (n) => `Reklamation #${n} eingeordnet & beantwortet`,
       mods: { vertrieb: 'KI-Agent', buchhaltung: 'DocFlow', einkauf: 'Cockpit', lager: 'Scanner', versand: 'Cockpit' },
       rooms: { vertrieb: 'Vertrieb', einkauf: 'Einkauf', lager: 'Lager', buchhaltung: 'Buchhaltung', versand: 'Versand' },
-      sysManual: 'Team', staticLog: ['Rechnung #2041 automatisch verbucht', 'Anfrage #1108 in 24 s beantwortet', 'Engpass früh erkannt — Route umgeplant']
+      sysManual: 'Team', tipDemo: 'Demo ansehen ↗',
+      staticLog: ['Rechnung #2041 automatisch verbucht', 'Anfrage #1108 in 24 s beantwortet', 'Engpass früh erkannt — Route umgeplant']
     },
     en: {
       logAgent: (n, s) => `Inquiry #${n} answered in ${s} s`,
@@ -55,11 +58,38 @@
       logInstall: { 1: 'Module installed: DocFlow', 2: 'Module installed: AI agent', 3: 'Module installed: ATLAS cockpit' },
       modManual: 'manual', modAuto: 'automated',
       tipQueue: (q) => q === 0 ? 'no backlog' : (q === 1 ? '1 order waiting' : `${q} orders waiting`),
+      logReklIn: () => `Complaint dropped in — priority: high`,
+      logRekl: (n) => `Complaint #${n} triaged & answered`,
       mods: { vertrieb: 'AI agent', buchhaltung: 'DocFlow', einkauf: 'Cockpit', lager: 'Scanner', versand: 'Cockpit' },
       rooms: { vertrieb: 'Sales', einkauf: 'Purchasing', lager: 'Warehouse', buchhaltung: 'Accounting', versand: 'Shipping' },
-      sysManual: 'Team', staticLog: ['Invoice #2041 booked automatically', 'Inquiry #1108 answered in 24 s', 'Bottleneck caught early — route replanned']
+      sysManual: 'Team', tipDemo: 'View demo ↗',
+      staticLog: ['Invoice #2041 booked automatically', 'Inquiry #1108 answered in 24 s', 'Bottleneck caught early — route replanned']
     }
   }[lang];
+
+  // Räume & Modul-Chips verlinken auf die passenden Live-Demos.
+  // Vor dem Fallback verdrahtet, damit die Links auch ohne Animation gehen.
+  const DEMO_LINKS = [
+    ['#roomVertrieb', 'apps/pulsecrm.html', 'vertrieb'],
+    ['#roomBuchhaltung', 'apps/docflow.html', 'buchhaltung'],
+    ['#roomEinkauf', 'apps/agent-flow.html', 'einkauf'],
+    ['#roomLager', 'apps/flowops.html', 'lager'],
+    ['#roomVersand', 'apps/atlas.html', 'versand'],
+    ['#chipDocflow', 'apps/docflow.html', null],
+    ['#chipAgent', 'apps/agent-flow.html', null],
+    ['#hudCockpit', 'apps/atlas.html', null]
+  ];
+  DEMO_LINKS.forEach(([sel, href, key]) => {
+    const el = svg.querySelector(sel);
+    if (!el) return;
+    el.classList.add('linked');
+    el.setAttribute('role', 'link');
+    el.setAttribute('tabindex', '0');
+    if (key) el.setAttribute('aria-label', STR.rooms[key] + ' — ' + STR.tipDemo);
+    const go = () => { window.location.href = href; };
+    el.addEventListener('click', go);
+    el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+  });
 
   const path = svg.querySelector('#orderPath');
   const pathOk = path && typeof path.getTotalLength === 'function';
@@ -84,6 +114,8 @@
     if (btn) btn.hidden = true;
     const rush = document.getElementById('rushBtn');
     if (rush) rush.hidden = true;
+    const compl = document.getElementById('complaintBtn');
+    if (compl) compl.hidden = true;
     return;
   }
 
@@ -199,7 +231,9 @@
     const prof = PROFILE[Math.max(0, stage)];
     const automated = Math.random() < (prof.auto[st.key] || 0);
     recordStationDone(automated);
-    if (automated && Math.random() < .5) {
+    if (st.key === 'vertrieb' && tk.type.key === 'reklamation' && automated) {
+      log(STR.logRekl(tk.no), STR.mods.vertrieb, true);
+    } else if (automated && Math.random() < .5) {
       if (st.key === 'buchhaltung') log(STR.logDoc(tk.no), STR.mods.buchhaltung);
       else if (st.key === 'vertrieb') log(STR.logAgent(tk.no, (20 + Math.round(Math.random() * 25))), STR.mods.vertrieb);
       else if (stage >= 3 && Math.random() < .4) log(STR.logCockpit(), 'Cockpit');
@@ -264,7 +298,9 @@
         st.current = tk;
         tk.state = 'proc';
         const base = prof.service[st.key];
-        st.busyUntil = simNow + base * (tk.prio ? .5 : 1) * (0.8 + Math.random() * .4);
+        // Reklamationen: ohne KI-Agent zäh (2x), mit ihm schnell eingeordnet
+        const mult = tk.type.key === 'reklamation' ? (stage >= 2 ? .6 : 2.2) : (tk.prio ? .5 : 1);
+        st.busyUntil = simNow + base * mult * (0.8 + Math.random() * .4);
       }
       // Überlastungs-Optik
       if (st.room) {
@@ -465,7 +501,8 @@
     function updateTip(st) {
       const auto = (PROFILE[Math.max(0, stage)].auto[st.key] || 0) >= .5;
       tipEl.innerHTML = `<b>${STR.rooms[st.key]}</b>${STR.tipQueue(st.queue.length)} · ` +
-        (auto ? `${STR.modAuto} <i>(${STR.mods[st.key]})</i>` : `${STR.modManual} (${STR.sysManual})`);
+        (auto ? `${STR.modAuto} <i>(${STR.mods[st.key]})</i>` : `${STR.modManual} (${STR.sysManual})`) +
+        `<span class="tip-link">${STR.tipDemo}</span>`;
     }
     setInterval(() => {
       const open = stations.find(s => s.tipOpen);
@@ -478,12 +515,17 @@
      ===================================================================== */
   const orderBtn = document.getElementById('orderBtn');
   const rushBtn = document.getElementById('rushBtn');
+  const complaintBtn = document.getElementById('complaintBtn');
   const badge = document.getElementById('liveBadge');
   const countEl = document.getElementById('liveCount');
 
   function spawnEil() {
     makeToken(TYPES[0], { live: true });
     log(STR.logEil(), null, true);
+  }
+  function spawnComplaint() {
+    makeToken({ key: 'reklamation', cls: 't-reklamation' });
+    log(STR.logReklIn(), null, true);
   }
   function spawnRush() {
     let k = 0;
@@ -506,6 +548,7 @@
       channel
         .on('broadcast', { event: 'auftrag' }, () => spawnEil())
         .on('broadcast', { event: 'rush' }, () => spawnRush())
+        .on('broadcast', { event: 'reklamation' }, () => spawnComplaint())
         .on('presence', { event: 'sync' }, () => {
           const n = Object.keys(channel.presenceState()).length;
           if (countEl) countEl.textContent = String(Math.max(1, n));
@@ -531,4 +574,5 @@
   }
   wireButton(orderBtn, spawnEil, 'auftrag');
   wireButton(rushBtn, spawnRush, 'rush');
+  wireButton(complaintBtn, spawnComplaint, 'reklamation');
 })();
