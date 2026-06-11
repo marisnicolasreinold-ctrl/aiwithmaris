@@ -41,6 +41,25 @@ setzen `metadata[files]`, leiten nach Zahlung auf `/danke?session_id=…`
 (Download funktioniert wie beim Website-Checkout) und enthalten Rechnung
 mit § 19-Footer + Widerrufsverzicht-Hinweis.
 
+## Die eBook-Reihe (live seit 11.06.2026)
+
+Drei neue eBooks (je DE+EN im Paket) + Komplett-Bundle. PDFs und
+Quell-Manuskripte liegen im privaten Storage-Bucket `guides` (Manuskripte
+unter `sources/` — NICHT im öffentlichen Repo!). Produktion: Manuskripte als
+Markdown, gesetzt mit `scripts/og/render-ebook.mjs`.
+
+| Produkt (product-Key) | Preis | Live-Price-ID | Payment Link |
+|---|---|---|---|
+| Prompt-Werkzeugkasten (`prompts`) | 12 € | `price_1Th4fzAYfMthwvewLi7hCOBS` | https://buy.stripe.com/aFa9ASdpYfcMddp7ZnfYY03 |
+| DSGVO & KI (`dsgvo`) | 29 € | `price_1Th4g0AYfMthwvewHswam7tF` | https://buy.stripe.com/cNi5kCdpY1lW0qD0wVfYY04 |
+| Make or Buy (`makeorbuy`) | 29 € | `price_1Th4g0AYfMthwvewKlOa2DIR` | https://buy.stripe.com/4gM00ify6fcMa1d1AZfYY05 |
+| KI-Bibliothek, alle 4 (`library`) | 59 € | `price_1Th4g1AYfMthwvew4k7tl8F7` | https://buy.stripe.com/fZueVc0DcggQddp1AZfYY06 |
+
+Datei-Schlüssel in `metadata[files]` (Download-Function):
+`prompts-de`, `prompts-en`, `dsgvo-de`, `dsgvo-en`, `makeorbuy-de`,
+`makeorbuy-en` (+ bestehend `de`, `en`). Verkaufsseite: guide.html
+(Abschnitt „Die Vertiefungs-Leitfäden"), Download-Labels: danke.html.
+
 ## Stripe (Sandbox / Test-Modus — historisch)
 
 Sandbox-Account: `acct_1TgeQIAPD9ukdtqR` („Aiwithmaris Sandbox")
