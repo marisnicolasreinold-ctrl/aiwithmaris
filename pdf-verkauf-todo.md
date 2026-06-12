@@ -82,6 +82,26 @@ Datei-Schlüssel in `metadata[files]` (Download-Function):
 `makeorbuy-en` (+ bestehend `de`, `en`). Verkaufsseite: guide.html
 (Abschnitt „Die Vertiefungs-Leitfäden"), Download-Labels: danke.html.
 
+## Neu: „Der KI-Workflow für Lehrkräfte" (12.06.2026 — VORBEREITET, wartet auf Freigabe)
+
+Fünfter Titel, neue Zielgruppe (Lehrkräfte): 68 Seiten, 20 Kapitel, 30+
+Kopiervorlagen. Produkt-Key `lehrer-de`, 19 € (DE; EN-Ausgabe folgt).
+KDP-Preis: 9,99 €.
+
+- ✅ Manuskript geschrieben (Markdown-Dialekt; NICHT im Repo — als Datei im
+  Claude-Chat geliefert, Ziel: `guides/sources/lehrer-ki-workflow-de.md`)
+- ✅ PDF lokal gebaut & geprüft (68 Seiten, 245 KB), EPUB gebaut (137 KB)
+- ✅ KDP-Cover: `marketing/kdp/cover-lehrer-ki-workflow-de.jpg` (1600×2560)
+- ✅ Website auf Branch: Banner auf guide.html (#lehrkraefte), danke.html-Label,
+  i18n (DE/EN), JSON-LD-Offer, Blog-Ankündigung in der Queue
+- ✅ Produkttexte Digistore24 + KDP: `marketing/lehrer-listing.md`
+- ⬜ **Produktion (braucht Freigabe von Maris):** Stripe-Live-Produkt + Preis,
+  Manuskript/PDF in den privaten Bucket, checkout-/download-/export-epub-
+  Functions erweitern — komplettes Runbook mit fertiger Setup-Function:
+  `scripts/edge/README.md` + `scripts/edge/admin-setup-lehrer/`
+- ⬜ Danach: Branch mergen (Website live), Digistore24-Upload, KDP-Upload,
+  Testkauf
+
 ## Stripe (Sandbox / Test-Modus — historisch)
 
 Sandbox-Account: `acct_1TgeQIAPD9ukdtqR` („Aiwithmaris Sandbox")
