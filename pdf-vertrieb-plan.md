@@ -40,7 +40,12 @@ gesucht. **Aber zwei Haken:**
    positionieren (z. B. 9,99 €) als „Einstiegsversion" — im Buch klar auf
    die Vollversion mit Vorlagen-Paket im eigenen Shop verweisen
    (Vorlagen/Checklisten als Download-Link auf aiwithmaris.com = Lead-Kanal).
-- [ ] EPUB-Export in `render-ebook.mjs` ergänzen
+- [x] EPUB-Export gebaut (12.06.2026): `scripts/og/render-epub.mjs` + Edge
+      Function `export-epub` — die 6 Vertiefungs-EPUBs (DE/EN) liegen fertig
+      im Dokumente-Tab des Cockpits. **Achtung:** Vom Hauptguide existiert
+      kein Quell-Manuskript im Storage (nur das fertige PDF) — für die
+      Kindle-Ausgabe des Hauptguides muss das Manuskript erst wieder
+      hochgeladen oder rekonstruiert werden.
 - [ ] KDP-Konto (Maris: Steuerinterview, Bankverbindung)
 - [ ] Hauptguide DE + EN als Test, danach die Vertiefungen
 - [ ] **Kein** KDP Select (verlangt Exklusivität — kollidiert mit eigenem Shop)
