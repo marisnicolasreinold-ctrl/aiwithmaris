@@ -21,6 +21,7 @@
 
     // --- Footer ---
     "KI-Coaching & maßgeschneiderte Software-Entwicklung — cloud-neutral, datensouverän, ohne Lock-in.": "AI coaching & custom software development — cloud-neutral, data-sovereign, no lock-in.",
+    "Ich zeige, was mit KI heute praktisch geht — mit Live-Demos und dem KI-Guide. Cloud-neutral & datensouverän.": "I show what AI can practically do today — with live demos and the AI Guide. Cloud-neutral & data-sovereign.",
     "Angebot": "Offer",
     "Rechtliches": "Legal",
     "Preise": "Pricing",
@@ -43,6 +44,7 @@
 
     // --- Seitentitel (document.title) ---
     "AI with Maris — KI-Coaching & maßgeschneiderte Software in deiner Cloud": "AI with Maris — AI coaching & custom software in your cloud",
+    "AI with Maris — KI zum Anfassen & der KI-Guide für den Mittelstand": "AI with Maris — hands-on AI & the AI Guide for SMEs",
     "Kontakt — AI with Maris": "Contact — AI with Maris",
     "Über mich — AI with Maris": "About me — AI with Maris",
     "Preise & FAQ — AI with Maris": "Pricing & FAQ — AI with Maris",
@@ -61,6 +63,26 @@
     "Sag Hallo": "Say hello",
     "Beispiele ansehen": "See examples",
     "Intro ansehen": "Watch intro",
+    // --- Startseite: neuer Fokus (Guide & Demos im Vordergrund, Coaching/Software als Ausblick) ---
+    "KI-Guide": "AI Guide",
+    "Live-Demos": "Live demos",
+    "Coaching & Software · bald": "Coaching & software · soon",
+    "Sehen, was": "See what's",
+    "heute möglich ist.": "possible today.",
+    "Hi, ich bin Maris. Ich experimentiere mit KI und baue Software, die echte Arbeit abnimmt — von kleinen Automatisierungen bis zu Apps, die sicher in der Cloud laufen. Hier zeige ich dir, was damit geht — und gebe mein Wissen im KI-Guide weiter.": "Hi, I'm Maris. I experiment with AI and build software that takes real work off your plate — from small automations to apps that run safely in the cloud. Here I show you what's possible — and pass on my knowledge in the AI Guide.",
+    "Zum KI-Guide": "To the AI Guide",
+    "Ausblick": "Outlook",
+    "Coaching & eigene Software — vielleicht bald.": "Coaching & custom software — perhaps soon.",
+    "Heute zeige ich vor allem, was mit KI geht. Diese zwei Bausteine plane ich für die Zukunft — noch kein festes Angebot, aber die Richtung.": "Today I mostly show what's possible with AI. These two building blocks are planned for the future — not a fixed offer yet, but the direction.",
+    "Idee · Befähigen": "Idea · Enable",
+    "1:1 & im Team an euren echten Aufgaben — damit KI im Alltag ankommt, statt nur ausprobiert zu werden.": "1:1 & in the team on your real tasks — so AI lands in everyday work instead of just being tried out.",
+    "Idee · Bauen": "Idea · Build",
+    "Maßgeschneiderte Apps & KI-Agenten, die Routine automatisieren und in deiner eigenen Cloud laufen.": "Tailored apps & AI agents that automate routine and run in your own cloud.",
+    "Klingt interessant für später?": "Sounds interesting for later?",
+    "Sag kurz Bescheid": "Just let me know",
+    "— ganz unverbindlich.": "— no strings attached.",
+    "Neugierig, was sonst noch geht?": "Curious what else is possible?",
+    "Mehr Beispiele ansehen →": "See more examples →",
     "Automatisierte Prozesse": "Automated processes",
     "Zeitersparnis / Woche": "Time saved / week",
     "Datenhoheit (eigene Cloud)": "Data ownership (your cloud)",

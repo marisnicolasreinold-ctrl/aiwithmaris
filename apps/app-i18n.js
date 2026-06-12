@@ -292,11 +292,27 @@
   if (navigator.doNotTrack === '1' || window.doNotTrack === '1' || navigator.globalPrivacyControl) return;
   if (!/(^|\.)aiwithmaris\.(com|de)$/.test(location.hostname)) return;
   var path = location.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+  var payload = { path: path };
+  // Quelle: nur die Domain des Verweises (keine vollständige URL), und nur wenn extern
+  try {
+    if (document.referrer) {
+      var rh = new URL(document.referrer).hostname;
+      if (rh && !/(^|\.)aiwithmaris\.(com|de)$/.test(rh)) payload.ref = rh;
+    }
+  } catch (e) { /* egal */ }
+  // UTM-Kampagnenparameter (falls in der URL vorhanden)
+  try {
+    var q = new URLSearchParams(location.search), utm = {};
+    if (q.get('utm_source')) utm.source = q.get('utm_source');
+    if (q.get('utm_medium')) utm.medium = q.get('utm_medium');
+    if (q.get('utm_campaign')) utm.campaign = q.get('utm_campaign');
+    if (utm.source || utm.medium || utm.campaign) payload.utm = utm;
+  } catch (e) { /* egal */ }
   try {
     fetch('https://amrdmnnijbfwtrjcpocl.supabase.co/functions/v1/track', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ path: path }),
+      body: JSON.stringify(payload),
       keepalive: true
     }).catch(function () { /* Zählung ist optional */ });
   } catch (e) { /* egal */ }
