@@ -50,6 +50,9 @@ gesucht. **Aber zwei Haken:**
       Kindle-Ausgabe des Hauptguides muss das Manuskript erst wieder
       hochgeladen oder rekonstruiert werden.
 - [x] KDP-Konto vorhanden
+- [x] Produkttexte DE + EN fertig (12.06.2026): „Amazon KDP & Gumroad ·
+      Produkttexte (DE + EN)" liegt im Dokumente-Tab (Beschreibungen +
+      Keywords je Buch, beide Sprachen)
 - [x] Marketing-Cover fertig (12.06.2026): 8 Stück (4 Bücher × DE/EN,
       1600×2560 JPG, Marken-Look) — liegen im Dokumente-Tab;
       Generator: scripts/og/generate-kdp-covers.mjs
@@ -60,6 +63,8 @@ gesucht. **Aber zwei Haken:**
 
 **Warum:** International Standard für Indie-Digitalprodukte, englischsprachige
 Käufer, einfache Einrichtung. 10 % + 0,30 $ Gebühr.
+- [x] EN-Produkttexte, USD-Preise und Profil-Bio fertig (12.06.2026) —
+      im selben Dokument „Amazon KDP & Gumroad · Produkttexte (DE + EN)"
 - [ ] EN-Ausgaben (Guide, Library) einstellen, Preise in USD
 - [ ] Profil verlinkt auf aiwithmaris.com (EN-Version)
 
