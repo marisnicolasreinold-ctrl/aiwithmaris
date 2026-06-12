@@ -93,8 +93,9 @@ tr.unsicher td{color:var(--amber)}
 <div id="login">
   <form class="lcard" id="loginForm">
     <h1>Maris-<span>Cockpit</span></h1>
-    <p>Private Übersicht: Verkäufe &amp; Besucher. Zugriff nur mit Schlüssel.</p>
-    <input type="password" id="keyInput" placeholder="Zugangsschlüssel" autocomplete="current-password" autofocus />
+    <p>Private Übersicht: Verkäufe, Besucher &amp; Finanzen. Anmeldung nur mit deinem Konto.</p>
+    <input type="email" id="emailInput" placeholder="E-Mail" autocomplete="username" value="marisnicolasreinold@googlemail.com" style="margin-bottom:10px" />
+    <input type="password" id="pwInput" placeholder="Passwort" autocomplete="current-password" autofocus />
     <button class="btn primary" type="submit">Einloggen</button>
     <div class="err" id="loginErr"></div>
   </form>
@@ -207,32 +208,44 @@ tr.unsicher td{color:var(--amber)}
   </form>
 </div>
 
+<script src="./vendor/supabase.min.js"></script>
 <script>
 (function () {
   var API = 'https://amrdmnnijbfwtrjcpocl.supabase.co/functions/v1/sales-report';
   var FIN = 'https://amrdmnnijbfwtrjcpocl.supabase.co/functions/v1/finance';
-  var KEY = 'aiwm_admin_key';
+  // Anmeldung über Supabase Auth: echte Session mit Ablauf + Auto-Refresh.
+  // Der anon-Key ist öffentlich (nur "Telefonnummer" des Projekts) — die
+  // Daten gibt der Server nur für die eingeloggte Admin-E-Mail heraus.
+  var sb = supabase.createClient(
+    'https://amrdmnnijbfwtrjcpocl.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtcmRtbm5pamJmd3RyamNwb2NsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTU0OTcsImV4cCI6MjA5NjQzMTQ5N30.y-9eLzeQKDlHzSG3_ro-ThAnnpnAEKLTWS8NMrpSXCI'
+  );
   var login = document.getElementById('login'), dash = document.getElementById('dash');
   var errEl = document.getElementById('loginErr');
   var lastReport = null, finLoaded = false;
 
-  function adminKey() { try { return sessionStorage.getItem(KEY) || ''; } catch (e) { return ''; } }
+  function getToken() {
+    return sb.auth.getSession().then(function (r) {
+      return (r.data.session && r.data.session.access_token) || '';
+    });
+  }
   function fmtEur(cents) { return (cents / 100).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }); }
   function fmtDay(d) { return d.slice(8, 10) + '.' + d.slice(5, 7) + '.'; }
 
-  function load(key, fromForm) {
+  function load(fromForm) {
     errEl.textContent = '';
-    fetch(API, { headers: { 'x-report-key': key } }).then(function (res) {
-      if (res.status === 401) throw new Error('Falscher Schlüssel.');
+    getToken().then(function (token) {
+      if (!token) throw new Error('Bitte einloggen.');
+      return fetch(API, { headers: { 'Authorization': 'Bearer ' + token } });
+    }).then(function (res) {
+      if (res.status === 401) throw new Error('Sitzung abgelaufen — bitte neu einloggen.');
       if (res.status === 429) throw new Error('Zu viele Versuche — kurz warten.');
       if (!res.ok) throw new Error('Report nicht erreichbar (' + res.status + ').');
       return res.json();
     }).then(function (d) {
-      try { sessionStorage.setItem(KEY, key); } catch (e) { /* egal */ }
       render(d);
       login.hidden = true; dash.hidden = false;
     }).catch(function (e) {
-      try { sessionStorage.removeItem(KEY); } catch (er) { /* egal */ }
       login.hidden = false; dash.hidden = true;
       if (fromForm) errEl.textContent = e.message;
     });
@@ -311,17 +324,21 @@ tr.unsicher td{color:var(--amber)}
 
   document.getElementById('loginForm').addEventListener('submit', function (e) {
     e.preventDefault();
-    var k = document.getElementById('keyInput').value.trim();
-    if (k) load(k, true);
+    errEl.textContent = '';
+    sb.auth.signInWithPassword({
+      email: document.getElementById('emailInput').value.trim(),
+      password: document.getElementById('pwInput').value
+    }).then(function (r) {
+      if (r.error) { errEl.textContent = 'E-Mail oder Passwort falsch.'; return; }
+      document.getElementById('pwInput').value = '';
+      load(true);
+    });
   });
-  document.getElementById('reloadBtn').addEventListener('click', function () {
-    var k = ''; try { k = sessionStorage.getItem(KEY) || ''; } catch (e) { /* egal */ }
-    if (k) load(k, false);
-  });
+  document.getElementById('reloadBtn').addEventListener('click', function () { load(false); });
   document.getElementById('logoutBtn').addEventListener('click', function () {
-    try { sessionStorage.removeItem(KEY); } catch (e) { /* egal */ }
-    dash.hidden = true; login.hidden = false;
-    document.getElementById('keyInput').value = '';
+    sb.auth.signOut().then(function () {
+      dash.hidden = true; login.hidden = false;
+    });
   });
 
   // ===================== Tabs =====================
@@ -338,8 +355,10 @@ tr.unsicher td{color:var(--amber)}
   // ===================== Finanzen =====================
   function finFetch(opts) {
     opts = opts || {};
-    opts.headers = Object.assign({ 'x-report-key': adminKey() }, opts.headers || {});
-    return fetch(FIN + (opts.qs || ''), opts).then(function (r) {
+    return getToken().then(function (token) {
+      opts.headers = Object.assign({ 'Authorization': 'Bearer ' + token }, opts.headers || {});
+      return fetch(FIN + (opts.qs || ''), opts);
+    }).then(function (r) {
       if (!r.ok) throw new Error('Finance ' + r.status);
       return r.json();
     });
@@ -484,9 +503,8 @@ tr.unsicher td{color:var(--amber)}
     }).then(function () { editModal.hidden = true; loadFinance(); });
   });
 
-  // Auto-Login, wenn der Schlüssel in dieser Browser-Sitzung schon stimmt
-  var saved = ''; try { saved = sessionStorage.getItem(KEY) || ''; } catch (e) { /* egal */ }
-  if (saved) load(saved, false);
+  // Auto-Login: bestehende Session wird von supabase-js gehalten und erneuert
+  getToken().then(function (token) { if (token) load(false); });
 })();
 </script>
 </body>
