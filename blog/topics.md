@@ -14,7 +14,6 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] Dokumenten-Automatisierung konkret: Was passiert eigentlich, wenn niemand mehr Rechnungen abtippt?
 - [ ] KI-Agent im Posteingang: Welche Anfragen sich automatisch beantworten lassen — und welche besser nicht
 - [ ] DSGVO und KI: Was du wirklich beachten musst, bevor das erste Tool live geht
 - [ ] Die fünf Fragen, mit denen du jeden KI-Use-Case in zehn Minuten bewertest
@@ -35,6 +34,8 @@ oberste offene Thema ist immer das nächste.
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-06-12 — Dokumenten-Automatisierung konkret: Was passiert, wenn niemand mehr Rechnungen abtippt? (Dokumenten-Automatisierung konkret: Was passiert eigentlich, wenn niemand mehr Rechnungen abtippt?)
 
 - 2026-06-11 — Der 90-Tage-Test: Wie du ein KI-Projekt aufsetzt, das seinen Nutzen beweisen muss (Der 90-Tage-Test: Wie du ein KI-Projekt aufsetzt, das seinen Nutzen beweisen muss)
 
