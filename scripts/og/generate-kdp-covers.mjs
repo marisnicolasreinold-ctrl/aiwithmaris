@@ -130,7 +130,8 @@ function cover(b) {
     el("div", { display: "flex", justifyContent: "space-between", alignItems: "flex-end", borderTop: "2px solid rgba(238,241,250,.14)", paddingTop: 56 },
       el("div", { display: "flex", flexDirection: "column" },
         el("span", { fontFamily: "Sora", fontWeight: 800, fontSize: 52, color: INK }, "Maris Reinold"),
-        el("span", { fontFamily: "Space Mono", fontSize: 32, color: MUTED, marginTop: 12 }, "M. Eng. · 17 Jahre Praxis")
+        el("span", { fontFamily: "Space Mono", fontSize: 32, color: MUTED, marginTop: 12 },
+          b.lang === "EN" ? "M. Eng. · 17 years of hands-on practice" : "M. Eng. · 17 Jahre Praxis")
       ),
       el("div", { display: "flex", flexDirection: "column", alignItems: "flex-end" },
         el("span", { fontFamily: "Sora", fontWeight: 800, fontSize: 44, color: b.a }, "AI with Maris"),
