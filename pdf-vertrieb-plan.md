@@ -44,11 +44,13 @@ gesucht. **Aber zwei Haken:**
    die Vollversion mit Vorlagen-Paket im eigenen Shop verweisen
    (Vorlagen/Checklisten als Download-Link auf aiwithmaris.com = Lead-Kanal).
 - [x] EPUB-Export gebaut (12.06.2026): `scripts/og/render-epub.mjs` + Edge
-      Function `export-epub` — die 6 Vertiefungs-EPUBs (DE/EN) liegen fertig
-      im Dokumente-Tab des Cockpits. **Achtung:** Vom Hauptguide existiert
-      kein Quell-Manuskript im Storage (nur das fertige PDF) — für die
-      Kindle-Ausgabe des Hauptguides muss das Manuskript erst wieder
-      hochgeladen oder rekonstruiert werden.
+      Function `export-epub` — alle 8 EPUBs (4 Bücher × DE/EN) liegen fertig
+      im Dokumente-Tab des Cockpits.
+- [x] Hauptguide-Manuskript rekonstruiert (12.06.2026): Das fehlende
+      Quell-Markdown wurde aus den fertigen PDFs (DE + EN) wiederhergestellt
+      und liegt wieder im privaten Storage (`guides/sources/ki-guide-de.md`
+      bzw. `ai-guide-en.md`) — damit sind auch die Hauptguide-EPUBs gebaut
+      (je 17 Kapitel).
 - [x] KDP-Konto vorhanden
 - [x] Produkttexte DE + EN fertig (12.06.2026): „Amazon KDP & Gumroad ·
       Produkttexte (DE + EN)" liegt im Dokumente-Tab (Beschreibungen +
@@ -56,7 +58,8 @@ gesucht. **Aber zwei Haken:**
 - [x] Marketing-Cover fertig (12.06.2026): 8 Stück (4 Bücher × DE/EN,
       1600×2560 JPG, Marken-Look) — liegen im Dokumente-Tab;
       Generator: scripts/og/generate-kdp-covers.mjs
-- [ ] Hauptguide DE + EN als Test, danach die Vertiefungen
+- [ ] Bücher bei KDP einstellen: Hauptguide DE + EN als Test, danach die
+      Vertiefungen (EPUBs, Cover und Produkttexte liegen alle im Dokumente-Tab)
 - [ ] **Kein** KDP Select (verlangt Exklusivität — kollidiert mit eigenem Shop)
 
 ## Kanal 3 — Gumroad (englischer Markt, ~½ Tag)
