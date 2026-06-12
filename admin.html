@@ -64,6 +64,28 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
 .legend i{display:inline-block;width:9px;height:9px;border-radius:3px;vertical-align:-1px;margin:0 4px 0 10px}
 .live{font-family:var(--mono);font-size:.64rem;letter-spacing:.06em;color:var(--green)}
 .live.test{color:var(--amber)}
+/* Tabs */
+.tabs{display:flex;gap:8px;margin-bottom:20px}
+.tbtn{font-family:var(--body);font-weight:600;font-size:.88rem;padding:9px 18px;border-radius:24px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--muted);cursor:pointer}
+.tbtn.active{color:#04050a;background:linear-gradient(110deg,var(--cyan),var(--violet));border-color:transparent}
+/* Finanzen */
+.v.plus{color:var(--green)} .v.minus{color:var(--pink)}
+.drop{display:block;border:1.5px dashed rgba(94,240,255,.35);border-radius:14px;padding:26px 18px;text-align:center;color:var(--muted);font-size:.86rem;cursor:pointer;transition:border-color .2s,background .2s}
+.drop:hover,.drop.over{border-color:var(--cyan);background:rgba(94,240,255,.05)}
+.upstatus{font-family:var(--mono);font-size:.72rem;color:var(--cyan);margin-top:10px;min-height:1.2em;white-space:pre-line}
+tr.unsicher td{color:var(--amber)}
+.act{display:flex;gap:6px;justify-content:flex-end}
+.act button{border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);border-radius:8px;padding:3px 9px;cursor:pointer;font-size:.78rem}
+.act button:hover{border-color:var(--cyan);color:var(--text)}
+.hint{font-size:.74rem;color:var(--muted);margin-top:10px}
+/* Edit-Modal */
+.modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(5,6,12,.7);backdrop-filter:blur(5px)}
+.modal[hidden]{display:none}
+.mcard{width:min(360px,calc(100vw - 44px));background:rgba(10,12,24,.95);border:1px solid var(--line);border-radius:18px;padding:24px}
+.mcard h2{font-family:var(--display);font-size:1rem;margin-bottom:14px}
+.mcard label{display:block;font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin:10px 0 4px}
+.mcard input,.mcard select{width:100%;padding:9px 11px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);font:inherit;font-size:.88rem}
+.mcard .mbtns{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
 </style>
 </head>
 <body>
@@ -91,6 +113,12 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
     </div>
   </header>
 
+  <nav class="tabs">
+    <button class="tbtn active" data-tab="overview" type="button">Übersicht</button>
+    <button class="tbtn" data-tab="finance" type="button">Finanzen</button>
+  </nav>
+
+  <div id="tab-overview">
   <div class="cards">
     <div class="card hl"><div class="k">Umsatz gesamt</div><div class="v" id="cRevenue">—</div></div>
     <div class="card"><div class="k">Verkäufe</div><div class="v" id="cSales">—</div></div>
@@ -122,15 +150,73 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
       <div class="rowlist" id="byProduct"></div>
     </div>
   </div>
+  </div><!-- /tab-overview -->
+
+  <div id="tab-finance" hidden>
+    <div class="cards">
+      <div class="card"><div class="k">Einnahmen (Shop)</div><div class="v plus" id="fIncome">—</div></div>
+      <div class="card"><div class="k">Ausgaben</div><div class="v" id="fExpense">—</div></div>
+      <div class="card"><div class="k">Ergebnis</div><div class="v" id="fResult">—</div></div>
+    </div>
+
+    <div class="panel" style="margin-bottom:14px">
+      <h2>Rechnung hochladen</h2>
+      <label class="drop" id="drop">
+        <input type="file" id="fileInput" accept="application/pdf,image/png,image/jpeg,image/webp" multiple hidden />
+        PDF oder Foto hierher ziehen oder klicken — die KI liest Händler, Datum, Betrag und Kategorie automatisch aus (max. 8 MB).
+      </label>
+      <div class="upstatus" id="upStatus"></div>
+      <div class="hint">Gelb markierte Einträge: Die KI war unsicher — kurz prüfen und mit ✎ korrigieren. Belege landen in deinem privaten Speicher.</div>
+    </div>
+
+    <div class="grid2">
+      <div class="panel">
+        <h2>Monat für Monat</h2>
+        <table><thead><tr><th>Monat</th><th class="r">Einnahmen</th><th class="r">Ausgaben</th><th class="r">Ergebnis</th></tr></thead>
+        <tbody id="monthRows"></tbody></table>
+      </div>
+      <div class="panel">
+        <h2>Ausgaben nach Kategorie</h2>
+        <div class="rowlist" id="byCat"></div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:14px">
+      <h2>Belege</h2>
+      <table><thead><tr><th>Datum</th><th>Händler</th><th>Kategorie</th><th class="r">Betrag</th><th class="r">Aktionen</th></tr></thead>
+      <tbody id="expRows"></tbody></table>
+    </div>
+  </div><!-- /tab-finance -->
+</div>
+
+<div class="modal" id="editModal" hidden>
+  <form class="mcard" id="editForm">
+    <h2>Beleg korrigieren</h2>
+    <label for="eVendor">Händler</label><input id="eVendor" type="text" maxlength="120" />
+    <label for="eDate">Rechnungsdatum</label><input id="eDate" type="date" />
+    <label for="eAmount">Betrag brutto (€)</label><input id="eAmount" type="number" step="0.01" min="0" />
+    <label for="eCat">Kategorie</label>
+    <select id="eCat">
+      <option>Software &amp; Cloud</option><option>Hardware</option><option>Marketing</option><option>Reise</option>
+      <option>Büro</option><option>Gebühren &amp; Versicherung</option><option>Weiterbildung</option><option>Sonstiges</option>
+    </select>
+    <div class="mbtns">
+      <button class="btn" type="button" id="eCancel">Abbrechen</button>
+      <button class="btn primary" type="submit">Speichern</button>
+    </div>
+  </form>
 </div>
 
 <script>
 (function () {
   var API = 'https://amrdmnnijbfwtrjcpocl.supabase.co/functions/v1/sales-report';
+  var FIN = 'https://amrdmnnijbfwtrjcpocl.supabase.co/functions/v1/finance';
   var KEY = 'aiwm_admin_key';
   var login = document.getElementById('login'), dash = document.getElementById('dash');
   var errEl = document.getElementById('loginErr');
+  var lastReport = null, finLoaded = false;
 
+  function adminKey() { try { return sessionStorage.getItem(KEY) || ''; } catch (e) { return ''; } }
   function fmtEur(cents) { return (cents / 100).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }); }
   function fmtDay(d) { return d.slice(8, 10) + '.' + d.slice(5, 7) + '.'; }
 
@@ -153,6 +239,8 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
   }
 
   function render(d) {
+    lastReport = d;
+    finLoaded = false; // Finanzen-Tab beim nächsten Öffnen neu laden
     document.getElementById('genAt').textContent = 'Stand: ' + new Date(d.generatedAt).toLocaleString('de-DE');
     var mode = document.getElementById('modeChip');
     mode.textContent = d.livemode ? 'LIVE' : 'TESTMODUS';
@@ -234,6 +322,166 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
     try { sessionStorage.removeItem(KEY); } catch (e) { /* egal */ }
     dash.hidden = true; login.hidden = false;
     document.getElementById('keyInput').value = '';
+  });
+
+  // ===================== Tabs =====================
+  var tabBtns = Array.prototype.slice.call(document.querySelectorAll('.tbtn'));
+  tabBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      tabBtns.forEach(function (x) { x.classList.toggle('active', x === b); });
+      document.getElementById('tab-overview').hidden = b.dataset.tab !== 'overview';
+      document.getElementById('tab-finance').hidden = b.dataset.tab !== 'finance';
+      if (b.dataset.tab === 'finance' && !finLoaded) loadFinance();
+    });
+  });
+
+  // ===================== Finanzen =====================
+  function finFetch(opts) {
+    opts = opts || {};
+    opts.headers = Object.assign({ 'x-report-key': adminKey() }, opts.headers || {});
+    return fetch(FIN + (opts.qs || ''), opts).then(function (r) {
+      if (!r.ok) throw new Error('Finance ' + r.status);
+      return r.json();
+    });
+  }
+
+  function loadFinance() {
+    finFetch({ qs: '?op=list' }).then(function (d) {
+      finLoaded = true;
+      renderFinance(d.expenses || [], d.byMonth || {});
+    }).catch(function () {
+      document.getElementById('expRows').innerHTML = '<tr><td colspan="5">Konnte Belege nicht laden — bitte neu einloggen.</td></tr>';
+    });
+  }
+
+  function renderFinance(expenses, byMonth) {
+    var income = (lastReport && lastReport.revenue && lastReport.revenue.EUR) || 0;
+    var revPerMonth = (lastReport && lastReport.revenuePerMonth) || {};
+    var spent = expenses.reduce(function (a, e) { return a + (e.currency === 'EUR' ? e.amount_cents : 0); }, 0);
+    var result = income - spent;
+    document.getElementById('fIncome').textContent = fmtEur(income);
+    document.getElementById('fExpense').textContent = spent ? '−' + fmtEur(spent) : fmtEur(0);
+    var rEl = document.getElementById('fResult');
+    rEl.textContent = (result < 0 ? '−' : '') + fmtEur(Math.abs(result));
+    rEl.className = 'v ' + (result >= 0 ? 'plus' : 'minus');
+
+    // Monatsübersicht: alle Monate aus Einnahmen + Ausgaben, neueste zuerst
+    var months = {};
+    Object.keys(revPerMonth).forEach(function (m) { months[m] = true; });
+    Object.keys(byMonth).forEach(function (m) { months[m] = true; });
+    var tb = document.getElementById('monthRows'); tb.innerHTML = '';
+    Object.keys(months).sort().reverse().slice(0, 12).forEach(function (m) {
+      var inc = revPerMonth[m] || 0, out = byMonth[m] || 0, res = inc - out;
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + m.slice(5, 7) + '/' + m.slice(0, 4) + '</td>' +
+        '<td class="r">' + fmtEur(inc) + '</td>' +
+        '<td class="r">' + (out ? '−' + fmtEur(out) : '—') + '</td>' +
+        '<td class="r" style="color:' + (res >= 0 ? 'var(--green)' : 'var(--pink)') + '">' + (res < 0 ? '−' : '') + fmtEur(Math.abs(res)) + '</td>';
+      tb.appendChild(tr);
+    });
+    if (!Object.keys(months).length) tb.innerHTML = '<tr><td colspan="4">Noch keine Daten</td></tr>';
+
+    // Nach Kategorie
+    var cats = {};
+    expenses.forEach(function (e) { cats[e.category] = (cats[e.category] || 0) + e.amount_cents; });
+    var entries = Object.entries(cats).sort(function (a, b) { return b[1] - a[1]; });
+    var cMax = (entries[0] && entries[0][1]) || 1;
+    var bc = document.getElementById('byCat'); bc.innerHTML = '';
+    entries.forEach(function (row) {
+      var div = document.createElement('div'); div.className = 'rl';
+      div.innerHTML = '<span class="nm"></span><span class="bar"><i style="width:' + Math.round(row[1] / cMax * 100) + '%"></i></span><span class="n">' + fmtEur(row[1]) + '</span>';
+      div.querySelector('.nm').textContent = row[0];
+      bc.appendChild(div);
+    });
+    if (!entries.length) bc.innerHTML = '<div class="rl"><span class="nm">Noch keine Ausgaben</span></div>';
+
+    // Beleg-Liste
+    var er = document.getElementById('expRows'); er.innerHTML = '';
+    expenses.forEach(function (e) {
+      var tr = document.createElement('tr');
+      if (e.status === 'unsicher') tr.className = 'unsicher';
+      var date = e.invoice_date ? e.invoice_date.slice(8, 10) + '.' + e.invoice_date.slice(5, 7) + '.' + e.invoice_date.slice(0, 4) : '—';
+      [date, e.vendor || '—', e.category].forEach(function (txt) {
+        var td = document.createElement('td'); td.textContent = txt; tr.appendChild(td);
+      });
+      var amt = document.createElement('td'); amt.className = 'r'; amt.textContent = fmtEur(e.amount_cents); tr.appendChild(amt);
+      var act = document.createElement('td'); act.className = 'r';
+      var wrap = document.createElement('div'); wrap.className = 'act';
+      var bFile = document.createElement('button'); bFile.type = 'button'; bFile.textContent = 'Beleg'; bFile.title = 'Beleg öffnen';
+      bFile.addEventListener('click', function () {
+        finFetch({ qs: '?op=file&id=' + e.id }).then(function (d) { if (d.url) window.open(d.url, '_blank'); });
+      });
+      var bEdit = document.createElement('button'); bEdit.type = 'button'; bEdit.textContent = '✎'; bEdit.title = 'Korrigieren';
+      bEdit.addEventListener('click', function () { openEdit(e); });
+      var bDel = document.createElement('button'); bDel.type = 'button'; bDel.textContent = '✕'; bDel.title = 'Löschen';
+      bDel.addEventListener('click', function () {
+        if (!confirm('Beleg "' + (e.vendor || 'Eintrag') + '" wirklich löschen?')) return;
+        finFetch({ method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ op: 'delete', id: e.id }) }).then(loadFinance);
+      });
+      wrap.appendChild(bFile); wrap.appendChild(bEdit); wrap.appendChild(bDel);
+      act.appendChild(wrap); tr.appendChild(act);
+      er.appendChild(tr);
+    });
+    if (!expenses.length) er.innerHTML = '<tr><td colspan="5">Noch keine Belege — lade oben die erste Rechnung hoch.</td></tr>';
+  }
+
+  // --- Upload (Klick + Drag & Drop) ---
+  var drop = document.getElementById('drop'), fileInput = document.getElementById('fileInput');
+  var upStatus = document.getElementById('upStatus');
+  drop.addEventListener('dragover', function (e) { e.preventDefault(); drop.classList.add('over'); });
+  drop.addEventListener('dragleave', function () { drop.classList.remove('over'); });
+  drop.addEventListener('drop', function (e) {
+    e.preventDefault(); drop.classList.remove('over');
+    handleFiles(e.dataTransfer.files);
+  });
+  fileInput.addEventListener('change', function () { handleFiles(fileInput.files); fileInput.value = ''; });
+
+  function handleFiles(files) {
+    Array.prototype.slice.call(files).forEach(function (f) {
+      if (f.size > 8 * 1024 * 1024) { upStatus.textContent = f.name + ': größer als 8 MB'; return; }
+      upStatus.textContent = f.name + ': wird hochgeladen und von der KI gelesen …';
+      var reader = new FileReader();
+      reader.onload = function () {
+        var b64 = String(reader.result).split(',')[1];
+        finFetch({
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ op: 'upload', filename: f.name, mime: f.type || 'application/pdf', data: b64 })
+        }).then(function (d) {
+          var x = d.expense || {};
+          upStatus.textContent = f.name + ': ✓ erkannt — ' + (x.vendor || '?') + ', ' + fmtEur(x.amount_cents || 0) +
+            (x.status === 'unsicher' ? ' (unsicher, bitte prüfen)' : '');
+          loadFinance();
+        }).catch(function () {
+          upStatus.textContent = f.name + ': Fehler beim Verarbeiten — nochmal versuchen.';
+        });
+      };
+      reader.readAsDataURL(f);
+    });
+  }
+
+  // --- Korrektur-Modal ---
+  var editModal = document.getElementById('editModal'), editId = null;
+  function openEdit(e) {
+    editId = e.id;
+    document.getElementById('eVendor').value = e.vendor || '';
+    document.getElementById('eDate').value = e.invoice_date || '';
+    document.getElementById('eAmount').value = (e.amount_cents / 100).toFixed(2);
+    document.getElementById('eCat').value = e.category;
+    editModal.hidden = false;
+  }
+  document.getElementById('eCancel').addEventListener('click', function () { editModal.hidden = true; });
+  document.getElementById('editForm').addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    finFetch({
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        op: 'update', id: editId,
+        vendor: document.getElementById('eVendor').value.trim(),
+        invoice_date: document.getElementById('eDate').value,
+        amount_cents: Math.round(parseFloat(document.getElementById('eAmount').value || '0') * 100),
+        category: document.getElementById('eCat').value
+      })
+    }).then(function () { editModal.hidden = true; loadFinance(); });
   });
 
   // Auto-Login, wenn der Schlüssel in dieser Browser-Sitzung schon stimmt
