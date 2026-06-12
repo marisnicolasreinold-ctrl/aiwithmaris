@@ -117,6 +117,7 @@ tr.unsicher td{color:var(--amber)}
   <nav class="tabs">
     <button class="tbtn active" data-tab="overview" type="button">Übersicht</button>
     <button class="tbtn" data-tab="finance" type="button">Finanzen</button>
+    <button class="tbtn" data-tab="docs" type="button">Dokumente</button>
   </nav>
 
   <div id="tab-overview">
@@ -188,6 +189,22 @@ tr.unsicher td{color:var(--amber)}
       <tbody id="expRows"></tbody></table>
     </div>
   </div><!-- /tab-finance -->
+
+  <div id="tab-docs" hidden>
+    <div class="panel" style="margin-bottom:14px">
+      <h2>Dokument ablegen</h2>
+      <label class="drop" id="docDrop">
+        <input type="file" id="docInput" multiple hidden />
+        Wichtige Dokumente hierher ziehen oder klicken — sie landen in deinem privaten Speicher (max. 20 MB pro Datei).
+      </label>
+      <div class="upstatus" id="docStatus"></div>
+    </div>
+    <div class="panel">
+      <h2>Deine Dokumente</h2>
+      <table><thead><tr><th>Name</th><th>Abgelegt am</th><th class="r">Größe</th><th class="r">Aktionen</th></tr></thead>
+      <tbody id="docRows"></tbody></table>
+    </div>
+  </div><!-- /tab-docs -->
 </div>
 
 <div class="modal" id="editModal" hidden>
@@ -220,9 +237,10 @@ tr.unsicher td{color:var(--amber)}
     'https://amrdmnnijbfwtrjcpocl.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtcmRtbm5pamJmd3RyamNwb2NsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTU0OTcsImV4cCI6MjA5NjQzMTQ5N30.y-9eLzeQKDlHzSG3_ro-ThAnnpnAEKLTWS8NMrpSXCI'
   );
+  var DOCS = 'https://amrdmnnijbfwtrjcpocl.supabase.co/functions/v1/docs';
   var login = document.getElementById('login'), dash = document.getElementById('dash');
   var errEl = document.getElementById('loginErr');
-  var lastReport = null, finLoaded = false;
+  var lastReport = null, finLoaded = false, docsLoaded = false;
 
   function getToken() {
     return sb.auth.getSession().then(function (r) {
@@ -346,9 +364,11 @@ tr.unsicher td{color:var(--amber)}
   tabBtns.forEach(function (b) {
     b.addEventListener('click', function () {
       tabBtns.forEach(function (x) { x.classList.toggle('active', x === b); });
-      document.getElementById('tab-overview').hidden = b.dataset.tab !== 'overview';
-      document.getElementById('tab-finance').hidden = b.dataset.tab !== 'finance';
+      ['overview', 'finance', 'docs'].forEach(function (t) {
+        document.getElementById('tab-' + t).hidden = b.dataset.tab !== t;
+      });
       if (b.dataset.tab === 'finance' && !finLoaded) loadFinance();
+      if (b.dataset.tab === 'docs' && !docsLoaded) loadDocs();
     });
   });
 
@@ -502,6 +522,97 @@ tr.unsicher td{color:var(--amber)}
       })
     }).then(function () { editModal.hidden = true; loadFinance(); });
   });
+
+  // ===================== Dokumente =====================
+  function docsFetch(opts) {
+    opts = opts || {};
+    return getToken().then(function (token) {
+      opts.headers = Object.assign({ 'Authorization': 'Bearer ' + token }, opts.headers || {});
+      return fetch(DOCS + (opts.qs || ''), opts);
+    }).then(function (r) {
+      if (!r.ok) throw new Error('Docs ' + r.status);
+      return r.json();
+    });
+  }
+  function fmtSize(b) {
+    if (b >= 1048576) return (b / 1048576).toFixed(1).replace('.', ',') + ' MB';
+    if (b >= 1024) return Math.round(b / 1024) + ' KB';
+    return b + ' B';
+  }
+
+  function loadDocs() {
+    docsFetch({ qs: '?op=list' }).then(function (d) {
+      docsLoaded = true;
+      renderDocs(d.documents || []);
+    }).catch(function () {
+      document.getElementById('docRows').innerHTML = '<tr><td colspan="4">Konnte Dokumente nicht laden — bitte neu einloggen.</td></tr>';
+    });
+  }
+
+  function renderDocs(docs) {
+    var tb = document.getElementById('docRows'); tb.innerHTML = '';
+    docs.forEach(function (doc) {
+      var tr = document.createElement('tr');
+      var nm = document.createElement('td'); nm.textContent = doc.name; tr.appendChild(nm);
+      var dt = document.createElement('td');
+      dt.textContent = new Date(doc.created_at).toLocaleDateString('de-DE') + ' ' +
+        new Date(doc.created_at).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+      tr.appendChild(dt);
+      var sz = document.createElement('td'); sz.className = 'r'; sz.textContent = fmtSize(doc.size_bytes); tr.appendChild(sz);
+      var act = document.createElement('td'); act.className = 'r';
+      var wrap = document.createElement('div'); wrap.className = 'act';
+      var bOpen = document.createElement('button'); bOpen.type = 'button'; bOpen.textContent = 'Öffnen';
+      bOpen.addEventListener('click', function () {
+        docsFetch({ qs: '?op=file&id=' + doc.id }).then(function (d) { if (d.url) window.open(d.url, '_blank'); });
+      });
+      var bRen = document.createElement('button'); bRen.type = 'button'; bRen.textContent = '✎'; bRen.title = 'Umbenennen';
+      bRen.addEventListener('click', function () {
+        var name = prompt('Neuer Name:', doc.name);
+        if (!name || name.trim() === doc.name) return;
+        docsFetch({ method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ op: 'rename', id: doc.id, name: name.trim() }) }).then(loadDocs);
+      });
+      var bDel = document.createElement('button'); bDel.type = 'button'; bDel.textContent = '✕'; bDel.title = 'Löschen';
+      bDel.addEventListener('click', function () {
+        if (!confirm('"' + doc.name + '" wirklich löschen?')) return;
+        docsFetch({ method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ op: 'delete', id: doc.id }) }).then(loadDocs);
+      });
+      wrap.appendChild(bOpen); wrap.appendChild(bRen); wrap.appendChild(bDel);
+      act.appendChild(wrap); tr.appendChild(act);
+      tb.appendChild(tr);
+    });
+    if (!docs.length) tb.innerHTML = '<tr><td colspan="4">Noch keine Dokumente — leg oben das erste ab.</td></tr>';
+  }
+
+  var docDrop = document.getElementById('docDrop'), docInput = document.getElementById('docInput');
+  var docStatus = document.getElementById('docStatus');
+  docDrop.addEventListener('dragover', function (e) { e.preventDefault(); docDrop.classList.add('over'); });
+  docDrop.addEventListener('dragleave', function () { docDrop.classList.remove('over'); });
+  docDrop.addEventListener('drop', function (e) {
+    e.preventDefault(); docDrop.classList.remove('over');
+    handleDocFiles(e.dataTransfer.files);
+  });
+  docInput.addEventListener('change', function () { handleDocFiles(docInput.files); docInput.value = ''; });
+
+  function handleDocFiles(files) {
+    Array.prototype.slice.call(files).forEach(function (f) {
+      if (f.size > 20 * 1024 * 1024) { docStatus.textContent = f.name + ': größer als 20 MB'; return; }
+      docStatus.textContent = f.name + ': wird abgelegt …';
+      var reader = new FileReader();
+      reader.onload = function () {
+        var b64 = String(reader.result).split(',')[1];
+        docsFetch({
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ op: 'upload', filename: f.name, mime: f.type || 'application/octet-stream', data: b64 })
+        }).then(function () {
+          docStatus.textContent = f.name + ': ✓ abgelegt';
+          loadDocs();
+        }).catch(function () {
+          docStatus.textContent = f.name + ': Fehler — nochmal versuchen.';
+        });
+      };
+      reader.readAsDataURL(f);
+    });
+  }
 
   // Auto-Login: bestehende Session wird von supabase-js gehalten und erneuert
   getToken().then(function (token) { if (token) load(false); });
