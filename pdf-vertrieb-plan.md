@@ -23,7 +23,10 @@ Rechnungen **und Umsatzsteuer** (kein Mehraufwand für dich). Größter Hebel:
 das **Affiliate-Netzwerk** — andere bewerben deine Guides gegen Provision.
 
 - Gebühr: 7,9 % + 1 € pro Verkauf — bei 29 € bleiben ~25,70 €.
-- [ ] Account anlegen (Maris), Produkte mit bestehenden PDFs einstellen
+- [x] Account vorhanden (12.06.2026)
+- [x] Produkttexte fertig: „Digistore24 · Produkttexte“ liegt im Dokumente-Tab
+      (Titel, Beschreibung, Bullets, Preise, Einstell-Hinweise je Produkt)
+- [ ] Produkte mit bestehenden PDFs einstellen (Maris, Texte einfügen)
 - [ ] Affiliate-Provision festlegen (Empfehlung: 30–40 %, Infoprodukt-üblich)
 - [ ] Verkaufsseite = bestehende /guide-Texte wiederverwenden
 - [ ] Lieferung: PDF-Upload direkt bei Digistore24 (eigene Kopie je Kanal,
@@ -40,15 +43,31 @@ gesucht. **Aber zwei Haken:**
    positionieren (z. B. 9,99 €) als „Einstiegsversion" — im Buch klar auf
    die Vollversion mit Vorlagen-Paket im eigenen Shop verweisen
    (Vorlagen/Checklisten als Download-Link auf aiwithmaris.com = Lead-Kanal).
-- [ ] EPUB-Export in `render-ebook.mjs` ergänzen
-- [ ] KDP-Konto (Maris: Steuerinterview, Bankverbindung)
-- [ ] Hauptguide DE + EN als Test, danach die Vertiefungen
+- [x] EPUB-Export gebaut (12.06.2026): `scripts/og/render-epub.mjs` + Edge
+      Function `export-epub` — alle 8 EPUBs (4 Bücher × DE/EN) liegen fertig
+      im Dokumente-Tab des Cockpits.
+- [x] Hauptguide-Manuskript rekonstruiert (12.06.2026): Das fehlende
+      Quell-Markdown wurde aus den fertigen PDFs (DE + EN) wiederhergestellt
+      und liegt wieder im privaten Storage (`guides/sources/ki-guide-de.md`
+      bzw. `ai-guide-en.md`) — damit sind auch die Hauptguide-EPUBs gebaut
+      (je 17 Kapitel).
+- [x] KDP-Konto vorhanden
+- [x] Produkttexte DE + EN fertig (12.06.2026): „Amazon KDP & Gumroad ·
+      Produkttexte (DE + EN)" liegt im Dokumente-Tab (Beschreibungen +
+      Keywords je Buch, beide Sprachen)
+- [x] Marketing-Cover fertig (12.06.2026): 8 Stück (4 Bücher × DE/EN,
+      1600×2560 JPG, Marken-Look) — liegen im Dokumente-Tab;
+      Generator: scripts/og/generate-kdp-covers.mjs
+- [ ] Bücher bei KDP einstellen: Hauptguide DE + EN als Test, danach die
+      Vertiefungen (EPUBs, Cover und Produkttexte liegen alle im Dokumente-Tab)
 - [ ] **Kein** KDP Select (verlangt Exklusivität — kollidiert mit eigenem Shop)
 
 ## Kanal 3 — Gumroad (englischer Markt, ~½ Tag)
 
 **Warum:** International Standard für Indie-Digitalprodukte, englischsprachige
 Käufer, einfache Einrichtung. 10 % + 0,30 $ Gebühr.
+- [x] EN-Produkttexte, USD-Preise und Profil-Bio fertig (12.06.2026) —
+      im selben Dokument „Amazon KDP & Gumroad · Produkttexte (DE + EN)"
 - [ ] EN-Ausgaben (Guide, Library) einstellen, Preise in USD
 - [ ] Profil verlinkt auf aiwithmaris.com (EN-Version)
 
