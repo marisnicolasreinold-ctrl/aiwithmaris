@@ -14,7 +14,8 @@ name: Täglicher Blog-Artikel
 on:
   schedule:
     # 04:30 UTC = 06:30 deutscher Sommerzeit / 05:30 Winterzeit
-    - cron: "30 4 * * *"
+    # 1-5 = Montag bis Freitag (am Wochenende erscheint kein Artikel)
+    - cron: "30 4 * * 1-5"
   workflow_dispatch:
     inputs:
       mode:
