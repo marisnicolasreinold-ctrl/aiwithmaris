@@ -1,9 +1,10 @@
 # Blog — so funktioniert er (ohne API-Key)
 
-Jeden Morgen (06:30 Sommerzeit / 05:30 Winterzeit) veröffentlicht GitHub
-Actions automatisch den nächsten vorbereiteten Artikel aus der Warteschlange
-`blog/queue/` — auf Deutsch und Englisch. Vercel deployt den Commit, der
-Artikel ist sofort live. **Es wird kein Anthropic-API-Key benötigt.**
+An jedem Werktag (Montag bis Freitag, 06:30 Sommerzeit / 05:30 Winterzeit)
+veröffentlicht GitHub Actions automatisch den nächsten vorbereiteten Artikel
+aus der Warteschlange `blog/queue/` — auf Deutsch und Englisch. Am Wochenende
+erscheint nichts. Vercel deployt den Commit, der Artikel ist sofort live.
+**Es wird kein Anthropic-API-Key benötigt.**
 
 ## Der Wochenrhythmus
 
