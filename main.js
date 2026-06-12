@@ -235,3 +235,20 @@ document.querySelectorAll('svg').forEach(s => {
     try { v.pause(); } catch (e) {}
   });
 })();
+
+// === Anonyme, cookielose Reichweitenmessung ===
+// Zählt nur Seitenaufrufe (Pfad + Tag) — keine Cookies, kein Profil.
+// Respektiert "Do Not Track" und zählt nur auf den echten Domains.
+(function () {
+  if (navigator.doNotTrack === '1' || window.doNotTrack === '1' || navigator.globalPrivacyControl) return;
+  if (!/(^|\.)aiwithmaris\.(com|de)$/.test(location.hostname)) return;
+  var path = location.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+  try {
+    fetch('https://amrdmnnijbfwtrjcpocl.supabase.co/functions/v1/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ path: path }),
+      keepalive: true
+    }).catch(function () { /* Zählung ist optional */ });
+  } catch (e) { /* egal */ }
+})();
