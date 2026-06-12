@@ -23,7 +23,10 @@ Rechnungen **und Umsatzsteuer** (kein Mehraufwand für dich). Größter Hebel:
 das **Affiliate-Netzwerk** — andere bewerben deine Guides gegen Provision.
 
 - Gebühr: 7,9 % + 1 € pro Verkauf — bei 29 € bleiben ~25,70 €.
-- [ ] Account anlegen (Maris), Produkte mit bestehenden PDFs einstellen
+- [x] Account vorhanden (12.06.2026)
+- [x] Produkttexte fertig: „Digistore24 · Produkttexte“ liegt im Dokumente-Tab
+      (Titel, Beschreibung, Bullets, Preise, Einstell-Hinweise je Produkt)
+- [ ] Produkte mit bestehenden PDFs einstellen (Maris, Texte einfügen)
 - [ ] Affiliate-Provision festlegen (Empfehlung: 30–40 %, Infoprodukt-üblich)
 - [ ] Verkaufsseite = bestehende /guide-Texte wiederverwenden
 - [ ] Lieferung: PDF-Upload direkt bei Digistore24 (eigene Kopie je Kanal,
@@ -46,7 +49,10 @@ gesucht. **Aber zwei Haken:**
       kein Quell-Manuskript im Storage (nur das fertige PDF) — für die
       Kindle-Ausgabe des Hauptguides muss das Manuskript erst wieder
       hochgeladen oder rekonstruiert werden.
-- [ ] KDP-Konto (Maris: Steuerinterview, Bankverbindung)
+- [x] KDP-Konto vorhanden
+- [x] Marketing-Cover fertig (12.06.2026): 8 Stück (4 Bücher × DE/EN,
+      1600×2560 JPG, Marken-Look) — liegen im Dokumente-Tab;
+      Generator: scripts/og/generate-kdp-covers.mjs
 - [ ] Hauptguide DE + EN als Test, danach die Vertiefungen
 - [ ] **Kein** KDP Select (verlangt Exklusivität — kollidiert mit eigenem Shop)
 
