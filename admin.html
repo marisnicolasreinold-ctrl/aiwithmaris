@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#05060c" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Cockpit — AI with Maris</title>
+<link rel="icon" type="image/png" href="./assets/logo-axon.png" />
+<link rel="stylesheet" href="./assets/fonts/fonts.css" />
+<style>
+:root{--bg:#05060c;--cyan:#5ef0ff;--violet:#7c5cff;--pink:#ff5ea8;--green:#5cff9d;--amber:#ffcc55;
+  --text:#eef1fa;--muted:rgba(238,241,250,.62);--line:rgba(238,241,250,.10);--focus:#5ef0ff;
+  --display:'Sora',sans-serif;--body:'Manrope',sans-serif;--mono:'Space Mono',monospace;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--body);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(closest-side at 12% 0%,rgba(94,240,255,.10),transparent 60%),radial-gradient(closest-side at 90% 8%,rgba(124,92,255,.10),transparent 60%)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1100px;margin:0 auto;padding:28px 22px 60px}
+header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:26px}
+h1{font-family:var(--display);font-weight:800;font-size:1.5rem;letter-spacing:-.02em}
+h1 span{background:linear-gradient(110deg,var(--cyan),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+.meta{font-family:var(--mono);font-size:.66rem;letter-spacing:.05em;color:var(--muted)}
+.btn{font-family:var(--body);font-weight:600;font-size:.86rem;padding:9px 16px;border-radius:24px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer}
+.btn:hover{border-color:rgba(94,240,255,.5)}
+.btn.primary{color:#04050a;background:linear-gradient(110deg,var(--cyan),var(--violet));border-color:transparent;font-weight:700}
+/* Login */
+#login{min-height:80vh;display:flex;align-items:center;justify-content:center}
+.lcard{width:min(380px,calc(100vw - 44px));text-align:center;background:rgba(10,12,24,.85);border:1px solid var(--line);border-radius:22px;padding:36px 30px;box-shadow:0 40px 90px rgba(0,0,0,.6)}
+.lcard p{color:var(--muted);font-size:.86rem;margin:10px 0 18px}
+.lcard input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);font:inherit;text-align:center;letter-spacing:.08em}
+.lcard input:focus{outline:1px solid var(--focus)}
+.lcard .btn{width:100%;margin-top:12px;padding:12px}
+.err{color:var(--pink);font-size:.8rem;margin-top:10px;min-height:1.2em}
+/* Dashboard */
+#dash[hidden],#login[hidden]{display:none}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:18px}
+.card{padding:16px 18px;border-radius:16px;border:1px solid var(--line);background:linear-gradient(160deg,rgba(255,255,255,.045),rgba(255,255,255,.01))}
+.card .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.card .v{font-family:var(--display);font-weight:800;font-size:1.7rem;margin-top:6px;font-variant-numeric:tabular-nums}
+.card .v small{font-size:.85rem;color:var(--muted);font-weight:400}
+.card.hl .v{color:var(--cyan)}
+.grid2{display:grid;grid-template-columns:1.25fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:860px){.grid2{grid-template-columns:1fr}}
+.panel{padding:18px;border-radius:16px;border:1px solid var(--line);background:linear-gradient(160deg,rgba(255,255,255,.04),rgba(255,255,255,.01))}
+.panel h2{font-family:var(--display);font-weight:700;font-size:.95rem;margin-bottom:14px}
+table{width:100%;border-collapse:collapse;font-size:.84rem}
+td,th{text-align:left;padding:7px 6px;border-bottom:1px solid var(--line)}
+th{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;font-weight:400}
+td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
+.bars{display:flex;align-items:flex-end;gap:5px;height:120px;margin-top:6px}
+.bars .b{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px;min-width:0}
+.bars .b i{display:block;width:100%;border-radius:4px 4px 2px 2px;background:linear-gradient(180deg,var(--cyan),rgba(94,240,255,.25));min-height:2px}
+.bars .b.u i{background:linear-gradient(180deg,var(--violet),rgba(124,92,255,.25))}
+.bars .b span{font-family:var(--mono);font-size:.52rem;color:var(--muted);white-space:nowrap}
+.rowlist{display:flex;flex-direction:column;gap:8px}
+.rowlist .rl{display:flex;align-items:center;gap:10px;font-size:.84rem}
+.rowlist .rl .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--mono);font-size:.74rem}
+.rowlist .rl .bar{flex:2;height:6px;border-radius:5px;background:rgba(238,241,250,.08);overflow:hidden}
+.rowlist .rl .bar i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,var(--cyan),var(--violet))}
+.rowlist .rl .n{font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:.74rem;color:var(--muted);width:46px;text-align:right}
+.legend{font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:3px;vertical-align:-1px;margin:0 4px 0 10px}
+.live{font-family:var(--mono);font-size:.64rem;letter-spacing:.06em;color:var(--green)}
+.live.test{color:var(--amber)}
+</style>
+</head>
+<body>
+
+<div id="login">
+  <form class="lcard" id="loginForm">
+    <h1>Maris-<span>Cockpit</span></h1>
+    <p>Private Übersicht: Verkäufe &amp; Besucher. Zugriff nur mit Schlüssel.</p>
+    <input type="password" id="keyInput" placeholder="Zugangsschlüssel" autocomplete="current-password" autofocus />
+    <button class="btn primary" type="submit">Einloggen</button>
+    <div class="err" id="loginErr"></div>
+  </form>
+</div>
+
+<div class="wrap" id="dash" hidden>
+  <header>
+    <div>
+      <h1>Maris-<span>Cockpit</span></h1>
+      <div class="meta" id="genAt"></div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <span class="live" id="modeChip"><i></i>LIVE</span>
+      <button class="btn" id="reloadBtn" type="button">Aktualisieren</button>
+      <button class="btn" id="logoutBtn" type="button">Abmelden</button>
+    </div>
+  </header>
+
+  <div class="cards">
+    <div class="card hl"><div class="k">Umsatz gesamt</div><div class="v" id="cRevenue">—</div></div>
+    <div class="card"><div class="k">Verkäufe</div><div class="v" id="cSales">—</div></div>
+    <div class="card"><div class="k">Conversion Checkout</div><div class="v" id="cConv">—</div></div>
+    <div class="card hl"><div class="k">Besucher heute</div><div class="v" id="cVisToday">—</div></div>
+    <div class="card"><div class="k">Besucher 7 Tage</div><div class="v" id="cVis7">—</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <h2>Besucher · letzte 14 Tage</h2>
+      <div class="bars" id="visBars"></div>
+      <div class="legend">Balken pro Tag:<i style="background:var(--cyan)"></i>Aufrufe<i style="background:var(--violet)"></i>eindeutige Besucher</div>
+    </div>
+    <div class="panel">
+      <h2>Top-Seiten · 7 Tage</h2>
+      <div class="rowlist" id="topPages"></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <h2>Letzte Verkäufe</h2>
+      <table><thead><tr><th>Datum</th><th>Produkt</th><th>E-Mail</th><th class="r">Betrag</th></tr></thead>
+      <tbody id="salesRows"></tbody></table>
+    </div>
+    <div class="panel">
+      <h2>Verkäufe nach Produkt</h2>
+      <div class="rowlist" id="byProduct"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var API = 'https://amrdmnnijbfwtrjcpocl.supabase.co/functions/v1/sales-report';
+  var KEY = 'aiwm_admin_key';
+  var login = document.getElementById('login'), dash = document.getElementById('dash');
+  var errEl = document.getElementById('loginErr');
+
+  function fmtEur(cents) { return (cents / 100).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }); }
+  function fmtDay(d) { return d.slice(8, 10) + '.' + d.slice(5, 7) + '.'; }
+
+  function load(key, fromForm) {
+    errEl.textContent = '';
+    fetch(API, { headers: { 'x-report-key': key } }).then(function (res) {
+      if (res.status === 401) throw new Error('Falscher Schlüssel.');
+      if (res.status === 429) throw new Error('Zu viele Versuche — kurz warten.');
+      if (!res.ok) throw new Error('Report nicht erreichbar (' + res.status + ').');
+      return res.json();
+    }).then(function (d) {
+      try { sessionStorage.setItem(KEY, key); } catch (e) { /* egal */ }
+      render(d);
+      login.hidden = true; dash.hidden = false;
+    }).catch(function (e) {
+      try { sessionStorage.removeItem(KEY); } catch (er) { /* egal */ }
+      login.hidden = false; dash.hidden = true;
+      if (fromForm) errEl.textContent = e.message;
+    });
+  }
+
+  function render(d) {
+    document.getElementById('genAt').textContent = 'Stand: ' + new Date(d.generatedAt).toLocaleString('de-DE');
+    var mode = document.getElementById('modeChip');
+    mode.textContent = d.livemode ? 'LIVE' : 'TESTMODUS';
+    mode.classList.toggle('test', !d.livemode);
+    var eur = (d.revenue && d.revenue.EUR) || 0;
+    document.getElementById('cRevenue').textContent = fmtEur(eur);
+    document.getElementById('cSales').textContent = d.paidCount;
+    document.getElementById('cConv').textContent = d.conversion + ' %';
+    var v = d.visitors || { today: {}, last7: {}, viewsPerDay: {}, uniquesPerDay: {}, topPages: [] };
+    document.getElementById('cVisToday').innerHTML = (v.today.uniques || 0) + ' <small>· ' + (v.today.views || 0) + ' Aufrufe</small>';
+    document.getElementById('cVis7').innerHTML = (v.last7.uniques || 0) + ' <small>· ' + (v.last7.views || 0) + ' Aufrufe</small>';
+
+    // Besucher-Balken: 14 Tage, je Tag zwei Balken (Aufrufe + Uniques)
+    var bars = document.getElementById('visBars'); bars.innerHTML = '';
+    var days = [];
+    for (var i = 13; i >= 0; i--) days.push(new Date(Date.now() - i * 864e5).toISOString().slice(0, 10));
+    var max = 1;
+    days.forEach(function (day) { max = Math.max(max, v.viewsPerDay[day] || 0); });
+    days.forEach(function (day) {
+      [['', v.viewsPerDay[day] || 0, true], ['u', v.uniquesPerDay[day] || 0, false]].forEach(function (cfg) {
+        var b = document.createElement('div'); b.className = 'b ' + cfg[0];
+        var bar = document.createElement('i'); bar.style.height = Math.max(2, Math.round(cfg[1] / max * 92)) + 'px';
+        b.appendChild(bar);
+        var lbl = document.createElement('span'); lbl.textContent = cfg[2] ? fmtDay(day) : '';
+        b.appendChild(lbl);
+        b.title = day + ': ' + cfg[1] + (cfg[2] ? ' Aufrufe' : ' Besucher');
+        bars.appendChild(b);
+      });
+    });
+
+    // Top-Seiten
+    var tp = document.getElementById('topPages'); tp.innerHTML = '';
+    var tMax = (v.topPages[0] && v.topPages[0][1]) || 1;
+    v.topPages.forEach(function (row) {
+      var div = document.createElement('div'); div.className = 'rl';
+      div.innerHTML = '<span class="nm"></span><span class="bar"><i style="width:' + Math.round(row[1] / tMax * 100) + '%"></i></span><span class="n">' + row[1] + '</span>';
+      div.querySelector('.nm').textContent = row[0];
+      tp.appendChild(div);
+    });
+    if (!v.topPages.length) tp.innerHTML = '<div class="rl"><span class="nm">Noch keine Daten</span></div>';
+
+    // Letzte Verkäufe
+    var tb = document.getElementById('salesRows'); tb.innerHTML = '';
+    (d.recent || []).forEach(function (s) {
+      var tr = document.createElement('tr');
+      var dt = new Date(s.created * 1000);
+      [dt.toLocaleDateString('de-DE') + ' ' + dt.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }),
+       s.product, s.email || '—'].forEach(function (txt) {
+        var td = document.createElement('td'); td.textContent = txt; tr.appendChild(td);
+      });
+      var amt = document.createElement('td'); amt.className = 'r'; amt.textContent = fmtEur(s.amount); tr.appendChild(amt);
+      tb.appendChild(tr);
+    });
+    if (!(d.recent || []).length) tb.innerHTML = '<tr><td colspan="4">Noch keine Verkäufe</td></tr>';
+
+    // Nach Produkt
+    var bp = document.getElementById('byProduct'); bp.innerHTML = '';
+    var entries = Object.entries(d.byProduct || {}).sort(function (a, b) { return b[1] - a[1]; });
+    var pMax = (entries[0] && entries[0][1]) || 1;
+    entries.forEach(function (row) {
+      var div = document.createElement('div'); div.className = 'rl';
+      div.innerHTML = '<span class="nm"></span><span class="bar"><i style="width:' + Math.round(row[1] / pMax * 100) + '%"></i></span><span class="n">' + row[1] + '×</span>';
+      div.querySelector('.nm').textContent = row[0];
+      bp.appendChild(div);
+    });
+    if (!entries.length) bp.innerHTML = '<div class="rl"><span class="nm">Noch keine Verkäufe</span></div>';
+  }
+
+  document.getElementById('loginForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var k = document.getElementById('keyInput').value.trim();
+    if (k) load(k, true);
+  });
+  document.getElementById('reloadBtn').addEventListener('click', function () {
+    var k = ''; try { k = sessionStorage.getItem(KEY) || ''; } catch (e) { /* egal */ }
+    if (k) load(k, false);
+  });
+  document.getElementById('logoutBtn').addEventListener('click', function () {
+    try { sessionStorage.removeItem(KEY); } catch (e) { /* egal */ }
+    dash.hidden = true; login.hidden = false;
+    document.getElementById('keyInput').value = '';
+  });
+
+  // Auto-Login, wenn der Schlüssel in dieser Browser-Sitzung schon stimmt
+  var saved = ''; try { saved = sessionStorage.getItem(KEY) || ''; } catch (e) { /* egal */ }
+  if (saved) load(saved, false);
+})();
+</script>
+</body>
+</html>

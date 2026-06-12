@@ -286,3 +286,18 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();
+
+// === Anonyme, cookielose Reichweitenmessung (wie main.js) ===
+(function () {
+  if (navigator.doNotTrack === '1' || window.doNotTrack === '1' || navigator.globalPrivacyControl) return;
+  if (!/(^|\.)aiwithmaris\.(com|de)$/.test(location.hostname)) return;
+  var path = location.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+  try {
+    fetch('https://amrdmnnijbfwtrjcpocl.supabase.co/functions/v1/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ path: path }),
+      keepalive: true
+    }).catch(function () { /* Zählung ist optional */ });
+  } catch (e) { /* egal */ }
+})();
