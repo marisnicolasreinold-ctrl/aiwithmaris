@@ -1,10 +1,22 @@
 # Launch-Runbook: „Der KI-Workflow für Lehrkräfte" (Produkt-Key `lehrer-de`)
 
-Stand 12.06.2026. Website-Seite (guide.html, danke.html, i18n.js, Blog-Post,
-Cover, Produkttexte) ist auf dem Branch fertig. Dieses Runbook enthält die
-**Produktions-Schritte**, die bewusst eine Freigabe von Maris brauchen
-(Live-Stripe + Supabase-Deploys). Reihenfolge einhalten — die Website darf erst
-auf main, wenn Schritt 1–4 erledigt sind, sonst läuft der Kauf-Button ins Leere.
+> **STATUS: AUSGEFÜHRT am 13.06.2026.** Manuskript + PDF liegen im privaten
+> Bucket, Stripe-Live-Produkt/-Preis/-Link sind angelegt, `checkout` (v5) und
+> `download` (v5) kennen `lehrer-de`, der Live-Checkout wurde verifiziert
+> (`cs_live_…`), und die Setup-Function ist wieder stillgelegt (410).
+> Einzige offene Punkte: Branch nach main mergen + manuelle Marktplatz-Uploads
+> (Digistore24/KDP) + Testkauf. Live-Werte siehe `pdf-verkauf-todo.md`.
+>
+> Das Manuskript wurde via Setup-Function übertragen: gzip → base64 → in
+> ~2500-Zeichen-Stücke geschnitten, je Stück per `pg_net`-`http_post` an die
+> Function geschickt, mit SHA-256 pro Stück verifiziert (drei fehlerhaft
+> übertragene Stücke wurden gezielt neu gesendet), dann serverseitig
+> zusammengefügt + entpackt (End-SHA == lokale Datei) und gerendert.
+
+Das folgende Runbook dokumentiert die ausgeführten Schritte (zur Reproduktion
+für die EN-Ausgabe oder weitere Titel). Reihenfolge einhalten — die Website
+darf erst auf main, wenn Schritt 1–4 erledigt sind, sonst läuft der Kauf-Button
+ins Leere.
 
 Das Manuskript liegt NICHT im Repo (öffentliches Repo!) — es wurde als Datei in
 den Chat geliefert (`lehrer-ki-workflow-de.md`) und gehört nach

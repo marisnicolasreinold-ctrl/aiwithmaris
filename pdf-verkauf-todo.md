@@ -82,25 +82,37 @@ Datei-Schlüssel in `metadata[files]` (Download-Function):
 `makeorbuy-en` (+ bestehend `de`, `en`). Verkaufsseite: guide.html
 (Abschnitt „Die Vertiefungs-Leitfäden"), Download-Labels: danke.html.
 
-## Neu: „Der KI-Workflow für Lehrkräfte" (12.06.2026 — VORBEREITET, wartet auf Freigabe)
+## Neu: „Der KI-Workflow für Lehrkräfte" (LIVE seit 13.06.2026)
 
 Fünfter Titel, neue Zielgruppe (Lehrkräfte): 68 Seiten, 20 Kapitel, 30+
 Kopiervorlagen. Produkt-Key `lehrer-de`, 19 € (DE; EN-Ausgabe folgt).
-KDP-Preis: 9,99 €.
+KDP-Preis-Empfehlung: 9,99 €.
 
-- ✅ Manuskript geschrieben (Markdown-Dialekt; NICHT im Repo — als Datei im
-  Claude-Chat geliefert, Ziel: `guides/sources/lehrer-ki-workflow-de.md`)
-- ✅ PDF lokal gebaut & geprüft (68 Seiten, 245 KB), EPUB gebaut (137 KB)
-- ✅ KDP-Cover: `marketing/kdp/cover-lehrer-ki-workflow-de.jpg` (1600×2560)
-- ✅ Website auf Branch: Banner auf guide.html (#lehrkraefte), danke.html-Label,
-  i18n (DE/EN), JSON-LD-Offer, Blog-Ankündigung in der Queue
-- ✅ Produkttexte Digistore24 + KDP: `marketing/lehrer-listing.md`
-- ⬜ **Produktion (braucht Freigabe von Maris):** Stripe-Live-Produkt + Preis,
-  Manuskript/PDF in den privaten Bucket, checkout-/download-/export-epub-
-  Functions erweitern — komplettes Runbook mit fertiger Setup-Function:
-  `scripts/edge/README.md` + `scripts/edge/admin-setup-lehrer/`
-- ⬜ Danach: Branch mergen (Website live), Digistore24-Upload, KDP-Upload,
-  Testkauf
+| Feld | Wert |
+|---|---|
+| Stripe-Produkt (live) | `prod_Uh8RvaYmxgwyq4` |
+| Live-Price-ID (19 €) | `price_1ThkARAYfMthwvewoxTtAS91` |
+| Payment Link | https://buy.stripe.com/5kQ00i99I5Cc1uHgvTfYY07 |
+| Datei-Schlüssel | `lehrer-de` |
+| PDF im Bucket | `guides/lehrer-ki-workflow-de.pdf` (68 S., 242 KB) |
+| Manuskript im Bucket | `guides/sources/lehrer-ki-workflow-de.md` (SHA 4042484697fc…72e8e) |
+
+- ✅ Manuskript geschrieben + per Setup-Function (gzip/base64-Chunks, SHA-verifiziert)
+  in den privaten Bucket geladen — **nicht** im öffentlichen Repo.
+- ✅ PDF serverseitig gerendert (admin-setup-lehrer, render.ts-Port) → Bucket.
+- ✅ Stripe-Live-Produkt + Preis (19 €) + Payment Link angelegt.
+- ✅ `checkout` (v5) um `lehrer-de` erweitert (Live-Price direkt im PRODUCTS-Map).
+- ✅ `download` (v5) um `lehrer-de` → `lehrer-ki-workflow-de.pdf` erweitert.
+- ✅ Live verifiziert: `POST /checkout {product:"lehrer-de"}` liefert `cs_live_…`.
+- ✅ Website (Branch): Banner guide.html (#lehrkraefte), danke.html-Label,
+  i18n (DE/EN), JSON-LD-Offer, Blog-Ankündigung; KDP-Cover + Produkttexte.
+- ✅ Setup-Function `admin-setup-lehrer` nach Abschluss stillgelegt (410).
+- ⬜ **Offen (nur Maris / manuell):** Branch nach main mergen (Website live
+  schalten), echten Testkauf 19 € + Erstattung, Digistore24-Upload
+  (`marketing/lehrer-listing.md`), KDP-Upload (EPUB + Cover, 9,99 €).
+- ⬜ Optional: EPUB im Dokumente-Tab — `export-epub` BOOKS-Map um
+  `"lehrer-ki-workflow-de": "sources/lehrer-ki-workflow-de.md"` ergänzen und aus
+  dem Cockpit auslösen. EPUB liegt bereits gebaut vor (137 KB, an Maris geliefert).
 
 ## Stripe (Sandbox / Test-Modus — historisch)
 

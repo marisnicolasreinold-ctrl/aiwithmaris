@@ -4,12 +4,17 @@
 // Zufallswert ersetzen (z. B. `openssl rand -hex 24`).
 //
 // Schritte (POST {step: ...}):
-//   chunk    {id, content}  -> Manuskript-Teil nach guides/sources/_lehrer_chunk_<id>.txt
-//   assemble {count}        -> Teile zusammenfügen -> guides/sources/lehrer-ki-workflow-de.md
+//   chunk    {id, b64}      -> base64(gzip)-Teil nach guides/sources/_lehrer_chunk_<id>.txt
+//                             (Antwort enthält sha256 des Teils zur Verifikation)
+//   verify   {count}        -> sha256 je gespeichertem Teil (Integritäts-Check)
+//   assemble {count}        -> Teile zusammenfügen, base64-dekodieren + gunzip ->
+//                             guides/sources/lehrer-ki-workflow-de.md
+//                             (Antwort enthält sha256 + Bytezahl der .md)
+// Hinweis: Beim Live-Lauf (13.06.2026) wurde render.ts als zweite Bundle-Datei
+// mitdeployt (kein Remote-Import); diese Referenz nutzt den statischen Import.
 //   render   {}             -> PDF rendern -> guides/lehrer-ki-workflow-de.pdf
 //   stripe   {link?}        -> Live-Produkt + Preis 19 € (+ optional Payment Link), idempotent
-//   docs     {files:[{url,path,name,mime}]} -> Dateien (z. B. Cover von raw.githubusercontent)
-//                                              in den Dokumente-Tab laden
+//   docs     {files:[{url,path,name,mime}]} -> Dateien (z. B. Cover) in den Dokumente-Tab
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { renderPdf } from "./render.ts";
 
@@ -23,6 +28,17 @@ const SRC = "sources/lehrer-ki-workflow-de.md";
 const PDF_OBJ = "lehrer-ki-workflow-de.pdf";
 const WAIVER = "Digitales Produkt: Mit dem Kauf verlangst du die sofortige Bereitstellung des Downloads und bestätigst, dass dein Widerrufsrecht damit erlischt. Eine Rückgabe oder Erstattung ist ausgeschlossen.";
 const FOOTER = "Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.";
+
+async function sha256Hex(data: Uint8Array | string): Promise<string> {
+  const bytes = typeof data === "string" ? new TextEncoder().encode(data) : data;
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  return Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+async function gunzip(gz: Uint8Array): Promise<Uint8Array> {
+  const ds = new DecompressionStream("gzip");
+  const stream = new Response(gz).body!.pipeThrough(ds);
+  return new Uint8Array(await new Response(stream).arrayBuffer());
+}
 
 Deno.serve(async (req: Request) => {
   const json = (status: number, body: unknown) =>
@@ -42,34 +58,48 @@ Deno.serve(async (req: Request) => {
   try {
     if (step === "chunk") {
       const id = Number(body.id);
-      const content = String(body.content ?? "");
-      if (!id || !content) return json(400, { error: "id/content fehlt" });
+      const b64 = String(body.b64 ?? "");
+      if (id === undefined || Number.isNaN(id) || !b64) return json(400, { error: "id/b64 fehlt" });
       const up = await supabase.storage.from("guides").upload(
         `sources/_lehrer_chunk_${id}.txt`,
-        new TextEncoder().encode(content),
+        new TextEncoder().encode(b64),
         { contentType: "text/plain; charset=utf-8", upsert: true }
       );
       if (up.error) return json(500, { error: up.error.message });
-      return json(200, { ok: true, id, bytes: content.length });
+      return json(200, { ok: true, id, len: b64.length, sha256: await sha256Hex(b64) });
+    }
+
+    if (step === "verify") {
+      const count = Number(body.count ?? 0);
+      const out: { id: number; sha256: string | null; error?: string }[] = [];
+      for (let i = 0; i < count; i++) {
+        const dl = await supabase.storage.from("guides").download(`sources/_lehrer_chunk_${i}.txt`);
+        if (dl.error || !dl.data) { out.push({ id: i, sha256: null, error: dl.error?.message }); continue; }
+        out.push({ id: i, sha256: await sha256Hex(await dl.data.text()) });
+      }
+      return json(200, { ok: true, chunks: out });
     }
 
     if (step === "assemble") {
       const count = Number(body.count ?? 0);
-      let md = "";
-      for (let i = 1; i <= count; i++) {
+      let b64 = "";
+      for (let i = 0; i < count; i++) {
         const dl = await supabase.storage.from("guides").download(`sources/_lehrer_chunk_${i}.txt`);
         if (dl.error || !dl.data) return json(500, { error: `Chunk ${i} fehlt: ${dl.error?.message}` });
-        md += await dl.data.text();
+        b64 += await dl.data.text();
       }
-      const up = await supabase.storage.from("guides").upload(SRC, new TextEncoder().encode(md), {
+      const gz = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+      const bin = await gunzip(gz);
+      const up = await supabase.storage.from("guides").upload(SRC, bin, {
         contentType: "text/markdown; charset=utf-8", upsert: true,
       });
       if (up.error) return json(500, { error: up.error.message });
       await supabase.storage.from("guides").remove(
-        Array.from({ length: count }, (_, i) => `sources/_lehrer_chunk_${i + 1}.txt`)
+        Array.from({ length: count }, (_, i) => `sources/_lehrer_chunk_${i}.txt`)
       );
+      const md = new TextDecoder().decode(bin);
       const h1 = (md.match(/^# /gm) || []).length;
-      return json(200, { ok: true, bytes: md.length, chapters: h1 });
+      return json(200, { ok: true, bytes: bin.length, chapters: h1, sha256: await sha256Hex(bin) });
     }
 
     if (step === "render") {
