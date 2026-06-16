@@ -14,7 +14,6 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] DSGVO und KI: Was du wirklich beachten musst, bevor das erste Tool live geht
 - [ ] Die fünf Fragen, mit denen du jeden KI-Use-Case in zehn Minuten bewertest
 - [ ] Prompt-Wissen fürs Team: Die Basics, die in jedem Unternehmen sitzen sollten
 - [ ] Frühwarn-Cockpit statt Bauchgefühl: KI für Kennzahlen im Tagesgeschäft
@@ -33,6 +32,8 @@ oberste offene Thema ist immer das nächste.
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-06-16 — DSGVO und KI: Was du klären musst, bevor das erste Tool live geht (DSGVO und KI: Was du wirklich beachten musst, bevor das erste Tool live geht)
 
 - 2026-06-15 — KI-Agent im Posteingang: Was sich automatisch beantworten lässt — und was besser nicht (KI-Agent im Posteingang: Welche Anfragen sich automatisch beantworten lassen — und welche besser nicht)
 
