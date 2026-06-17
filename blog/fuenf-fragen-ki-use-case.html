@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="de" data-blog-lang="de" data-alt-url="/blog/en/fuenf-fragen-ki-use-case">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#05060c" />
+
+<title>Die fünf Fragen, mit denen du jeden KI-Use-Case in zehn Minuten bewertest — AI with Maris</title>
+<meta name="description" content="Nicht jede Idee ist ein guter erster KI-Fall. Mit fünf Fragen sortierst du in zehn Minuten, was sich lohnt — und was du dir sparst." />
+<meta name="author" content="Maris Reinold" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://aiwithmaris.com/blog/fuenf-fragen-ki-use-case" />
+<link rel="alternate" hreflang="de" href="https://aiwithmaris.com/blog/fuenf-fragen-ki-use-case" />
+<link rel="alternate" hreflang="en" href="https://aiwithmaris.com/blog/en/fuenf-fragen-ki-use-case" />
+<link rel="alternate" type="application/rss+xml" title="AI with Maris — Blog" href="https://aiwithmaris.com/blog/feed.xml" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Die fünf Fragen, mit denen du jeden KI-Use-Case in zehn Minuten bewertest" />
+<meta property="og:description" content="Nicht jede Idee ist ein guter erster KI-Fall. Mit fünf Fragen sortierst du in zehn Minuten, was sich lohnt — und was du dir sparst." />
+<meta property="og:url" content="https://aiwithmaris.com/blog/fuenf-fragen-ki-use-case" />
+<meta property="og:image" content="https://aiwithmaris.com/assets/og-axon.png" />
+<meta property="article:published_time" content="2026-06-17T09:17:14.687Z" />
+<meta property="article:author" content="Maris Reinold" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Die fünf Fragen, mit denen du jeden KI-Use-Case in zehn Minuten bewertest",
+  "description": "Nicht jede Idee ist ein guter erster KI-Fall. Mit fünf Fragen sortierst du in zehn Minuten, was sich lohnt — und was du dir sparst.",
+  "datePublished": "2026-06-17T09:17:14.687Z",
+  "inLanguage": "de",
+  "url": "https://aiwithmaris.com/blog/fuenf-fragen-ki-use-case",
+  "author": { "@type": "Person", "name": "Maris Reinold", "url": "https://aiwithmaris.com/ueber-uns.html" },
+  "publisher": { "@type": "Organization", "name": "AI with Maris", "url": "https://aiwithmaris.com" }
+}
+</script>
+
+<link rel="icon" type="image/png" href="/assets/logo-axon.png" />
+<link rel="stylesheet" href="/assets/fonts/fonts.css" />
+<link rel="stylesheet" href="/style.css" />
+<script src="/blog/blog-lang.js"></script>
+
+<style>
+.blog-prose{color:var(--muted);font-weight:300;font-size:1.04rem;line-height:1.75}
+.blog-prose p{margin:0 0 18px}
+.blog-prose h2{font-family:var(--display);font-weight:700;color:var(--text);font-size:clamp(1.3rem,2.4vw,1.7rem);letter-spacing:-.01em;line-height:1.25;margin:42px 0 14px}
+.blog-prose h3{color:var(--text);font-size:1.1rem;margin:30px 0 10px}
+.blog-prose ul,.blog-prose ol{margin:0 0 18px;padding-left:22px}
+.blog-prose li{margin-bottom:8px}
+.blog-prose strong{color:var(--text);font-weight:600}
+.blog-prose a{color:var(--text)}
+.blog-meta{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:.9rem;margin:18px 0 36px}
+.blog-back{display:inline-block;color:var(--muted);text-decoration:none;font-size:.92rem;margin-bottom:26px}
+.blog-back:hover{color:var(--text)}
+.blog-cta{margin-top:48px;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:26px 28px;background:rgba(255,255,255,.03)}
+.blog-cta h2{font-family:var(--display);font-weight:700;font-size:1.25rem;margin:0 0 8px}
+.blog-cta p{color:var(--muted);font-weight:300;margin:0 0 16px}
+</style>
+</head>
+<body>
+
+<canvas id="scene"></canvas>
+<div class="bg-glow"></div><div class="grain"></div><div class="vignette"></div>
+<div class="cursor-ring"></div><div class="cursor-dot"></div>
+
+<a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+<nav id="nav" aria-label="Hauptnavigation">
+  <div class="nav-inner">
+    <a class="logo" href="/index.html" aria-label="AI with Maris — zur Startseite"><img src="/assets/logo-axon.png" alt="" />AI with Maris</a>
+    <div class="nav-links" id="navlinks">
+      <a href="/leistungen.html">Leistungen</a>
+      <a href="/beispiele.html">Beispiele</a>
+      <a href="/guide.html">KI-Guide<span class="nav-pill">PDF</span></a>
+      <a href="/blog" class="active">Blog</a>
+      <a href="/ueber-uns.html">Über mich</a>
+      <a href="/kontakt.html" class="nav-cta">Kontakt</a>
+      <button class="lang-toggle" id="langToggle" type="button">EN</button>
+    </div>
+    <button class="burger" id="burger" type="button" aria-label="Menü öffnen" aria-expanded="false" aria-controls="navlinks"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="wrap">
+<main id="main" tabindex="-1">
+
+<section class="section-pad" style="padding-top:140px">
+  <div class="container" style="max-width:780px">
+    <a class="blog-back" href="/blog">← Alle Artikel</a>
+    <div><span class="eyebrow">Blog</span></div>
+    <h1 style="font-family:var(--display);font-weight:700;font-size:clamp(1.9rem,4vw,2.7rem);letter-spacing:-.02em;line-height:1.15;margin:16px 0 0">Die fünf Fragen, mit denen du jeden KI-Use-Case in zehn Minuten bewertest</h1>
+    <div class="blog-meta">
+      <time datetime="2026-06-17T09:17:14.687Z">17. Juni 2026</time>
+      <span>·</span>
+      <span>3 Min. Lesezeit</span>
+      <span>·</span>
+      <span>Maris Reinold</span>
+    </div>
+
+    <article class="blog-prose">
+<p>Wenn das Thema KI im Unternehmen erst einmal Fahrt aufnimmt, hast du schnell ein Luxusproblem: zu viele Ideen. Der Vertrieb will Angebote automatisieren, die Buchhaltung den Papierberg loswerden, jemand hat von einem Chatbot gehört. Alles klingt sinnvoll. Und genau das ist die Falle.</p><p>Denn die meisten Projekte scheitern nicht an der Technik. Sie scheitern daran, dass mit dem falschen Fall angefangen wird — zu groß, zu vage, zu weit weg vom Alltag. Bevor du also Budget und Wochen in eine Idee steckst, schick sie durch fünf Fragen. Das dauert zehn Minuten und erspart dir oft Monate.</p><h2>1. Passiert das oft genug?</h2><p>KI rechnet sich über Wiederholung. Eine Aufgabe, die dreimal im Jahr anfällt, ist kein Automatisierungsfall — egal wie nervig sie ist. Frag konkret: Wie oft am Tag oder in der Woche macht jemand das? Wenn die Antwort „ständig“ lautet, bist du auf der richtigen Spur. Wenn sie „kommt drauf an“ lautet, schau genauer hin.</p><h2>2. Sind die Daten schon da — und halbwegs sauber?</h2><p>Eine KI kann nur mit dem arbeiten, was sie bekommt. Liegen die nötigen Informationen schon in einem System, einer Tabelle, einem Postfach? Oder müsstest du sie erst über drei Abteilungen zusammensuchen? Use Cases, bei denen die Daten griffbereit sind, kommen Wochen schneller ins Laufen. Wenn du erst eine saubere Datenbasis schaffen musst, ist das ein eigenes Projekt — kein Detail am Rande.</p><h2>3. Was kostet ein Fehler?</h2><p>KI macht Fehler. Die Frage ist nicht ob, sondern was sie kosten. Schlägt das Tool eine falsche Produktkategorie vor, korrigiert das jemand in zwei Sekunden. Verschickt es eine falsche Mahnung an einen wichtigen Kunden, sieht die Sache anders aus. Sortiere deine Ideen danach: Wo ein Fehler billig und sichtbar ist, kannst du mutig automatisieren. Wo er teuer oder unsichtbar ist, gehört ein Mensch dazwischen.</p><h2>4. Merkt jemand den Nutzen in Wochen, nicht in Jahren?</h2><p>Ein guter erster Use Case zahlt sich sichtbar aus, solange noch alle hinschauen. „Wir sparen langfristig Kosten“ überzeugt niemanden, der morgen wieder im Tagesgeschäft steckt. „Die Anfragen, die früher drei Tage lagen, sind jetzt am selben Tag beantwortet“ — das merkt das Team sofort. Wähl den Fall, bei dem die Verbesserung greifbar ist. Nutzen beweisen, dann skalieren.</p><h2>5. Würde es jemandem wehtun, wenn es funktioniert?</h2><p>Die unbequemste Frage, aber oft die wichtigste. Manche Prozesse sind das Revier einer bestimmten Person, manche Zahlen will jemand lieber nicht so transparent. Wenn die Einführung politisch heikel ist, scheitert sie selten an der Technik — sondern am stillen Widerstand. Das heißt nicht, dass du den Fall streichen musst. Aber du solltest wissen, wen du mitnehmen musst, bevor du anfängst.</p><h2>So nutzt du die fünf Fragen</h2><p>Nimm deine Ideenliste und geh sie durch. Für jede Idee fünf kurze Antworten:</p><ul><li><strong>Häufigkeit:</strong> oft genug, dass es sich lohnt?</li><li><strong>Daten:</strong> schon da und nutzbar?</li><li><strong>Fehlerkosten:</strong> billig zu korrigieren oder gefährlich?</li><li><strong>Sichtbarer Nutzen:</strong> in Wochen spürbar?</li><li><strong>Akzeptanz:</strong> wer muss mitziehen?</li></ul><p>Die Idee, die bei den ersten vier Fragen klar gewinnt und bei der fünften niemandem wehtut, ist dein erster Use Case. Nicht die ehrgeizigste, nicht die mit dem schönsten Slide — die mit dem besten Verhältnis aus Aufwand, Nutzen und Risiko.</p><p>Klein anfangen heißt nicht klein denken. Es heißt, an einer Stelle anzufangen, an der du in ein paar Wochen etwas vorzeigen kannst — und von dort aus die nächste Stelle anzugehen. Wenn du deine konkrete Liste einmal gemeinsam durchgehen willst, ist genau das der Punkt, an dem ein kurzes Gespräch mehr bringt als das zehnte Tool-Demo. Mehr dazu im <a href="/guide.html">KI-Guide</a> oder direkt über <a href="/kontakt.html">Kontakt</a>.</p>
+    </article>
+
+    <div class="blog-cta reveal">
+      <h2>Tiefer einsteigen?</h2>
+      <p>Im KI-Guide „Anfangen, wo es zählt“ steht der komplette Fahrplan — vom ersten Use Case bis zur Skalierung. Oder schreib mir einfach direkt.</p>
+      <a href="/guide.html" class="btn btn-primary" data-hover>Zum KI-Guide <span class="arrow">→</span></a>
+      &nbsp;
+      <a href="/kontakt.html" class="btn" data-hover>Kontakt</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div><div class="logo" style="margin-bottom:16px"><img src="/assets/logo-axon.png" alt="" />AI with Maris</div>
+        <p>KI-Coaching &amp; maßgeschneiderte Software-Entwicklung — cloud-neutral, datensouverän, ohne Lock-in.</p></div>
+      <div class="foot-links">
+        <div class="foot-col"><h4>Angebot</h4><a href="/leistungen.html">Leistungen</a><a href="/beispiele.html">Beispiele</a><a href="/guide.html">KI-Guide</a><a href="/blog">Blog</a><a href="/newsletter.html">Newsletter</a><a href="/ueber-uns.html">Über mich</a></div>
+        <div class="foot-col"><h4>Kontakt</h4><a href="mailto:marisnicolasreinold@gmail.com">marisnicolasreinold@gmail.com</a><a href="/kontakt.html">Kontakt</a></div>
+        <div class="foot-col"><h4>Rechtliches</h4><a href="/impressum.html">Impressum</a><a href="/datenschutz.html">Datenschutz</a><a href="/agb.html">AGB</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 AI with Maris</span><span>Made in Germany · Cloud-neutral · Powered by AI</span></div>
+  </div>
+</footer>
+
+</div>
+
+<script src="/vendor/three.min.js"></script>
+<script src="/main.js"></script>
+<script src="/i18n.js"></script>
+</body>
+</html>
