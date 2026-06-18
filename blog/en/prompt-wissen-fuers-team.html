@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" data-blog-lang="en" data-alt-url="/blog/prompt-wissen-fuers-team">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#05060c" />
+
+<title>Prompt basics for your team: what everyone should know — AI with Maris</title>
+<meta name="description" content="Not everyone needs to become a prompt expert. But a few ground rules decide whether AI saves time or just creates frustration." />
+<meta name="author" content="Maris Reinold" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://aiwithmaris.com/blog/en/prompt-wissen-fuers-team" />
+<link rel="alternate" hreflang="de" href="https://aiwithmaris.com/blog/prompt-wissen-fuers-team" />
+<link rel="alternate" hreflang="en" href="https://aiwithmaris.com/blog/en/prompt-wissen-fuers-team" />
+<link rel="alternate" type="application/rss+xml" title="AI with Maris — Blog" href="https://aiwithmaris.com/blog/en/feed.xml" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Prompt basics for your team: what everyone should know" />
+<meta property="og:description" content="Not everyone needs to become a prompt expert. But a few ground rules decide whether AI saves time or just creates frustration." />
+<meta property="og:url" content="https://aiwithmaris.com/blog/en/prompt-wissen-fuers-team" />
+<meta property="og:image" content="https://aiwithmaris.com/assets/og-axon.png" />
+<meta property="article:published_time" content="2026-06-18T08:59:56.373Z" />
+<meta property="article:author" content="Maris Reinold" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Prompt basics for your team: what everyone should know",
+  "description": "Not everyone needs to become a prompt expert. But a few ground rules decide whether AI saves time or just creates frustration.",
+  "datePublished": "2026-06-18T08:59:56.373Z",
+  "inLanguage": "en",
+  "url": "https://aiwithmaris.com/blog/en/prompt-wissen-fuers-team",
+  "author": { "@type": "Person", "name": "Maris Reinold", "url": "https://aiwithmaris.com/ueber-uns.html" },
+  "publisher": { "@type": "Organization", "name": "AI with Maris", "url": "https://aiwithmaris.com" }
+}
+</script>
+
+<link rel="icon" type="image/png" href="/assets/logo-axon.png" />
+<link rel="stylesheet" href="/assets/fonts/fonts.css" />
+<link rel="stylesheet" href="/style.css" />
+<script src="/blog/blog-lang.js"></script>
+
+<style>
+.blog-prose{color:var(--muted);font-weight:300;font-size:1.04rem;line-height:1.75}
+.blog-prose p{margin:0 0 18px}
+.blog-prose h2{font-family:var(--display);font-weight:700;color:var(--text);font-size:clamp(1.3rem,2.4vw,1.7rem);letter-spacing:-.01em;line-height:1.25;margin:42px 0 14px}
+.blog-prose h3{color:var(--text);font-size:1.1rem;margin:30px 0 10px}
+.blog-prose ul,.blog-prose ol{margin:0 0 18px;padding-left:22px}
+.blog-prose li{margin-bottom:8px}
+.blog-prose strong{color:var(--text);font-weight:600}
+.blog-prose a{color:var(--text)}
+.blog-meta{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:.9rem;margin:18px 0 36px}
+.blog-back{display:inline-block;color:var(--muted);text-decoration:none;font-size:.92rem;margin-bottom:26px}
+.blog-back:hover{color:var(--text)}
+.blog-cta{margin-top:48px;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:26px 28px;background:rgba(255,255,255,.03)}
+.blog-cta h2{font-family:var(--display);font-weight:700;font-size:1.25rem;margin:0 0 8px}
+.blog-cta p{color:var(--muted);font-weight:300;margin:0 0 16px}
+</style>
+</head>
+<body>
+
+<canvas id="scene"></canvas>
+<div class="bg-glow"></div><div class="grain"></div><div class="vignette"></div>
+<div class="cursor-ring"></div><div class="cursor-dot"></div>
+
+<a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+<nav id="nav" aria-label="Hauptnavigation">
+  <div class="nav-inner">
+    <a class="logo" href="/index.html" aria-label="AI with Maris — zur Startseite"><img src="/assets/logo-axon.png" alt="" />AI with Maris</a>
+    <div class="nav-links" id="navlinks">
+      <a href="/leistungen.html">Leistungen</a>
+      <a href="/beispiele.html">Beispiele</a>
+      <a href="/guide.html">KI-Guide<span class="nav-pill">PDF</span></a>
+      <a href="/blog/en" class="active">Blog</a>
+      <a href="/ueber-uns.html">Über mich</a>
+      <a href="/kontakt.html" class="nav-cta">Kontakt</a>
+      <button class="lang-toggle" id="langToggle" type="button">DE</button>
+    </div>
+    <button class="burger" id="burger" type="button" aria-label="Menü öffnen" aria-expanded="false" aria-controls="navlinks"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="wrap">
+<main id="main" tabindex="-1">
+
+<section class="section-pad" style="padding-top:140px">
+  <div class="container" style="max-width:780px">
+    <a class="blog-back" href="/blog/en">← All articles</a>
+    <div><span class="eyebrow">Blog</span></div>
+    <h1 style="font-family:var(--display);font-weight:700;font-size:clamp(1.9rem,4vw,2.7rem);letter-spacing:-.02em;line-height:1.15;margin:16px 0 0">Prompt basics for your team: what everyone should know</h1>
+    <div class="blog-meta">
+      <time datetime="2026-06-18T08:59:56.373Z">18 June 2026</time>
+      <span>·</span>
+      <span>3 min read</span>
+      <span>·</span>
+      <span>Maris Reinold</span>
+    </div>
+
+    <article class="blog-prose">
+<p>“I tried it with ChatGPT too — only got nonsense.” I hear that a lot. And almost always it's not the tool, but a misunderstanding: many treat an AI like a search engine. Keyword in, answer out. That's not how it works.</p><p>An AI is more like a new, very diligent colleague who has read everything but knows nothing about your business. It delivers exactly as well as you brief it. And good briefing can be learned — in half an hour, not a week-long course. These are the basics every team should have.</p><h2>Role and goal first</h2><p>Tell the AI who it should be and what you need in the end. “You're an experienced accountant. In three sentences, tell me what stands out about this invoice” beats “check this” by a mile. The role sets the frame, the goal sets the direction. Both cost half a sentence and change the result completely.</p><h2>Give context, don't assume it</h2><p>The AI doesn't know your delivery times are longer right now, or that this customer is a special case. What's obvious in your head has to go into the prompt. Better three sentences too many than one too few. A typical example: instead of “write a reply to the customer”, better “write a friendly reply to a customer who has been waiting two weeks for a delivery. We can only ship next week but don't want to sound submissive.” The difference is night and day.</p><h2>Specify the format</h2><p>Do you want a list, an email, a table, five bullet points? Say so. “In at most five bullet points” or “as a short email with a subject line” saves you the rework. The AI sticks to it surprisingly precisely — you just have to ask.</p><h2>Follow up instead of starting over</h2><p>The biggest beginner mistake: giving up at the first half-good result. The real strength is in the back-and-forth. “Shorter.” “Less formal.” “Expand the second point.” Every bit of feedback makes the result better. You keep talking to the diligent colleague instead of sending them away after one try.</p><h2>Never enter confidential data unprotected</h2><p>A rule everyone must know: personal data, customer names, internal numbers don't belong unchecked in a public AI tool. Either anonymise them or use a solution where the data stays in house. That's not distrust of the technology, it's simply data protection — and part of a clean setup from the start.</p><h2>Check results, don't copy blindly</h2><p>The AI always sounds confident — even when it's wrong. For facts, numbers and anything going outside, the rule is: proofread. The AI is a fast first draft, not the final editor. Internalise that and you use it confidently rather than naively.</p><h2>The basics at a glance</h2><ul><li><strong>Role and goal</strong> up front.</li><li><strong>Give context</strong> — what seems obvious has to go in.</li><li><strong>Specify the format</strong>, then you rework less.</li><li><strong>Follow up</strong> instead of giving up on the first try.</li><li><strong>Protect confidential data</strong> — anonymise or keep it internal.</li><li><strong>Check results</strong>, especially facts and numbers.</li></ul><p>You don't need more than these six points for daily work. Once they're in the team, “only got nonsense” stops on its own — and “gave it a try” becomes a tool that really saves time. If you want to bring the whole team there together, <a href="/leistungen.html">coaching</a> is the fastest route; the bigger picture is in the <a href="/guide.html">AI guide</a>.</p>
+    </article>
+
+    <div class="blog-cta reveal">
+      <h2>Want to go deeper?</h2>
+      <p>My AI guide “Start where it counts” lays out the full roadmap — from the first use case to scaling. Or just drop me a line.</p>
+      <a href="/guide.html" class="btn btn-primary" data-hover>Get the AI guide <span class="arrow">→</span></a>
+      &nbsp;
+      <a href="/kontakt.html" class="btn" data-hover>Contact</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div><div class="logo" style="margin-bottom:16px"><img src="/assets/logo-axon.png" alt="" />AI with Maris</div>
+        <p>KI-Coaching &amp; maßgeschneiderte Software-Entwicklung — cloud-neutral, datensouverän, ohne Lock-in.</p></div>
+      <div class="foot-links">
+        <div class="foot-col"><h4>Angebot</h4><a href="/leistungen.html">Leistungen</a><a href="/beispiele.html">Beispiele</a><a href="/guide.html">KI-Guide</a><a href="/blog/en">Blog</a><a href="/newsletter.html">Newsletter</a><a href="/ueber-uns.html">Über mich</a></div>
+        <div class="foot-col"><h4>Kontakt</h4><a href="mailto:marisnicolasreinold@gmail.com">marisnicolasreinold@gmail.com</a><a href="/kontakt.html">Kontakt</a></div>
+        <div class="foot-col"><h4>Rechtliches</h4><a href="/impressum.html">Impressum</a><a href="/datenschutz.html">Datenschutz</a><a href="/agb.html">AGB</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 AI with Maris</span><span>Made in Germany · Cloud-neutral · Powered by AI</span></div>
+  </div>
+</footer>
+
+</div>
+
+<script src="/vendor/three.min.js"></script>
+<script src="/main.js"></script>
+<script src="/i18n.js"></script>
+</body>
+</html>
