@@ -14,7 +14,6 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] Frühwarn-Cockpit statt Bauchgefühl: KI für Kennzahlen im Tagesgeschäft
 - [ ] KI im Vertrieb: Vom Lead bis zum Angebot — wo Automatisierung wirklich Zeit spart
 - [ ] KI in der Buchhaltung: Der Papierberg als perfekter erster Use Case
 - [ ] Klein anfangen heißt nicht klein denken: Vom ersten Use Case zur KI-Roadmap
@@ -30,6 +29,8 @@ oberste offene Thema ist immer das nächste.
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-06-19 — Frühwarn-Cockpit statt Bauchgefühl: KI für Kennzahlen im Tagesgeschäft (Frühwarn-Cockpit statt Bauchgefühl: KI für Kennzahlen im Tagesgeschäft)
 
 - 2026-06-18 — Prompt-Wissen fürs Team: Die Basics, die in jedem Unternehmen sitzen sollten (Prompt-Wissen fürs Team: Die Basics, die in jedem Unternehmen sitzen sollten)
 
