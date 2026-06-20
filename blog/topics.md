@@ -19,6 +19,11 @@ oberste offene Thema ist immer das nächste.
 - [ ] Die fünf Fragen, mit denen du jeden KI-Use-Case in zehn Minuten bewertest
 - [ ] Prompt-Wissen fürs Team: Die Basics, die in jedem Unternehmen sitzen sollten
 - [ ] Frühwarn-Cockpit statt Bauchgefühl: KI für Kennzahlen im Tagesgeschäft
+- [ ] Business-driven KI: Wenn das Geschäftsergebnis das Projekt steuert
+- [ ] KI im Controlling: Der Monatsabschluss, der sich selbst erklärt
+- [ ] KI in der Finanzplanung: Forecasts, die mehr sind als fortgeschriebenes Excel
+- [ ] Warum KI erst nützlich wird, wenn sie an deine Systeme darf — MCP erklärt
+- [ ] Was ein KI-Agent mit Zugang zu deinen Zahlen wirklich erledigt — Claude Code über MCP
 - [ ] KI im Vertrieb: Vom Lead bis zum Angebot — wo Automatisierung wirklich Zeit spart
 - [ ] KI in der Buchhaltung: Der Papierberg als perfekter erster Use Case
 - [ ] Klein anfangen heißt nicht klein denken: Vom ersten Use Case zur KI-Roadmap
