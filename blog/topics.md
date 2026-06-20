@@ -14,11 +14,6 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] KI-Agent im Posteingang: Welche Anfragen sich automatisch beantworten lassen — und welche besser nicht
-- [ ] DSGVO und KI: Was du wirklich beachten musst, bevor das erste Tool live geht
-- [ ] Die fünf Fragen, mit denen du jeden KI-Use-Case in zehn Minuten bewertest
-- [ ] Prompt-Wissen fürs Team: Die Basics, die in jedem Unternehmen sitzen sollten
-- [ ] Frühwarn-Cockpit statt Bauchgefühl: KI für Kennzahlen im Tagesgeschäft
 - [ ] Business-driven KI: Wenn das Geschäftsergebnis das Projekt steuert
 - [ ] KI im Controlling: Der Monatsabschluss, der sich selbst erklärt
 - [ ] KI in der Finanzplanung: Forecasts, die mehr sind als fortgeschriebenes Excel
@@ -39,6 +34,16 @@ oberste offene Thema ist immer das nächste.
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-06-19 — Frühwarn-Cockpit statt Bauchgefühl: KI für Kennzahlen im Tagesgeschäft (Frühwarn-Cockpit statt Bauchgefühl: KI für Kennzahlen im Tagesgeschäft)
+
+- 2026-06-18 — Prompt-Wissen fürs Team: Die Basics, die in jedem Unternehmen sitzen sollten (Prompt-Wissen fürs Team: Die Basics, die in jedem Unternehmen sitzen sollten)
+
+- 2026-06-17 — Die fünf Fragen, mit denen du jeden KI-Use-Case in zehn Minuten bewertest (Die fünf Fragen, mit denen du jeden KI-Use-Case in zehn Minuten bewertest)
+
+- 2026-06-16 — DSGVO und KI: Was du klären musst, bevor das erste Tool live geht (DSGVO und KI: Was du wirklich beachten musst, bevor das erste Tool live geht)
+
+- 2026-06-15 — KI-Agent im Posteingang: Was sich automatisch beantworten lässt — und was besser nicht (KI-Agent im Posteingang: Welche Anfragen sich automatisch beantworten lassen — und welche besser nicht)
 
 - 2026-06-12 — Dokumenten-Automatisierung konkret: Was passiert, wenn niemand mehr Rechnungen abtippt? (Dokumenten-Automatisierung konkret: Was passiert eigentlich, wenn niemand mehr Rechnungen abtippt?)
 

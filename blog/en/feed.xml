@@ -6,6 +6,41 @@
     <description>A new article every day about AI in small and mid-sized businesses.</description>
     <language>en</language>
     <item>
+      <title>An early-warning cockpit instead of gut feeling: AI for everyday metrics</title>
+      <link>https://aiwithmaris.com/blog/en/fruehwarn-cockpit-kennzahlen</link>
+      <guid>https://aiwithmaris.com/blog/en/fruehwarn-cockpit-kennzahlen</guid>
+      <pubDate>Fri, 19 Jun 2026 09:18:59 GMT</pubDate>
+      <description>The numbers are already there — no one just sees them in time. How AI turns data into an early-warning system for daily work.</description>
+    </item>
+    <item>
+      <title>Prompt basics for your team: what everyone should know</title>
+      <link>https://aiwithmaris.com/blog/en/prompt-wissen-fuers-team</link>
+      <guid>https://aiwithmaris.com/blog/en/prompt-wissen-fuers-team</guid>
+      <pubDate>Thu, 18 Jun 2026 08:59:56 GMT</pubDate>
+      <description>Not everyone needs to become a prompt expert. But a few ground rules decide whether AI saves time or just creates frustration.</description>
+    </item>
+    <item>
+      <title>Five questions to judge any AI use case in ten minutes</title>
+      <link>https://aiwithmaris.com/blog/en/fuenf-fragen-ki-use-case</link>
+      <guid>https://aiwithmaris.com/blog/en/fuenf-fragen-ki-use-case</guid>
+      <pubDate>Wed, 17 Jun 2026 09:17:14 GMT</pubDate>
+      <description>Not every idea makes a good first AI case. Five questions let you sort, in ten minutes, what is worth it — and what to skip.</description>
+    </item>
+    <item>
+      <title>GDPR and AI: what to sort out before your first tool goes live</title>
+      <link>https://aiwithmaris.com/blog/en/dsgvo-und-ki-vor-dem-start</link>
+      <guid>https://aiwithmaris.com/blog/en/dsgvo-und-ki-vor-dem-start</guid>
+      <pubDate>Tue, 16 Jun 2026 09:39:28 GMT</pubDate>
+      <description>GDPR and AI are not a contradiction — if you answer a few questions before you start instead of after. The key points, without the legalese.</description>
+    </item>
+    <item>
+      <title>An AI agent in your inbox: what to answer automatically — and what not to</title>
+      <link>https://aiwithmaris.com/blog/en/ki-agent-im-posteingang</link>
+      <guid>https://aiwithmaris.com/blog/en/ki-agent-im-posteingang</guid>
+      <pubDate>Mon, 15 Jun 2026 10:42:48 GMT</pubDate>
+      <description>An AI agent can handle many requests instantly. But not all of them. Knowing where the line is, is half the battle.</description>
+    </item>
+    <item>
       <title>Document automation in practice: what happens when nobody types up invoices anymore?</title>
       <link>https://aiwithmaris.com/blog/en/dokumenten-automatisierung-konkret</link>
       <guid>https://aiwithmaris.com/blog/en/dokumenten-automatisierung-konkret</guid>

@@ -82,6 +82,14 @@ const BOOKS = [
     subtitle: "Buy, rent or build? The decision framework for AI software — with honest cost math and the pitfalls to avoid.",
     badges: ["10 CHAPTERS", "DECISION FRAMEWORK", "COST MATH"],
   },
+  {
+    slug: "lehrer-ki-workflow-de", lang: "DE", a: "#64ffd9", b: "#19b8cf", c: "#7c5cff",
+    kicker: "KI · SCHULE & UNTERRICHT",
+    title: ["Der KI-Workflow", "für Lehrkräfte"],
+    accentLine: "Vom Lehrplan zum fertigen Material.",
+    subtitle: "Unterrichtsmaterial automatisch erstellen — lehrplanbasiert, aktuell und für jedes Fach. Schritt für Schritt bis zum Autopiloten.",
+    badges: ["20 KAPITEL", "30+ VORLAGEN", "4-WOCHEN-PLAN"],
+  },
 ];
 
 const font = (f) => readFile(path.join(FONT_DIR, f));
