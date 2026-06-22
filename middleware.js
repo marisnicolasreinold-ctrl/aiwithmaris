@@ -63,6 +63,15 @@ function clear(name) {
   return `${name}=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax`;
 }
 
+// Nicht-HttpOnly Flag-Cookie: nur ein UI-Hinweis ("eingeloggt"), damit das
+// Frontend den Logout-Button zeigen kann. Enthält kein Geheimnis.
+function flag(maxAge) {
+  return `aiwm_in=1; Path=/; Max-Age=${maxAge}; Secure; SameSite=Lax`;
+}
+function clearFlag() {
+  return `aiwm_in=; Path=/; Max-Age=0; Secure; SameSite=Lax`;
+}
+
 function json(obj, status) {
   return new Response(JSON.stringify(obj), {
     status,
@@ -124,6 +133,7 @@ export default async function middleware(request) {
     const res = json({ ok: true }, 200);
     res.headers.append('Set-Cookie', cookie(AT, access, MAXAGE));
     if (refreshTok) res.headers.append('Set-Cookie', cookie(RT, refreshTok, MAXAGE));
+    res.headers.append('Set-Cookie', flag(MAXAGE));
     return res;
   }
 
@@ -132,6 +142,7 @@ export default async function middleware(request) {
     const res = rewrite(new URL('/coming-soon', request.url));
     res.headers.append('Set-Cookie', clear(AT));
     res.headers.append('Set-Cookie', clear(RT));
+    res.headers.append('Set-Cookie', clearFlag());
     return res;
   }
 
@@ -150,6 +161,7 @@ export default async function middleware(request) {
       const res = next();
       res.headers.append('Set-Cookie', cookie(AT, fresh.access_token, MAXAGE));
       res.headers.append('Set-Cookie', cookie(RT, fresh.refresh_token, MAXAGE));
+      res.headers.append('Set-Cookie', flag(MAXAGE));
       return res;
     }
   }
