@@ -21,11 +21,23 @@ const SUPABASE_ANON =
 const COOKIE = 'aiwm_gate';
 const TTL = 60 * 60 * 24 * 7; // 7 Tage
 
-// Immer öffentlich, auch ohne Login. (Nur die Baustellen-Seite selbst —
-// alles andere, inkl. Impressum/Datenschutz, ist hinter dem Login.)
+// Immer öffentlich, auch ohne Login: die Baustellen-Seite selbst sowie
+// Blog und Newsletter. Alles andere (inkl. Impressum/Datenschutz) liegt
+// hinter dem Login.
 const PUBLIC = new Set([
   '/coming-soon.html',
+  '/newsletter',
+  '/newsletter.html',
+  '/blog',
+  '/blog.html',
 ]);
+
+// Öffentliche Pfad-Präfixe (Blog inkl. aller Beiträge, /en und feed.xml).
+function isPublic(path) {
+  if (PUBLIC.has(path)) return true;
+  if (path === '/blog/' || path.startsWith('/blog/')) return true;
+  return false;
+}
 
 const enc = new TextEncoder();
 const dec = new TextDecoder();
@@ -147,7 +159,7 @@ export default async function middleware(request) {
   }
 
   // Immer öffentliche Seiten.
-  if (PUBLIC.has(path)) return next();
+  if (isPublic(path)) return next();
 
   // Gültiges Cookie -> echte Seite ausliefern.
   const cookie = readCookie(request, COOKIE);
