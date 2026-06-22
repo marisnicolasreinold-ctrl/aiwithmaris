@@ -383,7 +383,10 @@
         return fetch('/__gate/enter', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ access_token: r.data.session.access_token })
+          body: JSON.stringify({
+            access_token: r.data.session.access_token,
+            refresh_token: r.data.session.refresh_token
+          })
         });
       })
       .then(function (res) { if (!res.ok) throw new Error('Zugang konnte nicht freigeschaltet werden.'); return res.json(); })
