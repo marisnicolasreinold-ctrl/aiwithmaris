@@ -1,37 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Seite ist vorübergehend offline (in Arbeit) — keine öffentlichen URLs. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://aiwithmaris.com/</loc></url>
-  <url><loc>https://aiwithmaris.com/leistungen</loc></url>
-  <url><loc>https://aiwithmaris.com/beispiele</loc></url>
-  <url><loc>https://aiwithmaris.com/guide</loc></url>
-  <url><loc>https://aiwithmaris.com/ueber-uns</loc></url>
-  <url><loc>https://aiwithmaris.com/kontakt</loc></url>
-  <url><loc>https://aiwithmaris.com/blog</loc></url>
-  <url><loc>https://aiwithmaris.com/blog/en</loc></url>
-  <url><loc>https://aiwithmaris.com/blog/business-driven-ki</loc><lastmod>2026-06-22</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/en/business-driven-ki</loc><lastmod>2026-06-22</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/fruehwarn-cockpit-kennzahlen</loc><lastmod>2026-06-19</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/en/fruehwarn-cockpit-kennzahlen</loc><lastmod>2026-06-19</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/prompt-wissen-fuers-team</loc><lastmod>2026-06-18</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/en/prompt-wissen-fuers-team</loc><lastmod>2026-06-18</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/fuenf-fragen-ki-use-case</loc><lastmod>2026-06-17</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/en/fuenf-fragen-ki-use-case</loc><lastmod>2026-06-17</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/dsgvo-und-ki-vor-dem-start</loc><lastmod>2026-06-16</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/en/dsgvo-und-ki-vor-dem-start</loc><lastmod>2026-06-16</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/ki-agent-im-posteingang</loc><lastmod>2026-06-15</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/en/ki-agent-im-posteingang</loc><lastmod>2026-06-15</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/dokumenten-automatisierung-konkret</loc><lastmod>2026-06-12</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/en/dokumenten-automatisierung-konkret</loc><lastmod>2026-06-12</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/der-90-tage-test</loc><lastmod>2026-06-11</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/en/der-90-tage-test</loc><lastmod>2026-06-11</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/ki-projekte-am-falschen-ende</loc><lastmod>2026-06-10</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/en/ki-projekte-am-falschen-ende</loc><lastmod>2026-06-10</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/halluzinationen-verstehen</loc><lastmod>2026-05-31</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/en/halluzinationen-verstehen</loc><lastmod>2026-05-31</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/warum-dein-team-ki-nicht-nutzt</loc><lastmod>2026-05-27</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/en/warum-dein-team-ki-nicht-nutzt</loc><lastmod>2026-05-27</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/make-or-buy-bei-ki</loc><lastmod>2026-05-22</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/en/make-or-buy-bei-ki</loc><lastmod>2026-05-22</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/datenhoheit-ohne-dogma</loc><lastmod>2026-05-18</lastmod></url>
-  <url><loc>https://aiwithmaris.com/blog/en/datenhoheit-ohne-dogma</loc><lastmod>2026-05-18</lastmod></url>
 </urlset>

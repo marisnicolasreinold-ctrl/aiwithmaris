@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#05060c" />
+<meta name="robots" content="noindex, nofollow" />
+<title>AI with Maris — in Arbeit</title>
+<meta name="description" content="AI with Maris wird gerade neu gebaut. Bald wieder da." />
+<link rel="icon" type="image/png" href="./assets/logo-axon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#05060c; --bg2:#080a14;
+    --cyan:#5ef0ff; --violet:#7c5cff; --indigo:#4d6bff; --pink:#ff5ea8;
+    --text:#eef1fa; --muted:rgba(238,241,250,.62); --line:rgba(238,241,250,.10);
+    --glass:rgba(255,255,255,.04);
+    --display:'Sora',sans-serif; --body:'Manrope',sans-serif; --mono:'Space Mono',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    font-family:var(--body); background:var(--bg); color:var(--text);
+    min-height:100dvh; overflow:hidden; line-height:1.6;
+    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    display:flex; align-items:center; justify-content:center;
+  }
+  /* ── Hintergrund-Ebenen ───────────────────────────────────────── */
+  #fx{ position:fixed; inset:0; z-index:0; display:block }
+  .bg-glow{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(closest-side at 18% 20%, rgba(124,92,255,.22), transparent 70%),
+      radial-gradient(closest-side at 84% 28%, rgba(94,240,255,.16), transparent 70%),
+      radial-gradient(closest-side at 50% 108%, rgba(255,94,168,.12), transparent 70%);
+    animation:drift 18s ease-in-out infinite alternate;
+  }
+  @keyframes drift{ from{transform:translate3d(0,0,0) scale(1)} to{transform:translate3d(0,-2%,0) scale(1.06)} }
+  .grid{
+    position:fixed; inset:-2px; z-index:1; pointer-events:none; opacity:.5;
+    background-image:
+      linear-gradient(to right, rgba(238,241,250,.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(238,241,250,.045) 1px, transparent 1px);
+    background-size:54px 54px;
+    -webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 45%, #000 40%, transparent 100%);
+    mask-image:radial-gradient(ellipse 80% 70% at 50% 45%, #000 40%, transparent 100%);
+  }
+  .scan{
+    position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.5;
+    background:repeating-linear-gradient(to bottom, rgba(94,240,255,.035) 0 1px, transparent 1px 4px);
+    -webkit-mask-image:linear-gradient(transparent, #000 30%, #000 70%, transparent);
+    mask-image:linear-gradient(transparent, #000 30%, #000 70%, transparent);
+    animation:scanmove 8s linear infinite;
+  }
+  @keyframes scanmove{ from{background-position-y:0} to{background-position-y:200px} }
+  .grain{
+    position:fixed; inset:0; z-index:2; pointer-events:none; opacity:.05; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .vignette{position:fixed; inset:0; z-index:2; pointer-events:none; box-shadow:inset 0 0 320px 60px rgba(0,0,0,.9)}
+  .cursor-glow{
+    position:fixed; top:0; left:0; z-index:3; width:520px; height:520px; margin:-260px 0 0 -260px;
+    border-radius:50%; pointer-events:none; opacity:0; transition:opacity .4s ease;
+    background:radial-gradient(closest-side, rgba(94,240,255,.10), rgba(124,92,255,.06) 45%, transparent 72%);
+    will-change:transform;
+  }
+  /* ── Inhalt ───────────────────────────────────────────────────── */
+  .wrap{position:relative; z-index:5; width:100%; max-width:780px; padding:40px 28px; text-align:center; will-change:transform}
+  .brand{
+    font-family:var(--display); font-weight:800; letter-spacing:.18em; font-size:.95rem;
+    display:inline-flex; align-items:center; gap:11px; text-transform:uppercase;
+  }
+  .brand img{width:22px; height:22px; object-fit:contain; filter:drop-shadow(0 0 8px rgba(94,240,255,.5))}
+  /* Status-Orb */
+  .orb{
+    position:relative; width:138px; height:138px; margin:36px auto 32px; border-radius:50%;
+    background:radial-gradient(circle at 32% 28%, rgba(94,240,255,.92), rgba(124,92,255,.85) 45%, rgba(77,107,255,.6) 70%, transparent 78%);
+    box-shadow:0 0 70px rgba(124,92,255,.5), inset 0 0 44px rgba(255,255,255,.14);
+    animation:pulse 3.4s ease-in-out infinite;
+  }
+  .orb::before{
+    content:""; position:absolute; inset:-20px; border-radius:50%; border:1px solid var(--line);
+    background:conic-gradient(from 0deg, transparent, rgba(94,240,255,.6), transparent 35%);
+    -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 0);
+    mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 0);
+    animation:spin 6s linear infinite;
+  }
+  .orb::after{
+    content:""; position:absolute; inset:-38px; border-radius:50%; border:1px dashed rgba(255,94,168,.25);
+    animation:spin 22s linear infinite reverse;
+  }
+  @keyframes pulse{ 0%,100%{transform:scale(1); filter:brightness(1)} 50%{transform:scale(1.06); filter:brightness(1.2)} }
+  @keyframes spin{ to{transform:rotate(360deg)} }
+  .eyebrow{
+    font-family:var(--mono); font-size:.7rem; letter-spacing:.34em; text-transform:uppercase;
+    color:var(--cyan); display:inline-flex; align-items:center; gap:10px;
+  }
+  .eyebrow .live{ width:8px; height:8px; border-radius:50%; background:var(--cyan); box-shadow:0 0 10px var(--cyan); animation:blink 1.6s ease-in-out infinite }
+  @keyframes blink{ 0%,100%{opacity:1} 50%{opacity:.25} }
+  h1{
+    font-family:var(--display); font-weight:800; line-height:1.04; letter-spacing:-.02em;
+    font-size:clamp(2.4rem, 7vw, 4.4rem); margin:18px 0 16px;
+  }
+  h1 .grad{
+    background:linear-gradient(100deg, var(--cyan), var(--violet) 50%, var(--pink), var(--cyan));
+    background-size:240% auto; -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation:shimmer 6s linear infinite;
+  }
+  @keyframes shimmer{ to{background-position:240% center} }
+  .scramble{ font-variant-ligatures:none }
+  .lead{ color:var(--muted); font-size:clamp(1rem,2.4vw,1.18rem); max-width:50ch; margin:0 auto }
+  /* Chips */
+  .chips{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:24px }
+  .chip{
+    font-family:var(--mono); font-size:.68rem; letter-spacing:.12em; text-transform:uppercase;
+    padding:7px 13px; border-radius:999px; border:1px solid var(--line); background:var(--glass);
+    color:var(--muted); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  }
+  .chip b{ color:var(--cyan); font-weight:700 }
+  /* Fortschritt + Ticker */
+  .bar{ position:relative; width:min(360px,82%); height:5px; margin:30px auto 0; border-radius:999px; background:rgba(238,241,250,.08); overflow:hidden }
+  .bar i{ position:absolute; inset:0; width:42%; border-radius:999px;
+    background:linear-gradient(90deg, var(--cyan), var(--violet)); box-shadow:0 0 18px rgba(124,92,255,.6); animation:load 2.6s ease-in-out infinite }
+  @keyframes load{ 0%{left:-42%} 100%{left:100%} }
+  .ticker{ font-family:var(--mono); font-size:.72rem; letter-spacing:.16em; color:var(--muted); margin-top:16px; min-height:1.2em }
+  .ticker .c{ color:var(--cyan) }
+  .ticker .cursor{ color:var(--cyan); animation:blink 1s step-end infinite }
+  /* ── Footer + Login-Trigger ───────────────────────────────────── */
+  footer{
+    position:fixed; left:0; right:0; bottom:0; z-index:6;
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+    padding:18px 24px; font-family:var(--mono); font-size:.72rem; color:var(--muted);
+  }
+  footer a{ color:var(--muted); text-decoration:none; transition:color .2s ease }
+  footer a:hover{ color:var(--cyan) }
+  footer .links{ display:flex; gap:18px; align-items:center }
+  .lock{
+    appearance:none; border:1px solid var(--line); background:var(--glass); color:var(--muted);
+    width:40px; height:40px; border-radius:12px; cursor:pointer; display:grid; place-items:center;
+    transition:border-color .2s ease, color .2s ease, transform .2s ease; -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  }
+  .lock:hover{ color:var(--cyan); border-color:rgba(94,240,255,.4); transform:translateY(-2px) }
+  .lock svg{ width:18px; height:18px }
+  /* ── Login-Modal ──────────────────────────────────────────────── */
+  .modal{ position:fixed; inset:0; z-index:20; display:none; align-items:center; justify-content:center; padding:24px;
+    background:rgba(3,4,9,.72); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px) }
+  .modal.open{ display:flex; animation:fade .25s ease }
+  @keyframes fade{ from{opacity:0} to{opacity:1} }
+  .card{
+    width:100%; max-width:380px; background:linear-gradient(180deg, rgba(16,18,30,.96), rgba(8,10,20,.96));
+    border:1px solid var(--line); border-radius:18px; padding:28px 26px; box-shadow:0 30px 80px rgba(0,0,0,.6); position:relative;
+  }
+  .card::before{ content:""; position:absolute; left:0; right:0; top:0; height:2px; border-radius:18px 18px 0 0;
+    background:linear-gradient(90deg, var(--cyan), var(--violet), var(--pink)) }
+  .card h2{ font-family:var(--display); font-weight:700; font-size:1.2rem; margin-bottom:4px }
+  .card p{ color:var(--muted); font-size:.86rem; margin-bottom:18px }
+  .field{ display:block; margin-bottom:12px }
+  .field input{
+    width:100%; padding:13px 14px; border-radius:11px; border:1px solid var(--line);
+    background:rgba(255,255,255,.03); color:var(--text); font-family:var(--body); font-size:.95rem; transition:border-color .2s ease;
+  }
+  .field input:focus{ outline:none; border-color:rgba(94,240,255,.55) }
+  .card button.submit{
+    width:100%; margin-top:6px; padding:13px 14px; border:none; border-radius:11px; cursor:pointer;
+    font-family:var(--display); font-weight:700; font-size:.95rem; color:#05060c;
+    background:linear-gradient(100deg, var(--cyan), var(--violet)); transition:filter .2s ease, transform .12s ease;
+  }
+  .card button.submit:hover{ filter:brightness(1.08) }
+  .card button.submit:active{ transform:translateY(1px) }
+  .card button.submit[disabled]{ opacity:.6; cursor:progress }
+  .err{ color:var(--pink); font-family:var(--mono); font-size:.76rem; min-height:1.1em; margin-top:10px; text-align:center }
+  .close{ position:absolute; top:12px; right:12px; background:none; border:none; color:var(--muted); font-size:1.3rem; cursor:pointer; line-height:1 }
+  .close:hover{ color:var(--text) }
+  @media (max-width:560px){ footer{ flex-direction:column; gap:12px; text-align:center } .cursor-glow{ display:none } }
+  @media (prefers-reduced-motion:reduce){ *{ animation:none !important } #fx{ display:none } }
+</style>
+</head>
+<body>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="bg-glow"></div><div class="grid"></div><div class="scan"></div><div class="grain"></div><div class="vignette"></div>
+<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
+<main class="wrap" id="parallax">
+  <div class="brand"><img src="./assets/logo-axon.png" alt="" />AI with Maris</div>
+
+  <div class="orb" aria-hidden="true"></div>
+
+  <span class="eyebrow"><span class="live"></span>Status: In Entwicklung</span>
+  <h1>Wir bauen gerade<br><span class="grad scramble" id="scramble">etwas Großes.</span></h1>
+  <p class="lead">Die Seite ist vorübergehend offline und wird komplett überarbeitet.
+    Bald gibt es hier wieder KI zum Anfassen — Live-Demos, der KI-Guide &amp; mehr.</p>
+
+  <div class="chips" aria-hidden="true">
+    <span class="chip"><b>◆</b> Live-Demos</span>
+    <span class="chip"><b>◆</b> KI-Guide</span>
+    <span class="chip"><b>◆</b> Neues Design</span>
+    <span class="chip"><b>◆</b> Bald verfügbar</span>
+  </div>
+
+  <div class="bar" aria-hidden="true"><i></i></div>
+  <div class="ticker" id="ticker" aria-hidden="true"></div>
+</main>
+
+<footer>
+  <span>© <span id="year"></span> AI with Maris</span>
+  <div class="links">
+    <button class="lock" id="lockBtn" type="button" aria-label="Interner Zugang" title="Interner Zugang">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="4" y="11" width="16" height="9" rx="2"></rect>
+        <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+      </svg>
+    </button>
+  </div>
+</footer>
+
+<!-- Login-Modal -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <form class="card" id="loginForm">
+    <button class="close" id="closeBtn" type="button" aria-label="Schließen">×</button>
+    <h2 id="modalTitle">Interner Zugang</h2>
+    <p>Anmeldung mit deinem Konto, um die Seite freizuschalten.</p>
+    <label class="field"><input type="email" id="email" placeholder="E-Mail" autocomplete="username" required /></label>
+    <label class="field"><input type="password" id="password" placeholder="Passwort" autocomplete="current-password" required /></label>
+    <button class="submit" id="submitBtn" type="submit">Freischalten</button>
+    <div class="err" id="err" role="alert"></div>
+  </form>
+</div>
+
+<script src="./vendor/supabase.min.js"></script>
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* ── Partikel-Konstellation ─────────────────────────────────── */
+  if (!reduce) {
+    var canvas = document.getElementById('fx');
+    var ctx = canvas.getContext('2d');
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var W, H, parts = [];
+    var mouse = { x: -9999, y: -9999 };
+    var palette = ['94,240,255', '124,92,255', '255,94,168'];
+
+    function resize() {
+      W = canvas.width = Math.floor(innerWidth * dpr);
+      H = canvas.height = Math.floor(innerHeight * dpr);
+      canvas.style.width = innerWidth + 'px';
+      canvas.style.height = innerHeight + 'px';
+      var target = Math.min(90, Math.round((innerWidth * innerHeight) / 16000));
+      parts = [];
+      for (var i = 0; i < target; i++) {
+        parts.push({
+          x: Math.random() * W, y: Math.random() * H,
+          vx: (Math.random() - 0.5) * 0.25 * dpr,
+          vy: (Math.random() - 0.5) * 0.25 * dpr,
+          r: (Math.random() * 1.6 + 0.6) * dpr,
+          c: palette[(Math.random() * palette.length) | 0]
+        });
+      }
+    }
+
+    function step() {
+      ctx.clearRect(0, 0, W, H);
+      var link = 130 * dpr, mr = 170 * dpr;
+      for (var i = 0; i < parts.length; i++) {
+        var p = parts[i];
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0 || p.x > W) p.vx *= -1;
+        if (p.y < 0 || p.y > H) p.vy *= -1;
+        // sanfte Anziehung zur Maus
+        var dxm = mouse.x - p.x, dym = mouse.y - p.y, dm = Math.hypot(dxm, dym);
+        if (dm < mr) { p.x += (dxm / dm) * 0.4; p.y += (dym / dm) * 0.4; }
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(' + p.c + ',0.85)';
+        ctx.fill();
+      }
+      for (var a = 0; a < parts.length; a++) {
+        for (var b = a + 1; b < parts.length; b++) {
+          var dx = parts[a].x - parts[b].x, dy = parts[a].y - parts[b].y;
+          var d = Math.hypot(dx, dy);
+          if (d < link) {
+            ctx.strokeStyle = 'rgba(' + parts[a].c + ',' + (0.12 * (1 - d / link)) + ')';
+            ctx.lineWidth = dpr * 0.6;
+            ctx.beginPath(); ctx.moveTo(parts[a].x, parts[a].y); ctx.lineTo(parts[b].x, parts[b].y); ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(step);
+    }
+
+    addEventListener('resize', resize);
+    addEventListener('mousemove', function (e) { mouse.x = e.clientX * dpr; mouse.y = e.clientY * dpr; });
+    addEventListener('mouseleave', function () { mouse.x = mouse.y = -9999; });
+    resize(); step();
+
+    /* Cursor-Glow + Parallax */
+    var glow = document.getElementById('cursorGlow');
+    var par = document.getElementById('parallax');
+    addEventListener('mousemove', function (e) {
+      glow.style.opacity = '1';
+      glow.style.transform = 'translate(' + e.clientX + 'px,' + e.clientY + 'px)';
+      var rx = (e.clientX / innerWidth - 0.5), ry = (e.clientY / innerHeight - 0.5);
+      par.style.transform = 'translate(' + (-rx * 16) + 'px,' + (-ry * 16) + 'px)';
+    });
+
+    /* Text-Scramble auf "etwas Großes." */
+    (function () {
+      var el = document.getElementById('scramble');
+      var target = el.textContent, chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0101#$%&/<>*';
+      function run() {
+        var frame = 0, total = 34;
+        var iv = setInterval(function () {
+          var out = '';
+          for (var i = 0; i < target.length; i++) {
+            if (target[i] === ' ') { out += ' '; continue; }
+            if (i < (frame / total) * target.length) out += target[i];
+            else out += chars[(Math.random() * chars.length) | 0];
+          }
+          el.textContent = out;
+          if (++frame > total) { clearInterval(iv); el.textContent = target; }
+        }, 38);
+      }
+      run();
+      setInterval(run, 9000);
+    })();
+  }
+
+  /* ── Status-Ticker (Typewriter) ─────────────────────────────── */
+  (function () {
+    var el = document.getElementById('ticker');
+    if (!el) return;
+    var lines = [
+      '> deploy: in progress …',
+      '> build: neues design',
+      '> status: bald wieder online',
+      '> tip: interner zugang unten rechts'
+    ];
+    if (reduce) { el.innerHTML = '<span class="c">' + lines[2] + '</span>'; return; }
+    var li = 0, ci = 0, del = false;
+    function tick() {
+      var s = lines[li];
+      el.innerHTML = '<span class="c">' + s.slice(0, ci) + '</span><span class="cursor">▌</span>';
+      if (!del) { ci++; if (ci > s.length) { del = true; setTimeout(tick, 1600); return; } }
+      else { ci--; if (ci === 0) { del = false; li = (li + 1) % lines.length; } }
+      setTimeout(tick, del ? 28 : 55);
+    }
+    tick();
+  })();
+
+  /* ── Login ──────────────────────────────────────────────────── */
+  var modal = document.getElementById('modal');
+  var form = document.getElementById('loginForm');
+  var errEl = document.getElementById('err');
+  var btn = document.getElementById('submitBtn');
+
+  function openModal() { modal.classList.add('open'); setTimeout(function () { document.getElementById('email').focus(); }, 60); }
+  function closeModal() { modal.classList.remove('open'); errEl.textContent = ''; }
+
+  document.getElementById('lockBtn').addEventListener('click', openModal);
+  document.getElementById('closeBtn').addEventListener('click', closeModal);
+  modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+
+  var sb = supabase.createClient(
+    'https://amrdmnnijbfwtrjcpocl.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtcmRtbm5pamJmd3RyamNwb2NsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTU0OTcsImV4cCI6MjA5NjQzMTQ5N30.y-9eLzeQKDlHzSG3_ro-ThAnnpnAEKLTWS8NMrpSXCI'
+  );
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    errEl.textContent = '';
+    btn.disabled = true;
+    var email = document.getElementById('email').value.trim();
+    var password = document.getElementById('password').value;
+
+    sb.auth.signInWithPassword({ email: email, password: password })
+      .then(function (r) {
+        if (r.error || !r.data || !r.data.session) throw new Error('E-Mail oder Passwort falsch.');
+        return fetch('/__gate/enter', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ access_token: r.data.session.access_token })
+        });
+      })
+      .then(function (res) { if (!res.ok) throw new Error('Zugang konnte nicht freigeschaltet werden.'); return res.json(); })
+      .then(function (out) { if (!out.ok) throw new Error('Zugang konnte nicht freigeschaltet werden.'); window.location.replace('/'); })
+      .catch(function (err) { errEl.textContent = err.message || 'Anmeldung fehlgeschlagen.'; btn.disabled = false; });
+  });
+})();
+</script>
+</body>
+</html>

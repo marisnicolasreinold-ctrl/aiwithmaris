@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "name": "aiwithmaris",
+  "description": "Statische Site mit Edge-Middleware-Login-Gate.",
+  "dependencies": {
+    "@vercel/edge": "^1.2.2"
+  }
+}
