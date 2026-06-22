@@ -14,7 +14,6 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] Business-driven KI: Wenn das Geschäftsergebnis das Projekt steuert
 - [ ] KI im Controlling: Der Monatsabschluss, der sich selbst erklärt
 - [ ] KI in der Finanzplanung: Forecasts, die mehr sind als fortgeschriebenes Excel
 - [ ] Warum KI erst nützlich wird, wenn sie an deine Systeme darf — MCP erklärt
@@ -34,6 +33,8 @@ oberste offene Thema ist immer das nächste.
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-06-22 — Business-driven KI: Wenn das Geschäftsergebnis das Projekt steuert (Business-driven KI: Wenn das Geschäftsergebnis das Projekt steuert)
 
 - 2026-06-19 — Frühwarn-Cockpit statt Bauchgefühl: KI für Kennzahlen im Tagesgeschäft (Frühwarn-Cockpit statt Bauchgefühl: KI für Kennzahlen im Tagesgeschäft)
 
