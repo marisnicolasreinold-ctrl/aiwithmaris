@@ -21,12 +21,9 @@ const SUPABASE_ANON =
 const COOKIE = 'aiwm_gate';
 const TTL = 60 * 60 * 24 * 7; // 7 Tage
 
-// Immer öffentlich, auch ohne Login.
+// Immer öffentlich, auch ohne Login. (Nur die Baustellen-Seite selbst —
+// alles andere, inkl. Impressum/Datenschutz, ist hinter dem Login.)
 const PUBLIC = new Set([
-  '/impressum',
-  '/impressum.html',
-  '/datenschutz',
-  '/datenschutz.html',
   '/coming-soon.html',
 ]);
 

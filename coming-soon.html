@@ -28,7 +28,8 @@
     -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
     display:flex; align-items:center; justify-content:center;
   }
-  /* ── Hintergrund: Glow, Grid, Grain, Vignette ─────────────────── */
+  /* ── Hintergrund-Ebenen ───────────────────────────────────────── */
+  #fx{ position:fixed; inset:0; z-index:0; display:block }
   .bg-glow{
     position:fixed; inset:0; z-index:0; pointer-events:none;
     background:
@@ -39,7 +40,7 @@
   }
   @keyframes drift{ from{transform:translate3d(0,0,0) scale(1)} to{transform:translate3d(0,-2%,0) scale(1.06)} }
   .grid{
-    position:fixed; inset:-2px; z-index:0; pointer-events:none; opacity:.5;
+    position:fixed; inset:-2px; z-index:1; pointer-events:none; opacity:.5;
     background-image:
       linear-gradient(to right, rgba(238,241,250,.045) 1px, transparent 1px),
       linear-gradient(to bottom, rgba(238,241,250,.045) 1px, transparent 1px);
@@ -47,35 +48,51 @@
     -webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 45%, #000 40%, transparent 100%);
     mask-image:radial-gradient(ellipse 80% 70% at 50% 45%, #000 40%, transparent 100%);
   }
+  .scan{
+    position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.5;
+    background:repeating-linear-gradient(to bottom, rgba(94,240,255,.035) 0 1px, transparent 1px 4px);
+    -webkit-mask-image:linear-gradient(transparent, #000 30%, #000 70%, transparent);
+    mask-image:linear-gradient(transparent, #000 30%, #000 70%, transparent);
+    animation:scanmove 8s linear infinite;
+  }
+  @keyframes scanmove{ from{background-position-y:0} to{background-position-y:200px} }
   .grain{
-    position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.05; mix-blend-mode:overlay;
+    position:fixed; inset:0; z-index:2; pointer-events:none; opacity:.05; mix-blend-mode:overlay;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
-  .vignette{position:fixed; inset:0; z-index:1; pointer-events:none; box-shadow:inset 0 0 320px 60px rgba(0,0,0,.9)}
+  .vignette{position:fixed; inset:0; z-index:2; pointer-events:none; box-shadow:inset 0 0 320px 60px rgba(0,0,0,.9)}
+  .cursor-glow{
+    position:fixed; top:0; left:0; z-index:3; width:520px; height:520px; margin:-260px 0 0 -260px;
+    border-radius:50%; pointer-events:none; opacity:0; transition:opacity .4s ease;
+    background:radial-gradient(closest-side, rgba(94,240,255,.10), rgba(124,92,255,.06) 45%, transparent 72%);
+    will-change:transform;
+  }
   /* ── Inhalt ───────────────────────────────────────────────────── */
-  .wrap{position:relative; z-index:5; width:100%; max-width:760px; padding:40px 28px; text-align:center}
+  .wrap{position:relative; z-index:5; width:100%; max-width:780px; padding:40px 28px; text-align:center; will-change:transform}
   .brand{
     font-family:var(--display); font-weight:800; letter-spacing:.18em; font-size:.95rem;
     display:inline-flex; align-items:center; gap:11px; text-transform:uppercase;
   }
-  .brand img{width:22px; height:22px; object-fit:contain}
+  .brand img{width:22px; height:22px; object-fit:contain; filter:drop-shadow(0 0 8px rgba(94,240,255,.5))}
   /* Status-Orb */
   .orb{
-    position:relative; width:128px; height:128px; margin:34px auto 30px;
-    border-radius:50%;
-    background:radial-gradient(circle at 32% 28%, rgba(94,240,255,.9), rgba(124,92,255,.85) 45%, rgba(77,107,255,.6) 70%, transparent 78%);
-    box-shadow:0 0 60px rgba(124,92,255,.45), inset 0 0 40px rgba(255,255,255,.12);
+    position:relative; width:138px; height:138px; margin:36px auto 32px; border-radius:50%;
+    background:radial-gradient(circle at 32% 28%, rgba(94,240,255,.92), rgba(124,92,255,.85) 45%, rgba(77,107,255,.6) 70%, transparent 78%);
+    box-shadow:0 0 70px rgba(124,92,255,.5), inset 0 0 44px rgba(255,255,255,.14);
     animation:pulse 3.4s ease-in-out infinite;
   }
   .orb::before{
-    content:""; position:absolute; inset:-18px; border-radius:50%;
-    border:1px solid var(--line);
-    background:conic-gradient(from 0deg, transparent, rgba(94,240,255,.55), transparent 35%);
+    content:""; position:absolute; inset:-20px; border-radius:50%; border:1px solid var(--line);
+    background:conic-gradient(from 0deg, transparent, rgba(94,240,255,.6), transparent 35%);
     -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 0);
     mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 0);
     animation:spin 6s linear infinite;
   }
-  @keyframes pulse{ 0%,100%{transform:scale(1); filter:brightness(1)} 50%{transform:scale(1.05); filter:brightness(1.18)} }
+  .orb::after{
+    content:""; position:absolute; inset:-38px; border-radius:50%; border:1px dashed rgba(255,94,168,.25);
+    animation:spin 22s linear infinite reverse;
+  }
+  @keyframes pulse{ 0%,100%{transform:scale(1); filter:brightness(1)} 50%{transform:scale(1.06); filter:brightness(1.2)} }
   @keyframes spin{ to{transform:rotate(360deg)} }
   .eyebrow{
     font-family:var(--mono); font-size:.7rem; letter-spacing:.34em; text-transform:uppercase;
@@ -84,21 +101,33 @@
   .eyebrow .live{ width:8px; height:8px; border-radius:50%; background:var(--cyan); box-shadow:0 0 10px var(--cyan); animation:blink 1.6s ease-in-out infinite }
   @keyframes blink{ 0%,100%{opacity:1} 50%{opacity:.25} }
   h1{
-    font-family:var(--display); font-weight:800; line-height:1.05; letter-spacing:-.02em;
-    font-size:clamp(2.3rem, 6.5vw, 4rem); margin:18px 0 14px;
+    font-family:var(--display); font-weight:800; line-height:1.04; letter-spacing:-.02em;
+    font-size:clamp(2.4rem, 7vw, 4.4rem); margin:18px 0 16px;
   }
   h1 .grad{
-    background:linear-gradient(100deg, var(--cyan), var(--violet) 55%, var(--pink));
-    -webkit-background-clip:text; background-clip:text; color:transparent;
+    background:linear-gradient(100deg, var(--cyan), var(--violet) 50%, var(--pink), var(--cyan));
+    background-size:240% auto; -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation:shimmer 6s linear infinite;
   }
-  .lead{ color:var(--muted); font-size:clamp(1rem,2.4vw,1.18rem); max-width:48ch; margin:0 auto }
-  /* Fortschrittsbalken */
-  .bar{ position:relative; width:min(340px,80%); height:5px; margin:34px auto 0; border-radius:999px; background:rgba(238,241,250,.08); overflow:hidden }
+  @keyframes shimmer{ to{background-position:240% center} }
+  .scramble{ font-variant-ligatures:none }
+  .lead{ color:var(--muted); font-size:clamp(1rem,2.4vw,1.18rem); max-width:50ch; margin:0 auto }
+  /* Chips */
+  .chips{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:24px }
+  .chip{
+    font-family:var(--mono); font-size:.68rem; letter-spacing:.12em; text-transform:uppercase;
+    padding:7px 13px; border-radius:999px; border:1px solid var(--line); background:var(--glass);
+    color:var(--muted); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  }
+  .chip b{ color:var(--cyan); font-weight:700 }
+  /* Fortschritt + Ticker */
+  .bar{ position:relative; width:min(360px,82%); height:5px; margin:30px auto 0; border-radius:999px; background:rgba(238,241,250,.08); overflow:hidden }
   .bar i{ position:absolute; inset:0; width:42%; border-radius:999px;
-    background:linear-gradient(90deg, var(--cyan), var(--violet)); box-shadow:0 0 18px rgba(124,92,255,.6);
-    animation:load 2.6s ease-in-out infinite }
+    background:linear-gradient(90deg, var(--cyan), var(--violet)); box-shadow:0 0 18px rgba(124,92,255,.6); animation:load 2.6s ease-in-out infinite }
   @keyframes load{ 0%{left:-42%} 100%{left:100%} }
-  .meta{ font-family:var(--mono); font-size:.72rem; letter-spacing:.16em; color:var(--muted); margin-top:16px }
+  .ticker{ font-family:var(--mono); font-size:.72rem; letter-spacing:.16em; color:var(--muted); margin-top:16px; min-height:1.2em }
+  .ticker .c{ color:var(--cyan) }
+  .ticker .cursor{ color:var(--cyan); animation:blink 1s step-end infinite }
   /* ── Footer + Login-Trigger ───────────────────────────────────── */
   footer{
     position:fixed; left:0; right:0; bottom:0; z-index:6;
@@ -122,8 +151,7 @@
   @keyframes fade{ from{opacity:0} to{opacity:1} }
   .card{
     width:100%; max-width:380px; background:linear-gradient(180deg, rgba(16,18,30,.96), rgba(8,10,20,.96));
-    border:1px solid var(--line); border-radius:18px; padding:28px 26px;
-    box-shadow:0 30px 80px rgba(0,0,0,.6); position:relative;
+    border:1px solid var(--line); border-radius:18px; padding:28px 26px; box-shadow:0 30px 80px rgba(0,0,0,.6); position:relative;
   }
   .card::before{ content:""; position:absolute; left:0; right:0; top:0; height:2px; border-radius:18px 18px 0 0;
     background:linear-gradient(90deg, var(--cyan), var(--violet), var(--pink)) }
@@ -132,8 +160,7 @@
   .field{ display:block; margin-bottom:12px }
   .field input{
     width:100%; padding:13px 14px; border-radius:11px; border:1px solid var(--line);
-    background:rgba(255,255,255,.03); color:var(--text); font-family:var(--body); font-size:.95rem;
-    transition:border-color .2s ease;
+    background:rgba(255,255,255,.03); color:var(--text); font-family:var(--body); font-size:.95rem; transition:border-color .2s ease;
   }
   .field input:focus{ outline:none; border-color:rgba(94,240,255,.55) }
   .card button.submit{
@@ -147,32 +174,39 @@
   .err{ color:var(--pink); font-family:var(--mono); font-size:.76rem; min-height:1.1em; margin-top:10px; text-align:center }
   .close{ position:absolute; top:12px; right:12px; background:none; border:none; color:var(--muted); font-size:1.3rem; cursor:pointer; line-height:1 }
   .close:hover{ color:var(--text) }
-  @media (max-width:560px){ footer{ flex-direction:column; gap:12px; text-align:center } }
-  @media (prefers-reduced-motion:reduce){ *{ animation:none !important } }
+  @media (max-width:560px){ footer{ flex-direction:column; gap:12px; text-align:center } .cursor-glow{ display:none } }
+  @media (prefers-reduced-motion:reduce){ *{ animation:none !important } #fx{ display:none } }
 </style>
 </head>
 <body>
-<div class="bg-glow"></div><div class="grid"></div><div class="grain"></div><div class="vignette"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="bg-glow"></div><div class="grid"></div><div class="scan"></div><div class="grain"></div><div class="vignette"></div>
+<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
 
-<main class="wrap">
+<main class="wrap" id="parallax">
   <div class="brand"><img src="./assets/logo-axon.png" alt="" />AI with Maris</div>
 
   <div class="orb" aria-hidden="true"></div>
 
   <span class="eyebrow"><span class="live"></span>Status: In Entwicklung</span>
-  <h1>Wir bauen gerade<br><span class="grad">etwas Großes.</span></h1>
-  <p class="lead">Die Seite ist vorübergehend offline und wird überarbeitet.
-    Bald gibt es hier wieder KI zum Anfassen — Live-Demos, Guide &amp; mehr.</p>
+  <h1>Wir bauen gerade<br><span class="grad scramble" id="scramble">etwas Großes.</span></h1>
+  <p class="lead">Die Seite ist vorübergehend offline und wird komplett überarbeitet.
+    Bald gibt es hier wieder KI zum Anfassen — Live-Demos, der KI-Guide &amp; mehr.</p>
+
+  <div class="chips" aria-hidden="true">
+    <span class="chip"><b>◆</b> Live-Demos</span>
+    <span class="chip"><b>◆</b> KI-Guide</span>
+    <span class="chip"><b>◆</b> Neues Design</span>
+    <span class="chip"><b>◆</b> Bald verfügbar</span>
+  </div>
 
   <div class="bar" aria-hidden="true"><i></i></div>
-  <div class="meta">// DEPLOY IN PROGRESS — BALD WIEDER DA</div>
+  <div class="ticker" id="ticker" aria-hidden="true"></div>
 </main>
 
 <footer>
   <span>© <span id="year"></span> AI with Maris</span>
   <div class="links">
-    <a href="/impressum">Impressum</a>
-    <a href="/datenschutz">Datenschutz</a>
     <button class="lock" id="lockBtn" type="button" aria-label="Interner Zugang" title="Interner Zugang">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <rect x="4" y="11" width="16" height="9" rx="2"></rect>
@@ -198,17 +232,132 @@
 <script src="./vendor/supabase.min.js"></script>
 <script>
 (function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   document.getElementById('year').textContent = new Date().getFullYear();
 
+  /* ── Partikel-Konstellation ─────────────────────────────────── */
+  if (!reduce) {
+    var canvas = document.getElementById('fx');
+    var ctx = canvas.getContext('2d');
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var W, H, parts = [];
+    var mouse = { x: -9999, y: -9999 };
+    var palette = ['94,240,255', '124,92,255', '255,94,168'];
+
+    function resize() {
+      W = canvas.width = Math.floor(innerWidth * dpr);
+      H = canvas.height = Math.floor(innerHeight * dpr);
+      canvas.style.width = innerWidth + 'px';
+      canvas.style.height = innerHeight + 'px';
+      var target = Math.min(90, Math.round((innerWidth * innerHeight) / 16000));
+      parts = [];
+      for (var i = 0; i < target; i++) {
+        parts.push({
+          x: Math.random() * W, y: Math.random() * H,
+          vx: (Math.random() - 0.5) * 0.25 * dpr,
+          vy: (Math.random() - 0.5) * 0.25 * dpr,
+          r: (Math.random() * 1.6 + 0.6) * dpr,
+          c: palette[(Math.random() * palette.length) | 0]
+        });
+      }
+    }
+
+    function step() {
+      ctx.clearRect(0, 0, W, H);
+      var link = 130 * dpr, mr = 170 * dpr;
+      for (var i = 0; i < parts.length; i++) {
+        var p = parts[i];
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0 || p.x > W) p.vx *= -1;
+        if (p.y < 0 || p.y > H) p.vy *= -1;
+        // sanfte Anziehung zur Maus
+        var dxm = mouse.x - p.x, dym = mouse.y - p.y, dm = Math.hypot(dxm, dym);
+        if (dm < mr) { p.x += (dxm / dm) * 0.4; p.y += (dym / dm) * 0.4; }
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(' + p.c + ',0.85)';
+        ctx.fill();
+      }
+      for (var a = 0; a < parts.length; a++) {
+        for (var b = a + 1; b < parts.length; b++) {
+          var dx = parts[a].x - parts[b].x, dy = parts[a].y - parts[b].y;
+          var d = Math.hypot(dx, dy);
+          if (d < link) {
+            ctx.strokeStyle = 'rgba(' + parts[a].c + ',' + (0.12 * (1 - d / link)) + ')';
+            ctx.lineWidth = dpr * 0.6;
+            ctx.beginPath(); ctx.moveTo(parts[a].x, parts[a].y); ctx.lineTo(parts[b].x, parts[b].y); ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(step);
+    }
+
+    addEventListener('resize', resize);
+    addEventListener('mousemove', function (e) { mouse.x = e.clientX * dpr; mouse.y = e.clientY * dpr; });
+    addEventListener('mouseleave', function () { mouse.x = mouse.y = -9999; });
+    resize(); step();
+
+    /* Cursor-Glow + Parallax */
+    var glow = document.getElementById('cursorGlow');
+    var par = document.getElementById('parallax');
+    addEventListener('mousemove', function (e) {
+      glow.style.opacity = '1';
+      glow.style.transform = 'translate(' + e.clientX + 'px,' + e.clientY + 'px)';
+      var rx = (e.clientX / innerWidth - 0.5), ry = (e.clientY / innerHeight - 0.5);
+      par.style.transform = 'translate(' + (-rx * 16) + 'px,' + (-ry * 16) + 'px)';
+    });
+
+    /* Text-Scramble auf "etwas Großes." */
+    (function () {
+      var el = document.getElementById('scramble');
+      var target = el.textContent, chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0101#$%&/<>*';
+      function run() {
+        var frame = 0, total = 34;
+        var iv = setInterval(function () {
+          var out = '';
+          for (var i = 0; i < target.length; i++) {
+            if (target[i] === ' ') { out += ' '; continue; }
+            if (i < (frame / total) * target.length) out += target[i];
+            else out += chars[(Math.random() * chars.length) | 0];
+          }
+          el.textContent = out;
+          if (++frame > total) { clearInterval(iv); el.textContent = target; }
+        }, 38);
+      }
+      run();
+      setInterval(run, 9000);
+    })();
+  }
+
+  /* ── Status-Ticker (Typewriter) ─────────────────────────────── */
+  (function () {
+    var el = document.getElementById('ticker');
+    if (!el) return;
+    var lines = [
+      '> deploy: in progress …',
+      '> build: neues design',
+      '> status: bald wieder online',
+      '> tip: interner zugang unten rechts'
+    ];
+    if (reduce) { el.innerHTML = '<span class="c">' + lines[2] + '</span>'; return; }
+    var li = 0, ci = 0, del = false;
+    function tick() {
+      var s = lines[li];
+      el.innerHTML = '<span class="c">' + s.slice(0, ci) + '</span><span class="cursor">▌</span>';
+      if (!del) { ci++; if (ci > s.length) { del = true; setTimeout(tick, 1600); return; } }
+      else { ci--; if (ci === 0) { del = false; li = (li + 1) % lines.length; } }
+      setTimeout(tick, del ? 28 : 55);
+    }
+    tick();
+  })();
+
+  /* ── Login ──────────────────────────────────────────────────── */
   var modal = document.getElementById('modal');
   var form = document.getElementById('loginForm');
   var errEl = document.getElementById('err');
   var btn = document.getElementById('submitBtn');
 
-  function openModal() {
-    modal.classList.add('open');
-    setTimeout(function () { document.getElementById('email').focus(); }, 60);
-  }
+  function openModal() { modal.classList.add('open'); setTimeout(function () { document.getElementById('email').focus(); }, 60); }
   function closeModal() { modal.classList.remove('open'); errEl.textContent = ''; }
 
   document.getElementById('lockBtn').addEventListener('click', openModal);
@@ -230,27 +379,16 @@
 
     sb.auth.signInWithPassword({ email: email, password: password })
       .then(function (r) {
-        if (r.error || !r.data || !r.data.session) {
-          throw new Error('E-Mail oder Passwort falsch.');
-        }
+        if (r.error || !r.data || !r.data.session) throw new Error('E-Mail oder Passwort falsch.');
         return fetch('/__gate/enter', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ access_token: r.data.session.access_token })
         });
       })
-      .then(function (res) {
-        if (!res.ok) throw new Error('Zugang konnte nicht freigeschaltet werden.');
-        return res.json();
-      })
-      .then(function (out) {
-        if (!out.ok) throw new Error('Zugang konnte nicht freigeschaltet werden.');
-        window.location.replace('/');
-      })
-      .catch(function (err) {
-        errEl.textContent = err.message || 'Anmeldung fehlgeschlagen.';
-        btn.disabled = false;
-      });
+      .then(function (res) { if (!res.ok) throw new Error('Zugang konnte nicht freigeschaltet werden.'); return res.json(); })
+      .then(function (out) { if (!out.ok) throw new Error('Zugang konnte nicht freigeschaltet werden.'); window.location.replace('/'); })
+      .catch(function (err) { errEl.textContent = err.message || 'Anmeldung fehlgeschlagen.'; btn.disabled = false; });
   });
 })();
 </script>
