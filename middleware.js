@@ -28,6 +28,7 @@ const MAXAGE = 60 * 60 * 24 * 30; // 30 Tage (Refresh hält die Session frisch)
 // Blog und Newsletter. Alles andere (inkl. Impressum/Datenschutz) liegt
 // hinter dem Login.
 const PUBLIC = new Set([
+  '/coming-soon',
   '/coming-soon.html',
   '/newsletter',
   '/newsletter.html',
@@ -126,7 +127,7 @@ export default async function middleware(request) {
 
   // Logout: Token-Cookies löschen -> zurück zur Baustelle.
   if (path === '/__gate/leave') {
-    const res = rewrite(new URL('/coming-soon.html', request.url));
+    const res = rewrite(new URL('/coming-soon', request.url));
     res.headers.append('Set-Cookie', clear(AT));
     res.headers.append('Set-Cookie', clear(RT));
     return res;
@@ -152,5 +153,5 @@ export default async function middleware(request) {
   }
 
   // Sonst: Baustelle zeigen (Inhalt bleibt verborgen).
-  return rewrite(new URL('/coming-soon.html', request.url));
+  return rewrite(new URL('/coming-soon', request.url));
 }
