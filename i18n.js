@@ -7,6 +7,7 @@
   // Deutsch -> Englisch. Schlüssel = normalisierter (Whitespace zusammengefasst) deutscher Text.
   var EN = {
     // --- Navigation / geteilt ---
+    "Abmelden": "Logout",
     "Leistungen": "Services",
     "Lösungen": "Solutions",
     "Beispiele": "Examples",

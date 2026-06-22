@@ -150,6 +150,18 @@ if (burger && navlinks) {
   });
 }
 
+// === 3b. Logout-Link (nur wenn eingeloggt) ===
+// Das Flag-Cookie aiwm_in=1 setzt die Edge-Middleware nach dem Login
+// (die echten Tokens sind HttpOnly und hier nicht lesbar).
+if (navlinks && /(?:^|;\s*)aiwm_in=1(?:;|$)/.test(document.cookie)) {
+  const logout = document.createElement('a');
+  logout.href = '/__gate/leave';
+  logout.className = 'nav-logout';
+  logout.textContent = 'Abmelden'; // i18n.js übersetzt zu "Logout"
+  const toggle = document.getElementById('langToggle');
+  navlinks.insertBefore(logout, toggle || null);
+}
+
 // === 4. Scroll Reveal IntersectionObserver ===
 const io = new IntersectionObserver(es => es.forEach(e => {
   if (e.isIntersecting) {
