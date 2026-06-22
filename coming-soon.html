@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#05060c" />
+<meta name="robots" content="noindex, nofollow" />
+<title>AI with Maris — in Arbeit</title>
+<meta name="description" content="AI with Maris wird gerade neu gebaut. Bald wieder da." />
+<link rel="icon" type="image/png" href="./assets/logo-axon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#05060c; --bg2:#080a14;
+    --cyan:#5ef0ff; --violet:#7c5cff; --indigo:#4d6bff; --pink:#ff5ea8;
+    --text:#eef1fa; --muted:rgba(238,241,250,.62); --line:rgba(238,241,250,.10);
+    --glass:rgba(255,255,255,.04);
+    --display:'Sora',sans-serif; --body:'Manrope',sans-serif; --mono:'Space Mono',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    font-family:var(--body); background:var(--bg); color:var(--text);
+    min-height:100dvh; overflow:hidden; line-height:1.6;
+    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    display:flex; align-items:center; justify-content:center;
+  }
+  /* ── Hintergrund: Glow, Grid, Grain, Vignette ─────────────────── */
+  .bg-glow{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(closest-side at 18% 20%, rgba(124,92,255,.22), transparent 70%),
+      radial-gradient(closest-side at 84% 28%, rgba(94,240,255,.16), transparent 70%),
+      radial-gradient(closest-side at 50% 108%, rgba(255,94,168,.12), transparent 70%);
+    animation:drift 18s ease-in-out infinite alternate;
+  }
+  @keyframes drift{ from{transform:translate3d(0,0,0) scale(1)} to{transform:translate3d(0,-2%,0) scale(1.06)} }
+  .grid{
+    position:fixed; inset:-2px; z-index:0; pointer-events:none; opacity:.5;
+    background-image:
+      linear-gradient(to right, rgba(238,241,250,.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(238,241,250,.045) 1px, transparent 1px);
+    background-size:54px 54px;
+    -webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 45%, #000 40%, transparent 100%);
+    mask-image:radial-gradient(ellipse 80% 70% at 50% 45%, #000 40%, transparent 100%);
+  }
+  .grain{
+    position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.05; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .vignette{position:fixed; inset:0; z-index:1; pointer-events:none; box-shadow:inset 0 0 320px 60px rgba(0,0,0,.9)}
+  /* ── Inhalt ───────────────────────────────────────────────────── */
+  .wrap{position:relative; z-index:5; width:100%; max-width:760px; padding:40px 28px; text-align:center}
+  .brand{
+    font-family:var(--display); font-weight:800; letter-spacing:.18em; font-size:.95rem;
+    display:inline-flex; align-items:center; gap:11px; text-transform:uppercase;
+  }
+  .brand img{width:22px; height:22px; object-fit:contain}
+  /* Status-Orb */
+  .orb{
+    position:relative; width:128px; height:128px; margin:34px auto 30px;
+    border-radius:50%;
+    background:radial-gradient(circle at 32% 28%, rgba(94,240,255,.9), rgba(124,92,255,.85) 45%, rgba(77,107,255,.6) 70%, transparent 78%);
+    box-shadow:0 0 60px rgba(124,92,255,.45), inset 0 0 40px rgba(255,255,255,.12);
+    animation:pulse 3.4s ease-in-out infinite;
+  }
+  .orb::before{
+    content:""; position:absolute; inset:-18px; border-radius:50%;
+    border:1px solid var(--line);
+    background:conic-gradient(from 0deg, transparent, rgba(94,240,255,.55), transparent 35%);
+    -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 0);
+    mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 0);
+    animation:spin 6s linear infinite;
+  }
+  @keyframes pulse{ 0%,100%{transform:scale(1); filter:brightness(1)} 50%{transform:scale(1.05); filter:brightness(1.18)} }
+  @keyframes spin{ to{transform:rotate(360deg)} }
+  .eyebrow{
+    font-family:var(--mono); font-size:.7rem; letter-spacing:.34em; text-transform:uppercase;
+    color:var(--cyan); display:inline-flex; align-items:center; gap:10px;
+  }
+  .eyebrow .live{ width:8px; height:8px; border-radius:50%; background:var(--cyan); box-shadow:0 0 10px var(--cyan); animation:blink 1.6s ease-in-out infinite }
+  @keyframes blink{ 0%,100%{opacity:1} 50%{opacity:.25} }
+  h1{
+    font-family:var(--display); font-weight:800; line-height:1.05; letter-spacing:-.02em;
+    font-size:clamp(2.3rem, 6.5vw, 4rem); margin:18px 0 14px;
+  }
+  h1 .grad{
+    background:linear-gradient(100deg, var(--cyan), var(--violet) 55%, var(--pink));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .lead{ color:var(--muted); font-size:clamp(1rem,2.4vw,1.18rem); max-width:48ch; margin:0 auto }
+  /* Fortschrittsbalken */
+  .bar{ position:relative; width:min(340px,80%); height:5px; margin:34px auto 0; border-radius:999px; background:rgba(238,241,250,.08); overflow:hidden }
+  .bar i{ position:absolute; inset:0; width:42%; border-radius:999px;
+    background:linear-gradient(90deg, var(--cyan), var(--violet)); box-shadow:0 0 18px rgba(124,92,255,.6);
+    animation:load 2.6s ease-in-out infinite }
+  @keyframes load{ 0%{left:-42%} 100%{left:100%} }
+  .meta{ font-family:var(--mono); font-size:.72rem; letter-spacing:.16em; color:var(--muted); margin-top:16px }
+  /* ── Footer + Login-Trigger ───────────────────────────────────── */
+  footer{
+    position:fixed; left:0; right:0; bottom:0; z-index:6;
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+    padding:18px 24px; font-family:var(--mono); font-size:.72rem; color:var(--muted);
+  }
+  footer a{ color:var(--muted); text-decoration:none; transition:color .2s ease }
+  footer a:hover{ color:var(--cyan) }
+  footer .links{ display:flex; gap:18px; align-items:center }
+  .lock{
+    appearance:none; border:1px solid var(--line); background:var(--glass); color:var(--muted);
+    width:40px; height:40px; border-radius:12px; cursor:pointer; display:grid; place-items:center;
+    transition:border-color .2s ease, color .2s ease, transform .2s ease; -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  }
+  .lock:hover{ color:var(--cyan); border-color:rgba(94,240,255,.4); transform:translateY(-2px) }
+  .lock svg{ width:18px; height:18px }
+  /* ── Login-Modal ──────────────────────────────────────────────── */
+  .modal{ position:fixed; inset:0; z-index:20; display:none; align-items:center; justify-content:center; padding:24px;
+    background:rgba(3,4,9,.72); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px) }
+  .modal.open{ display:flex; animation:fade .25s ease }
+  @keyframes fade{ from{opacity:0} to{opacity:1} }
+  .card{
+    width:100%; max-width:380px; background:linear-gradient(180deg, rgba(16,18,30,.96), rgba(8,10,20,.96));
+    border:1px solid var(--line); border-radius:18px; padding:28px 26px;
+    box-shadow:0 30px 80px rgba(0,0,0,.6); position:relative;
+  }
+  .card::before{ content:""; position:absolute; left:0; right:0; top:0; height:2px; border-radius:18px 18px 0 0;
+    background:linear-gradient(90deg, var(--cyan), var(--violet), var(--pink)) }
+  .card h2{ font-family:var(--display); font-weight:700; font-size:1.2rem; margin-bottom:4px }
+  .card p{ color:var(--muted); font-size:.86rem; margin-bottom:18px }
+  .field{ display:block; margin-bottom:12px }
+  .field input{
+    width:100%; padding:13px 14px; border-radius:11px; border:1px solid var(--line);
+    background:rgba(255,255,255,.03); color:var(--text); font-family:var(--body); font-size:.95rem;
+    transition:border-color .2s ease;
+  }
+  .field input:focus{ outline:none; border-color:rgba(94,240,255,.55) }
+  .card button.submit{
+    width:100%; margin-top:6px; padding:13px 14px; border:none; border-radius:11px; cursor:pointer;
+    font-family:var(--display); font-weight:700; font-size:.95rem; color:#05060c;
+    background:linear-gradient(100deg, var(--cyan), var(--violet)); transition:filter .2s ease, transform .12s ease;
+  }
+  .card button.submit:hover{ filter:brightness(1.08) }
+  .card button.submit:active{ transform:translateY(1px) }
+  .card button.submit[disabled]{ opacity:.6; cursor:progress }
+  .err{ color:var(--pink); font-family:var(--mono); font-size:.76rem; min-height:1.1em; margin-top:10px; text-align:center }
+  .close{ position:absolute; top:12px; right:12px; background:none; border:none; color:var(--muted); font-size:1.3rem; cursor:pointer; line-height:1 }
+  .close:hover{ color:var(--text) }
+  @media (max-width:560px){ footer{ flex-direction:column; gap:12px; text-align:center } }
+  @media (prefers-reduced-motion:reduce){ *{ animation:none !important } }
+</style>
+</head>
+<body>
+<div class="bg-glow"></div><div class="grid"></div><div class="grain"></div><div class="vignette"></div>
+
+<main class="wrap">
+  <div class="brand"><img src="./assets/logo-axon.png" alt="" />AI with Maris</div>
+
+  <div class="orb" aria-hidden="true"></div>
+
+  <span class="eyebrow"><span class="live"></span>Status: In Entwicklung</span>
+  <h1>Wir bauen gerade<br><span class="grad">etwas Großes.</span></h1>
+  <p class="lead">Die Seite ist vorübergehend offline und wird überarbeitet.
+    Bald gibt es hier wieder KI zum Anfassen — Live-Demos, Guide &amp; mehr.</p>
+
+  <div class="bar" aria-hidden="true"><i></i></div>
+  <div class="meta">// DEPLOY IN PROGRESS — BALD WIEDER DA</div>
+</main>
+
+<footer>
+  <span>© <span id="year"></span> AI with Maris</span>
+  <div class="links">
+    <a href="/impressum">Impressum</a>
+    <a href="/datenschutz">Datenschutz</a>
+    <button class="lock" id="lockBtn" type="button" aria-label="Interner Zugang" title="Interner Zugang">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="4" y="11" width="16" height="9" rx="2"></rect>
+        <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+      </svg>
+    </button>
+  </div>
+</footer>
+
+<!-- Login-Modal -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <form class="card" id="loginForm">
+    <button class="close" id="closeBtn" type="button" aria-label="Schließen">×</button>
+    <h2 id="modalTitle">Interner Zugang</h2>
+    <p>Anmeldung mit deinem Konto, um die Seite freizuschalten.</p>
+    <label class="field"><input type="email" id="email" placeholder="E-Mail" autocomplete="username" required /></label>
+    <label class="field"><input type="password" id="password" placeholder="Passwort" autocomplete="current-password" required /></label>
+    <button class="submit" id="submitBtn" type="submit">Freischalten</button>
+    <div class="err" id="err" role="alert"></div>
+  </form>
+</div>
+
+<script src="./vendor/supabase.min.js"></script>
+<script>
+(function () {
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  var modal = document.getElementById('modal');
+  var form = document.getElementById('loginForm');
+  var errEl = document.getElementById('err');
+  var btn = document.getElementById('submitBtn');
+
+  function openModal() {
+    modal.classList.add('open');
+    setTimeout(function () { document.getElementById('email').focus(); }, 60);
+  }
+  function closeModal() { modal.classList.remove('open'); errEl.textContent = ''; }
+
+  document.getElementById('lockBtn').addEventListener('click', openModal);
+  document.getElementById('closeBtn').addEventListener('click', closeModal);
+  modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+
+  var sb = supabase.createClient(
+    'https://amrdmnnijbfwtrjcpocl.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtcmRtbm5pamJmd3RyamNwb2NsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTU0OTcsImV4cCI6MjA5NjQzMTQ5N30.y-9eLzeQKDlHzSG3_ro-ThAnnpnAEKLTWS8NMrpSXCI'
+  );
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    errEl.textContent = '';
+    btn.disabled = true;
+    var email = document.getElementById('email').value.trim();
+    var password = document.getElementById('password').value;
+
+    sb.auth.signInWithPassword({ email: email, password: password })
+      .then(function (r) {
+        if (r.error || !r.data || !r.data.session) {
+          throw new Error('E-Mail oder Passwort falsch.');
+        }
+        return fetch('/__gate/enter', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ access_token: r.data.session.access_token })
+        });
+      })
+      .then(function (res) {
+        if (!res.ok) throw new Error('Zugang konnte nicht freigeschaltet werden.');
+        return res.json();
+      })
+      .then(function (out) {
+        if (!out.ok) throw new Error('Zugang konnte nicht freigeschaltet werden.');
+        window.location.replace('/');
+      })
+      .catch(function (err) {
+        errEl.textContent = err.message || 'Anmeldung fehlgeschlagen.';
+        btn.disabled = false;
+      });
+  });
+})();
+</script>
+</body>
+</html>

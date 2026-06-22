@@ -1,4 +1,5 @@
+# Seite ist vorübergehend offline (in Arbeit) — nicht indexieren.
 User-agent: *
-Allow: /
-
-Sitemap: https://aiwithmaris.com/sitemap.xml
+Disallow: /
+Allow: /impressum
+Allow: /datenschutz
