@@ -1,3 +1,8 @@
-# Seite ist vorübergehend offline (in Arbeit) — komplett gesperrt, nicht indexieren.
+# Seite ist vorübergehend offline (in Arbeit). Öffentlich bleiben nur
+# Blog und Newsletter — der Rest ist hinter dem Login gesperrt.
 User-agent: *
 Disallow: /
+Allow: /blog
+Allow: /newsletter
+
+Sitemap: https://aiwithmaris.com/sitemap.xml
