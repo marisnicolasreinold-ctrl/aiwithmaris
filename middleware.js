@@ -25,13 +25,15 @@ const RT = 'aiwm_rt'; // Supabase refresh token
 const MAXAGE = 60 * 60 * 24 * 30; // 30 Tage (Refresh hält die Session frisch)
 
 // Immer öffentlich, auch ohne Login: die Baustellen-Seite selbst sowie
-// Blog und Newsletter. Alles andere (inkl. Impressum/Datenschutz) liegt
-// hinter dem Login.
+// Blog, Newsletter und Datenschutz (für die Newsletter-Einwilligung).
+// Alles andere (inkl. Impressum) liegt hinter dem Login.
 const PUBLIC = new Set([
   '/coming-soon',
   '/coming-soon.html',
   '/newsletter',
   '/newsletter.html',
+  '/datenschutz',
+  '/datenschutz.html',
   '/blog',
   '/blog.html',
 ]);

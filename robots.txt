@@ -1,8 +1,9 @@
 # Seite ist vorübergehend offline (in Arbeit). Öffentlich bleiben nur
-# Blog und Newsletter — der Rest ist hinter dem Login gesperrt.
+# Blog, Newsletter und Datenschutz — der Rest ist hinter dem Login gesperrt.
 User-agent: *
 Disallow: /
 Allow: /blog
 Allow: /newsletter
+Allow: /datenschutz
 
 Sitemap: https://aiwithmaris.com/sitemap.xml
