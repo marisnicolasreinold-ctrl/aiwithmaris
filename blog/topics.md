@@ -34,6 +34,8 @@ oberste offene Thema ist immer das nächste.
 
 ## Veröffentlicht
 
+- 2026-06-23 — Neu: Der KI-Workflow für Lehrkräfte — Unterrichtsmaterial auf Autopilot (Neu: Der KI-Workflow für Lehrkräfte — Unterrichtsmaterial automatisch erstellen, vom Lehrplan bis zum Autopiloten)
+
 - 2026-06-22 — Business-driven KI: Wenn das Geschäftsergebnis das Projekt steuert (Business-driven KI: Wenn das Geschäftsergebnis das Projekt steuert)
 
 - 2026-06-19 — Frühwarn-Cockpit statt Bauchgefühl: KI für Kennzahlen im Tagesgeschäft (Frühwarn-Cockpit statt Bauchgefühl: KI für Kennzahlen im Tagesgeschäft)
