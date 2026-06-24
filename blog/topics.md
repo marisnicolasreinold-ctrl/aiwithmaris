@@ -14,7 +14,6 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] KI im Controlling: Der Monatsabschluss, der sich selbst erklärt
 - [ ] KI in der Finanzplanung: Forecasts, die mehr sind als fortgeschriebenes Excel
 - [ ] Warum KI erst nützlich wird, wenn sie an deine Systeme darf — MCP erklärt
 - [ ] Was ein KI-Agent mit Zugang zu deinen Zahlen wirklich erledigt — Claude Code über MCP
@@ -33,6 +32,8 @@ oberste offene Thema ist immer das nächste.
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-06-24 — KI im Controlling: Der Monatsabschluss, der sich selbst erklärt (KI im Controlling: Der Monatsabschluss, der sich selbst erklärt)
 
 - 2026-06-23 — Neu: Der KI-Workflow für Lehrkräfte — Unterrichtsmaterial auf Autopilot (Neu: Der KI-Workflow für Lehrkräfte — Unterrichtsmaterial automatisch erstellen, vom Lehrplan bis zum Autopiloten)
 
