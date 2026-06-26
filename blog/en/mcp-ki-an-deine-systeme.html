@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" data-blog-lang="en" data-alt-url="/blog/mcp-ki-an-deine-systeme">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#05060c" />
+
+<title>Why AI only becomes useful once it's allowed into your systems — AI with Maris</title>
+<meta name="description" content="An AI chat in the browser doesn't know your business. MCP is the standard that gives it safe access to your real systems — without the tech jargon." />
+<meta name="author" content="Maris Reinold" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://aiwithmaris.com/blog/en/mcp-ki-an-deine-systeme" />
+<link rel="alternate" hreflang="de" href="https://aiwithmaris.com/blog/mcp-ki-an-deine-systeme" />
+<link rel="alternate" hreflang="en" href="https://aiwithmaris.com/blog/en/mcp-ki-an-deine-systeme" />
+<link rel="alternate" type="application/rss+xml" title="AI with Maris — Blog" href="https://aiwithmaris.com/blog/en/feed.xml" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Why AI only becomes useful once it's allowed into your systems" />
+<meta property="og:description" content="An AI chat in the browser doesn't know your business. MCP is the standard that gives it safe access to your real systems — without the tech jargon." />
+<meta property="og:url" content="https://aiwithmaris.com/blog/en/mcp-ki-an-deine-systeme" />
+<meta property="og:image" content="https://aiwithmaris.com/assets/og-axon.png" />
+<meta property="article:published_time" content="2026-06-26T08:07:10.771Z" />
+<meta property="article:author" content="Maris Reinold" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Why AI only becomes useful once it's allowed into your systems",
+  "description": "An AI chat in the browser doesn't know your business. MCP is the standard that gives it safe access to your real systems — without the tech jargon.",
+  "datePublished": "2026-06-26T08:07:10.771Z",
+  "inLanguage": "en",
+  "url": "https://aiwithmaris.com/blog/en/mcp-ki-an-deine-systeme",
+  "author": { "@type": "Person", "name": "Maris Reinold", "url": "https://aiwithmaris.com/ueber-uns.html" },
+  "publisher": { "@type": "Organization", "name": "AI with Maris", "url": "https://aiwithmaris.com" }
+}
+</script>
+
+<link rel="icon" type="image/png" href="/assets/logo-axon.png" />
+<link rel="stylesheet" href="/assets/fonts/fonts.css" />
+<link rel="stylesheet" href="/style.css" />
+<script src="/blog/blog-lang.js"></script>
+
+<style>
+.blog-prose{color:var(--muted);font-weight:300;font-size:1.04rem;line-height:1.75}
+.blog-prose p{margin:0 0 18px}
+.blog-prose h2{font-family:var(--display);font-weight:700;color:var(--text);font-size:clamp(1.3rem,2.4vw,1.7rem);letter-spacing:-.01em;line-height:1.25;margin:42px 0 14px}
+.blog-prose h3{color:var(--text);font-size:1.1rem;margin:30px 0 10px}
+.blog-prose ul,.blog-prose ol{margin:0 0 18px;padding-left:22px}
+.blog-prose li{margin-bottom:8px}
+.blog-prose strong{color:var(--text);font-weight:600}
+.blog-prose a{color:var(--text)}
+.blog-meta{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:.9rem;margin:18px 0 36px}
+.blog-back{display:inline-block;color:var(--muted);text-decoration:none;font-size:.92rem;margin-bottom:26px}
+.blog-back:hover{color:var(--text)}
+.blog-cta{margin-top:48px;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:26px 28px;background:rgba(255,255,255,.03)}
+.blog-cta h2{font-family:var(--display);font-weight:700;font-size:1.25rem;margin:0 0 8px}
+.blog-cta p{color:var(--muted);font-weight:300;margin:0 0 16px}
+</style>
+</head>
+<body>
+
+<canvas id="scene"></canvas>
+<div class="bg-glow"></div><div class="grain"></div><div class="vignette"></div>
+<div class="cursor-ring"></div><div class="cursor-dot"></div>
+
+<a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+<nav id="nav" aria-label="Hauptnavigation">
+  <div class="nav-inner">
+    <a class="logo" href="/index.html" aria-label="AI with Maris — zur Startseite"><img src="/assets/logo-axon.png" alt="" />AI with Maris</a>
+    <div class="nav-links" id="navlinks">
+      <a href="/leistungen.html">Leistungen</a>
+      <a href="/beispiele.html">Beispiele</a>
+      <a href="/guide.html">KI-Guide<span class="nav-pill">PDF</span></a>
+      <a href="/blog/en" class="active">Blog</a>
+      <a href="/ueber-uns.html">Über mich</a>
+      <a href="/kontakt.html" class="nav-cta">Kontakt</a>
+      <button class="lang-toggle" id="langToggle" type="button">DE</button>
+    </div>
+    <button class="burger" id="burger" type="button" aria-label="Menü öffnen" aria-expanded="false" aria-controls="navlinks"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="wrap">
+<main id="main" tabindex="-1">
+
+<section class="section-pad" style="padding-top:140px">
+  <div class="container" style="max-width:780px">
+    <a class="blog-back" href="/blog/en">← All articles</a>
+    <div><span class="eyebrow">Blog</span></div>
+    <h1 style="font-family:var(--display);font-weight:700;font-size:clamp(1.9rem,4vw,2.7rem);letter-spacing:-.02em;line-height:1.15;margin:16px 0 0">Why AI only becomes useful once it's allowed into your systems</h1>
+    <div class="blog-meta">
+      <time datetime="2026-06-26T08:07:10.771Z">26 June 2026</time>
+      <span>·</span>
+      <span>3 min read</span>
+      <span>·</span>
+      <span>Maris Reinold</span>
+    </div>
+
+    <article class="blog-prose">
+<p>Picture a brilliant new hire. They've read everything, think fast, write cleanly. But they sit in an empty room with no phone, no access to your system, no look into the folder. You can ask them anything — but they know nothing about <em>your</em> business. That's exactly what an AI chat in the browser is. Clever, but cut off.</p><p>The value only appears once the AI is allowed at the real data: the accounting, the order list, the inbox, the database. And for just that there's been a standard for about a year that's getting a lot of talk: MCP, the Model Context Protocol.</p><h2>What MCP is — in one image</h2><p>MCP is something like a USB port for AI. It used to be that every connection between an AI and a system needed its own bespoke solution — expensive, fragile, new for every tool. MCP is the universal plug: a system is made MCP-capable once, and after that any AI that understands the standard can use it. Like USB-C, which fits laptop, phone and monitor alike.</p><p>This isn't a vendor trick. MCP is an open standard — originally started by Anthropic, since handed to the Linux Foundation and thus vendor-neutral. There are already over a thousand ready-made connections, from databases to Google Drive to accounting and sales systems.</p><h2>Why this matters for smaller companies</h2><ul><li><strong>You don't build anew for every tool.</strong> One connection, many AI applications can use it. That cuts cost and dependence.</li><li><strong>The data stays where it is.</strong> The AI reaches in selectively instead of you dumping everything into a foreign tool. Important for data protection and data sovereignty.</li><li><strong>You control what's allowed.</strong> MCP defines what the AI may do — read only, or also write; this system, but not that one. Access with the handbrake on, not an open door.</li><li><strong>No lock-in.</strong> Because the standard is open and vendor-neutral, you're not chained to a single provider.</li></ul><h2>From advisor to colleague</h2><p>The difference sounds small but is huge. An AI without access can <em>tell</em> you how to check an invoice. An AI with access via MCP can actually pull the invoice from the system, match it against the order and flag the discrepancy. Advice becomes work. “Here's how you could do it” becomes “done, please take a look”.</p><h2>The honest take</h2><p>Access is power — and power needs limits. An AI allowed to write into real systems can also do real damage if left unsupervised. So the same rule applies for getting started as everywhere: let it read first, not write. Observe first, then hand over responsibility. And grant narrow rights — the AI needs access to that one system, not to everything.</p><p>MCP isn't a product you buy but the wiring in the background. But it's the wiring that makes the difference between an AI that chats nicely and one that really pitches in. What that looks like concretely when an AI agent is allowed at your numbers via MCP, I'll look at in the next article — and the <a href="/guide.html">AI guide</a> lays out how to get there step by step.</p>
+    </article>
+
+    <div class="blog-cta reveal">
+      <h2>Want to go deeper?</h2>
+      <p>My AI guide “Start where it counts” lays out the full roadmap — from the first use case to scaling. Or just drop me a line.</p>
+      <a href="/guide.html" class="btn btn-primary" data-hover>Get the AI guide <span class="arrow">→</span></a>
+      &nbsp;
+      <a href="/kontakt.html" class="btn" data-hover>Contact</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div><div class="logo" style="margin-bottom:16px"><img src="/assets/logo-axon.png" alt="" />AI with Maris</div>
+        <p>KI-Coaching &amp; maßgeschneiderte Software-Entwicklung — cloud-neutral, datensouverän, ohne Lock-in.</p></div>
+      <div class="foot-links">
+        <div class="foot-col"><h4>Angebot</h4><a href="/leistungen.html">Leistungen</a><a href="/beispiele.html">Beispiele</a><a href="/guide.html">KI-Guide</a><a href="/blog/en">Blog</a><a href="/newsletter.html">Newsletter</a><a href="/ueber-uns.html">Über mich</a></div>
+        <div class="foot-col"><h4>Kontakt</h4><a href="mailto:info@aiwithmaris.com">info@aiwithmaris.com</a><a href="/kontakt.html">Kontakt</a></div>
+        <div class="foot-col"><h4>Rechtliches</h4><a href="/impressum.html">Impressum</a><a href="/datenschutz.html">Datenschutz</a><a href="/agb.html">AGB</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 AI with Maris</span><span>Made in Germany · Cloud-neutral · Powered by AI</span></div>
+  </div>
+</footer>
+
+</div>
+
+<script src="/vendor/three.min.js"></script>
+<script src="/main.js"></script>
+<script src="/i18n.js"></script>
+</body>
+</html>

@@ -14,7 +14,6 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] Warum KI erst nützlich wird, wenn sie an deine Systeme darf — MCP erklärt
 - [ ] Was ein KI-Agent mit Zugang zu deinen Zahlen wirklich erledigt — Claude Code über MCP
 - [ ] KI im Vertrieb: Vom Lead bis zum Angebot — wo Automatisierung wirklich Zeit spart
 - [ ] KI in der Buchhaltung: Der Papierberg als perfekter erster Use Case
@@ -31,6 +30,8 @@ oberste offene Thema ist immer das nächste.
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-06-26 — Warum KI erst nützlich wird, wenn sie an deine Systeme darf (Warum KI erst nützlich wird, wenn sie an deine Systeme darf — MCP erklärt)
 
 - 2026-06-25 — KI in der Finanzplanung: Forecasts, die mehr sind als fortgeschriebenes Excel (KI in der Finanzplanung: Forecasts, die mehr sind als fortgeschriebenes Excel)
 
