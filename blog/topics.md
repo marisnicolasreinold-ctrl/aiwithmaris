@@ -14,7 +14,6 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] Was ein KI-Agent mit Zugang zu deinen Zahlen wirklich erledigt — Claude Code über MCP
 - [ ] KI im Vertrieb: Vom Lead bis zum Angebot — wo Automatisierung wirklich Zeit spart
 - [ ] KI in der Buchhaltung: Der Papierberg als perfekter erster Use Case
 - [ ] Klein anfangen heißt nicht klein denken: Vom ersten Use Case zur KI-Roadmap
@@ -30,6 +29,8 @@ oberste offene Thema ist immer das nächste.
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-06-29 — Was ein KI-Agent mit Zugang zu deinen Zahlen wirklich erledigt (Was ein KI-Agent mit Zugang zu deinen Zahlen wirklich erledigt — Claude Code über MCP)
 
 - 2026-06-26 — Warum KI erst nützlich wird, wenn sie an deine Systeme darf (Warum KI erst nützlich wird, wenn sie an deine Systeme darf — MCP erklärt)
 
