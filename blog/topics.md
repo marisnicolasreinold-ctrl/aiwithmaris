@@ -14,7 +14,6 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] Klein anfangen heißt nicht klein denken: Vom ersten Use Case zur KI-Roadmap
 - [ ] Was ein KI-Pilotprojekt kosten darf — eine ehrliche Rechnung
 - [ ] Schatten-KI im Unternehmen: Dein Team nutzt längst ChatGPT — was jetzt?
 - [ ] KI-Coaching vs. KI-Workshop: Warum einmalige Schulungen fast nichts bringen
@@ -27,6 +26,8 @@ oberste offene Thema ist immer das nächste.
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-07-02 — Klein anfangen heißt nicht klein denken: Vom ersten Use Case zur KI-Roadmap (Klein anfangen heißt nicht klein denken: Vom ersten Use Case zur KI-Roadmap)
 
 - 2026-07-01 — KI in der Buchhaltung: Warum der Papierberg der perfekte erste Use Case ist (KI in der Buchhaltung: Der Papierberg als perfekter erster Use Case)
 
