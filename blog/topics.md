@@ -15,6 +15,16 @@ oberste offene Thema ist immer das nächste.
 ## Offene Themen
 
 - [ ] Schatten-KI im Unternehmen: Dein Team nutzt längst ChatGPT — was jetzt?
+- [ ] Predictive Maintenance: Maschinenausfälle vorhersehen, bevor sie teuer werden
+- [ ] KI in der Qualitätskontrolle: Fehler sehen, die das Auge übersieht
+- [ ] KI in der Produktionsplanung: Wenn der Plan sich selbst umstellt
+- [ ] Erfahrungswissen sichern: KI als Gedächtnis der Produktion
+- [ ] Weniger Ausschuss, weniger Energie: KI-Optimierung in der Fertigung
+- [ ] EU AI Act: Warum die verschobenen Fristen keine Entwarnung sind
+- [ ] Neue KI-Modelle, fallende Preise: Was das für dein Budget heißt
+- [ ] 94 Prozent ohne KI: Was eine aktuelle Zahl über den Mittelstand verrät
+- [ ] Agentic AI: Vom Assistenten zum Kollegen — der Trend 2026 eingeordnet
+- [ ] Fachkräftemangel und KI: Kein Ersatz, aber ein Hebel
 - [ ] KI-Coaching vs. KI-Workshop: Warum einmalige Schulungen fast nichts bringen
 - [ ] Der Unterschied zwischen Automatisierung und KI — und warum er für dein Budget wichtig ist
 - [ ] Lock-in vermeiden: Wie du KI einführst, ohne dich von einem Anbieter abhängig zu machen
