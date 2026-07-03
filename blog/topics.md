@@ -14,7 +14,6 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] Was ein KI-Pilotprojekt kosten darf — eine ehrliche Rechnung
 - [ ] Schatten-KI im Unternehmen: Dein Team nutzt längst ChatGPT — was jetzt?
 - [ ] KI-Coaching vs. KI-Workshop: Warum einmalige Schulungen fast nichts bringen
 - [ ] Der Unterschied zwischen Automatisierung und KI — und warum er für dein Budget wichtig ist
@@ -26,6 +25,8 @@ oberste offene Thema ist immer das nächste.
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-07-03 — Was ein KI-Pilotprojekt kosten darf — eine ehrliche Rechnung (Was ein KI-Pilotprojekt kosten darf — eine ehrliche Rechnung)
 
 - 2026-07-02 — Klein anfangen heißt nicht klein denken: Vom ersten Use Case zur KI-Roadmap (Klein anfangen heißt nicht klein denken: Vom ersten Use Case zur KI-Roadmap)
 
