@@ -1,18 +1,17 @@
-// Edge Middleware: stellt die echte Seite hinter einen Login.
-// Nicht eingeloggte Besucher sehen nur die Coming-Soon-Baustelle.
-// Login läuft über den bestehenden Supabase-Auth-Account (wie admin.html).
-// Es wird KEIN eigenes Secret benötigt: nach dem Login werden Access- und
-// Refresh-Token in HttpOnly-Cookies gehalten und pro Request direkt gegen
-// Supabase verifiziert (mit automatischem Refresh bei Ablauf).
+// Edge Middleware: öffentliche Info-Seite, nur die internen Dashboards
+// (admin.html, report.html) liegen hinter einem Login.
+// Alle Info-Seiten sind ohne Anmeldung erreichbar. Login läuft weiterhin
+// über den bestehenden Supabase-Auth-Account (wie admin.html): nach dem
+// Login werden Access- und Refresh-Token in HttpOnly-Cookies gehalten und
+// pro Request direkt gegen Supabase verifiziert (mit automatischem Refresh).
+// Es wird KEIN eigenes Secret benötigt.
 import { next, rewrite } from '@vercel/edge';
 
 export const config = {
-  // Middleware läuft auf allen Routen AUSSER statischen Assets
-  // (Styles/Skripte/Bilder/Fonts bleiben öffentlich erreichbar);
-  // gegated wird nur der HTML-Inhalt der Seiten.
-  matcher: [
-    '/((?!assets/|vendor/|favicon|robots.txt|sitemap.xml|.*\\.(?:css|js|mjs|png|jpg|jpeg|svg|webp|avif|gif|ico|mp4|webmanifest|woff2?|ttf|map)$).*)',
-  ],
+  // Middleware läuft nur noch auf den gegateten Pfaden und den Login-
+  // Endpoints — alle öffentlichen Info-Seiten werden gar nicht erst
+  // abgefangen (schneller, kein Supabase-Call pro Seitenaufruf).
+  matcher: ['/admin', '/admin.html', '/report', '/report.html', '/__gate/:path*'],
 };
 
 const SUPABASE_URL = 'https://amrdmnnijbfwtrjcpocl.supabase.co';
@@ -24,25 +23,13 @@ const AT = 'aiwm_at'; // Supabase access token
 const RT = 'aiwm_rt'; // Supabase refresh token
 const MAXAGE = 60 * 60 * 24 * 30; // 30 Tage (Refresh hält die Session frisch)
 
-// Immer öffentlich, auch ohne Login: die Baustellen-Seite selbst sowie
-// Blog, Newsletter und Datenschutz (für die Newsletter-Einwilligung).
-// Alles andere (inkl. Impressum) liegt hinter dem Login.
-const PUBLIC = new Set([
-  '/coming-soon',
-  '/coming-soon.html',
-  '/newsletter',
-  '/newsletter.html',
-  '/datenschutz',
-  '/datenschutz.html',
-  '/blog',
-  '/blog.html',
-]);
+// Nur diese Pfade liegen hinter dem Login: die internen Dashboards.
+// Wegen cleanUrls können sowohl die saubere als auch die .html-Form
+// die Middleware treffen — beide Formen aufführen.
+const GATED = new Set(['/admin', '/admin.html', '/report', '/report.html']);
 
-// Öffentliche Pfad-Präfixe (Blog inkl. aller Beiträge, /en und feed.xml).
-function isPublic(path) {
-  if (PUBLIC.has(path)) return true;
-  if (path === '/blog/' || path.startsWith('/blog/')) return true;
-  return false;
+function isGated(path) {
+  return GATED.has(path);
 }
 
 function readCookie(request, name) {
@@ -146,8 +133,8 @@ export default async function middleware(request) {
     return res;
   }
 
-  // Immer öffentliche Seiten.
-  if (isPublic(path)) return next();
+  // Alles außer den gegateten Dashboards ist öffentlich.
+  if (!isGated(path)) return next();
 
   // Gültiger Access-Token -> echte Seite ausliefern.
   const access = readCookie(request, AT);

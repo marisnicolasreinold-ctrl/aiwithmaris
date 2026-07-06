@@ -5,10 +5,10 @@
     { "source": "/apps/:path*", "destination": "/apps/:path*" }
   ],
   "redirects": [
-    { "source": "/loesungen", "destination": "/leistungen#abteilungen", "permanent": true },
-    { "source": "/loesungen.html", "destination": "/leistungen#abteilungen", "permanent": true },
-    { "source": "/preise", "destination": "/guide", "permanent": true },
-    { "source": "/preise.html", "destination": "/guide", "permanent": true }
+    { "source": "/loesungen", "destination": "/ai-officer", "permanent": true },
+    { "source": "/loesungen.html", "destination": "/ai-officer", "permanent": true },
+    { "source": "/preise", "destination": "/", "permanent": true },
+    { "source": "/preise.html", "destination": "/", "permanent": true }
   ],
   "headers": [
     {
