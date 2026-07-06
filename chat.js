@@ -13,9 +13,9 @@
     de: {
       open: 'KI-Chat öffnen', close: 'Chat schließen', title: 'Frag Maris',
       sub: 'KI-Assistent · antwortet sofort',
-      hello: 'Hi! Ich bin der KI-Assistent dieser Seite. Frag mich zum Coaching, zur Software-Entwicklung, zu den Live-Demos oder zum KI-Guide.',
+      hello: 'Hi! Ich bin der KI-Assistent dieser Seite. Frag mich zum AI Officer, zum EU AI Act, zu KI im Unternehmen oder zu den Live-Demos.',
       placeholder: 'Deine Frage …', send: 'Senden',
-      chips: ['Was kostet der KI-Guide?', 'Zeig mir eine Live-Demo', 'Wie läuft ein Projekt ab?'],
+      chips: ['Was macht ein AI Officer?', 'Was ändert der EU AI Act für uns?', 'Welche Live-Demos gibt es?'],
       privacy: 'Deine Nachrichten werden zur Beantwortung an einen KI-Dienst (z. B. Google Gemini) übermittelt und von uns nicht dauerhaft gespeichert. Keine persönlichen Daten eingeben. Details: ',
       privacyLink: 'Datenschutz',
       errRate: 'Gerade sind viele Anfragen unterwegs — probier es in ein paar Minuten nochmal oder schreib direkt über die Kontaktseite.',
@@ -25,9 +25,9 @@
     en: {
       open: 'Open AI chat', close: 'Close chat', title: 'Ask Maris',
       sub: 'AI assistant · instant answers',
-      hello: "Hi! I'm this site's AI assistant. Ask me about coaching, software development, the live demos or the AI guide.",
+      hello: "Hi! I'm this site's AI assistant. Ask me about the AI Officer role, the EU AI Act, AI in your company or the live demos.",
       placeholder: 'Your question …', send: 'Send',
-      chips: ['How much is the AI guide?', 'Show me a live demo', 'How does a project work?'],
+      chips: ['What does an AI Officer do?', 'What does the EU AI Act change for us?', 'Which live demos are there?'],
       privacy: 'Your messages are sent to an AI service (e.g. Google Gemini) to generate answers and are not stored by us permanently. Please do not enter personal data. Details: ',
       privacyLink: 'Privacy policy',
       errRate: 'Lots of requests right now — please try again in a few minutes or reach out via the contact page.',

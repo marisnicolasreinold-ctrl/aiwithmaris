@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#05060c" />
+
+<title>AI Officer — die Rolle, der EU AI Act &amp; die ersten 90 Tage · AI with Maris</title>
+<meta name="description" content="Wer verantwortet KI im Unternehmen? Was der AI Officer wirklich macht, der EU AI Act in Klartext, die vier Risikoklassen und ein 90-Tage-Fahrplan — aus der Praxis, ohne Buzzwords." />
+<meta name="author" content="AI with Maris" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="https://aiwithmaris.com/ai-officer" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="article" />
+<meta property="og:locale" content="de_DE" />
+<meta property="og:site_name" content="AI with Maris" />
+<meta property="og:url" content="https://aiwithmaris.com/ai-officer" />
+<meta property="og:title" content="AI Officer — die Rolle, der EU AI Act &amp; die ersten 90 Tage" />
+<meta property="og:description" content="Wer verantwortet KI im Unternehmen? Die Rolle, der EU AI Act in Klartext und ein 90-Tage-Fahrplan — aus der Praxis, ohne Buzzwords." />
+<meta property="og:image" content="./assets/og-axon.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="AI with Maris — AI Officer" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="AI Officer — die Rolle, der EU AI Act &amp; die ersten 90 Tage" />
+<meta name="twitter:description" content="Wer verantwortet KI im Unternehmen? Die Rolle, der EU AI Act in Klartext und ein 90-Tage-Fahrplan — aus der Praxis." />
+<meta name="twitter:image" content="./assets/og-axon.png" />
+
+<link rel="icon" type="image/png" href="./assets/logo-axon.png" />
+
+<link rel="stylesheet" href="./assets/fonts/fonts.css" />
+<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+<canvas id="scene"></canvas>
+<div class="bg-glow"></div><div class="grain"></div><div class="vignette"></div>
+<div class="cursor-ring"></div><div class="cursor-dot"></div>
+
+<a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+<nav id="nav" aria-label="Hauptnavigation">
+  <div class="nav-inner">
+    <a class="logo" href="index.html" aria-label="AI with Maris — zur Startseite"><img src="./assets/logo-axon.png" alt="" />AI with Maris</a>
+    <div class="nav-links" id="navlinks">
+      <a href="beispiele.html">Beispiele</a>
+      <a href="ai-officer.html">AI Officer</a>
+      <a href="blog">Blog</a>
+      <a href="ueber-uns.html">Über mich</a>
+      <a href="kontakt.html" class="nav-cta">Kontakt</a>
+      <button class="lang-toggle" id="langToggle" type="button">EN</button>
+    </div>
+    <button class="burger" id="burger" type="button" aria-label="Menü öffnen" aria-expanded="false" aria-controls="navlinks"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="wrap">
+<main id="main" tabindex="-1">
+
+<!-- HERO -->
+<header class="hero" style="min-height:70vh;padding-top:140px">
+  <div class="container hero-grid">
+    <div>
+      <div class="dual-badge reveal"><span>EU AI Act</span><span>DSGVO</span><span>Erste 90 Tage</span></div>
+      <h1 class="reveal d1"><span class="grad">AI Officer</span> —<br>wer KI im Unternehmen verantwortet.</h1>
+      <p class="lead reveal d2">Zwischen Geschäftsführung, IT, Datenschutz und Team braucht KI jemanden,
+        der den Hut aufhat. Hier erkläre ich, was diese Rolle wirklich macht — aus der Praxis,
+        ohne Zertifikats-Verkauf und ohne Buzzwords.</p>
+      <div class="hero-actions reveal d3">
+        <a href="#rolle" class="btn btn-primary" data-hover>Was macht ein AI Officer? <span class="arrow">→</span></a>
+        <a href="blog" class="btn btn-ghost" data-hover>Zum Blog</a>
+      </div>
+    </div>
+    <div class="reveal d3">
+      <div class="holo-panel" id="tiltPanel">
+        <div class="panel-head"><div class="dot-row"><i></i><i></i><i></i></div><span class="label">AI Officer · SCOPE</span></div>
+        <div class="metric"><div><div class="k">Nutzen im Blick</div><div class="bar"><i style="width:88%"></i></div></div><div class="v">Use-Cases</div></div>
+        <div class="metric"><div><div class="k">Recht &amp; Risiko</div><div class="bar"><i style="width:74%"></i></div></div><div class="v">EU AI Act</div></div>
+        <div class="metric"><div><div class="k">Menschen mitnehmen</div><div class="bar"><i style="width:92%"></i></div></div><div class="v">Team</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>Scroll</span><span class="line"></span></div>
+</header>
+
+<!-- WAS IST EIN AI OFFICER -->
+<section class="section-pad" style="padding-top:0">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Die Rolle</span>
+      <h2>Kein Titel — eine Funktion.</h2>
+      <p>Ein AI Officer muss keine neue Stelle sein. Es ist ein Hut, den jemand aufsetzt: die Person,
+        die dafür sorgt, dass KI im Unternehmen nützlich und sicher eingesetzt wird.
+        Sie sitzt zwischen Strategie, IT, Datenschutz und den Fachbereichen — und übersetzt in beide
+        Richtungen. Nicht der Buzzword-Beauftragte, sondern der, der Ordnung reinbringt, bevor es
+        chaotisch wird.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VERANTWORTUNGSBEREICHE -->
+<section id="rolle" class="section-pad" style="padding-top:0">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Verantwortung</span>
+      <h2>Sechs Dinge, die auf dem Tisch liegen.</h2>
+      <p>Keine Stellenbeschreibung mit 40 Punkten — sondern die Bereiche, die wirklich zählen.</p>
+    </div>
+    <div class="cards reveal d1">
+      <div class="card">
+        <h3>Use-Cases priorisieren</h3>
+        <p>Nicht überall gleichzeitig anfangen. Herausfinden, wo KI am meisten Zeit oder Nerven spart —
+          und dort starten, wo der Nutzen sichtbar wird.</p>
+      </div>
+      <div class="card">
+        <h3>Recht &amp; Risiko im Blick</h3>
+        <p>EU AI Act und DSGVO nicht als Bremse, sondern als Landkarte. Wissen, welche Systeme welche
+          Pflichten auslösen — bevor sie live gehen.</p>
+      </div>
+      <div class="card">
+        <h3>Team befähigen</h3>
+        <p>KI kommt nur an, wenn Menschen sie nutzen. Schulung, klare Beispiele, Vertrauen — statt
+          Tool-Rollout und Hoffen.</p>
+      </div>
+      <div class="card">
+        <h3>Werkzeuge &amp; Datenhoheit</h3>
+        <p>Welche Tools sind freigegeben, wo liegen die Daten, was darf in offene Modelle? Klare
+          Leitplanken statt Schatten-KI.</p>
+      </div>
+      <div class="card">
+        <h3>Piloten messen</h3>
+        <p>Einen Nutzen definieren, ehrlich messen, entscheiden: skalieren oder stoppen. Kein
+          „läuft schon irgendwie".</p>
+      </div>
+      <div class="card">
+        <h3>Governance &amp; Freigaben</h3>
+        <p>Wer entscheidet, wer wird gefragt, wer informiert — für jeden KI-Einsatz. Eine schlanke
+          RACI-Logik reicht, um Verantwortung eindeutig zu machen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EU AI ACT -->
+<section class="section-pad" style="padding-top:0">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">EU AI Act</span>
+      <h2>Vier Risikoklassen — mehr musst du erst mal nicht wissen.</h2>
+      <p>Der EU AI Act sortiert KI-Systeme nach ihrem Risiko. In welche Klasse ein System fällt,
+        bestimmt, welche Pflichten gelten. Das ist der Kern.</p>
+    </div>
+    <div class="cards reveal d1">
+      <div class="card">
+        <h3>Inakzeptabel</h3>
+        <p>Schlicht verboten. Etwa Social Scoring oder manipulatives Verhalten, das Menschen gezielt
+          ausnutzt. Solche Systeme dürfen gar nicht betrieben werden.</p>
+      </div>
+      <div class="card">
+        <h3>Hoch</h3>
+        <p>Strenge Pflichten: Dokumentation, Datenqualität, menschliche Aufsicht. Typisch bei
+          Bewerber-Scoring oder Kreditwürdigkeit — überall, wo es um Menschen geht.</p>
+      </div>
+      <div class="card">
+        <h3>Begrenzt</h3>
+        <p>Transparenzpflicht: Nutzer müssen wissen, dass sie mit KI sprechen. Betrifft Chatbots,
+          KI-generierte Inhalte und Deepfakes.</p>
+      </div>
+      <div class="card">
+        <h3>Minimal</h3>
+        <p>Kaum Auflagen. Spamfilter, Übersetzungshilfen, die meisten Alltags-Tools. Hier reicht
+          gesunder Menschenverstand.</p>
+      </div>
+    </div>
+    <div class="cloud reveal d2" style="margin-top:32px">
+      <span class="eyebrow">Fristen</span>
+      <h3 style="font-family:var(--display);font-weight:700;font-size:1.5rem;margin:6px 0 10px">Ab August 2026 wird es ernst.</h3>
+      <p>Dann greifen die Hochrisiko-Pflichten vollständig. Wer jetzt anfängt, seine KI-Systeme zu
+        ordnen und einzustufen, hat später keinen Stress. Wichtig: Das hier ersetzt keine
+        Rechtsberatung — es gibt dir die Landkarte, damit du die richtigen Fragen stellst.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DIE ERSTEN 90 TAGE -->
+<section class="section-pad" style="padding-top:0">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Fahrplan</span>
+      <h2>Die ersten 90 Tage.</h2>
+      <p>Wenn du die Rolle neu übernimmst: nicht alles auf einmal. Drei Phasen, ein Ziel — Überblick
+        gewinnen, einen Nutzen beweisen, dann erst breit machen.</p>
+    </div>
+    <div class="cards reveal d1">
+      <div class="card">
+        <h3>Tag 1–30 · Bestandsaufnahme</h3>
+        <p>Welche KI-Tools laufen schon — auch inoffiziell (Schatten-KI)? Wo klemmt es im Alltag?
+          Erst verstehen, was da ist, bevor du steuerst.</p>
+      </div>
+      <div class="card">
+        <h3>Tag 31–60 · Pilot</h3>
+        <p>Einen konkreten Use-Case wählen, den Nutzen definieren, den rechtlichen Rahmen klären.
+          Klein genug, um schnell zu lernen — groß genug, um zu zählen.</p>
+      </div>
+      <div class="card">
+        <h3>Tag 61–90 · Messen &amp; entscheiden</h3>
+        <p>Ehrlich auswerten: Hat es geholfen? Dann skalieren. Wenn nicht: stoppen und den nächsten
+          Use-Case angehen. Beides ist ein guter Ausgang.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPLIANCE-BAUSTEINE -->
+<section class="section-pad" style="padding-top:0">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Compliance-Bausteine</span>
+      <h2>Was dich absichert.</h2>
+      <p>Drei Bausteine, die früh geklärt gehören — als Konzept, nicht als 200-seitiges Regelwerk.</p>
+    </div>
+    <div class="cards reveal d1">
+      <div class="card">
+        <h3>DSGVO</h3>
+        <p>Rechtsgrundlage klären, keine personenbezogenen Daten in offene Modelle, Datenhoheit
+          behalten. Der Klassiker, der zuerst schiefgeht, wenn niemand hinschaut.</p>
+      </div>
+      <div class="card">
+        <h3>Betriebsvereinbarung</h3>
+        <p>Wenn ein Betriebsrat da ist: Transparenz gegenüber dem Team, klare Bausteine für den
+          KI-Einsatz. Früh einbinden spart später Reibung.</p>
+      </div>
+      <div class="card">
+        <h3>RACI &amp; Governance</h3>
+        <p>Eindeutige Freigaben: wer verantwortet, wer entscheidet, wer wird gefragt. Eine einfache
+          Matrix reicht, damit niemand im Nebel steht.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WEITERLESEN -->
+<section class="section-pad" style="padding-top:0">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Weiterlesen</span>
+      <h2>Vertiefung im Blog.</h2>
+      <p>Zu vielen dieser Themen habe ich ausführlicher geschrieben — kostenlos, ohne Anmeldung.</p>
+    </div>
+    <div class="cards reveal d1">
+      <a class="card" href="blog/dsgvo-und-ki-vor-dem-start">
+        <h3>DSGVO &amp; KI vor dem Start</h3>
+        <p>Was du klären musst, bevor das erste Tool live geht.</p>
+      </a>
+      <a class="card" href="blog/der-90-tage-test">
+        <h3>Der 90-Tage-Test</h3>
+        <p>Wie du in drei Monaten beweist, ob ein KI-Use-Case trägt.</p>
+      </a>
+      <a class="card" href="blog/vom-use-case-zur-roadmap">
+        <h3>Vom Use-Case zur Roadmap</h3>
+        <p>Aus einzelnen Ideen einen Plan machen, der hält.</p>
+      </a>
+      <a class="card" href="blog/was-ein-ki-pilot-kosten-darf">
+        <h3>Was ein KI-Pilot kosten darf</h3>
+        <p>Ein realistischer Rahmen, bevor du Budget freigibst.</p>
+      </a>
+      <a class="card" href="blog/make-or-buy-bei-ki">
+        <h3>Make or Buy bei KI</h3>
+        <p>Selbst bauen oder einkaufen — wann sich was lohnt.</p>
+      </a>
+      <a class="card" href="blog/warum-dein-team-ki-nicht-nutzt">
+        <h3>Warum dein Team KI nicht nutzt</h3>
+        <p>Die häufigsten Gründe — und was dagegen hilft.</p>
+      </a>
+      <a class="card" href="blog/halluzinationen-verstehen">
+        <h3>Halluzinationen verstehen</h3>
+        <p>Warum KI Dinge erfindet und wie du damit umgehst.</p>
+      </a>
+      <a class="card" href="blog/datenhoheit-ohne-dogma">
+        <h3>Datenhoheit ohne Dogma</h3>
+        <p>Sicher mit Daten umgehen, ohne alles zu blockieren.</p>
+      </a>
+      <a class="card" href="blog/mcp-ki-an-deine-systeme">
+        <h3>KI an deine Systeme anbinden</h3>
+        <p>Was MCP ist und wie KI sicher an eure Daten kommt.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- SOFT CLOSE -->
+<section class="section-pad" style="padding-top:0">
+  <div class="container">
+    <div class="cta reveal">
+      <h2>Fragen zur Rolle?</h2>
+      <p>Kein Verkaufsgespräch — schreib mir, wenn du wissen willst, wo du anfangen sollst.</p>
+      <a href="kontakt.html" class="btn btn-primary" data-hover>Sag Hallo <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div><div class="logo" style="margin-bottom:16px"><img src="./assets/logo-axon.png" alt="" />AI with Maris</div>
+        <p>Eine Info-Seite über KI zum Anfassen und die Rolle des AI Officers — cloud-neutral &amp; datensouverän.</p></div>
+      <div class="foot-links">
+        <div class="foot-col"><h4>Entdecken</h4><a href="beispiele.html">Beispiele</a><a href="ai-officer.html">AI Officer</a><a href="blog">Blog</a><a href="newsletter.html">Newsletter</a><a href="ueber-uns.html">Über mich</a></div>
+        <div class="foot-col"><h4>Kontakt</h4><a href="mailto:marisnicolasreinold@gmail.com">marisnicolasreinold@gmail.com</a><a href="kontakt.html">Kontakt</a></div>
+        <div class="foot-col"><h4>Rechtliches</h4><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 AI with Maris</span><span>Made in Germany · Cloud-neutral · Powered by AI</span></div>
+  </div>
+</footer>
+
+</div>
+
+<script src="./vendor/three.min.js"></script>
+<script src="./main.js"></script>
+<script src="./i18n.js"></script>
+<script src="./chat.js" defer></script>
+</body>
+</html>
