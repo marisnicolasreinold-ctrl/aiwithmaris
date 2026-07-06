@@ -14,7 +14,6 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] Schatten-KI im Unternehmen: Dein Team nutzt längst ChatGPT — was jetzt?
 - [ ] Predictive Maintenance: Maschinenausfälle vorhersehen, bevor sie teuer werden
 - [ ] KI in der Qualitätskontrolle: Fehler sehen, die das Auge übersieht
 - [ ] KI in der Produktionsplanung: Wenn der Plan sich selbst umstellt
@@ -35,6 +34,8 @@ oberste offene Thema ist immer das nächste.
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-07-06 — Schatten-KI im Unternehmen: Dein Team nutzt längst ChatGPT — was jetzt? (Schatten-KI im Unternehmen: Dein Team nutzt längst ChatGPT — was jetzt?)
 
 - 2026-07-03 — Was ein KI-Pilotprojekt kosten darf — eine ehrliche Rechnung (Was ein KI-Pilotprojekt kosten darf — eine ehrliche Rechnung)
 
