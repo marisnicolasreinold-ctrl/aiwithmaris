@@ -14,7 +14,6 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] Predictive Maintenance: Maschinenausfälle vorhersehen, bevor sie teuer werden
 - [ ] KI in der Qualitätskontrolle: Fehler sehen, die das Auge übersieht
 - [ ] KI in der Produktionsplanung: Wenn der Plan sich selbst umstellt
 - [ ] Erfahrungswissen sichern: KI als Gedächtnis der Produktion
@@ -34,6 +33,8 @@ oberste offene Thema ist immer das nächste.
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-07-07 — Predictive Maintenance: Maschinenausfälle vorhersehen, bevor sie teuer werden (Predictive Maintenance: Maschinenausfälle vorhersehen, bevor sie teuer werden)
 
 - 2026-07-06 — Schatten-KI im Unternehmen: Dein Team nutzt längst ChatGPT — was jetzt? (Schatten-KI im Unternehmen: Dein Team nutzt längst ChatGPT — was jetzt?)
 
