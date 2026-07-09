@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#05060c" />
+
+<title>KI-Tool-Radar — Anbieter, Hosting &amp; Datenstandort im Überblick · AI with Maris</title>
+<meta name="description" content="Neutrale Übersicht gängiger KI-Tools: Anbieter, Hosting-Region und worauf man beim Datenschutz achten sollte. Momentaufnahme, ohne Gewähr — aus der Praxis." />
+<meta name="author" content="AI with Maris" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="https://aiwithmaris.com/tool-radar" />
+
+<meta property="og:type" content="article" />
+<meta property="og:locale" content="de_DE" />
+<meta property="og:site_name" content="AI with Maris" />
+<meta property="og:url" content="https://aiwithmaris.com/tool-radar" />
+<meta property="og:title" content="KI-Tool-Radar — Anbieter, Hosting &amp; Datenstandort im Überblick" />
+<meta property="og:description" content="Neutrale Übersicht gängiger KI-Tools: Anbieter, Hosting-Region und Datenschutz-Hinweise. Momentaufnahme, ohne Gewähr." />
+<meta property="og:image" content="./assets/og-axon.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="AI with Maris — KI-Tool-Radar" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="KI-Tool-Radar — Anbieter, Hosting &amp; Datenstandort im Überblick" />
+<meta name="twitter:description" content="Neutrale Übersicht gängiger KI-Tools: Anbieter, Hosting-Region und Datenschutz-Hinweise." />
+<meta name="twitter:image" content="./assets/og-axon.png" />
+
+<link rel="icon" type="image/png" href="./assets/logo-axon.png" />
+
+<link rel="stylesheet" href="./assets/fonts/fonts.css" />
+<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+<canvas id="scene"></canvas>
+<div class="bg-glow"></div><div class="grain"></div><div class="vignette"></div>
+<div class="cursor-ring"></div><div class="cursor-dot"></div>
+
+<a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+<nav id="nav" aria-label="Hauptnavigation">
+  <div class="nav-inner">
+    <a class="logo" href="index.html" aria-label="AI with Maris — zur Startseite"><img src="./assets/logo-axon.png" alt="" />AI with Maris</a>
+    <div class="nav-links" id="navlinks">
+      <a href="beispiele.html">Beispiele</a>
+      <a href="ai-officer.html">AI Officer</a>
+      <a href="blog">Blog</a>
+      <a href="ueber-uns.html">Über mich</a>
+      <a href="kontakt.html" class="nav-cta">Kontakt</a>
+      <button class="lang-toggle" id="langToggle" type="button">EN</button>
+    </div>
+    <button class="burger" id="burger" type="button" aria-label="Menü öffnen" aria-expanded="false" aria-controls="navlinks"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="wrap">
+<main id="main" tabindex="-1">
+
+<!-- HERO -->
+<header class="hero" style="min-height:52vh;padding-top:140px">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">KI-Tool-Radar</span>
+      <h1>Welches KI-Tool — und <span class="grad">wo liegen die Daten?</span></h1>
+      <p class="lead" style="margin-top:20px">Eine neutrale, kurze Übersicht gängiger KI-Tools: wer dahintersteht, wo gehostet wird und worauf du beim Datenschutz achten solltest. Ich verkaufe hier nichts und bekomme keine Provision — es geht nur um Orientierung.</p>
+    </div>
+  </div>
+</header>
+
+<!-- DISCLAIMER -->
+<section style="padding:0 0 10px">
+  <div class="container">
+    <div class="cloud reveal" style="border-left:3px solid var(--cyan)">
+      <p style="margin:0"><strong>Momentaufnahme, ohne Gewähr.</strong> Tarife, Hosting-Optionen und Vertragsbedingungen ändern sich schnell. Für den echten Einsatz gilt: Auftragsverarbeitungsvertrag (AVV/DPA) und Datenstandort immer selbst beim Anbieter prüfen — besonders bei personenbezogenen Daten. Kostenlose Tarife eignen sich selten für sensible Firmendaten.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section class="section-pad" style="padding-top:24px">
+  <div class="container">
+    <div class="cards reveal d1">
+
+      <div class="card">
+        <span class="tag">USA</span>
+        <h3>ChatGPT</h3>
+        <p><strong>Anbieter:</strong> OpenAI (USA). <strong>Hosting:</strong> überwiegend USA; über API/Enterprise teils EU-Datenstandort wählbar. <strong>Typisch für:</strong> Text, Analyse, Coding. <strong>Hinweis:</strong> Business-/Enterprise-Tarife bieten AVV und „kein Training auf deinen Daten" — im Free-Tarif nicht für sensible Daten nutzen.</p>
+      </div>
+
+      <div class="card">
+        <span class="tag">USA</span>
+        <h3>Claude</h3>
+        <p><strong>Anbieter:</strong> Anthropic (USA). <strong>Hosting:</strong> USA; über Cloud-Anbieter (z. B. AWS Bedrock, Google Vertex) mit Regionswahl. <strong>Typisch für:</strong> lange Dokumente, sorgfältige Texte, Coding. <strong>Hinweis:</strong> API-/Business-Daten werden laut Anbieter nicht fürs Training genutzt — Konditionen im Vertrag prüfen.</p>
+      </div>
+
+      <div class="card">
+        <span class="tag">USA / Global</span>
+        <h3>Gemini</h3>
+        <p><strong>Anbieter:</strong> Google (USA). <strong>Hosting:</strong> global; über Google Workspace und Vertex AI mit EU-Region möglich. <strong>Typisch für:</strong> Integration in Google-Umgebung, Multimodales. <strong>Hinweis:</strong> Datenschutz stark abhängig vom gewählten Tarif (Consumer vs. Workspace/Cloud).</p>
+      </div>
+
+      <div class="card">
+        <span class="tag">Global</span>
+        <h3>Microsoft Copilot</h3>
+        <p><strong>Anbieter:</strong> Microsoft (USA). <strong>Hosting:</strong> global; über Microsoft 365 und Azure OpenAI mit EU-Datenresidenz möglich. <strong>Typisch für:</strong> Office-Alltag, Unternehmensintegration. <strong>Hinweis:</strong> Für Firmen oft der pragmatische Weg, wenn Microsoft 365 schon läuft — Datenraum („Data Residency") konfigurieren.</p>
+      </div>
+
+      <div class="card">
+        <span class="tag">EU</span>
+        <h3>Mistral</h3>
+        <p><strong>Anbieter:</strong> Mistral AI (Frankreich). <strong>Hosting:</strong> EU. <strong>Typisch für:</strong> Chat (Le Chat), API, eigene Integrationen. <strong>Hinweis:</strong> Europäischer Anbieter — oft attraktiv, wenn EU-Datenhaltung Priorität hat. Trotzdem Vertrag prüfen.</p>
+      </div>
+
+      <div class="card">
+        <span class="tag">EU · Deutschland</span>
+        <h3>Langdock</h3>
+        <p><strong>Anbieter:</strong> Langdock (Deutschland). <strong>Hosting:</strong> EU. <strong>Typisch für:</strong> zentrale Plattform, die mehrere Modelle unter einem DSGVO-Rahmen bündelt. <strong>Hinweis:</strong> Interessant für Teams, die Zugriff steuern und Modelle wechseln wollen, ohne Daten in viele US-Dienste zu streuen.</p>
+      </div>
+
+      <div class="card">
+        <span class="tag">EU · Deutschland</span>
+        <h3>DeepL</h3>
+        <p><strong>Anbieter:</strong> DeepL (Deutschland). <strong>Hosting:</strong> EU. <strong>Typisch für:</strong> Übersetzung und Textverbesserung (DeepL Write). <strong>Hinweis:</strong> Pro-Tarife löschen Texte nach der Übersetzung laut Anbieter — für Übersetzungen ein solider EU-Standard.</p>
+      </div>
+
+      <div class="card">
+        <span class="tag">USA</span>
+        <h3>Perplexity</h3>
+        <p><strong>Anbieter:</strong> Perplexity (USA). <strong>Hosting:</strong> USA. <strong>Typisch für:</strong> Recherche mit Quellenangaben. <strong>Hinweis:</strong> Praktisch fürs Suchen und Zusammenfassen — für vertrauliche Firmendaten eher zurückhaltend nutzen.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- WORAUF ACHTEN -->
+<section class="section-pad" style="padding-top:0">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Worauf achten</span>
+      <h2>Fünf Fragen vor der Tool-Wahl.</h2>
+    </div>
+    <div class="cards reveal d1">
+      <div class="card"><h3>Wo liegen die Daten?</h3><p>EU-Datenstandort verfügbar? Für personenbezogene Daten oft entscheidend.</p></div>
+      <div class="card"><h3>Gibt es einen AVV?</h3><p>Ein Auftragsverarbeitungsvertrag ist bei personenbezogenen Daten Pflicht.</p></div>
+      <div class="card"><h3>Wird auf deinen Daten trainiert?</h3><p>Business-Tarife schließen das meist aus — im Free-Tarif oft nicht.</p></div>
+      <div class="card"><h3>Wer darf rein?</h3><p>Zugänge steuern, statt dass jede:r wild eigene Accounts anlegt (Schatten-KI).</p></div>
+      <div class="card"><h3>Passt es zum Zweck?</h3><p>Das beste Tool ist das, das euer konkretes Problem löst — nicht das lauteste.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SOFT CLOSE -->
+<section class="section-pad" style="padding-top:0">
+  <div class="container">
+    <div class="cta reveal">
+      <h2>Unsicher, was zu euch passt?</h2>
+      <p>Kein Verkaufsgespräch — schreib mir, dann sortieren wir die Optionen gemeinsam.</p>
+      <a href="kontakt.html" class="btn btn-primary" data-hover>Sag Hallo <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div><div class="logo" style="margin-bottom:16px"><img src="./assets/logo-axon.png" alt="" />AI with Maris</div>
+        <p>Eine Info-Seite über KI zum Anfassen und die Rolle des AI Officers — cloud-neutral &amp; datensouverän.</p></div>
+      <div class="foot-links">
+        <div class="foot-col"><h4>Entdecken</h4><a href="beispiele.html">Beispiele</a><a href="ai-officer.html">AI Officer</a><a href="tool-radar.html">Tool-Radar</a><a href="glossar.html">Glossar</a><a href="blog">Blog</a><a href="newsletter.html">Newsletter</a><a href="ueber-uns.html">Über mich</a></div>
+        <div class="foot-col"><h4>Kontakt</h4><a href="mailto:marisnicolasreinold@gmail.com">marisnicolasreinold@gmail.com</a><a href="kontakt.html">Kontakt</a></div>
+        <div class="foot-col"><h4>Rechtliches</h4><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 AI with Maris</span><span>Made in Germany · Cloud-neutral · Powered by AI</span></div>
+  </div>
+</footer>
+
+</div>
+
+<script src="./vendor/three.min.js"></script>
+<script src="./main.js"></script>
+<script src="./i18n.js"></script>
+<script src="./chat.js" defer></script>
+</body>
+</html>

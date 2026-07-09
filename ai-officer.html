@@ -186,6 +186,23 @@
   </div>
 </section>
 
+<!-- RISIKO-CHECK (interaktiv) -->
+<section id="risiko-check" class="section-pad" style="padding-top:0">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Interaktiv</span>
+      <h2>Schnell-Check: In welche Risikoklasse fällt dein KI-System?</h2>
+      <p>Drei Fragen, eine grobe Einordnung nach EU AI Act. Kein Ersatz für eine rechtliche Prüfung — aber ein guter erster Kompass.</p>
+    </div>
+    <div class="cloud reveal d1">
+      <div id="rc-app" data-rc>
+        <div id="rc-stage"><!-- JS füllt hier Fragen bzw. Ergebnis ein --></div>
+        <noscript><p>Für den interaktiven Check bitte JavaScript aktivieren. Die vier Klassen findest du oben ausführlich beschrieben.</p></noscript>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- DIE ERSTEN 90 TAGE -->
 <section class="section-pad" style="padding-top:0">
   <div class="container">
@@ -288,6 +305,14 @@
         <h3>KI an deine Systeme anbinden</h3>
         <p>Was MCP ist und wie KI sicher an eure Daten kommt.</p>
       </a>
+      <a class="card" href="tool-radar.html">
+        <h3>KI-Tool-Radar</h3>
+        <p>Welches Tool, welcher Anbieter, wo liegen die Daten?</p>
+      </a>
+      <a class="card" href="glossar.html">
+        <h3>KI-Glossar</h3>
+        <p>Die wichtigsten Begriffe kurz erklärt — ohne Buzzwords.</p>
+      </a>
     </div>
   </div>
 </section>
@@ -311,7 +336,7 @@
       <div><div class="logo" style="margin-bottom:16px"><img src="./assets/logo-axon.png" alt="" />AI with Maris</div>
         <p>Eine Info-Seite über KI zum Anfassen und die Rolle des AI Officers — cloud-neutral &amp; datensouverän.</p></div>
       <div class="foot-links">
-        <div class="foot-col"><h4>Entdecken</h4><a href="beispiele.html">Beispiele</a><a href="ai-officer.html">AI Officer</a><a href="blog">Blog</a><a href="newsletter.html">Newsletter</a><a href="ueber-uns.html">Über mich</a></div>
+        <div class="foot-col"><h4>Entdecken</h4><a href="beispiele.html">Beispiele</a><a href="ai-officer.html">AI Officer</a><a href="tool-radar.html">Tool-Radar</a><a href="glossar.html">Glossar</a><a href="blog">Blog</a><a href="newsletter.html">Newsletter</a><a href="ueber-uns.html">Über mich</a></div>
         <div class="foot-col"><h4>Kontakt</h4><a href="mailto:marisnicolasreinold@gmail.com">marisnicolasreinold@gmail.com</a><a href="kontakt.html">Kontakt</a></div>
         <div class="foot-col"><h4>Rechtliches</h4><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a></div>
       </div>
@@ -326,5 +351,116 @@
 <script src="./main.js"></script>
 <script src="./i18n.js"></script>
 <script src="./chat.js" defer></script>
+
+<!-- EU-AI-ACT RISIKO-CHECK -->
+<script>
+(function () {
+  var stage = document.getElementById('rc-stage');
+  if (!stage) return;
+  var lang = (window.aiwmLang && window.aiwmLang() === 'en') ? 'en' : 'de';
+
+  var CLASSES = {
+    unacceptable: { color: '#ff5e7a' },
+    high:         { color: '#ffb457' },
+    limited:      { color: '#5ef0ff' },
+    minimal:      { color: '#7c5cff' }
+  };
+
+  var T = {
+    de: {
+      intro: 'Beantworte drei Fragen zu deinem KI-System.',
+      of: 'Frage',
+      yes: 'Ja', no: 'Nein', unsure: 'Unsicher',
+      restart: 'Nochmal starten',
+      resultLead: 'Grobe Einordnung:',
+      disclaimer: 'Das ist eine vereinfachte Orientierung, keine Rechtsberatung. Grenzfälle und Details klärst du am besten mit fachkundiger Beratung.',
+      more: 'Mehr zum EU AI Act oben auf dieser Seite.',
+      q: [
+        'Nutzt das System verbotene Praktiken? Zum Beispiel: Social Scoring, das gezielte Ausnutzen von Schwächen zur Manipulation oder biometrische Massenüberwachung im öffentlichen Raum.',
+        'Entscheidet oder bewertet das System über Menschen in sensiblen Bereichen? Zum Beispiel: Bewerber-Auswahl, Kreditwürdigkeit, Prüfungen, Strafverfolgung, Medizin oder kritische Infrastruktur.',
+        'Interagiert das System direkt mit Menschen oder erzeugt es Inhalte, die für echt gehalten werden könnten? Zum Beispiel: Chatbots, KI-Texte, KI-Bilder oder Deepfakes.'
+      ],
+      res: {
+        unacceptable: { name: 'Inakzeptabel', text: 'Klingt nach einer verbotenen Praxis. Solche Systeme dürfen in der EU gar nicht betrieben werden — hier hilft nur: nicht einsetzen.' },
+        high:         { name: 'Hoch', text: 'Deutet auf ein Hochrisiko-System. Es gelten strenge Pflichten: Dokumentation, Datenqualität, menschliche Aufsicht, Risikomanagement. Früh planen — ab August 2026 greifen diese Pflichten voll.' },
+        limited:      { name: 'Begrenzt', text: 'Vor allem eine Transparenzpflicht: Menschen müssen erkennen können, dass sie es mit KI zu tun haben bzw. dass Inhalte KI-generiert sind.' },
+        minimal:      { name: 'Minimal', text: 'Geringes Risiko, kaum Auflagen. Trotzdem sinnvoll: freiwillige Leitplanken, Datenschutz und Transparenz im Team.' }
+      }
+    },
+    en: {
+      intro: 'Answer three questions about your AI system.',
+      of: 'Question',
+      yes: 'Yes', no: 'No', unsure: 'Not sure',
+      restart: 'Start over',
+      resultLead: 'Rough classification:',
+      disclaimer: 'This is a simplified orientation, not legal advice. Clarify edge cases and details with qualified counsel.',
+      more: 'More on the EU AI Act above on this page.',
+      q: [
+        'Does the system use banned practices? For example: social scoring, deliberately exploiting vulnerabilities to manipulate people, or mass biometric surveillance in public spaces.',
+        'Does the system decide about or assess people in sensitive areas? For example: hiring, creditworthiness, exams, law enforcement, medicine or critical infrastructure.',
+        'Does the system interact directly with people or produce content that could be mistaken for real? For example: chatbots, AI text, AI images or deepfakes.'
+      ],
+      res: {
+        unacceptable: { name: 'Unacceptable', text: 'Sounds like a banned practice. Such systems may not be operated in the EU at all — the only option is not to use it.' },
+        high:         { name: 'High', text: 'Points to a high-risk system. Strict duties apply: documentation, data quality, human oversight, risk management. Plan early — from August 2026 these duties apply in full.' },
+        limited:      { name: 'Limited', text: 'Mainly a transparency duty: people must be able to tell they are dealing with AI, or that content is AI-generated.' },
+        minimal:      { name: 'Minimal', text: 'Low risk, barely any requirements. Still worthwhile: voluntary guardrails, data protection and transparency within the team.' }
+      }
+    }
+  };
+  var t = T[lang];
+  var step = 0;
+
+  function esc(s) { return s.replace(/[&<>]/g, function (c) { return { '&':'&amp;','<':'&lt;','>':'&gt;' }[c]; }); }
+
+  function classify(answers) {
+    if (answers[0] === 'yes') return 'unacceptable';
+    if (answers[1] === 'yes') return 'high';
+    if (answers[2] === 'yes') return 'limited';
+    // "unsure" on the sensitive question leans high (safer default)
+    if (answers[1] === 'unsure') return 'high';
+    return 'minimal';
+  }
+
+  var answers = [];
+
+  function renderQuestion() {
+    var qn = step + 1;
+    stage.innerHTML =
+      '<p class="eyebrow" style="margin-bottom:10px">' + t.of + ' ' + qn + ' / 3</p>' +
+      '<p style="font-size:1.15rem;font-weight:600;margin-bottom:20px">' + esc(t.q[step]) + '</p>' +
+      '<div class="rc-actions" style="display:flex;flex-wrap:wrap;gap:12px">' +
+        '<button type="button" class="btn btn-primary" data-ans="yes" data-hover>' + t.yes + '</button>' +
+        '<button type="button" class="btn btn-ghost" data-ans="no" data-hover>' + t.no + '</button>' +
+        (step === 1 ? '<button type="button" class="btn btn-ghost" data-ans="unsure" data-hover>' + t.unsure + '</button>' : '') +
+      '</div>';
+    stage.querySelectorAll('[data-ans]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        answers[step] = b.getAttribute('data-ans');
+        // Shortcut: a "yes" on Q1 or Q2 ends early
+        if ((step === 0 && answers[0] === 'yes') || (step === 1 && answers[1] === 'yes')) { renderResult(); return; }
+        if (step < 2) { step++; renderQuestion(); } else { renderResult(); }
+      });
+    });
+  }
+
+  function renderResult() {
+    var key = classify(answers);
+    var c = CLASSES[key], r = t.res[key];
+    stage.innerHTML =
+      '<p class="eyebrow" style="margin-bottom:12px">' + t.resultLead + '</p>' +
+      '<div style="display:inline-block;padding:6px 16px;border-radius:999px;font-family:var(--mono);font-weight:700;' +
+        'text-transform:uppercase;letter-spacing:.06em;font-size:.85rem;color:#05060c;background:' + c.color + ';margin-bottom:16px">' +
+        esc(r.name) + '</div>' +
+      '<p style="font-size:1.1rem;line-height:1.6;margin-bottom:18px">' + esc(r.text) + '</p>' +
+      '<p style="color:var(--muted);font-size:.92rem;margin-bottom:22px">' + esc(t.disclaimer) + ' ' + esc(t.more) + '</p>' +
+      '<button type="button" class="btn btn-ghost" id="rc-restart" data-hover>' + t.restart + '</button>';
+    var rb = document.getElementById('rc-restart');
+    if (rb) rb.addEventListener('click', function () { answers = []; step = 0; renderQuestion(); });
+  }
+
+  renderQuestion();
+})();
+</script>
 </body>
 </html>
