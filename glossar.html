@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#05060c" />
+
+<title>KI-Glossar — die wichtigsten Begriffe in Klartext · AI with Maris</title>
+<meta name="description" content="Kurz und ohne Buzzwords erklärt: LLM, Prompt, Halluzination, RAG, MCP, KI-Agent, EU AI Act, Risikoklasse, DSGVO, Schatten-KI und mehr." />
+<meta name="author" content="AI with Maris" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="https://aiwithmaris.com/glossar" />
+
+<meta property="og:type" content="article" />
+<meta property="og:locale" content="de_DE" />
+<meta property="og:site_name" content="AI with Maris" />
+<meta property="og:url" content="https://aiwithmaris.com/glossar" />
+<meta property="og:title" content="KI-Glossar — die wichtigsten Begriffe in Klartext" />
+<meta property="og:description" content="LLM, Prompt, Halluzination, RAG, MCP, EU AI Act, Risikoklasse, DSGVO, Schatten-KI — kurz erklärt, ohne Buzzwords." />
+<meta property="og:image" content="./assets/og-axon.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="AI with Maris — KI-Glossar" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="KI-Glossar — die wichtigsten Begriffe in Klartext" />
+<meta name="twitter:description" content="LLM, Prompt, Halluzination, RAG, MCP, EU AI Act, Risikoklasse, DSGVO, Schatten-KI — kurz erklärt." />
+<meta name="twitter:image" content="./assets/og-axon.png" />
+
+<link rel="icon" type="image/png" href="./assets/logo-axon.png" />
+
+<link rel="stylesheet" href="./assets/fonts/fonts.css" />
+<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+<canvas id="scene"></canvas>
+<div class="bg-glow"></div><div class="grain"></div><div class="vignette"></div>
+<div class="cursor-ring"></div><div class="cursor-dot"></div>
+
+<a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+<nav id="nav" aria-label="Hauptnavigation">
+  <div class="nav-inner">
+    <a class="logo" href="index.html" aria-label="AI with Maris — zur Startseite"><img src="./assets/logo-axon.png" alt="" />AI with Maris</a>
+    <div class="nav-links" id="navlinks">
+      <a href="beispiele.html">Beispiele</a>
+      <a href="ai-officer.html">AI Officer</a>
+      <a href="blog">Blog</a>
+      <a href="ueber-uns.html">Über mich</a>
+      <a href="kontakt.html" class="nav-cta">Kontakt</a>
+      <button class="lang-toggle" id="langToggle" type="button">EN</button>
+    </div>
+    <button class="burger" id="burger" type="button" aria-label="Menü öffnen" aria-expanded="false" aria-controls="navlinks"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="wrap">
+<main id="main" tabindex="-1">
+
+<!-- HERO -->
+<header class="hero" style="min-height:48vh;padding-top:140px">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">KI-Glossar</span>
+      <h1>Die wichtigsten Begriffe — <span class="grad">in Klartext.</span></h1>
+      <p class="lead" style="margin-top:20px">Kurz erklärt, ohne Buzzwords. Damit du in Meetings und Blog-Artikeln nicht raten musst, was gemeint ist.</p>
+    </div>
+  </div>
+</header>
+
+<!-- TERMS -->
+<section class="section-pad" style="padding-top:8px">
+  <div class="container">
+    <div class="cards reveal d1">
+
+      <div class="card"><h3>KI / Künstliche Intelligenz</h3><p>Sammelbegriff für Software, die Aufgaben löst, für die man früher menschliches Denken brauchte — heute meist Systeme, die aus Daten Muster lernen.</p></div>
+
+      <div class="card"><h3>LLM (Sprachmodell)</h3><p>Ein „Large Language Model" ist ein KI-Modell, das Sprache versteht und erzeugt. Es sagt das jeweils wahrscheinlichste nächste Wort voraus — daraus entstehen ganze Texte. ChatGPT, Claude und Gemini basieren darauf.</p></div>
+
+      <div class="card"><h3>Prompt</h3><p>Die Eingabe, mit der du ein KI-Modell steuerst — deine Frage oder Anweisung. Je klarer der Prompt, desto besser das Ergebnis.</p></div>
+
+      <div class="card"><h3>Token</h3><p>Die kleinste Verarbeitungseinheit eines Sprachmodells — ein Wortteil. Länge und Kosten von KI-Anfragen werden in Tokens gemessen, nicht in Wörtern.</p></div>
+
+      <div class="card"><h3>Halluzination</h3><p>Wenn ein Modell etwas plausibel klingend, aber falsch behauptet. Es „erfindet" Fakten, weil es Wahrscheinlichkeiten fortschreibt und nicht wirklich „weiß". Deshalb: Wichtiges immer prüfen.</p></div>
+
+      <div class="card"><h3>RAG</h3><p>„Retrieval-Augmented Generation": Das Modell schlägt vor der Antwort in deinen eigenen Dokumenten nach und antwortet auf Basis dieser Fundstellen. So wird KI faktentreuer und arbeitet mit deinem Wissen.</p></div>
+
+      <div class="card"><h3>MCP</h3><p>Das „Model Context Protocol" ist ein offener Standard, über den KI-Modelle sicher an externe Systeme und Daten andocken — z. B. an dein CRM oder deine Ablage.</p></div>
+
+      <div class="card"><h3>KI-Agent</h3><p>Eine KI, die nicht nur antwortet, sondern in Schritten selbst handelt: Aufgaben plant, Werkzeuge nutzt, Ergebnisse prüft. Gut mit klaren Grenzen und menschlicher Freigabe.</p></div>
+
+      <div class="card"><h3>Fine-Tuning</h3><p>Ein vorhandenes Modell mit eigenen Beispieldaten nachtrainieren, damit es Ton oder Fachaufgaben besser trifft. Für vieles reicht heute aber schon ein guter Prompt oder RAG.</p></div>
+
+      <div class="card"><h3>Embedding</h3><p>Die Umwandlung von Text in Zahlenvektoren, sodass Ähnliches nah beieinanderliegt. Die Basis dafür, dass KI in Dokumenten „das Passende" findet (siehe RAG).</p></div>
+
+      <div class="card"><h3>EU AI Act</h3><p>Das KI-Gesetz der EU. Es teilt KI-Systeme nach Risiko in vier Klassen ein und knüpft daran Pflichten. Hochrisiko-Pflichten greifen ab August 2026 vollständig.</p></div>
+
+      <div class="card"><h3>Risikoklasse</h3><p>Die Einstufung eines KI-Systems im EU AI Act: inakzeptabel (verboten), hoch (strenge Pflichten), begrenzt (Transparenzpflicht) oder minimal (kaum Auflagen).</p></div>
+
+      <div class="card"><h3>DSGVO</h3><p>Die Datenschutz-Grundverordnung. Sie regelt den Umgang mit personenbezogenen Daten — bei KI besonders wichtig: Rechtsgrundlage, Auftragsverarbeitung und keine sensiblen Daten in offene Modelle.</p></div>
+
+      <div class="card"><h3>Schatten-KI</h3><p>KI-Tools, die Mitarbeitende ohne Freigabe privat nutzen. Praktisch, aber riskant — weil niemand steuert, welche Daten wohin fließen. Ein Kernthema für den AI Officer.</p></div>
+
+      <div class="card"><h3>Datenhoheit</h3><p>Die Kontrolle darüber, wo deine Daten liegen und wer darauf zugreift. Ziel: KI nutzen, ohne die Herrschaft über die eigenen Daten abzugeben.</p></div>
+
+      <div class="card"><h3>On-Premise / Cloud</h3><p>„On-Premise" heißt: Software läuft auf eigenen Servern. „Cloud" heißt: bei einem Anbieter. Bei KI oft ein Mittelweg — Cloud mit wählbarer EU-Region und klaren Verträgen.</p></div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SOFT CLOSE -->
+<section class="section-pad" style="padding-top:0">
+  <div class="container">
+    <div class="cta reveal">
+      <h2>Ein Begriff fehlt?</h2>
+      <p>Schreib mir, welcher — dann nehme ich ihn auf. Und im <a href="blog">Blog</a> gehe ich vielen davon ausführlicher nach.</p>
+      <a href="kontakt.html" class="btn btn-primary" data-hover>Sag Hallo <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div><div class="logo" style="margin-bottom:16px"><img src="./assets/logo-axon.png" alt="" />AI with Maris</div>
+        <p>Eine Info-Seite über KI zum Anfassen und die Rolle des AI Officers — cloud-neutral &amp; datensouverän.</p></div>
+      <div class="foot-links">
+        <div class="foot-col"><h4>Entdecken</h4><a href="beispiele.html">Beispiele</a><a href="ai-officer.html">AI Officer</a><a href="tool-radar.html">Tool-Radar</a><a href="glossar.html">Glossar</a><a href="blog">Blog</a><a href="newsletter.html">Newsletter</a><a href="ueber-uns.html">Über mich</a></div>
+        <div class="foot-col"><h4>Kontakt</h4><a href="mailto:marisnicolasreinold@gmail.com">marisnicolasreinold@gmail.com</a><a href="kontakt.html">Kontakt</a></div>
+        <div class="foot-col"><h4>Rechtliches</h4><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 AI with Maris</span><span>Made in Germany · Cloud-neutral · Powered by AI</span></div>
+  </div>
+</footer>
+
+</div>
+
+<script src="./vendor/three.min.js"></script>
+<script src="./main.js"></script>
+<script src="./i18n.js"></script>
+<script src="./chat.js" defer></script>
+</body>
+</html>

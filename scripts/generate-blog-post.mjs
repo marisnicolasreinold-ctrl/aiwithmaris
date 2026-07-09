@@ -233,7 +233,7 @@ const WRITER_SYSTEM =
   `Du hältst dich strikt an das folgende Schreibstil-Profil:\n\n${styleguide}\n\n` +
   `Eiserne Regeln:\n` +
   `- Erfinde niemals Fakten, Zahlen, Studien, Kunden oder Zitate. Hypothetische Beispiele klar kennzeichnen („Stell dir vor …“).\n` +
-  `- Verlinke sparsam und nur intern (/guide.html, /leistungen.html, /beispiele.html, /kontakt.html) oder auf im Material genannte Quellen.\n` +
+  `- Verlinke sparsam und nur intern (/ai-officer.html, /beispiele.html, /glossar.html, /tool-radar.html, /kontakt.html) oder auf im Material genannte Quellen.\n` +
   `- Der HTML-Text beginnt direkt mit einem <p>-Absatz (Titel und Teaser stehen separat).\n` +
   `- Die englische Fassung ist derselbe Artikel im selben Ton, kein Wort-für-Wort-Übersetzungston.`;
 
@@ -418,8 +418,8 @@ function renderFeed(posts, lang) {
 
 function renderSitemap(posts) {
   const staticPages = [
-    `${SITE}/`, `${SITE}/leistungen`, `${SITE}/beispiele`, `${SITE}/guide`,
-    `${SITE}/ueber-uns`, `${SITE}/kontakt`, `${SITE}/blog`, `${SITE}/blog/en`,
+    `${SITE}/`, `${SITE}/beispiele`, `${SITE}/ai-officer`, `${SITE}/tool-radar`,
+    `${SITE}/glossar`, `${SITE}/ueber-uns`, `${SITE}/kontakt`, `${SITE}/blog`, `${SITE}/blog/en`,
   ];
   const urls = [
     ...staticPages.map((u) => `  <url><loc>${u}</loc></url>`),
