@@ -14,7 +14,6 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] KI in der Produktionsplanung: Wenn der Plan sich selbst umstellt
 - [ ] Erfahrungswissen sichern: KI als Gedächtnis der Produktion
 - [ ] Weniger Ausschuss, weniger Energie: KI-Optimierung in der Fertigung
 - [ ] EU AI Act: Warum die verschobenen Fristen keine Entwarnung sind
@@ -32,6 +31,8 @@ oberste offene Thema ist immer das nächste.
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-07-09 — KI in der Produktionsplanung: Wenn der Plan sich selbst umstellt (KI in der Produktionsplanung: Wenn der Plan sich selbst umstellt)
 
 - 2026-07-08 — KI in der Qualitätskontrolle: Fehler sehen, die das Auge übersieht (KI in der Qualitätskontrolle: Fehler sehen, die das Auge übersieht)
 
