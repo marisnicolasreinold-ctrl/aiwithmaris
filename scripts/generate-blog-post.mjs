@@ -233,8 +233,9 @@ const WRITER_SYSTEM =
   `Du hältst dich strikt an das folgende Schreibstil-Profil:\n\n${styleguide}\n\n` +
   `Eiserne Regeln:\n` +
   `- Erfinde niemals Fakten, Zahlen, Studien, Kunden oder Zitate. Hypothetische Beispiele klar kennzeichnen („Stell dir vor …“).\n` +
-  `- Verlinke sparsam und nur intern (/ai-officer.html, /beispiele.html, /glossar.html, /tool-radar.html, /kontakt.html) oder auf im Material genannte Quellen.\n` +
-  `- Der HTML-Text beginnt direkt mit einem <p>-Absatz (Titel und Teaser stehen separat).\n` +
+  `- Kein Verkauf: keine Werbung, keine Handlungsaufforderungen („schreib mir", „zum KI-Guide"), keine Links auf Angebots-/Verkaufsseiten (/guide.html, /leistungen.html, /beispiele.html) und keine Produktwerbung. Der Artikel endet mit einem inhaltlichen Fazit.\n` +
+  `- Keine Preise: keine Euro-Beträge für Produkte, Abos oder Dienstleistungen, keine Preisvergleiche, kein „ab X €". Cost-Benefit als Konzept ist ok, konkrete Preisschilder nicht.\n` +
+  `- Links nur auf im Material genannte, seriöse Quellen (bei News). Der HTML-Text beginnt direkt mit einem <p>-Absatz (Titel und Teaser stehen separat).\n` +
   `- Die englische Fassung ist derselbe Artikel im selben Ton, kein Wort-für-Wort-Übersetzungston.`;
 
 async function writeArticle(assignment, feedback = "") {
@@ -291,10 +292,6 @@ const UI = {
     back: "Alle Artikel",
     eyebrow: "Blog",
     read: "Min. Lesezeit",
-    ctaTitle: "Tiefer einsteigen?",
-    ctaText: "Im KI-Guide „Anfangen, wo es zählt“ steht der komplette Fahrplan — vom ersten Use Case bis zur Skalierung. Oder schreib mir einfach direkt.",
-    ctaGuide: "Zum KI-Guide",
-    ctaContact: "Kontakt",
     more: "Weiterlesen →",
     toggle: "EN",
   },
@@ -302,10 +299,6 @@ const UI = {
     back: "All articles",
     eyebrow: "Blog",
     read: "min read",
-    ctaTitle: "Want to go deeper?",
-    ctaText: "My AI guide “Start where it counts” lays out the full roadmap — from the first use case to scaling. Or just drop me a line.",
-    ctaGuide: "Get the AI guide",
-    ctaContact: "Contact",
     more: "Read more →",
     toggle: "DE",
   },
@@ -342,10 +335,6 @@ function renderArticlePage(post, lang) {
     "{{UI_BACK}}": ui.back,
     "{{UI_EYEBROW}}": ui.eyebrow,
     "{{UI_READ}}": ui.read,
-    "{{UI_CTA_TITLE}}": ui.ctaTitle,
-    "{{UI_CTA_TEXT}}": ui.ctaText,
-    "{{UI_CTA_GUIDE}}": ui.ctaGuide,
-    "{{UI_CTA_CONTACT}}": ui.ctaContact,
   };
   let html = template;
   for (const [key, value] of Object.entries(repl)) {
@@ -550,7 +539,33 @@ function publish(article, topicsMd, topicLabel) {
   console.log(`Fertig: /blog/${slug} + /blog/en/${slug}`);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+// Alle Artikelseiten aus blog/posts.json neu rendern (Template + Bodies sind
+// die Quelle der Wahrheit). Nützlich nach Template- oder Body-Änderungen, ohne
+// die Warteschlange anzufassen. Aufruf: BLOG_RERENDER_ALL=1 node scripts/generate-blog-post.mjs
+function rerenderAll() {
+  const sorted = [...postsDb.posts].sort((a, b) => new Date(b.date) - new Date(a.date));
+  for (const post of sorted) {
+    write(`blog/${post.slug}.html`, renderArticlePage(post, "de"));
+    write(`blog/en/${post.slug}.html`, renderArticlePage(post, "en"));
+  }
+  updateIndexPage("blog/index.html", renderIndexCards(sorted, "de"));
+  updateIndexPage("blog/en/index.html", renderIndexCards(sorted, "en"));
+  write("blog/feed.xml", renderFeed(sorted, "de"));
+  write("blog/en/feed.xml", renderFeed(sorted, "en"));
+  write("sitemap.xml", renderSitemap(sorted));
+  console.log(`Neu gerendert: ${sorted.length} Artikel (DE+EN) + Index, Feeds, Sitemap.`);
+}
+
+if (process.env.BLOG_RERENDER_ALL) {
+  try {
+    rerenderAll();
+  } catch (err) {
+    console.error(err);
+    process.exit(1);
+  }
+} else {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}

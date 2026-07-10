@@ -54,9 +54,6 @@
 .blog-meta{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:.9rem;margin:18px 0 36px}
 .blog-back{display:inline-block;color:var(--muted);text-decoration:none;font-size:.92rem;margin-bottom:26px}
 .blog-back:hover{color:var(--text)}
-.blog-cta{margin-top:48px;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:26px 28px;background:rgba(255,255,255,.03)}
-.blog-cta h2{font-family:var(--display);font-weight:700;font-size:1.25rem;margin:0 0 8px}
-.blog-cta p{color:var(--muted);font-weight:300;margin:0 0 16px}
 </style>
 </head>
 <body>
@@ -102,14 +99,6 @@
     <article class="blog-prose">
 <p>Imagine asking an AI about a court ruling on employment law — and getting a convincing answer with case number, date and quote. It all sounds credible. Except: the ruling doesn’t exist. The AI invented it. Without hesitation, without a warning label.</p><p>This behaviour is called hallucination, and anyone deploying AI in a company should understand it — not to get scared, but to build the right guardrails.</p><h2>Why does this happen at all?</h2><p>A language model is not a reference book. It has no database of facts to look things up in. It has learned which words plausibly follow each other in which context — and that is exactly what it produces: <strong>plausible text</strong>. Most of the time, plausible is also correct. But when the model doesn’t know something, it still generates the most likely answer — and that answer sounds just as confident as a correct one.</p><p>So hallucinating is not a flaw in the system. It is the system. Models are getting better at admitting uncertainty — but you shouldn’t rely on it.</p><h2>Where it’s harmless — and where it isn’t</h2><p>The risk question isn’t “does the AI hallucinate?” but “what happens when it does?”</p><ul><li><strong>Harmless:</strong> draft texts, brainstorming, summaries that an expert reviews. An invented detail gets noticed and cut.</li><li><strong>Risky:</strong> numbers, legal matters, medical content, commitments to customers — anything that leaves the building unchecked or triggers decisions.</li></ul><h2>Four guardrails for practice</h2><ul><li><strong>Require sources:</strong> connect the AI to your real documents and have it answer from them — with a pointer to the passage. Then every statement can be verified.</li><li><strong>Human before send:</strong> everything that reaches customers is seen by a person first. Generating becomes checking — still far faster than writing from scratch.</li><li><strong>Ban the delicate questions:</strong> define the areas where the AI shouldn’t answer at all (legal advice, price commitments) but refer to a human instead.</li><li><strong>Ask instead of believe:</strong> the simplest check takes one second: “How do you know that?” Shaky sources get looked up.</li></ul><p>AI is a brilliant, fast colleague with one weakness: it never likes admitting it doesn’t know something. Know that, build your processes around it, and you get the benefit — <strong>without the nasty surprises</strong>.</p>
     </article>
-
-    <div class="blog-cta reveal">
-      <h2>Want to go deeper?</h2>
-      <p>My AI guide “Start where it counts” lays out the full roadmap — from the first use case to scaling. Or just drop me a line.</p>
-      <a href="/guide.html" class="btn btn-primary" data-hover>Get the AI guide <span class="arrow">→</span></a>
-      &nbsp;
-      <a href="/kontakt.html" class="btn" data-hover>Contact</a>
-    </div>
   </div>
 </section>
 

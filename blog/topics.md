@@ -16,7 +16,7 @@ oberste offene Thema ist immer das nächste.
 
 - [ ] Weniger Ausschuss, weniger Energie: KI-Optimierung in der Fertigung
 - [ ] EU AI Act: Warum die verschobenen Fristen keine Entwarnung sind
-- [ ] Neue KI-Modelle, fallende Preise: Was das für dein Budget heißt
+- [ ] Neue KI-Modelle im Halbjahrestakt: Welches passt zu welcher Aufgabe?
 - [ ] 94 Prozent ohne KI: Was eine aktuelle Zahl über den Mittelstand verrät
 - [ ] Agentic AI: Vom Assistenten zum Kollegen — der Trend 2026 eingeordnet
 - [ ] Fachkräftemangel und KI: Kein Ersatz, aber ein Hebel
