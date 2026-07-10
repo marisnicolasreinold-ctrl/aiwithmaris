@@ -14,7 +14,6 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] Erfahrungswissen sichern: KI als Gedächtnis der Produktion
 - [ ] Weniger Ausschuss, weniger Energie: KI-Optimierung in der Fertigung
 - [ ] EU AI Act: Warum die verschobenen Fristen keine Entwarnung sind
 - [ ] Neue KI-Modelle, fallende Preise: Was das für dein Budget heißt
@@ -31,6 +30,8 @@ oberste offene Thema ist immer das nächste.
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-07-10 — Erfahrungswissen sichern: KI als Gedächtnis der Produktion (Erfahrungswissen sichern: KI als Gedächtnis der Produktion)
 
 - 2026-07-09 — KI in der Produktionsplanung: Wenn der Plan sich selbst umstellt (KI in der Produktionsplanung: Wenn der Plan sich selbst umstellt)
 
