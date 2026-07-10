@@ -54,9 +54,6 @@
 .blog-meta{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:.9rem;margin:18px 0 36px}
 .blog-back{display:inline-block;color:var(--muted);text-decoration:none;font-size:.92rem;margin-bottom:26px}
 .blog-back:hover{color:var(--text)}
-.blog-cta{margin-top:48px;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:26px 28px;background:rgba(255,255,255,.03)}
-.blog-cta h2{font-family:var(--display);font-weight:700;font-size:1.25rem;margin:0 0 8px}
-.blog-cta p{color:var(--muted);font-weight:300;margin:0 0 16px}
 </style>
 </head>
 <body>
@@ -102,14 +99,6 @@
     <article class="blog-prose">
 {{CONTENT}}
     </article>
-
-    <div class="blog-cta reveal">
-      <h2>{{UI_CTA_TITLE}}</h2>
-      <p>{{UI_CTA_TEXT}}</p>
-      <a href="{{P}}guide.html" class="btn btn-primary" data-hover>{{UI_CTA_GUIDE}} <span class="arrow">→</span></a>
-      &nbsp;
-      <a href="{{P}}kontakt.html" class="btn" data-hover>{{UI_CTA_CONTACT}}</a>
-    </div>
   </div>
 </section>
 

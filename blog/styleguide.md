@@ -59,8 +59,9 @@ wollen, ohne sich zu verzetteln. Motto: **„Anfangen, wo es zählt."**
    Gedanke mit Beispiel.
 4. **Praxisteil:** eine kurze Liste mit umsetzbaren Schritten oder
    Fragen zum Selbst-Checken.
-5. **Schluss:** 1–2 Absätze Fazit + sanfter Hinweis auf den KI-Guide oder
-   das Kontaktangebot. Nie pushy, eher: „Wenn du tiefer einsteigen willst…"
+5. **Schluss:** 1–2 Absätze Fazit — ein inhaltlicher Gedanke, der den Artikel
+   rund macht. **Keine** Handlungsaufforderung, kein Hinweis auf Guide,
+   Leistungen oder „schreib mir". Der Text endet mit Substanz, nicht mit Werbung.
 
 **Länge:** 700–1.100 Wörter.
 
@@ -74,6 +75,24 @@ wollen, ohne sich zu verzetteln. Motto: **„Anfangen, wo es zählt."**
 - Erfundene Fakten, Statistiken, Kunden oder Zitate
 - Amerikanische Marketing-Floskeln und Denglisch, wo es ein gutes deutsches
   Wort gibt
+
+## Kein Verkauf, keine Preise (verbindlich)
+
+Der Blog informiert — er verkauft nicht. Das ist eine harte Regel:
+
+- **Keine Werbung und keine Handlungsaufforderungen (CTAs).** Kein „schreib
+  mir", „zum KI-Guide", „lass uns sprechen". Der Artikel endet mit einem
+  inhaltlichen Fazit, nicht mit einem Aufruf.
+- **Keine Links auf Angebots-/Verkaufsseiten** im Artikeltext: nicht auf
+  `/guide.html`, `/leistungen.html`, `/beispiele.html` oder Produktseiten.
+- **Keine Preise.** Keine Euro-Beträge für Produkte, Abos, Guides oder
+  Dienstleistungen, keine Preisvergleiche, keine „ab X €". (Cost-Benefit als
+  Konzept ist erlaubt — „das kostet Zeit" —, aber keine konkreten Preisschilder.)
+- **Keine Eigen-/Produktwerbung.** Kein „unser neues eBook", keine
+  Feature-Listen eines Angebots. Wissen teilen, nicht anpreisen.
+
+Die globale Seiten-Navigation und Fußzeile sind davon nicht betroffen — die
+Regel gilt für den Artikelinhalt.
 
 ## Beispiele für den Originalton (Referenz, nicht kopieren)
 
