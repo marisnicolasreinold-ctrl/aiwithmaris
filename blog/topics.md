@@ -14,7 +14,6 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] EU AI Act: Warum die verschobenen Fristen keine Entwarnung sind
 - [ ] Neue KI-Modelle im Halbjahrestakt: Welches passt zu welcher Aufgabe?
 - [ ] 94 Prozent ohne KI: Was eine aktuelle Zahl über den Mittelstand verrät
 - [ ] Agentic AI: Vom Assistenten zum Kollegen — der Trend 2026 eingeordnet
@@ -29,6 +28,8 @@ oberste offene Thema ist immer das nächste.
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-07-14 — EU AI Act: Warum die verschobenen Fristen keine Entwarnung sind (EU AI Act: Warum die verschobenen Fristen keine Entwarnung sind)
 
 - 2026-07-13 — Weniger Ausschuss, weniger Energie: KI-Optimierung in der Fertigung (Weniger Ausschuss, weniger Energie: KI-Optimierung in der Fertigung)
 
