@@ -6,6 +6,13 @@
     <description>Täglich ein neuer Artikel über KI im Mittelstand.</description>
     <language>de</language>
     <item>
+      <title>94 Prozent ohne KI: Was eine aktuelle Zahl über den Mittelstand verrät</title>
+      <link>https://aiwithmaris.com/blog/mittelstand-ki-adoption-zahlen</link>
+      <guid>https://aiwithmaris.com/blog/mittelstand-ki-adoption-zahlen</guid>
+      <pubDate>Thu, 16 Jul 2026 06:40:05 GMT</pubDate>
+      <description>Eine aktuelle Erhebung sagt: Die große Mehrheit im Mittelstand nutzt noch keine KI produktiv. Das ist keine Blamage — sondern eine Chance mit Ansage.</description>
+    </item>
+    <item>
       <title>Neue KI-Modelle im Halbjahrestakt: Welches passt zu welcher Aufgabe?</title>
       <link>https://aiwithmaris.com/blog/neue-ki-modelle-ueberblick</link>
       <guid>https://aiwithmaris.com/blog/neue-ki-modelle-ueberblick</guid>
@@ -207,13 +214,6 @@
       <guid>https://aiwithmaris.com/blog/make-or-buy-bei-ki</guid>
       <pubDate>Fri, 22 May 2026 06:30:00 GMT</pubDate>
       <description>Fertiges Tool kaufen oder selbst bauen lassen? Die Antwort hängt an einer einzigen Frage — und die hat nichts mit Technik zu tun.</description>
-    </item>
-    <item>
-      <title>Eigene Cloud oder US-Anbieter? Datenhoheit ohne Dogma</title>
-      <link>https://aiwithmaris.com/blog/datenhoheit-ohne-dogma</link>
-      <guid>https://aiwithmaris.com/blog/datenhoheit-ohne-dogma</guid>
-      <pubDate>Mon, 18 May 2026 06:30:00 GMT</pubDate>
-      <description>Zwischen „alles zu Big Tech“ und „alles selbst hosten“ liegt ein vernünftiger Mittelweg. Eine Entscheidungshilfe ohne Glaubenskrieg.</description>
     </item>
   </channel>
 </rss>

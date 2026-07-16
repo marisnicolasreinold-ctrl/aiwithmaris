@@ -14,7 +14,6 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] 94 Prozent ohne KI: Was eine aktuelle Zahl über den Mittelstand verrät
 - [ ] Agentic AI: Vom Assistenten zum Kollegen — der Trend 2026 eingeordnet
 - [ ] Fachkräftemangel und KI: Kein Ersatz, aber ein Hebel
 - [ ] KI-Coaching vs. KI-Workshop: Warum einmalige Schulungen fast nichts bringen
@@ -27,6 +26,8 @@ oberste offene Thema ist immer das nächste.
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-07-16 — 94 Prozent ohne KI: Was eine aktuelle Zahl über den Mittelstand verrät (94 Prozent ohne KI: Was eine aktuelle Zahl über den Mittelstand verrät)
 
 - 2026-07-15 — Neue KI-Modelle im Halbjahrestakt: Welches passt zu welcher Aufgabe? (Neue KI-Modelle im Halbjahrestakt: Welches passt zu welcher Aufgabe?)
 

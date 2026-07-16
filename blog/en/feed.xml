@@ -6,6 +6,13 @@
     <description>A new article every day about AI in small and mid-sized businesses.</description>
     <language>en</language>
     <item>
+      <title>94 percent without AI: what a current figure reveals about the Mittelstand</title>
+      <link>https://aiwithmaris.com/blog/en/mittelstand-ki-adoption-zahlen</link>
+      <guid>https://aiwithmaris.com/blog/en/mittelstand-ki-adoption-zahlen</guid>
+      <pubDate>Thu, 16 Jul 2026 06:40:05 GMT</pubDate>
+      <description>A recent survey says the vast majority of smaller firms don't yet use AI productively. That's not a disgrace — it's an opportunity in plain sight.</description>
+    </item>
+    <item>
       <title>New AI models every six months: which one fits which task?</title>
       <link>https://aiwithmaris.com/blog/en/neue-ki-modelle-ueberblick</link>
       <guid>https://aiwithmaris.com/blog/en/neue-ki-modelle-ueberblick</guid>
@@ -207,13 +214,6 @@
       <guid>https://aiwithmaris.com/blog/en/make-or-buy-bei-ki</guid>
       <pubDate>Fri, 22 May 2026 06:30:00 GMT</pubDate>
       <description>Buy a finished tool or have one built? The answer hangs on a single question — and it has nothing to do with technology.</description>
-    </item>
-    <item>
-      <title>Your own cloud or US providers? Data sovereignty without dogma</title>
-      <link>https://aiwithmaris.com/blog/en/datenhoheit-ohne-dogma</link>
-      <guid>https://aiwithmaris.com/blog/en/datenhoheit-ohne-dogma</guid>
-      <pubDate>Mon, 18 May 2026 06:30:00 GMT</pubDate>
-      <description>Between “hand everything to Big Tech” and “host everything yourself” lies a sensible middle ground. A decision guide without the holy war.</description>
     </item>
   </channel>
 </rss>
