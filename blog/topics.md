@@ -14,7 +14,6 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] Agentic AI: Vom Assistenten zum Kollegen — der Trend 2026 eingeordnet
 - [ ] Fachkräftemangel und KI: Kein Ersatz, aber ein Hebel
 - [ ] KI-Coaching vs. KI-Workshop: Warum einmalige Schulungen fast nichts bringen
 - [ ] Der Unterschied zwischen Automatisierung und KI — und warum er für dein Budget wichtig ist
@@ -26,6 +25,8 @@ oberste offene Thema ist immer das nächste.
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-07-17 — Agentic AI: Vom Assistenten zum Kollegen — der Trend 2026 eingeordnet (Agentic AI: Vom Assistenten zum Kollegen — der Trend 2026 eingeordnet)
 
 - 2026-07-16 — 94 Prozent ohne KI: Was eine aktuelle Zahl über den Mittelstand verrät (94 Prozent ohne KI: Was eine aktuelle Zahl über den Mittelstand verrät)
 

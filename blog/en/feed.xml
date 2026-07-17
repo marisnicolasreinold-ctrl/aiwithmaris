@@ -6,6 +6,13 @@
     <description>A new article every day about AI in small and mid-sized businesses.</description>
     <language>en</language>
     <item>
+      <title>Agentic AI: from assistant to colleague — the 2026 trend in context</title>
+      <link>https://aiwithmaris.com/blog/en/agentic-ai-trend-2026</link>
+      <guid>https://aiwithmaris.com/blog/en/agentic-ai-trend-2026</guid>
+      <pubDate>Fri, 17 Jul 2026 06:35:12 GMT</pubDate>
+      <description>The buzzword of the year is “agentic”. What's behind it, where it really helps — and why without guardrails the colleague quickly becomes a risk.</description>
+    </item>
+    <item>
       <title>94 percent without AI: what a current figure reveals about the Mittelstand</title>
       <link>https://aiwithmaris.com/blog/en/mittelstand-ki-adoption-zahlen</link>
       <guid>https://aiwithmaris.com/blog/en/mittelstand-ki-adoption-zahlen</guid>
@@ -207,13 +214,6 @@
       <guid>https://aiwithmaris.com/blog/en/warum-dein-team-ki-nicht-nutzt</guid>
       <pubDate>Wed, 27 May 2026 06:30:00 GMT</pubDate>
       <description>The tool is bought, the licences are running — and nobody uses it. What’s really behind it, and why a single training session changes nothing.</description>
-    </item>
-    <item>
-      <title>Make or buy in AI: when to build custom software, when a ready-made tool will do</title>
-      <link>https://aiwithmaris.com/blog/en/make-or-buy-bei-ki</link>
-      <guid>https://aiwithmaris.com/blog/en/make-or-buy-bei-ki</guid>
-      <pubDate>Fri, 22 May 2026 06:30:00 GMT</pubDate>
-      <description>Buy a finished tool or have one built? The answer hangs on a single question — and it has nothing to do with technology.</description>
     </item>
   </channel>
 </rss>
