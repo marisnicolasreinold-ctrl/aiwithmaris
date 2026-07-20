@@ -6,6 +6,13 @@
     <description>Täglich ein neuer Artikel über KI im Mittelstand.</description>
     <language>de</language>
     <item>
+      <title>Fachkräftemangel und KI: Kein Ersatz, aber ein Hebel</title>
+      <link>https://aiwithmaris.com/blog/fachkraeftemangel-und-ki</link>
+      <guid>https://aiwithmaris.com/blog/fachkraeftemangel-und-ki</guid>
+      <pubDate>Mon, 20 Jul 2026 07:39:38 GMT</pubDate>
+      <description>KI ersetzt keine Fachkräfte — die gibt es dafür viel zu selten. Aber sie kann die vorhandenen entlasten. Genau da liegt der eigentliche Nutzen.</description>
+    </item>
+    <item>
       <title>Agentic AI: Vom Assistenten zum Kollegen — der Trend 2026 eingeordnet</title>
       <link>https://aiwithmaris.com/blog/agentic-ai-trend-2026</link>
       <guid>https://aiwithmaris.com/blog/agentic-ai-trend-2026</guid>
@@ -207,13 +214,6 @@
       <guid>https://aiwithmaris.com/blog/halluzinationen-verstehen</guid>
       <pubDate>Sun, 31 May 2026 06:30:00 GMT</pubDate>
       <description>KI-Modelle erfinden manchmal Fakten — mit voller Überzeugung. Warum das kein Bug ist, wann es gefährlich wird und wie du dich schützt.</description>
-    </item>
-    <item>
-      <title>Warum dein Team KI-Tools nicht nutzt — und was Coaching daran ändert</title>
-      <link>https://aiwithmaris.com/blog/warum-dein-team-ki-nicht-nutzt</link>
-      <guid>https://aiwithmaris.com/blog/warum-dein-team-ki-nicht-nutzt</guid>
-      <pubDate>Wed, 27 May 2026 06:30:00 GMT</pubDate>
-      <description>Das Tool ist gekauft, die Lizenzen laufen — und keiner nutzt es. Woran das wirklich liegt und warum eine Schulung allein nichts ändert.</description>
     </item>
   </channel>
 </rss>

@@ -6,6 +6,13 @@
     <description>A new article every day about AI in small and mid-sized businesses.</description>
     <language>en</language>
     <item>
+      <title>Skilled-worker shortage and AI: no replacement, but a lever</title>
+      <link>https://aiwithmaris.com/blog/en/fachkraeftemangel-und-ki</link>
+      <guid>https://aiwithmaris.com/blog/en/fachkraeftemangel-und-ki</guid>
+      <pubDate>Mon, 20 Jul 2026 07:39:38 GMT</pubDate>
+      <description>AI doesn't replace skilled workers — they're far too scarce for that. But it can ease the load on the ones you have. That's where the real value is.</description>
+    </item>
+    <item>
       <title>Agentic AI: from assistant to colleague — the 2026 trend in context</title>
       <link>https://aiwithmaris.com/blog/en/agentic-ai-trend-2026</link>
       <guid>https://aiwithmaris.com/blog/en/agentic-ai-trend-2026</guid>
@@ -207,13 +214,6 @@
       <guid>https://aiwithmaris.com/blog/en/halluzinationen-verstehen</guid>
       <pubDate>Sun, 31 May 2026 06:30:00 GMT</pubDate>
       <description>AI models sometimes invent facts — with full conviction. Why that’s not a bug, when it gets dangerous and how to protect yourself.</description>
-    </item>
-    <item>
-      <title>Why your team doesn’t use AI tools — and what coaching changes</title>
-      <link>https://aiwithmaris.com/blog/en/warum-dein-team-ki-nicht-nutzt</link>
-      <guid>https://aiwithmaris.com/blog/en/warum-dein-team-ki-nicht-nutzt</guid>
-      <pubDate>Wed, 27 May 2026 06:30:00 GMT</pubDate>
-      <description>The tool is bought, the licences are running — and nobody uses it. What’s really behind it, and why a single training session changes nothing.</description>
     </item>
   </channel>
 </rss>
