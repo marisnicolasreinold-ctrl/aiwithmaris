@@ -91,7 +91,7 @@ jobs:
                 "",
                 "So füllst du sie auf (ca. 10 Minuten):",
                 "1. Neuen Claude-Code-Chat für dieses Repo öffnen",
-                "2. Schreiben: **„Neue Blog-Runde — schreib mir 5 Artikel-Vorschläge"**",
+                "2. Schreiben: **„Neue Blog-Runde — schreib mir 5 Artikel-Vorschläge“**",
                 "3. Entwürfe lesen, freigeben (oder Änderungen wünschen)",
                 "4. Claude reiht die freigegebenen Artikel in `blog/queue/` ein — fertig",
                 "",
