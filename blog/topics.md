@@ -14,7 +14,6 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] Fachkräftemangel und KI: Kein Ersatz, aber ein Hebel
 - [ ] KI-Coaching vs. KI-Workshop: Warum einmalige Schulungen fast nichts bringen
 - [ ] Der Unterschied zwischen Automatisierung und KI — und warum er für dein Budget wichtig ist
 - [ ] Lock-in vermeiden: Wie du KI einführst, ohne dich von einem Anbieter abhängig zu machen
@@ -25,6 +24,8 @@ oberste offene Thema ist immer das nächste.
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-07-20 — Fachkräftemangel und KI: Kein Ersatz, aber ein Hebel (Fachkräftemangel und KI: Kein Ersatz, aber ein Hebel)
 
 - 2026-07-17 — Agentic AI: Vom Assistenten zum Kollegen — der Trend 2026 eingeordnet (Agentic AI: Vom Assistenten zum Kollegen — der Trend 2026 eingeordnet)
 
