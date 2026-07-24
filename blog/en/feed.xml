@@ -6,6 +6,13 @@
     <description>A new article every day about AI in small and mid-sized businesses.</description>
     <language>en</language>
     <item>
+      <title>AI coaching vs. workshop: why the one-off training barely helps</title>
+      <link>https://aiwithmaris.com/blog/en/ki-coaching-vs-workshop</link>
+      <guid>https://aiwithmaris.com/blog/en/ki-coaching-vs-workshop</guid>
+      <pubDate>Fri, 24 Jul 2026 07:03:17 GMT</pubDate>
+      <description>A day of workshop, everyone's excited — two weeks later nobody uses it. Why that happens, and what works instead.</description>
+    </item>
+    <item>
       <title>Skilled-worker shortage and AI: no replacement, but a lever</title>
       <link>https://aiwithmaris.com/blog/en/fachkraeftemangel-und-ki</link>
       <guid>https://aiwithmaris.com/blog/en/fachkraeftemangel-und-ki</guid>
@@ -207,13 +214,6 @@
       <guid>https://aiwithmaris.com/blog/en/ki-projekte-am-falschen-ende</guid>
       <pubDate>Wed, 10 Jun 2026 20:00:39 GMT</pubDate>
       <description>Most AI projects don’t fail because of the technology. They fail because of the order of things. How to spot the right first project.</description>
-    </item>
-    <item>
-      <title>Understanding hallucinations: why AI confidently makes things up</title>
-      <link>https://aiwithmaris.com/blog/en/halluzinationen-verstehen</link>
-      <guid>https://aiwithmaris.com/blog/en/halluzinationen-verstehen</guid>
-      <pubDate>Sun, 31 May 2026 06:30:00 GMT</pubDate>
-      <description>AI models sometimes invent facts — with full conviction. Why that’s not a bug, when it gets dangerous and how to protect yourself.</description>
     </item>
   </channel>
 </rss>

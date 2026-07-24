@@ -14,7 +14,6 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] KI-Coaching vs. KI-Workshop: Warum einmalige Schulungen fast nichts bringen
 - [ ] Der Unterschied zwischen Automatisierung und KI — und warum er für dein Budget wichtig ist
 - [ ] Lock-in vermeiden: Wie du KI einführst, ohne dich von einem Anbieter abhängig zu machen
 - [ ] Wie du Mitarbeiter mitnimmst, die Angst haben, von KI ersetzt zu werden
@@ -24,6 +23,8 @@ oberste offene Thema ist immer das nächste.
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-07-24 — KI-Coaching vs. Workshop: Warum die eine Schulung fast nichts bringt (KI-Coaching vs. KI-Workshop: Warum einmalige Schulungen fast nichts bringen)
 
 - 2026-07-20 — Fachkräftemangel und KI: Kein Ersatz, aber ein Hebel (Fachkräftemangel und KI: Kein Ersatz, aber ein Hebel)
 
