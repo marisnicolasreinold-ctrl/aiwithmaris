@@ -1,6 +1,21 @@
 {
   "posts": [
     {
+      "slug": "automatisierung-vs-ki-budget",
+      "date": "2026-07-27T07:59:35.535Z",
+      "mode": "queue",
+      "de": {
+        "title": "Automatisierung oder KI? Der Unterschied, der dein Budget entscheidet",
+        "teaser": "Nicht jede Zeitersparnis braucht KI. Wer beides verwechselt, zahlt zu viel — oder schießt mit Kanonen auf Spatzen.",
+        "html": "<p>„Das automatisieren wir einfach mit KI.“ Diesen Satz höre ich oft — und manchmal ist die KI darin überflüssig. Automatisierung und KI versprechen beide weniger Handarbeit, sind aber zwei verschiedene Werkzeuge. Wer sie verwechselt, zahlt drauf.</p><h2>Der Unterschied in einem Satz</h2><p>Klassische Automatisierung folgt festen Regeln: gleiche Eingabe, gleiches Ergebnis — günstig, schnell, verlässlich. KI kommt dort ins Spiel, wo es keine feste Regel gibt: Sprache, Mehrdeutigkeit, Varianten. Mächtiger, aber teurer und weniger vorhersehbar.</p><h2>Wann simple Automatisierung reicht</h2><p>Wenn die Aufgabe strukturiert und regelbasiert ist, brauchst du keine KI. Eine Datei ins richtige Verzeichnis schieben, ein Feld aus einem festen Formular übernehmen, bei einem Ereignis eine Mail auslösen — das erledigt eine simple Automatisierung zuverlässig und für einen Bruchteil der Kosten.</p><h2>Wann KI sich lohnt</h2><p>KI zahlt sich aus, wo die Eingabe unstrukturiert ist und Einschätzung gefragt: eine frei formulierte Kundenmail verstehen, aus einer chaotischen Rechnung die richtigen Werte ziehen, einen langen Text zusammenfassen. Also überall dort, wo eine starre Regel scheitern würde.</p><h2>Fürs Budget heißt das</h2><p>Stell vor jedem Projekt eine einfache Frage: Gibt es hier klare Regeln — oder echte Varianz? Wo klare Regeln reichen, nimm die günstige Automatisierung. Wo die Varianz sitzt, setz KI gezielt ein. Oft ist die beste Lösung eine Mischung: Automatisierung für den Rahmen, KI für die kniffligen Stellen.</p><p>Der teuerste Fehler ist, mit KI auf ein Problem zu zielen, das ein einfaches Skript für ein paar Euro löst — oder umgekehrt, eine KI-taugliche Aufgabe in starre Regeln zu pressen, bis sie ständig hakt.</p>"
+      },
+      "en": {
+        "title": "Automation or AI? The difference that decides your budget",
+        "teaser": "Not every time saving needs AI. Confuse the two and you overpay — or use a sledgehammer to crack a nut.",
+        "html": "<p>“We'll just automate that with AI.” I hear this sentence a lot — and sometimes the AI in it is superfluous. Automation and AI both promise less manual work, but they're two different tools. Confuse them and you lose money.</p><h2>The difference in one sentence</h2><p>Classic automation follows fixed rules: same input, same output — cheap, fast, reliable. AI comes into play where there is no fixed rule: language, ambiguity, variation. More powerful, but pricier and less predictable.</p><h2>When simple automation is enough</h2><p>If the task is structured and rule-based, you don't need AI. Move a file into the right folder, take a field from a fixed form, trigger an email on an event — a simple automation handles that reliably and for a fraction of the cost.</p><h2>When AI pays off</h2><p>AI pays off where the input is unstructured and judgment is needed: understanding a freely worded customer email, pulling the right values from a messy invoice, summarizing a long text. In other words, wherever a rigid rule would fail.</p><h2>What that means for your budget</h2><p>Before every project, ask one simple question: are there clear rules here — or real variance? Where clear rules suffice, take cheap automation. Where the variance sits, use AI deliberately. Often the best solution is a mix: automation for the frame, AI for the tricky bits.</p><p>The most expensive mistake is aiming AI at a problem a simple script solves for a few euros — or the reverse, forcing an AI-suited task into rigid rules until it keeps jamming.</p>"
+      }
+    },
+    {
       "slug": "ki-coaching-vs-workshop",
       "date": "2026-07-24T07:03:17.546Z",
       "mode": "queue",
