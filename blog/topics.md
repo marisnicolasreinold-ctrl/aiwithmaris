@@ -14,7 +14,6 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] Lock-in vermeiden: Wie du KI einführst, ohne dich von einem Anbieter abhängig zu machen
 - [ ] Wie du Mitarbeiter mitnimmst, die Angst haben, von KI ersetzt zu werden
 - [ ] KI im Lager und Einkauf: Drei Prozesse, die sich fast immer lohnen
 - [ ] Vom Excel-Chaos zur sauberen Datenbasis: Die unterschätzte Voraussetzung für KI
@@ -22,6 +21,8 @@ oberste offene Thema ist immer das nächste.
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-07-28 — Lock-in vermeiden: KI einführen, ohne dich abhängig zu machen (Lock-in vermeiden: Wie du KI einführst, ohne dich von einem Anbieter abhängig zu machen)
 
 - 2026-07-27 — Automatisierung oder KI? Der Unterschied, der dein Budget entscheidet (Der Unterschied zwischen Automatisierung und KI — und warum er für dein Budget wichtig ist)
 

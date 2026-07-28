@@ -1,6 +1,21 @@
 {
   "posts": [
     {
+      "slug": "lock-in-vermeiden-ki",
+      "date": "2026-07-28T07:08:56.971Z",
+      "mode": "queue",
+      "de": {
+        "title": "Lock-in vermeiden: KI einführen, ohne dich abhängig zu machen",
+        "teaser": "Das bequemste KI-Tool von heute kann die teure Falle von morgen sein. Wie du dir die Tür offenhältst.",
+        "html": "<p>Ein neues KI-Tool ist schnell eingeführt — und schnell unverzichtbar. Das ist bequem, bis der Anbieter die Preise anzieht, den Dienst einstellt oder deine Daten in einem Format festhält, aus dem du nicht mehr rauskommst. Abhängigkeit entsteht leise. Vermeiden lässt sie sich mit ein paar einfachen Vorkehrungen.</p><h2>Wo Lock-in entsteht</h2><p>Meist an drei Stellen: Deine Daten liegen nur im Format des Anbieters. Deine Abläufe sind fest an eine einzige Schnittstelle geklebt. Und das Wissen, wie das alles läuft, steckt nur in diesem einen Tool. Fällt der Anbieter weg, fällt alles weg.</p><h2>Drei einfache Vorkehrungen</h2><ul><li><strong>Daten bleiben deine Daten.</strong> Achte darauf, dass du sie jederzeit vollständig und in einem gängigen Format exportieren kannst. Kein Export, kein Vertrauen.</li><li><strong>Auf offene Standards setzen.</strong> Anbindungen über offene Schnittstellen statt proprietärer Speziallösungen machen einen späteren Wechsel überhaupt erst möglich.</li><li><strong>Das Modell austauschbar halten.</strong> Wenn dein Ablauf nicht fest an ein einziges KI-Modell genagelt ist, kannst du auf ein besseres oder günstigeres umsteigen, ohne alles neu zu bauen.</li></ul><h2>Nicht ins andere Extrem</h2><p>Jetzt bloß nicht monatelang eine perfekt anbieterneutrale Architektur bauen, während nichts Nutzbares entsteht. Ein bisschen Bindung ist völlig in Ordnung — solange du im Zweifel mit deinen Daten und ohne Drama wieder rausgehen kannst. Das ist der eigentliche Punkt: nicht Unabhängigkeit um jeden Preis, sondern eine offene Tür.</p><h2>Ehrlich bleiben</h2><p>Kein Setup ist zu hundert Prozent wechselfrei. Aber der Unterschied zwischen „ich kann in zwei Wochen umziehen“ und „ich sitze fest“ entscheidet sich am Anfang — bei der Wahl, wie du Daten und Abläufe aufsetzt. Diese Frage einmal am Start zu stellen, kostet fast nichts. Sie später zu ignorieren, kann teuer werden.</p>"
+      },
+      "en": {
+        "title": "Avoiding lock-in: adopting AI without making yourself dependent",
+        "teaser": "Today's most convenient AI tool can be tomorrow's expensive trap. How to keep the door open.",
+        "html": "<p>A new AI tool is quickly adopted — and quickly indispensable. That's convenient, until the vendor raises prices, discontinues the service, or holds your data in a format you can't get out of. Dependence creeps in quietly. You can avoid it with a few simple precautions.</p><h2>Where lock-in comes from</h2><p>Usually in three places: your data only lives in the vendor's format. Your processes are glued to a single interface. And the knowledge of how it all runs sits only inside that one tool. If the vendor goes, everything goes.</p><h2>Three simple precautions</h2><ul><li><strong>Your data stays your data.</strong> Make sure you can export it fully and in a common format at any time. No export, no trust.</li><li><strong>Rely on open standards.</strong> Connections via open interfaces instead of proprietary special solutions are what make a later switch possible at all.</li><li><strong>Keep the model swappable.</strong> If your process isn't nailed to a single AI model, you can move to a better or cheaper one without rebuilding everything.</li></ul><h2>Don't overshoot the other way</h2><p>Just don't spend months building a perfectly vendor-neutral architecture while nothing usable emerges. A bit of attachment is perfectly fine — as long as, in a pinch, you can leave with your data and without drama. That's the actual point: not independence at any cost, but an open door.</p><h2>Staying honest</h2><p>No setup is a hundred percent switch-free. But the difference between “I can move in two weeks” and “I'm stuck” is decided at the start — in how you set up data and processes. Asking this question once at the outset costs almost nothing. Ignoring it later can get expensive.</p>"
+      }
+    },
+    {
       "slug": "automatisierung-vs-ki-budget",
       "date": "2026-07-27T07:59:35.535Z",
       "mode": "queue",
