@@ -14,13 +14,14 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] Wie du Mitarbeiter mitnimmst, die Angst haben, von KI ersetzt zu werden
 - [ ] KI im Lager und Einkauf: Drei Prozesse, die sich fast immer lohnen
 - [ ] Vom Excel-Chaos zur sauberen Datenbasis: Die unterschätzte Voraussetzung für KI
 - [ ] Warum „Wir brauchen erst eine KI-Strategie" das Projekt oft beerdigt
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-07-29 — Angst vor KI im Team: Wie du Leute mitnimmst statt vor den Kopf zu stoßen (Wie du Mitarbeiter mitnimmst, die Angst haben, von KI ersetzt zu werden)
 
 - 2026-07-28 — Lock-in vermeiden: KI einführen, ohne dich abhängig zu machen (Lock-in vermeiden: Wie du KI einführst, ohne dich von einem Anbieter abhängig zu machen)
 

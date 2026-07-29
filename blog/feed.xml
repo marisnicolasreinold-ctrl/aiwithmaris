@@ -6,6 +6,13 @@
     <description>Täglich ein neuer Artikel über KI im Mittelstand.</description>
     <language>de</language>
     <item>
+      <title>Angst vor KI im Team: Wie du Leute mitnimmst statt vor den Kopf zu stoßen</title>
+      <link>https://aiwithmaris.com/blog/mitarbeiter-angst-vor-ki</link>
+      <guid>https://aiwithmaris.com/blog/mitarbeiter-angst-vor-ki</guid>
+      <pubDate>Wed, 29 Jul 2026 07:14:24 GMT</pubDate>
+      <description>„Macht die KI jetzt meinen Job?“ Wer diese Angst übergeht, verliert das Team — egal wie gut das Tool ist.</description>
+    </item>
+    <item>
       <title>Lock-in vermeiden: KI einführen, ohne dich abhängig zu machen</title>
       <link>https://aiwithmaris.com/blog/lock-in-vermeiden-ki</link>
       <guid>https://aiwithmaris.com/blog/lock-in-vermeiden-ki</guid>
@@ -207,13 +214,6 @@
       <guid>https://aiwithmaris.com/blog/ki-agent-im-posteingang</guid>
       <pubDate>Mon, 15 Jun 2026 10:42:48 GMT</pubDate>
       <description>Ein KI-Agent kann viele Anfragen sofort erledigen. Aber nicht alle. Die Grenze zu kennen ist der halbe Erfolg.</description>
-    </item>
-    <item>
-      <title>Dokumenten-Automatisierung konkret: Was passiert, wenn niemand mehr Rechnungen abtippt?</title>
-      <link>https://aiwithmaris.com/blog/dokumenten-automatisierung-konkret</link>
-      <guid>https://aiwithmaris.com/blog/dokumenten-automatisierung-konkret</guid>
-      <pubDate>Fri, 12 Jun 2026 08:45:54 GMT</pubDate>
-      <description>Ein Blick in den Maschinenraum der Dokumenten-Automatisierung — was die Software wirklich tut, was das Team noch tut und wo die Grenzen liegen.</description>
     </item>
   </channel>
 </rss>
