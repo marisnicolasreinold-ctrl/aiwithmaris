@@ -14,12 +14,13 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] KI im Lager und Einkauf: Drei Prozesse, die sich fast immer lohnen
 - [ ] Vom Excel-Chaos zur sauberen Datenbasis: Die unterschätzte Voraussetzung für KI
 - [ ] Warum „Wir brauchen erst eine KI-Strategie" das Projekt oft beerdigt
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-07-30 — KI im Lager und Einkauf: Drei Prozesse, die sich fast immer lohnen (KI im Lager und Einkauf: Drei Prozesse, die sich fast immer lohnen)
 
 - 2026-07-29 — Angst vor KI im Team: Wie du Leute mitnimmst statt vor den Kopf zu stoßen (Wie du Mitarbeiter mitnimmst, die Angst haben, von KI ersetzt zu werden)
 

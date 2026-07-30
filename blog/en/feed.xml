@@ -6,6 +6,13 @@
     <description>A new article every day about AI in small and mid-sized businesses.</description>
     <language>en</language>
     <item>
+      <title>AI in the warehouse and purchasing: three processes that almost always pay off</title>
+      <link>https://aiwithmaris.com/blog/en/ki-lager-und-einkauf</link>
+      <guid>https://aiwithmaris.com/blog/en/ki-lager-und-einkauf</guid>
+      <pubDate>Thu, 30 Jul 2026 07:08:16 GMT</pubDate>
+      <description>Between goods-in and ordering lies a lot of quiet manual work. Three spots where AI eases the load fast.</description>
+    </item>
+    <item>
       <title>Fear of AI in the team: how to bring people along instead of alienating them</title>
       <link>https://aiwithmaris.com/blog/en/mitarbeiter-angst-vor-ki</link>
       <guid>https://aiwithmaris.com/blog/en/mitarbeiter-angst-vor-ki</guid>
@@ -207,13 +214,6 @@
       <guid>https://aiwithmaris.com/blog/en/dsgvo-und-ki-vor-dem-start</guid>
       <pubDate>Tue, 16 Jun 2026 09:39:28 GMT</pubDate>
       <description>GDPR and AI are not a contradiction — if you answer a few questions before you start instead of after. The key points, without the legalese.</description>
-    </item>
-    <item>
-      <title>An AI agent in your inbox: what to answer automatically — and what not to</title>
-      <link>https://aiwithmaris.com/blog/en/ki-agent-im-posteingang</link>
-      <guid>https://aiwithmaris.com/blog/en/ki-agent-im-posteingang</guid>
-      <pubDate>Mon, 15 Jun 2026 10:42:48 GMT</pubDate>
-      <description>An AI agent can handle many requests instantly. But not all of them. Knowing where the line is, is half the battle.</description>
     </item>
   </channel>
 </rss>
