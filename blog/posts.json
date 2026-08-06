@@ -1,6 +1,21 @@
 {
   "posts": [
     {
+      "slug": "excel-chaos-datenbasis",
+      "date": "2026-08-06T07:11:56.495Z",
+      "mode": "queue",
+      "de": {
+        "title": "Vom Excel-Chaos zur sauberen Datenbasis: die unterschätzte KI-Voraussetzung",
+        "teaser": "KI scheitert selten an der KI — meistens am Chaos darunter. Warum saubere Daten der langweiligste und wichtigste Schritt sind.",
+        "html": "<p>Alle reden über die KI. Kaum jemand über das, worauf sie steht: deine Daten. Und die liegen im Mittelstand oft in vierzehn Excel-Dateien, drei Benennungslogiken und dem Kopf eines Kollegen, der nächste Woche im Urlaub ist. Genau da scheitern die meisten Projekte — nicht an der KI.</p><h2>Warum das die KI ausbremst</h2><p>Eine KI kann nur so gut sein wie die Daten, die sie sieht. Sind die widersprüchlich, doppelt oder lückenhaft, rät sie — überzeugend, aber falsch. „Garbage in, garbage out\" gilt hier doppelt: Weil KI so souverän klingt, fällt schlechter Input erst spät auf.</p><h2>Du brauchst kein Data-Warehouse</h2><p>Die gute Nachricht: Du musst nicht erst ein Jahr lang eine Datenplattform bauen. Für den ersten Anwendungsfall reicht eine einzige saubere Tabelle. Klein anfangen schlägt den großen Wurf — auch bei den Daten.</p><h2>Drei pragmatische Schritte</h2><ul><li><strong>Eine Quelle der Wahrheit.</strong> Pro Sache genau ein Ort, an dem der gültige Stand steht — nicht fünf Versionen in fünf Ordnern.</li><li><strong>Einheitliche Benennung.</strong> Gleiche Dinge gleich benennen. Klingt banal, ist aber die halbe Miete, damit KI Zusammenhänge findet.</li><li><strong>Nur aufräumen, was der Fall braucht.</strong> Nicht die ganze Altlast, sondern die Daten für diesen einen Use Case. Der Rest kann warten.</li></ul><h2>Ehrlich bleiben</h2><p>Daten ordnen ist unspektakulär. Es gibt kein schickes Demo-Video dafür. Aber es ist der Schritt mit dem größten Hebel: Wer ihn überspringt, erlebt KI als Enttäuschung. Wer ihn — klein und gezielt — geht, legt das Fundament, auf dem alles Weitere überhaupt erst trägt.</p>"
+      },
+      "en": {
+        "title": "From Excel chaos to a clean data base: the underrated AI precondition",
+        "teaser": "AI rarely fails on the AI — usually on the chaos underneath. Why clean data is the most boring and most important step.",
+        "html": "<p>Everyone talks about the AI. Almost nobody about what it stands on: your data. And in smaller firms that data often lives in fourteen Excel files, three naming logics, and the head of a colleague who's on holiday next week. That's exactly where most projects fail — not on the AI.</p><h2>Why this slows the AI down</h2><p>An AI can only be as good as the data it sees. If that's contradictory, duplicated or full of gaps, it guesses — convincingly, but wrong. \"Garbage in, garbage out\" counts double here: because AI sounds so confident, bad input only shows up late.</p><h2>You don't need a data warehouse</h2><p>The good news: you don't have to spend a year building a data platform first. For the first use case, a single clean table is enough. Starting small beats the grand move — with data too.</p><h2>Three pragmatic steps</h2><ul><li><strong>One source of truth.</strong> For each thing, exactly one place holding the valid state — not five versions in five folders.</li><li><strong>Consistent naming.</strong> Name the same things the same way. Sounds trivial, but it's half the battle for AI to find connections.</li><li><strong>Only tidy what the case needs.</strong> Not the whole legacy pile, just the data for this one use case. The rest can wait.</li></ul><h2>Staying honest</h2><p>Ordering data is unspectacular. There's no slick demo video for it. But it's the step with the biggest leverage: skip it and AI feels like a disappointment. Do it — small and targeted — and you lay the foundation everything else can actually stand on.</p>"
+      }
+    },
+    {
       "slug": "ki-lager-und-einkauf",
       "date": "2026-07-30T07:08:16.631Z",
       "mode": "queue",

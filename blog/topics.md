@@ -14,11 +14,12 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] Vom Excel-Chaos zur sauberen Datenbasis: Die unterschätzte Voraussetzung für KI
 - [ ] Warum „Wir brauchen erst eine KI-Strategie" das Projekt oft beerdigt
 - [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-08-06 — Vom Excel-Chaos zur sauberen Datenbasis: die unterschätzte KI-Voraussetzung (Vom Excel-Chaos zur sauberen Datenbasis: Die unterschätzte Voraussetzung für KI)
 
 - 2026-07-30 — KI im Lager und Einkauf: Drei Prozesse, die sich fast immer lohnen (KI im Lager und Einkauf: Drei Prozesse, die sich fast immer lohnen)
 
