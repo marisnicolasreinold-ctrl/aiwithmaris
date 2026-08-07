@@ -6,6 +6,13 @@
     <description>A new article every day about AI in small and mid-sized businesses.</description>
     <language>en</language>
     <item>
+      <title>Why “we need an AI strategy first” often buries the project</title>
+      <link>https://aiwithmaris.com/blog/en/ki-strategie-zuerst-fehler</link>
+      <guid>https://aiwithmaris.com/blog/en/ki-strategie-zuerst-fehler</guid>
+      <pubDate>Fri, 07 Aug 2026 05:55:17 GMT</pubDate>
+      <description>Sounds responsible — but it's often where the AI project quietly dies. Why experience comes before strategy.</description>
+    </item>
+    <item>
       <title>From Excel chaos to a clean data base: the underrated AI precondition</title>
       <link>https://aiwithmaris.com/blog/en/excel-chaos-datenbasis</link>
       <guid>https://aiwithmaris.com/blog/en/excel-chaos-datenbasis</guid>
@@ -207,13 +214,6 @@
       <guid>https://aiwithmaris.com/blog/en/prompt-wissen-fuers-team</guid>
       <pubDate>Thu, 18 Jun 2026 08:59:56 GMT</pubDate>
       <description>Not everyone needs to become a prompt expert. But a few ground rules decide whether AI saves time or just creates frustration.</description>
-    </item>
-    <item>
-      <title>Five questions to judge any AI use case in ten minutes</title>
-      <link>https://aiwithmaris.com/blog/en/fuenf-fragen-ki-use-case</link>
-      <guid>https://aiwithmaris.com/blog/en/fuenf-fragen-ki-use-case</guid>
-      <pubDate>Wed, 17 Jun 2026 09:17:14 GMT</pubDate>
-      <description>Not every idea makes a good first AI case. Five questions let you sort, in ten minutes, what is worth it — and what to skip.</description>
     </item>
   </channel>
 </rss>
