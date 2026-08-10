@@ -6,6 +6,13 @@
     <description>Täglich ein neuer Artikel über KI im Mittelstand.</description>
     <language>de</language>
     <item>
+      <title>Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion drehen</title>
+      <link>https://aiwithmaris.com/blog/live-demos-statt-powerpoint</link>
+      <guid>https://aiwithmaris.com/blog/live-demos-statt-powerpoint</guid>
+      <pubDate>Mon, 10 Aug 2026 05:52:38 GMT</pubDate>
+      <description>Vierzig Folien, alle nicken, keiner ist überzeugt. Dann läuft eine echte Demo — und der Raum kippt. Warum Zeigen schlägt Behaupten.</description>
+    </item>
+    <item>
       <title>Warum „Wir brauchen erst eine KI-Strategie“ das Projekt oft beerdigt</title>
       <link>https://aiwithmaris.com/blog/ki-strategie-zuerst-fehler</link>
       <guid>https://aiwithmaris.com/blog/ki-strategie-zuerst-fehler</guid>
@@ -207,13 +214,6 @@
       <guid>https://aiwithmaris.com/blog/fruehwarn-cockpit-kennzahlen</guid>
       <pubDate>Fri, 19 Jun 2026 09:18:59 GMT</pubDate>
       <description>Die Zahlen liegen längst vor — nur sieht sie keiner rechtzeitig. Wie KI aus Daten ein Frühwarnsystem fürs Tagesgeschäft macht.</description>
-    </item>
-    <item>
-      <title>Prompt-Wissen fürs Team: Die Basics, die in jedem Unternehmen sitzen sollten</title>
-      <link>https://aiwithmaris.com/blog/prompt-wissen-fuers-team</link>
-      <guid>https://aiwithmaris.com/blog/prompt-wissen-fuers-team</guid>
-      <pubDate>Thu, 18 Jun 2026 08:59:56 GMT</pubDate>
-      <description>Nicht jeder muss Prompt-Profi werden. Aber ein paar Grundregeln entscheiden, ob KI im Team Zeit spart oder nur Frust erzeugt.</description>
     </item>
   </channel>
 </rss>

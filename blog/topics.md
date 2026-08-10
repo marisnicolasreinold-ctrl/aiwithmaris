@@ -14,9 +14,10 @@ oberste offene Thema ist immer das nächste.
 
 ## Offene Themen
 
-- [ ] Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern
 
 ## Veröffentlicht
+
+- 2026-08-10 — Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion drehen (Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern)
 
 - 2026-08-07 — Warum „Wir brauchen erst eine KI-Strategie“ das Projekt oft beerdigt (Warum „Wir brauchen erst eine KI-Strategie" das Projekt oft beerdigt)
 

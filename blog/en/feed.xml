@@ -6,6 +6,13 @@
     <description>A new article every day about AI in small and mid-sized businesses.</description>
     <language>en</language>
     <item>
+      <title>Try it yourself instead of PowerPoint: how live demos turn the AI debate</title>
+      <link>https://aiwithmaris.com/blog/en/live-demos-statt-powerpoint</link>
+      <guid>https://aiwithmaris.com/blog/en/live-demos-statt-powerpoint</guid>
+      <pubDate>Mon, 10 Aug 2026 05:52:38 GMT</pubDate>
+      <description>Forty slides, everyone nods, nobody's convinced. Then a real demo runs — and the room turns. Why showing beats claiming.</description>
+    </item>
+    <item>
       <title>Why “we need an AI strategy first” often buries the project</title>
       <link>https://aiwithmaris.com/blog/en/ki-strategie-zuerst-fehler</link>
       <guid>https://aiwithmaris.com/blog/en/ki-strategie-zuerst-fehler</guid>
@@ -207,13 +214,6 @@
       <guid>https://aiwithmaris.com/blog/en/fruehwarn-cockpit-kennzahlen</guid>
       <pubDate>Fri, 19 Jun 2026 09:18:59 GMT</pubDate>
       <description>The numbers are already there — no one just sees them in time. How AI turns data into an early-warning system for daily work.</description>
-    </item>
-    <item>
-      <title>Prompt basics for your team: what everyone should know</title>
-      <link>https://aiwithmaris.com/blog/en/prompt-wissen-fuers-team</link>
-      <guid>https://aiwithmaris.com/blog/en/prompt-wissen-fuers-team</guid>
-      <pubDate>Thu, 18 Jun 2026 08:59:56 GMT</pubDate>
-      <description>Not everyone needs to become a prompt expert. But a few ground rules decide whether AI saves time or just creates frustration.</description>
     </item>
   </channel>
 </rss>
