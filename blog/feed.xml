@@ -6,6 +6,13 @@
     <description>Täglich ein neuer Artikel über KI im Mittelstand.</description>
     <language>de</language>
     <item>
+      <title>KI im Kundenservice: Was der Assistent übernimmt — und wo der Mensch ran muss</title>
+      <link>https://aiwithmaris.com/blog/ki-im-kundenservice</link>
+      <guid>https://aiwithmaris.com/blog/ki-im-kundenservice</guid>
+      <pubDate>Tue, 11 Aug 2026 05:33:42 GMT</pubDate>
+      <description>Ein Chatbot, der bei jeder Frage „Das kann ich leider nicht&quot; sagt, nervt. Wo KI im Service wirklich hilft — und wo sie besser schweigt.</description>
+    </item>
+    <item>
       <title>Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion drehen</title>
       <link>https://aiwithmaris.com/blog/live-demos-statt-powerpoint</link>
       <guid>https://aiwithmaris.com/blog/live-demos-statt-powerpoint</guid>
@@ -207,13 +214,6 @@
       <guid>https://aiwithmaris.com/blog/business-driven-ki</guid>
       <pubDate>Mon, 22 Jun 2026 10:20:34 GMT</pubDate>
       <description>Technik-getrieben heißt: schickes Tool, das keiner braucht. Business-driven heißt: jede KI zahlt auf eine Zahl ein, die zählt. So drehst du es um.</description>
-    </item>
-    <item>
-      <title>Frühwarn-Cockpit statt Bauchgefühl: KI für Kennzahlen im Tagesgeschäft</title>
-      <link>https://aiwithmaris.com/blog/fruehwarn-cockpit-kennzahlen</link>
-      <guid>https://aiwithmaris.com/blog/fruehwarn-cockpit-kennzahlen</guid>
-      <pubDate>Fri, 19 Jun 2026 09:18:59 GMT</pubDate>
-      <description>Die Zahlen liegen längst vor — nur sieht sie keiner rechtzeitig. Wie KI aus Daten ein Frühwarnsystem fürs Tagesgeschäft macht.</description>
     </item>
   </channel>
 </rss>

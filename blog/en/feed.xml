@@ -6,6 +6,13 @@
     <description>A new article every day about AI in small and mid-sized businesses.</description>
     <language>en</language>
     <item>
+      <title>AI in customer service: what the assistant takes on — and where the human is needed</title>
+      <link>https://aiwithmaris.com/blog/en/ki-im-kundenservice</link>
+      <guid>https://aiwithmaris.com/blog/en/ki-im-kundenservice</guid>
+      <pubDate>Tue, 11 Aug 2026 05:33:42 GMT</pubDate>
+      <description>A chatbot that answers every question with &quot;sorry, I can't help&quot; is a pain. Where AI really helps in service — and where it should stay quiet.</description>
+    </item>
+    <item>
       <title>Try it yourself instead of PowerPoint: how live demos turn the AI debate</title>
       <link>https://aiwithmaris.com/blog/en/live-demos-statt-powerpoint</link>
       <guid>https://aiwithmaris.com/blog/en/live-demos-statt-powerpoint</guid>
@@ -207,13 +214,6 @@
       <guid>https://aiwithmaris.com/blog/en/business-driven-ki</guid>
       <pubDate>Mon, 22 Jun 2026 10:20:34 GMT</pubDate>
       <description>Technology-driven means a slick tool nobody needs. Business-driven means every AI pays into a number that matters. Here's how to flip it.</description>
-    </item>
-    <item>
-      <title>An early-warning cockpit instead of gut feeling: AI for everyday metrics</title>
-      <link>https://aiwithmaris.com/blog/en/fruehwarn-cockpit-kennzahlen</link>
-      <guid>https://aiwithmaris.com/blog/en/fruehwarn-cockpit-kennzahlen</guid>
-      <pubDate>Fri, 19 Jun 2026 09:18:59 GMT</pubDate>
-      <description>The numbers are already there — no one just sees them in time. How AI turns data into an early-warning system for daily work.</description>
     </item>
   </channel>
 </rss>
