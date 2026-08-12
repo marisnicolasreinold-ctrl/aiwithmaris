@@ -6,6 +6,13 @@
     <description>A new article every day about AI in small and mid-sized businesses.</description>
     <language>en</language>
     <item>
+      <title>AI meeting notes: when the summary and to-dos write themselves</title>
+      <link>https://aiwithmaris.com/blog/en/ki-meeting-protokolle</link>
+      <guid>https://aiwithmaris.com/blog/en/ki-meeting-protokolle</guid>
+      <pubDate>Wed, 12 Aug 2026 05:52:04 GMT</pubDate>
+      <description>The meeting's over, nobody took notes, half the to-dos evaporate. That's exactly where AI can quietly run along — with clear limits.</description>
+    </item>
+    <item>
       <title>AI in customer service: what the assistant takes on — and where the human is needed</title>
       <link>https://aiwithmaris.com/blog/en/ki-im-kundenservice</link>
       <guid>https://aiwithmaris.com/blog/en/ki-im-kundenservice</guid>
@@ -207,13 +214,6 @@
       <guid>https://aiwithmaris.com/blog/en/ki-workflow-fuer-lehrkraefte</guid>
       <pubDate>Tue, 23 Jun 2026 08:02:34 GMT</pubDate>
       <description>A clear AI workflow for teachers takes over typing, formatting and research — without any student data ever entering an AI tool.</description>
-    </item>
-    <item>
-      <title>Business-driven AI: when the bottom line steers the project</title>
-      <link>https://aiwithmaris.com/blog/en/business-driven-ki</link>
-      <guid>https://aiwithmaris.com/blog/en/business-driven-ki</guid>
-      <pubDate>Mon, 22 Jun 2026 10:20:34 GMT</pubDate>
-      <description>Technology-driven means a slick tool nobody needs. Business-driven means every AI pays into a number that matters. Here's how to flip it.</description>
     </item>
   </channel>
 </rss>

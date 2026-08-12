@@ -17,6 +17,8 @@ oberste offene Thema ist immer das nächste.
 
 ## Veröffentlicht
 
+- 2026-08-12 — KI-Meeting-Protokolle: Wenn Zusammenfassung und To-dos sich selbst schreiben (KI-Meeting-Protokolle: Wenn Zusammenfassung und To-dos sich selbst schreiben)
+
 - 2026-08-11 — KI im Kundenservice: Was der Assistent übernimmt — und wo der Mensch ran muss (KI im Kundenservice: Welche Anfragen der Assistent übernimmt — und wo der Mensch ran muss)
 
 - 2026-08-10 — Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion drehen (Selbst ausprobieren statt PowerPoint: Wie Live-Demos die KI-Diskussion im Unternehmen verändern)

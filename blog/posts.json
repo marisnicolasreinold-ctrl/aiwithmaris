@@ -1,6 +1,21 @@
 {
   "posts": [
     {
+      "slug": "ki-meeting-protokolle",
+      "date": "2026-08-12T05:52:04.963Z",
+      "mode": "queue",
+      "de": {
+        "title": "KI-Meeting-Protokolle: Wenn Zusammenfassung und To-dos sich selbst schreiben",
+        "teaser": "Das Meeting ist vorbei, keiner hat mitgeschrieben, die Hälfte der To-dos verdampft. Genau da kann KI leise mitlaufen — mit klaren Grenzen.",
+        "html": "<p>Ein typisches Bild: Das Meeting ist vorbei, alle gehen auseinander, und keiner hat richtig mitgeschrieben. Zwei Tage später weiß niemand mehr, wer eigentlich was übernommen hat. Genau hier kann KI helfen — unauffällig im Hintergrund.</p><h2>Was KI aus einem Meeting macht</h2><p>Aus einer Aufzeichnung wird eine kurze Zusammenfassung, eine Liste der Entscheidungen und die To-dos — idealerweise mit Namen dahinter, wer was macht. Und das Ganze später durchsuchbar, statt in einem Notizzettel zu verschwinden, den keiner wiederfindet.</p><h2>Warum das mehr ist als Bequemlichkeit</h2><p>Es entsteht ein gemeinsames Gedächtnis. Weniger „Wer sollte das noch mal machen?\", weniger Dinge, die zwischen den Stühlen verschwinden. Und wer nicht dabei war oder neu ist, liest in fünf Minuten nach, statt jemanden aufzuhalten.</p><h2>Die Grenzen und der Datenschutz</h2><p>Menschen aufzuzeichnen ist nicht harmlos. Es braucht Transparenz und Einverständnis — alle im Raum sollten wissen, dass mitgeschrieben wird. Heikle Themen vielleicht bewusst ohne. Und die Daten gehören unter deine Kontrolle, nicht wahllos in irgendein Tool (Stichwort DSGVO und Datenhoheit).</p><h2>Klein anfangen</h2><p>Nimm ein einziges, regelmäßiges Meeting und probier es dort aus. Werden die Protokolle wirklich gelesen und genutzt? Wenn ja, weite es aus. Wenn nicht, hast du wenig verloren — und viel darüber gelernt, was dein Team wirklich braucht.</p>"
+      },
+      "en": {
+        "title": "AI meeting notes: when the summary and to-dos write themselves",
+        "teaser": "The meeting's over, nobody took notes, half the to-dos evaporate. That's exactly where AI can quietly run along — with clear limits.",
+        "html": "<p>A typical picture: the meeting's over, everyone scatters, and nobody really took notes. Two days later no one remembers who actually took on what. This is exactly where AI can help — unobtrusively in the background.</p><h2>What AI makes of a meeting</h2><p>From a recording you get a short summary, a list of decisions, and the to-dos — ideally with names attached to who does what. And the whole thing searchable later, instead of vanishing into a sticky note nobody finds again.</p><h2>Why this is more than convenience</h2><p>A shared memory emerges. Less \"who was supposed to do that again?\", fewer things falling between the cracks. And whoever wasn't there or is new reads up in five minutes instead of holding someone up.</p><h2>The limits and data protection</h2><p>Recording people isn't harmless. It needs transparency and consent — everyone in the room should know notes are being taken. Sensitive topics maybe deliberately without. And the data belongs under your control, not dumped into some random tool (think GDPR and data sovereignty).</p><h2>Start small</h2><p>Take a single recurring meeting and try it there. Are the notes really read and used? If yes, expand it. If not, you've lost little — and learned a lot about what your team actually needs.</p>"
+      }
+    },
+    {
       "slug": "ki-im-kundenservice",
       "date": "2026-08-11T05:33:42.586Z",
       "mode": "queue",
