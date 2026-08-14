@@ -75,6 +75,8 @@
   }
   .pill:hover{ color:var(--cyan); border-color:rgba(94,240,255,.4); transform:translateY(-1px) }
   .lock{ width:38px; height:38px; padding:0; display:grid; place-items:center; border-radius:11px }
+  /* Fingerkuppen brauchen mehr als 38px. */
+  @media (pointer: coarse){ .lock{ width:44px; height:44px } }
   .lock svg{ width:17px; height:17px }
   /* ── Layout ───────────────────────────────────────────────────── */
   .wrap{ position:relative; z-index:5 }
@@ -434,9 +436,25 @@
   var loginForm = document.getElementById('loginForm');
   var errEl = document.getElementById('err');
   var btn = document.getElementById('submitBtn');
-  function openModal() { modal.classList.add('open'); setTimeout(function () { document.getElementById('email').focus(); }, 60); }
+  function openModal() {
+    modal.classList.add('open');
+    /* Auf Touch-Geraeten reisst ein sofortiger Fokus die Tastatur hoch, bevor
+       man den Dialog ueberhaupt gesehen hat. */
+    if (!window.matchMedia('(pointer: coarse)').matches) {
+      setTimeout(function () { document.getElementById('email').focus(); }, 60);
+    }
+  }
   function closeModal() { modal.classList.remove('open'); errEl.textContent = ''; }
   document.getElementById('lockBtn').addEventListener('click', openModal);
+
+  /* Diese Seite wird auch per Rewrite ausgeliefert, wenn jemand eine
+     geschuetzte Adresse angefragt hat — die steht dann noch in der Leiste.
+     Wer das tut, sucht den Login und soll ihn nicht als 38-px-Schloss oben
+     rechts auf einer langen Seite suchen muessen. */
+  (function autoOpenForGatedRequest() {
+    var wanted = window.location.pathname;
+    if (wanted && wanted !== '/' && wanted !== '/coming-soon') openModal();
+  })();
   document.getElementById('closeBtn').addEventListener('click', closeModal);
   modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
