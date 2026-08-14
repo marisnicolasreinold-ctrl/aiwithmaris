@@ -458,7 +458,15 @@
         });
       })
       .then(function (res) { if (!res.ok) throw new Error(t('loginFail')); return res.json(); })
-      .then(function (out) { if (!out.ok) throw new Error(t('loginFail')); window.location.replace('/'); })
+      .then(function (out) {
+        if (!out.ok) throw new Error(t('loginFail'));
+        /* Das Gate rewritet, statt umzuleiten — die angefragte Adresse steht
+           also noch in der Leiste. Nach dem Login geht es dorthin zurück
+           statt pauschal auf die Startseite; sonst muss man den Pfad von Hand
+           nochmal eintippen, was auf dem Handy besonders lästig ist. */
+        var back = window.location.pathname;
+        window.location.replace(back && back !== '/coming-soon' ? back : '/');
+      })
       .catch(function (err) { errEl.textContent = err.message || t('loginFail'); btn.disabled = false; });
   });
 
