@@ -11,7 +11,7 @@ export const config = {
   // Middleware läuft nur noch auf den gegateten Pfaden und den Login-
   // Endpoints — alle öffentlichen Info-Seiten werden gar nicht erst
   // abgefangen (schneller, kein Supabase-Call pro Seitenaufruf).
-  matcher: ['/admin', '/admin.html', '/report', '/report.html', '/__gate/:path*'],
+  matcher: ['/admin', '/admin.html', '/report', '/report.html', '/lsu', '/lsu/', '/__gate/:path*'],
 };
 
 const SUPABASE_URL = 'https://amrdmnnijbfwtrjcpocl.supabase.co';
@@ -26,7 +26,11 @@ const MAXAGE = 60 * 60 * 24 * 30; // 30 Tage (Refresh hält die Session frisch)
 // Nur diese Pfade liegen hinter dem Login: die internen Dashboards.
 // Wegen cleanUrls können sowohl die saubere als auch die .html-Form
 // die Middleware treffen — beide Formen aufführen.
-const GATED = new Set(['/admin', '/admin.html', '/report', '/report.html']);
+//
+// /lsu ist das Backyard-Live-Dashboard (Last Soul Ultra). Gegated wird nur die
+// Einstiegsseite, nicht /lsu/assets/* — sonst liefe pro Datei ein Supabase-Call,
+// und ohne die Seite ist das Bundle allein nutzlos. Genau wie bei admin.html.
+const GATED = new Set(['/admin', '/admin.html', '/report', '/report.html', '/lsu', '/lsu/']);
 
 function isGated(path) {
   return GATED.has(path);
