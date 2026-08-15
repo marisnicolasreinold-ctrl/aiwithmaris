@@ -125,6 +125,61 @@ async function refresh(refreshToken) {
   }
 }
 
+
+// ── Gastzugang fuer das Renn-Dashboard ────────────────────────────────
+// /lsu bekommt einen zweiten, einfacheren Weg hinein: ein geteilter
+// Benutzername mit Passwort, per HTTP Basic. Supabase-Auth waere hier das
+// falsche Werkzeug — es identifiziert ueber E-Mail-Adressen, und fuer einen
+// Gast ohne Postfach bliebe davon nur eine verkleidete Kennung uebrig, dafuer
+// mit Bestaetigungsmail und einem Passwort-Reset, der ins Leere laeuft.
+//
+// Die Zugangsdaten stehen in den Projekt-Variablen LSU_USER und LSU_PASSWORD,
+// niemals im Repo — das hier ist oeffentlich. Fehlt eine der beiden, ist der
+// Gastzugang schlicht aus und es bleibt beim Supabase-Login.
+
+// Zeichenweiser Vergleich ohne fruehen Abbruch, damit die Laufzeit nichts
+// ueber einen falschen Versuch verraet.
+function safeEqual(a, b) {
+  const len = Math.max(a.length, b.length);
+  let diff = a.length ^ b.length;
+  for (let i = 0; i < len; i++) {
+    diff |= (a.charCodeAt(i) || 0) ^ (b.charCodeAt(i) || 0);
+  }
+  return diff === 0;
+}
+
+function guestOk(request) {
+  const user = process.env.LSU_USER;
+  const pass = process.env.LSU_PASSWORD;
+  if (!user || !pass) return false;
+
+  const header = request.headers.get('authorization') || '';
+  if (!header.startsWith('Basic ')) return false;
+
+  let decoded;
+  try {
+    decoded = atob(header.slice(6));
+  } catch {
+    return false;
+  }
+  const sep = decoded.indexOf(':');
+  if (sep < 0) return false;
+
+  const okUser = safeEqual(decoded.slice(0, sep), user);
+  const okPass = safeEqual(decoded.slice(sep + 1), pass);
+  return okUser && okPass;
+}
+
+function askForGuestLogin() {
+  return new Response('Zugang nur mit Anmeldung.', {
+    status: 401,
+    headers: {
+      'WWW-Authenticate': 'Basic realm="Last Soul Ultra", charset="UTF-8"',
+      'Cache-Control': 'no-store',
+    },
+  });
+}
+
 export default async function middleware(request) {
   const url = new URL(request.url);
   const path = url.pathname;
@@ -172,7 +227,14 @@ export default async function middleware(request) {
   const access = readCookie(request, AT);
   const user = await verifyAccess(access);
   if (user) {
-    return mayAccess(user, area) ? next() : rewrite(new URL('/coming-soon', request.url));
+    if (mayAccess(user, area)) return next();
+    // Angemeldet, aber nicht für diesen Bereich: nichts verraten.
+    return rewrite(new URL('/coming-soon', request.url));
+  }
+
+  // Kein Supabase-Konto? Für das Dashboard genügt der Gastzugang.
+  if (area === 'lsu' && (process.env.LSU_USER || '')) {
+    return guestOk(request) ? next() : askForGuestLogin();
   }
 
   // Access abgelaufen? Mit Refresh-Token erneuern und durchlassen.
