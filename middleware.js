@@ -148,26 +148,50 @@ function safeEqual(a, b) {
   return diff === 0;
 }
 
-function guestOk(request) {
-  const user = process.env.LSU_USER;
-  const pass = process.env.LSU_PASSWORD;
-  if (!user || !pass) return false;
-
+// Zerlegt einen Basic-Header in Name und Passwort.
+function readBasic(request) {
   const header = request.headers.get('authorization') || '';
-  if (!header.startsWith('Basic ')) return false;
-
+  if (!header.startsWith('Basic ')) return null;
   let decoded;
   try {
     decoded = atob(header.slice(6));
   } catch {
-    return false;
+    return null;
   }
   const sep = decoded.indexOf(':');
-  if (sep < 0) return false;
+  if (sep < 0) return null;
+  return { user: decoded.slice(0, sep), pass: decoded.slice(sep + 1) };
+}
 
-  const okUser = safeEqual(decoded.slice(0, sep), user);
-  const okPass = safeEqual(decoded.slice(sep + 1), pass);
-  return okUser && okPass;
+async function guestOk(request, area) {
+  const creds = readBasic(request);
+  if (!creds) return false;
+
+  // Variante 1: Zugangsdaten stehen in den Projekt-Variablen.
+  const envUser = process.env.LSU_USER;
+  const envPass = process.env.LSU_PASSWORD;
+  if (envUser && envPass) {
+    return safeEqual(creds.user, envUser) && safeEqual(creds.pass, envPass);
+  }
+
+  // Variante 2: Prüfung in der Datenbank. Der bcrypt-Hash liegt in einem
+  // Schema, das PostgREST nicht ausliefert; der öffentliche anon-Key darf nur
+  // die Funktion aufrufen, nie die Tabelle lesen.
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/check_site_guest`, {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_ANON,
+        Authorization: `Bearer ${SUPABASE_ANON}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ u: creds.user, p: creds.pass, a: area }),
+    });
+    if (!r.ok) return false;
+    return (await r.json()) === true;
+  } catch {
+    return false;
+  }
 }
 
 function askForGuestLogin() {
@@ -233,8 +257,8 @@ export default async function middleware(request) {
   }
 
   // Kein Supabase-Konto? Für das Dashboard genügt der Gastzugang.
-  if (area === 'lsu' && (process.env.LSU_USER || '')) {
-    return guestOk(request) ? next() : askForGuestLogin();
+  if (area === 'lsu') {
+    return (await guestOk(request, area)) ? next() : askForGuestLogin();
   }
 
   // Access abgelaufen? Mit Refresh-Token erneuern und durchlassen.
