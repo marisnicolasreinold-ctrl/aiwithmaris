@@ -70,17 +70,41 @@ function json(obj, status) {
   });
 }
 
-// Prüft einen Access-Token direkt bei Supabase.
+// Prüft einen Access-Token direkt bei Supabase und liefert den Nutzer,
+// weil für die Rechte nicht nur zählt OB jemand angemeldet ist, sondern WER.
 async function verifyAccess(token) {
-  if (!token) return false;
+  if (!token) return null;
   try {
     const r = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
       headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${token}` },
     });
-    return r.ok;
+    if (!r.ok) return null;
+    return await r.json();
   } catch {
-    return false;
+    return null;
   }
+}
+
+// Welcher Bereich hinter einem Pfad steckt.
+function areaOf(path) {
+  if (path === '/lsu' || path === '/lsu/') return 'lsu';
+  if (path === '/report' || path === '/report.html') return 'report';
+  return 'admin';
+}
+
+// Darf dieser Nutzer diesen Bereich sehen?
+//
+// Die Rechte stehen in app_metadata.access des Supabase-Kontos, z. B.
+// ["lsu"] für einen Zugang, der nur das Renn-Dashboard sehen soll.
+//
+// Fehlt das Feld, gilt Vollzugriff. Das ist bewusst so herum: Der Eigentümer-
+// Account hat keine Metadaten, und eine Umkehrung würde ihn bei einem Fehler
+// aus seiner eigenen Seite aussperren. Wer künftig einen eingeschränkten
+// Zugang anlegt, muss access also setzen — sonst darf er alles.
+function mayAccess(user, area) {
+  const access = user && user.app_metadata && user.app_metadata.access;
+  if (!Array.isArray(access)) return true;
+  return access.indexOf(area) !== -1;
 }
 
 // Tauscht einen Refresh-Token gegen ein frisches Token-Paar.
@@ -120,6 +144,8 @@ export default async function middleware(request) {
     }
     if (!access) return json({ ok: false }, 400);
     if (!(await verifyAccess(access))) return json({ ok: false }, 401);
+    // Rechte werden erst beim Seitenaufruf geprüft, nicht hier: ein gültiges
+    // Konto darf sich anmelden, sieht danach aber nur seine Bereiche.
 
     const res = json({ ok: true }, 200);
     res.headers.append('Set-Cookie', cookie(AT, access, MAXAGE));
@@ -140,15 +166,24 @@ export default async function middleware(request) {
   // Alles außer den gegateten Dashboards ist öffentlich.
   if (!isGated(path)) return next();
 
-  // Gültiger Access-Token -> echte Seite ausliefern.
+  const area = areaOf(path);
+
+  // Gültiger Access-Token -> ausliefern, sofern der Bereich freigegeben ist.
   const access = readCookie(request, AT);
-  if (await verifyAccess(access)) return next();
+  const user = await verifyAccess(access);
+  if (user) {
+    return mayAccess(user, area) ? next() : rewrite(new URL('/coming-soon', request.url));
+  }
 
   // Access abgelaufen? Mit Refresh-Token erneuern und durchlassen.
   const refreshTok = readCookie(request, RT);
   if (refreshTok) {
     const fresh = await refresh(refreshTok);
     if (fresh) {
+      const refreshed = await verifyAccess(fresh.access_token);
+      if (refreshed && !mayAccess(refreshed, area)) {
+        return rewrite(new URL('/coming-soon', request.url));
+      }
       const res = next();
       res.headers.append('Set-Cookie', cookie(AT, fresh.access_token, MAXAGE));
       res.headers.append('Set-Cookie', cookie(RT, fresh.refresh_token, MAXAGE));
