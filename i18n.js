@@ -416,7 +416,8 @@
     "Bitte prüfe die markierten Felder.": "Please check the highlighted fields.",
     "Wird gesendet …": "Sending …",
     "Danke! Deine Nachricht ist angekommen — ich melde mich. ✦": "Thanks! Your message arrived — I'll be in touch. ✦",
-    "Hmm, das hat gerade nicht geklappt. Schreib mir gern direkt an": "Hmm, that didn't work just now. Feel free to email me directly at",
+    "Hmm, das hat gerade nicht geklappt. Versuch es bitte gleich noch einmal.": "Hmm, that didn't work just now. Please try again in a moment.",
+    "E-Mail-Adresse anzeigen": "Show email address",
 
     // --- Navigation: Guide ---
     "KI-Guide": "AI Guide",

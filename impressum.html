@@ -57,7 +57,13 @@
       Deutschland</p>
 
       <h2>Kontakt</h2>
-      <p>E-Mail: <a href="mailto:marisnicolasreinold@gmail.com" style="color:var(--cyan); text-decoration:underline;">marisnicolasreinold@gmail.com</a></p>
+      <!-- Diese Adresse steht bewusst im Klartext und ist absichtlich NICHT
+           verschleiert: § 5 DDG verlangt eine unmittelbar erreichbare
+           E-Mail-Adresse, und eine nur per JavaScript sichtbare Adresse wäre
+           an dieser Stelle rechtlich angreifbar. Deshalb hier eine
+           Rollen-Adresse auf eigener Domain statt einer privaten — sie lässt
+           sich beim Provider austauschen, wenn sie zugespammt wird. -->
+      <p>E-Mail: <a href="mailto:info@aiwithmaris.com" style="color:var(--cyan); text-decoration:underline;">info@aiwithmaris.com</a></p>
 
       <h2>Umsatzsteuer</h2>
       <p>Als Kleinunternehmer im Sinne von § 19 Abs. 1 UStG wird keine Umsatzsteuer berechnet und ausgewiesen.</p>
@@ -80,7 +86,7 @@
         <p>Eine Info-Seite über KI zum Anfassen und die Rolle des AI Officers — cloud-neutral &amp; datensouverän.</p></div>
       <div class="foot-links">
         <div class="foot-col"><h4>Entdecken</h4><a href="beispiele.html">Beispiele</a><a href="ai-officer.html">AI Officer</a><a href="tool-radar.html">Tool-Radar</a><a href="glossar.html">Glossar</a><a href="blog">Blog</a><a href="newsletter.html">Newsletter</a><a href="ueber-uns.html">Über mich</a></div>
-        <div class="foot-col"><h4>Kontakt</h4><a href="mailto:marisnicolasreinold@gmail.com">marisnicolasreinold@gmail.com</a><a href="kontakt.html">Kontakt</a></div>
+        <div class="foot-col"><h4>Kontakt</h4><a href="kontakt.html" data-contact-mail>E-Mail</a><a href="kontakt.html">Kontakt</a></div>
         <div class="foot-col"><h4>Rechtliches</h4><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a></div>
       </div>
     </div>
@@ -93,5 +99,6 @@
 <script src="./vendor/three.min.js"></script>
 <script src="./main.js"></script>
 <script src="./i18n.js"></script>
+<script src="./contact.js" defer></script>
 </body>
 </html>
