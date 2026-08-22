@@ -16,7 +16,7 @@ Kein Buzzword-Bingo, sondern Klartext aus der Praxis:
 ✔ Für Geschäftsführer, Abteilungsleiter und alle, die KI-Projekte verantworten
 ✔ Sofort-Download als PDF
 
-Du bekommst das Dokument direkt nach dem Kauf. Fragen? Schreib mir: marisnicolasreinold@gmail.com
+Du bekommst das Dokument direkt nach dem Kauf. Fragen? Schreib mir: info@aiwithmaris.com
 
 **Preis:** 19 € · **Tags:** ki, künstliche intelligenz, mittelstand, digitalisierung, leitfaden, automatisierung
 
@@ -36,7 +36,7 @@ Introduce AI without losing yourself in buzzwords — this guide shows the path 
 ✔ For managing directors, department heads and anyone owning an AI initiative
 ✔ Instant PDF download
 
-Questions? Drop me a line: marisnicolasreinold@gmail.com
+Questions? Drop me a line: info@aiwithmaris.com
 
 **Price:** €19 · **Tags:** ai, artificial intelligence, sme, digital transformation, playbook, automation
 
