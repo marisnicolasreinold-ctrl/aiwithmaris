@@ -1,0 +1,1550 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+<!-- fragment:start -->
+<title>Zimmer für Zimmer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Karla:wght@400;500;700&family=Oswald:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<style>
+/*
+  Fliesen und Fugen: Flaechen sind hell und glatt, getrennt durch duenne
+  Fugenlinien statt durch Schatten. Alle Farben liegen als Token auf :root,
+  damit der Dunkelmodus nur die Werte tauscht und keine Regel doppelt.
+*/
+:root {
+  color-scheme: light;
+
+  --page: #e8ebec;
+  --flaeche: #fbfcfc;
+  --flaeche-2: #f1f4f4;
+  --flaeche-3: #e4e9ea;
+  --fuge: #ccd4d6;
+  --fuge-stark: #b0bcbf;
+
+  --text: #10171a;
+  --text-2: #4c585c;
+  --text-3: #7d8a8e;
+
+  --akzent: #0f6b64;
+  --akzent-text: #0b524d;
+  --akzent-weich: #d7eae7;
+
+  --gut: #2f7d3a;
+  --gut-weich: #dcecdc;
+  --warn: #9a6410;
+  --warn-weich: #f3e8d2;
+  --stop: #a63a2c;
+
+  --raum-sz: #6a5b93;
+  --raum-bad: #17708a;
+  --raum-wz: #8a6a3f;
+
+  --r-klein: 3px;
+  --r-karte: 5px;
+  --r-pille: 999px;
+  --ease: cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #0f1517;
+    --flaeche: #192124;
+    --flaeche-2: #202a2d;
+    --flaeche-3: #273336;
+    --fuge: #2c383b;
+    --fuge-stark: #3e4e52;
+    --text: #f1f5f5;
+    --text-2: #b2c0c2;
+    --text-3: #829094;
+    --akzent: #4fbfae;
+    --akzent-text: #6fd0c0;
+    --akzent-weich: #17342f;
+    --gut: #6cc47b;
+    --gut-weich: #1b3320;
+    --warn: #dfa64a;
+    --warn-weich: #352813;
+    --stop: #e8796b;
+    --raum-sz: #a294dd;
+    --raum-bad: #66bcdb;
+    --raum-wz: #cca677;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0f1517;
+  --flaeche: #192124;
+  --flaeche-2: #202a2d;
+  --flaeche-3: #273336;
+  --fuge: #2c383b;
+  --fuge-stark: #3e4e52;
+  --text: #f1f5f5;
+  --text-2: #b2c0c2;
+  --text-3: #829094;
+  --akzent: #4fbfae;
+  --akzent-text: #6fd0c0;
+  --akzent-weich: #17342f;
+  --gut: #6cc47b;
+  --gut-weich: #1b3320;
+  --warn: #dfa64a;
+  --warn-weich: #352813;
+  --stop: #e8796b;
+  --raum-sz: #a294dd;
+  --raum-bad: #66bcdb;
+  --raum-wz: #cca677;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--text);
+  font-family: Karla, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+
+:focus-visible { outline: 2px solid var(--akzent); outline-offset: 2px; border-radius: var(--r-klein); }
+
+.huelle {
+  max-width: 62rem;
+  margin: 0 auto;
+  padding: 26px 16px 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ------------------------------------------------------------------ Kopf */
+
+.kopf { display: flex; flex-direction: column; gap: 8px; }
+
+.marke {
+  font-family: Oswald, "Arial Narrow", sans-serif;
+  font-weight: 500; font-size: 12px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--text-3); margin: 0;
+}
+
+h1 {
+  font-family: Oswald, "Arial Narrow", sans-serif;
+  font-weight: 600; font-size: clamp(2rem, 6vw, 2.75rem);
+  line-height: 1.05; margin: 0; text-wrap: balance;
+}
+
+.unterzeile { margin: 0; max-width: 46rem; color: var(--text-2); }
+
+/* ------------------------------------------------------------------ Reiter */
+
+.reiter {
+  display: flex; gap: 2px; background: var(--fuge);
+  border: 1px solid var(--fuge); border-radius: var(--r-karte); overflow: hidden;
+}
+
+.reiter button {
+  flex: 1 1 0; background: var(--flaeche); border: 0; padding: 11px 8px;
+  font-family: Oswald, "Arial Narrow", sans-serif; font-size: 14px;
+  letter-spacing: 0.09em; text-transform: uppercase; color: var(--text-3);
+  border-bottom: 2px solid transparent;
+  transition: color 140ms var(--ease), background 140ms var(--ease), border-color 140ms var(--ease);
+}
+
+.reiter button:hover { background: var(--flaeche-2); color: var(--text); }
+.reiter button[aria-selected="true"] { color: var(--akzent-text); border-bottom-color: var(--akzent); background: var(--flaeche-2); }
+
+/* --------------------------------------------------------------- Uebersicht */
+
+.uebersicht {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 2px; background: var(--fuge);
+  border: 1px solid var(--fuge); border-radius: var(--r-karte); overflow: hidden;
+}
+
+.kachel {
+  background: var(--flaeche); padding: 14px 16px 16px; text-align: left;
+  display: flex; align-items: center; gap: 14px;
+  border: 0; border-top: 3px solid var(--kante, var(--fuge-stark));
+  transition: background 140ms var(--ease);
+}
+
+.kachel:hover { background: var(--flaeche-2); }
+.kachel[aria-pressed="true"] { background: var(--flaeche-3); }
+
+.ring { flex: 0 0 auto; width: 46px; height: 46px; }
+.ring circle { fill: none; stroke-width: 5; }
+.ring .spur { stroke: var(--flaeche-3); }
+.ring .weg { stroke: var(--kante, var(--akzent)); stroke-linecap: round; transition: stroke-dashoffset 600ms var(--ease); }
+.ring text {
+  font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 500;
+  fill: var(--text-2); text-anchor: middle; dominant-baseline: central;
+}
+
+.kachel-text { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+
+.kachel-name {
+  font-family: Oswald, "Arial Narrow", sans-serif; font-weight: 500;
+  font-size: 13px; letter-spacing: 0.13em; text-transform: uppercase;
+  color: var(--kante, var(--text-2));
+}
+
+.kachel-zahl { font-family: "JetBrains Mono", monospace; font-size: 15px; font-variant-numeric: tabular-nums; }
+.kachel-fuss { font-size: 13px; color: var(--text-3); font-variant-numeric: tabular-nums; }
+
+/* ------------------------------------------------------------------ Filter */
+
+.filter {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 0;
+  background: color-mix(in srgb, var(--page) 92%, transparent);
+  backdrop-filter: blur(6px);
+}
+
+.chip {
+  border: 1px solid var(--fuge-stark); background: var(--flaeche); color: var(--text-2);
+  border-radius: var(--r-pille); padding: 5px 13px;
+  font-family: Oswald, "Arial Narrow", sans-serif; font-size: 13px; letter-spacing: 0.06em;
+  transition: background 140ms var(--ease), color 140ms var(--ease), border-color 140ms var(--ease);
+}
+
+.chip:hover { border-color: var(--akzent); color: var(--text); }
+.chip[aria-pressed="true"] { background: var(--akzent); border-color: var(--akzent); color: #fff; }
+:root[data-theme="dark"] .chip[aria-pressed="true"] { color: #0f1517; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .chip[aria-pressed="true"] { color: #0f1517; } }
+.chip-zahl { font-family: "JetBrains Mono", monospace; font-size: 11px; opacity: 0.75; }
+
+/* ------------------------------------------------------------------ Karte */
+
+.karte {
+  min-width: 0; border: 1px solid var(--fuge); border-radius: var(--r-karte);
+  background: var(--fuge); overflow: hidden;
+  display: flex; flex-direction: column; gap: 1px; margin-bottom: 18px;
+}
+
+.karte-kopf {
+  background: var(--flaeche); padding: 15px 16px;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 5px 12px;
+  border-top: 3px solid var(--kante, var(--fuge-stark));
+}
+
+.karte-kopf h2 {
+  font-family: Oswald, "Arial Narrow", sans-serif; font-weight: 600;
+  font-size: 21px; letter-spacing: 0.02em; margin: 0; flex: 1 1 auto;
+}
+
+.karte-kopf .meta {
+  font-family: "JetBrains Mono", monospace; font-size: 12px;
+  color: var(--text-3); font-variant-numeric: tabular-nums;
+}
+
+.phase {
+  background: var(--flaeche-2); padding: 9px 16px;
+  font-family: Oswald, "Arial Narrow", sans-serif; font-size: 12px;
+  letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-2);
+  display: flex; gap: 10px; align-items: baseline;
+}
+
+.phase em { font: 400 12px/1.4 Karla, sans-serif; letter-spacing: 0; text-transform: none; color: var(--text-3); }
+
+/* ---------------------------------------------------------------- Aufgabe */
+
+.zeile { background: var(--flaeche); transition: background 140ms var(--ease); }
+.zeile:hover { background: var(--flaeche-2); }
+.zeile.fertig .titel { color: var(--text-3); text-decoration: line-through; text-decoration-color: var(--fuge-stark); }
+.zeile.blockiert .titel, .zeile.ruht .titel { color: var(--text-3); }
+.zeile.imfokus { background: var(--akzent-weich); }
+
+.zeile-kopf { display: flex; align-items: flex-start; gap: 11px; padding: 11px 16px; }
+
+.status {
+  flex: 0 0 auto; width: 27px; height: 27px; margin-top: 1px; padding: 0;
+  border-radius: var(--r-klein); border: 1.5px solid var(--fuge-stark);
+  background: var(--flaeche-2); display: grid; place-items: center;
+  transition: border-color 140ms var(--ease), background 140ms var(--ease), transform 140ms var(--ease);
+}
+
+.status:hover { border-color: var(--akzent); transform: scale(1.08); }
+.status:active { transform: scale(0.94); }
+.status svg { width: 15px; height: 15px; display: block; }
+.status[data-s="laeuft"] { border-color: var(--warn); background: var(--warn-weich); color: var(--warn); }
+.status[data-s="fertig"] { border-color: var(--gut); background: var(--gut); color: #fff; }
+.status[data-s="offen"] { color: transparent; }
+.status[data-s="fertig"] svg path { stroke-dasharray: 22; animation: haken 320ms var(--ease); }
+@keyframes haken { from { stroke-dashoffset: 22; } to { stroke-dashoffset: 0; } }
+
+.zeile-mitte { flex: 1 1 auto; min-width: 0; }
+
+.titel {
+  display: block; text-align: left; background: none; border: 0; padding: 0;
+  font-size: 16px; line-height: 1.35; color: var(--text);
+}
+
+.marker { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; min-width: 0; }
+
+.tag {
+  font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: 0.02em;
+  padding: 2px 7px; border-radius: var(--r-pille);
+  background: var(--flaeche-3); color: var(--text-3);
+  font-variant-numeric: tabular-nums; max-width: 100%; overflow-wrap: anywhere;
+}
+
+.tag.warten, .tag.einkauf { background: var(--warn-weich); color: var(--warn); }
+.tag.blocker { background: var(--flaeche-3); color: var(--text-2); }
+.tag.dazu { background: transparent; border: 1px dashed var(--fuge-stark); color: var(--text-3); }
+.tag.dran { background: var(--akzent-weich); color: var(--akzent-text); }
+.tag.ist { background: var(--gut-weich); color: var(--gut); }
+
+.wer {
+  flex: 0 0 auto; width: 27px; height: 27px; margin-top: 1px; padding: 0;
+  border-radius: var(--r-pille); border: 1.5px dashed var(--fuge-stark);
+  background: none; color: var(--text-3);
+  font-family: Oswald, sans-serif; font-size: 12px; line-height: 1;
+  display: grid; place-items: center;
+  transition: transform 140ms var(--ease), border-color 140ms var(--ease);
+}
+
+.wer:hover { transform: scale(1.08); border-color: var(--akzent); }
+.wer[data-p="0"] { border-style: solid; border-color: var(--raum-sz); background: var(--raum-sz); color: #fff; }
+.wer[data-p="1"] { border-style: solid; border-color: var(--raum-bad); background: var(--raum-bad); color: #fff; }
+
+.aufklapp { flex: 0 0 auto; background: none; border: 0; color: var(--text-3); padding: 3px 4px; line-height: 1; }
+.aufklapp svg { width: 16px; height: 16px; transition: transform 200ms var(--ease); display: block; }
+.zeile.offen-detail .aufklapp svg { transform: rotate(180deg); }
+
+.detail {
+  padding: 12px 16px 14px 55px; display: flex; flex-direction: column; gap: 10px;
+  border-top: 1px dashed var(--fuge); animation: aufklappen 200ms var(--ease);
+}
+
+@keyframes aufklappen { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+
+.detail p { margin: 0; color: var(--text-2); font-size: 15px; max-width: 44rem; }
+.detail .liste { margin: 0; padding-left: 18px; color: var(--text-2); font-size: 14px; }
+
+.notiz {
+  width: 100%; min-height: 58px; resize: vertical;
+  background: var(--flaeche-2); border: 1px solid var(--fuge);
+  border-radius: var(--r-klein); padding: 8px 10px; font-size: 15px;
+}
+
+.notiz::placeholder { color: var(--text-3); }
+
+.detail-knoepfe { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* -------------------------------------------------------------- Entscheidung */
+
+.entscheidung {
+  background: var(--flaeche); padding: 14px 16px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px;
+  border-left: 3px solid var(--warn);
+}
+
+.entscheidung.erledigt { border-left-color: var(--gut); }
+.entscheidung .wahl { display: flex; gap: 6px; margin-left: auto; }
+.entscheidung .warum { color: var(--text-2); font-size: 14px; max-width: 44rem; }
+
+/* ------------------------------------------------------------------ Fokus */
+
+.fokus-karte {
+  border: 1px solid var(--fuge); border-radius: var(--r-karte); overflow: hidden;
+  background: var(--flaeche); border-top: 3px solid var(--kante, var(--akzent));
+}
+
+.fokus-innen { padding: 22px 20px 20px; display: flex; flex-direction: column; gap: 16px; }
+
+.fokus-raum {
+  font-family: Oswald, sans-serif; font-size: 12px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--kante, var(--text-3));
+}
+
+.fokus-titel {
+  font-family: Oswald, "Arial Narrow", sans-serif; font-weight: 600;
+  font-size: clamp(1.5rem, 5vw, 2.1rem); line-height: 1.1; margin: 0; text-wrap: balance;
+}
+
+.uhr {
+  font-family: "JetBrains Mono", monospace; font-weight: 700;
+  font-size: clamp(2.6rem, 12vw, 4.2rem); line-height: 1;
+  font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
+  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+}
+
+.uhr .schaetzung { font-family: Karla, sans-serif; font-size: 15px; font-weight: 400; color: var(--text-3); letter-spacing: 0; }
+.uhr.laeuft { color: var(--warn); }
+.uhr.drueber { color: var(--stop); }
+
+.fokus-knoepfe { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.knopf {
+  border: 1px solid var(--fuge-stark); background: var(--flaeche-2); color: var(--text);
+  border-radius: var(--r-control, 6px); padding: 10px 18px;
+  font-family: Oswald, sans-serif; font-size: 14px; letter-spacing: 0.07em; text-transform: uppercase;
+  transition: transform 120ms var(--ease), background 140ms var(--ease), border-color 140ms var(--ease);
+}
+
+.knopf:hover { background: var(--flaeche-3); border-color: var(--akzent); }
+.knopf:active { transform: scale(0.97); }
+.knopf.stark { background: var(--akzent); border-color: var(--akzent); color: #fff; }
+:root[data-theme="dark"] .knopf.stark { color: #0f1517; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .knopf.stark { color: #0f1517; } }
+.knopf.fertig { background: var(--gut); border-color: var(--gut); color: #fff; }
+.knopf.klein { padding: 5px 12px; font-size: 12px; }
+
+.warteschlange { display: flex; flex-direction: column; gap: 1px; background: var(--fuge); }
+
+.warte-zeile {
+  background: var(--flaeche); border: 0; text-align: left; width: 100%;
+  padding: 11px 16px; display: flex; align-items: center; gap: 12px;
+  transition: background 140ms var(--ease);
+}
+
+.warte-zeile:hover { background: var(--flaeche-2); }
+.warte-zeile .w-titel { flex: 1 1 auto; min-width: 0; }
+.warte-nr {
+  font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--text-3);
+  width: 20px; flex: 0 0 auto;
+}
+
+.fokus-leer { padding: 26px 20px; text-align: center; color: var(--text-2); }
+
+/* ----------------------------------------------------------------- Ablauf */
+
+.ablauf-huelle { overflow-x: auto; background: var(--flaeche); padding: 16px 0; }
+.ablauf-huelle svg { display: block; }
+.knoten rect { transition: fill 200ms var(--ease), stroke 200ms var(--ease); }
+.knoten { cursor: pointer; }
+.knoten:hover rect { stroke: var(--akzent); stroke-width: 2; }
+.knoten text {
+  font-family: Karla, sans-serif; font-size: 11.5px; fill: var(--text);
+  dominant-baseline: central; pointer-events: none;
+}
+.knoten.fertig text { fill: var(--text-3); }
+.kante-linie { fill: none; stroke: var(--fuge-stark); stroke-width: 1.3; }
+.kante-linie.erfuellt { stroke: var(--gut); }
+.stufe-titel {
+  font-family: Oswald, sans-serif; font-size: 10.5px; letter-spacing: 0.14em;
+  fill: var(--text-3); text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------- Einkauf, Fuss */
+
+.einkauf-liste { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1px; background: var(--fuge); }
+
+.einkauf-zeile {
+  background: var(--flaeche); display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 16px; text-align: left; border: 0; font-size: 15px;
+  transition: background 140ms var(--ease);
+}
+
+.einkauf-zeile:hover { background: var(--flaeche-2); }
+.einkauf-zeile.da { color: var(--text-3); }
+.einkauf-zeile.da .e-name { text-decoration: line-through; text-decoration-color: var(--fuge-stark); }
+.e-name { display: block; }
+.e-wofuer { display: block; font-size: 12px; color: var(--text-3); margin-top: 2px; }
+
+.parken { background: var(--flaeche); padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.parken p { margin: 0; color: var(--text-2); }
+
+.fuss {
+  border-top: 1px solid var(--fuge); padding-top: 16px; margin-top: 4px;
+  display: flex; flex-wrap: wrap; gap: 10px 20px; align-items: center;
+  font-size: 13px; color: var(--text-3);
+}
+
+.namen { display: flex; align-items: center; gap: 6px; }
+.namen input {
+  width: 8.5rem; background: var(--flaeche); border: 1px solid var(--fuge);
+  border-radius: var(--r-klein); padding: 3px 8px; font-size: 13px;
+}
+
+.punkt { width: 11px; height: 11px; border-radius: var(--r-pille); flex: 0 0 auto; }
+.speicherstand { font-family: "JetBrains Mono", monospace; font-size: 12px; }
+
+.knopf-still {
+  background: none; border: 1px solid var(--fuge-stark); color: var(--text-3);
+  border-radius: var(--r-pille); padding: 4px 12px;
+  font-family: Oswald, sans-serif; font-size: 12px; letter-spacing: 0.06em;
+}
+
+.knopf-still:hover { border-color: var(--stop); color: var(--stop); }
+.leer { background: var(--flaeche); padding: 22px 16px; color: var(--text-3); text-align: center; }
+
+/* ------------------------------------------------------------------ Meldung */
+
+.meldung {
+  position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
+  z-index: 40; display: flex; align-items: center; gap: 14px;
+  background: var(--text); color: var(--page);
+  border-radius: var(--r-pille); padding: 10px 12px 10px 20px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.22); font-size: 15px;
+  animation: hoch 220ms var(--ease); max-width: calc(100vw - 32px);
+}
+
+@keyframes hoch { from { opacity: 0; transform: translate(-50%, 12px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+.meldung button {
+  background: none; border: 1px solid currentColor; color: inherit;
+  border-radius: var(--r-pille); padding: 3px 12px;
+  font-family: Oswald, sans-serif; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+}
+
+#konfetti { position: fixed; inset: 0; pointer-events: none; z-index: 60; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+@media (max-width: 460px) {
+  .huelle { padding: 20px 10px 80px; }
+  .detail { padding-left: 16px; }
+  .entscheidung .wahl { margin-left: 0; width: 100%; }
+  .fokus-innen { padding: 18px 15px 16px; }
+}
+</style>
+
+<script type="application/json" id="zustand">{}</script>
+
+<div class="huelle">
+  <header class="kopf">
+    <p class="marke">Haushalt · zwei Räume</p>
+    <h1>Zimmer für Zimmer</h1>
+    <p class="unterzeile" id="unterzeile"></p>
+  </header>
+
+  <nav class="reiter" id="reiter" role="tablist">
+    <button type="button" role="tab" data-blick="plan" aria-selected="true">Plan</button>
+    <button type="button" role="tab" data-blick="fokus" aria-selected="false">Fokus</button>
+    <button type="button" role="tab" data-blick="ablauf" aria-selected="false">Ablauf</button>
+  </nav>
+
+  <main id="buehne"></main>
+
+  <footer class="fuss">
+    <div class="namen">
+      <span class="punkt" style="background:var(--raum-sz)"></span>
+      <input id="name-0" maxlength="14" aria-label="Name der ersten Person">
+      <span class="punkt" style="background:var(--raum-bad)"></span>
+      <input id="name-1" maxlength="14" aria-label="Name der zweiten Person">
+    </div>
+    <span>Tasten: <b>P</b> Plan · <b>F</b> Fokus · <b>A</b> Ablauf · <b>Leertaste</b> Uhr · <b>Enter</b> fertig</span>
+    <span class="speicherstand" id="speicherstand"></span>
+    <button class="knopf-still" id="zuruecksetzen" type="button">Alles zurücksetzen</button>
+  </footer>
+</div>
+
+<canvas id="konfetti" aria-hidden="true"></canvas>
+
+<script>
+(() => {
+  'use strict'
+
+  // Quelltext vor jeder Aenderung festhalten: daraus wird spaeter die neue
+  // Fassung gebaut, wenn die Seite sich selbst veroeffentlichen darf.
+  const QUELLE = '<!doctype html>\n' + document.documentElement.outerHTML
+  const SPEICHER = 'zimmer-fuer-zimmer/v1'
+
+  /* ------------------------------------------------------------- Material */
+
+  const MATERIAL = [
+    { id: 'saecke', name: 'Kleidersäcke oder Kartons', wofuer: 'Aussortiertes aus dem Kleiderschrank' },
+    { id: 'fensterzeug', name: 'Abzieher, Mikrofasertuch, Glasreiniger', wofuer: 'Fenster' },
+    { id: 'gardinenwasch', name: 'Waschmittel für Gardinen, Waschbeutel', wofuer: 'Gardinen' },
+    { id: 'haken', name: 'Bilderhaken, Dübel, Schrauben', wofuer: 'Bilder in beiden Räumen' },
+    { id: 'werkzeug', name: 'Bohrmaschine, Wasserwaage, Zollstock', wofuer: 'Bilder aufhängen' },
+    { id: 'kratzer', name: 'Cutter, Fugenkratzer, Silikonentferner', wofuer: 'altes Silikon' },
+    { id: 'silikon', name: 'Sanitärsilikon, weiß, schimmelfest', wofuer: 'Fugen an Waschbecken und WC' },
+    { id: 'pistole', name: 'Kartuschenpistole', wofuer: 'Silikon' },
+    { id: 'abzieher', name: 'Fugenglätter, Abziehset', wofuer: 'Silikon' },
+    { id: 'krepp', name: 'Kreppband, fein', wofuer: 'Fugen abkleben' },
+    { id: 'spiritus', name: 'Spiritus oder Silikonreiniger', wofuer: 'Fugen entfetten' },
+    { id: 'entkalker', name: 'Entkalker oder Essigreiniger', wofuer: 'Dusche, Armaturen' },
+    { id: 'farbe', name: 'Wandfarbe für Feuchträume', wofuer: 'Bad streichen', wenn: 'streichen' },
+    { id: 'malerzeug', name: 'Rolle, Pinsel, Abdeckfolie, Malerkrepp', wofuer: 'Bad streichen', wenn: 'streichen' },
+  ]
+
+  const MATERIAL_NACH_ID = Object.fromEntries(MATERIAL.map((m) => [m.id, m]))
+
+  /* ----------------------------------------------------------------- Plan */
+
+  const RAEUME = [
+    {
+      id: 'sz', name: 'Schlafzimmer', farbe: 'var(--raum-sz)', jubel: '#6a5b93',
+      phasen: [
+        {
+          name: 'Leer machen', hinweis: 'Erst raus, was nicht bleibt — sonst putzt man um Sachen herum.',
+          aufgaben: [
+            { id: 'sz-ausmisten', t: 'Kleiderschrank ausmisten', min: 120, braucht: ['saecke'],
+              text: 'Drei Stapel: bleibt, weg, unsicher. Der unsichere Stapel kommt in eine Kiste mit dem heutigen Datum drauf — was in einem halben Jahr nicht wieder rausgeholt wurde, kann weg.' },
+            { id: 'sz-gardinen-ab', t: 'Gardinen abnehmen', min: 10,
+              text: 'Vor dem Staubwischen. Beim Abnehmen rieselt es, und die Fenster sind danach ohne Stoff im Weg dran.' },
+            { id: 'sz-bilder-ab', t: 'Alte Bilder abnehmen und sortieren', min: 20,
+              text: 'Alles runter, auch das, was bleiben soll. An der leeren Wand entscheidet es sich leichter.' },
+            { id: 'sz-sortieren', t: 'Ordnung machen und sortieren', min: 60, nach: ['sz-ausmisten'],
+              text: 'Alles ohne festen Platz auf einen Haufen. Was danach übrig bleibt, bekommt einen Platz oder geht raus.' },
+          ],
+        },
+        {
+          name: 'Von oben nach unten', hinweis: 'Reihenfolge zählt: was oben runterfällt, landet unten.',
+          aufgaben: [
+            { id: 'sz-schrank-oben', t: 'Oben auf dem Schrank Staub wischen', min: 20, nach: ['sz-gardinen-ab'],
+              text: 'Erst grob absaugen, dann feucht nach. Danach Zeitung oder Backpapier auflegen — beim nächsten Mal wird nur getauscht.' },
+            { id: 'sz-staub', t: 'Staub wischen: Regale, Leisten, Türrahmen, Heizung', min: 30, nach: ['sz-schrank-oben'] },
+            { id: 'sz-lampe', t: 'Lampe und Lampenschirm abstauben', min: 10, dazu: true, nach: ['sz-schrank-oben'] },
+            { id: 'sz-fenster', t: 'Fenster putzen: innen, außen, Rahmen', min: 40, nach: ['sz-gardinen-ab'], braucht: ['fensterzeug'],
+              text: 'Nicht in der prallen Sonne — die Reinigungsmittel trocknen schneller, als man abziehen kann.' },
+            { id: 'sz-boden', t: 'Boden saugen und wischen', min: 20, dazu: true, nach: ['sz-staub', 'sz-fenster'] },
+          ],
+        },
+        {
+          name: 'Waschen und beziehen',
+          aufgaben: [
+            { id: 'sz-gardinen-waschen', t: 'Gardinen waschen', min: 15, nach: ['sz-gardinen-ab'], braucht: ['gardinenwasch'],
+              text: 'Schonwaschgang, wenig schleudern. Feucht wieder aufhängen, dann ziehen sie sich glatt und das Bügeln entfällt.' },
+            { id: 'sz-gardinen-auf', t: 'Gardinen aufhängen', min: 15, nach: ['sz-gardinen-waschen', 'sz-fenster'] },
+            { id: 'sz-matratze', t: 'Matratze absaugen und wenden', min: 15, dazu: true },
+            { id: 'sz-betten', t: 'Betten frisch beziehen', min: 15, nach: ['sz-matratze'] },
+          ],
+        },
+        {
+          name: 'Wände', hinweis: 'Zum Schluss, wenn der Staub liegt und der Raum aufgeräumt ist.',
+          aufgaben: [
+            { id: 'sz-bilder-planen', t: 'Bilder überdenken: was soll hängen?', min: 30, nach: ['sz-bilder-ab'],
+              text: 'Anordnung erst auf dem Boden legen, dann mit Kreppband die Umrisse an die Wand kleben und einen Tag drauf schauen. Erst dann bohren.' },
+            { id: 'sz-bilder-auf', t: 'Neue Bilder aufhängen', min: 45, nach: ['sz-bilder-planen', 'sz-staub'], braucht: ['haken', 'werkzeug'],
+              text: 'Bildmitte auf ungefähr 1,45 m — Augenhöhe im Stehen. Über dem Bett tiefer, damit es vom Bett aus stimmt.' },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'bad', name: 'Badezimmer', farbe: 'var(--raum-bad)', jubel: '#17708a',
+      entscheidung: {
+        id: 'streichen', frage: 'Wird das Bad gestrichen?',
+        text: 'Die Antwort ändert die Reihenfolge: gestrichen wird vor dem neuen Silikon und vor dem Bild, geputzt wird danach. Solange die Frage offen ist, zählen die Streich-Aufgaben nicht mit.',
+      },
+      phasen: [
+        {
+          name: 'Vorbereiten',
+          aufgaben: [
+            { id: 'bad-material', t: 'Material besorgen', min: 60,
+              text: 'Sanitärsilikon nehmen, nicht das für Fenster: nur das hat Schimmelschutz. Kartusche, Pistole, Abzieher und Kreppband gehören dazu.' },
+            { id: 'bad-ausraeumen', t: 'Ablagen und Schränkchen ausräumen', min: 20,
+              text: 'Alles runter von den Flächen. Beim Wiedereinräumen fliegt raus, was abgelaufen oder leer ist.' },
+          ],
+        },
+        {
+          name: 'Alte Fugen raus', hinweis: 'Immer zuerst — danach kommt Farbe, dann erst neues Silikon.',
+          aufgaben: [
+            { id: 'bad-sil-raus-wb', t: 'Altes Silikon am Waschbecken entfernen', min: 30, nach: ['bad-material'], braucht: ['kratzer'],
+              text: 'Mit dem Cutter an beiden Kanten einschneiden, den Strang abziehen, Reste mit dem Fugenkratzer holen. Keramik nicht mit der Klinge schaben.' },
+            { id: 'bad-sil-raus-wc', t: 'Altes Silikon an der Toilette entfernen', min: 25, nach: ['bad-material'], braucht: ['kratzer'] },
+            { id: 'bad-fuge-reinigen', t: 'Fugen reinigen und trocknen lassen', min: 20, nach: ['bad-sil-raus-wb', 'bad-sil-raus-wc'], braucht: ['spiritus'],
+              text: 'Fettfrei und wirklich trocken. Auf einem feuchten oder seifigen Untergrund hält das neue Silikon nicht und wird von hinten schwarz.' },
+          ],
+        },
+        {
+          name: 'Streichen', wenn: 'streichen', hinweis: 'Nur wenn ihr euch dafür entscheidet.',
+          aufgaben: [
+            { id: 'bad-abkleben', t: 'Abkleben und abdecken', min: 30, braucht: ['malerzeug'], nach: ['bad-ausraeumen'] },
+            { id: 'bad-streichen', t: 'Wand streichen', min: 90, nach: ['bad-abkleben'], braucht: ['farbe'],
+              text: 'Zwei dünne Anstriche halten besser als einer dicker. Feuchtraumfarbe nehmen, das Bad trocknet langsam.' },
+            { id: 'bad-trocknen', t: 'Farbe durchtrocknen lassen', min: 720, warten: true, nach: ['bad-streichen'],
+              text: 'Über Nacht. Fenster auf oder Lüfter an.' },
+          ],
+        },
+        {
+          name: 'Neu verfugen',
+          aufgaben: [
+            { id: 'bad-krepp', t: 'Fugen abkleben', min: 15, nach: ['bad-fuge-reinigen', 'bad-trocknen'], braucht: ['krepp'],
+              text: 'Ober- und unterhalb der Fuge ein Band mit gleichmäßigem Abstand. Das Band wird abgezogen, solange das Silikon nass ist.' },
+            { id: 'bad-fuge-wb', t: 'Waschbecken neu verfugen', min: 20, nach: ['bad-krepp'], braucht: ['silikon', 'pistole', 'abzieher'],
+              text: 'In einem Zug ziehen, nicht absetzen. Glätten mit Spülwasser am Finger oder mit dem Abzieher, dann sofort das Kreppband ab.' },
+            { id: 'bad-fuge-wc', t: 'Toilette neu verfugen', min: 20, nach: ['bad-krepp'], braucht: ['silikon', 'pistole', 'abzieher'],
+              text: 'Hinten am Sockel offen lassen: läuft dort mal Wasser aus, will man das sehen und nicht darunter.' },
+            { id: 'bad-aushaerten', t: 'Silikon aushärten lassen', min: 1440, warten: true, nach: ['bad-fuge-wb', 'bad-fuge-wc'],
+              text: '24 Stunden: nicht duschen, nichts wischen, kein Wasser an die Fuge.' },
+          ],
+        },
+        {
+          name: 'Putzen', hinweis: 'Nach dem Aushärten, sonst putzt man zweimal.',
+          aufgaben: [
+            { id: 'bad-dusche', t: 'Dusche und Wanne entkalken', min: 40, nach: ['bad-aushaerten'], braucht: ['entkalker'],
+              text: 'Einwirken lassen und in der Zeit etwas anderes machen. Auf Naturstein keinen Essig.' },
+            { id: 'bad-wc', t: 'Toilette gründlich, auch unter dem Rand und am Sockel', min: 25, nach: ['bad-aushaerten'] },
+            { id: 'bad-becken', t: 'Waschbecken und Armaturen', min: 20, nach: ['bad-aushaerten'] },
+            { id: 'bad-fliesen', t: 'Fliesen und Fugen abwischen', min: 30, nach: ['bad-aushaerten'] },
+            { id: 'bad-spiegel', t: 'Spiegel und Schrankfronten', min: 15 },
+            { id: 'bad-lueften', t: 'Fenster und Lüftung säubern', min: 20, dazu: true },
+            { id: 'bad-textil', t: 'Handtücher und Vorleger waschen', min: 10, dazu: true },
+            { id: 'bad-boden', t: 'Boden wischen', min: 15, nach: ['bad-dusche', 'bad-wc', 'bad-becken', 'bad-fliesen'] },
+          ],
+        },
+        {
+          name: 'Zum Schluss',
+          aufgaben: [
+            { id: 'bad-bild', t: 'Bild aufhängen', min: 30, nach: ['bad-trocknen', 'bad-boden'], braucht: ['haken', 'werkzeug'],
+              text: 'In Fliesen: kleben spart die Fuge. Muss gebohrt werden, dann ohne Schlag anfangen und mittig in die Fliese, nie in die Fuge oder auf eine Kante.' },
+          ],
+        },
+      ],
+    },
+  ]
+
+  const AUFGABEN = []
+  RAEUME.forEach((raum) => {
+    raum.phasen.forEach((phase) => {
+      phase.aufgaben.forEach((a) => {
+        // Raum und Bedingung an der Aufgabe selbst festhalten: der Plan und die
+        // flache Liste teilen sich dieselben Objekte, sonst kennt die Zeile im
+        // Raum ihren eigenen Raum nicht und der Raumfilter leert die Seite.
+        a.raum = raum.id
+        a.phase = phase.name
+        a.wenn = phase.wenn
+        AUFGABEN.push(a)
+      })
+    })
+  })
+  const AUFGABE_NACH_ID = Object.fromEntries(AUFGABEN.map((a) => [a.id, a]))
+  const RAUM_NACH_ID = Object.fromEntries(RAEUME.map((r) => [r.id, r]))
+
+  /* ---------------------------------------------------------------- Zustand */
+
+  const leer = () => ({
+    v: 1, status: {}, notizen: {}, einkauf: {}, entscheidungen: {},
+    wer: {}, ist: {}, namen: ['Maris', 'Zweite:r'], laufend: null,
+    wohnzimmer: '', geaendert: 0,
+  })
+
+  function lies(text) {
+    try {
+      const roh = JSON.parse(text)
+      if (!roh || typeof roh !== 'object' || roh.v !== 1) return null
+      const zusammen = { ...leer(), ...roh }
+      // Aeltere Staende kannten die Namen noch nicht; ein halbes Paar waere
+      // schlimmer als gar keins.
+      if (!Array.isArray(zusammen.namen) || zusammen.namen.length !== 2) zusammen.namen = leer().namen
+      return zusammen
+    } catch (_) {
+      return null
+    }
+  }
+
+  function ausSpeicher() {
+    try { return lies(localStorage.getItem(SPEICHER) || '') } catch (_) { return null }
+  }
+
+  const eingebettet = lies((document.getElementById('zustand') || {}).textContent || '')
+  const lokal = ausSpeicher()
+  let stand =
+    eingebettet && lokal
+      ? (lokal.geaendert || 0) > (eingebettet.geaendert || 0) ? lokal : eingebettet
+      : eingebettet || lokal || leer()
+
+  let blick = 'plan'
+  let ansicht = 'alle'
+  let raumFilter = null
+  let ablaufRaum = 'sz'
+  const offeneDetails = new Set()
+  let rueckgaengig = null
+  let meldungTimer = null
+
+  /* ------------------------------------------------------------- Ableitungen */
+
+  const aktiv = (a) => !a.wenn || stand.entscheidungen[a.wenn] === 'ja'
+  const status = (id) => stand.status[id] || 'offen'
+  const daIstEs = (mid) => !!stand.einkauf[mid]
+
+  function blocker(a) {
+    return (a.nach || []).map((id) => AUFGABE_NACH_ID[id]).filter((v) => v && aktiv(v) && status(v.id) !== 'fertig')
+  }
+
+  function fehltMaterial(a) {
+    return (a.braucht || []).map((id) => MATERIAL_NACH_ID[id]).filter((m) => m && !daIstEs(m.id))
+  }
+
+  const istDran = (a) => aktiv(a) && status(a.id) !== 'fertig' && blocker(a).length === 0 && fehltMaterial(a).length === 0
+
+  // Reihenfolge der Vorschlaege: was laeuft zuerst, dann kurze Aufgaben vor
+  // langen — ein Erfolgserlebnis in zehn Minuten zieht besser als zwei Stunden
+  // Kleiderschrank.
+  function warteschlange() {
+    return AUFGABEN.filter(istDran).sort((a, b) => {
+      const la = status(a.id) === 'laeuft' ? 0 : 1
+      const lb = status(b.id) === 'laeuft' ? 0 : 1
+      if (la !== lb) return la - lb
+      if (!!a.warten !== !!b.warten) return a.warten ? 1 : -1
+      return (a.min || 0) - (b.min || 0)
+    })
+  }
+
+  function zeit(min) {
+    if (!min) return ''
+    if (min >= 1440) return Math.round(min / 1440) + ' Tag' + (min >= 2880 ? 'e' : '')
+    if (min < 60) return min + ' min'
+    const h = Math.floor(min / 60)
+    const r = min % 60
+    return r ? h + ' h ' + String(r).padStart(2, '0') : h + ' h'
+  }
+
+  function uhrzeit(sek) {
+    const s = Math.max(0, Math.floor(sek))
+    const m = Math.floor(s / 60)
+    if (m >= 60) return Math.floor(m / 60) + ':' + String(m % 60).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0')
+    return String(m).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0')
+  }
+
+  function bilanz(raumId) {
+    const menge = AUFGABEN.filter((a) => a.raum === raumId && aktiv(a))
+    const fertig = menge.filter((a) => status(a.id) === 'fertig')
+    const restMin = menge.filter((a) => status(a.id) !== 'fertig' && !a.warten).reduce((s, a) => s + (a.min || 0), 0)
+    const ruht = AUFGABEN.filter((a) => a.raum === raumId && !aktiv(a)).length
+    return {
+      gesamt: menge.length, fertig: fertig.length, restMin, ruht,
+      dran: menge.filter(istDran).length,
+      anteil: menge.length ? fertig.length / menge.length : 0,
+    }
+  }
+
+  /* --------------------------------------------------------------- Uhrwerk */
+
+  // Die laufende Uhr steht als Startzeitpunkt im Zustand, nicht als Zaehler:
+  // so laeuft sie weiter, wenn der Tab zu ist, und ueberlebt einen Neuladen.
+  function gelaufen(id) {
+    const l = stand.laufend
+    const gespeichert = stand.ist[id] || 0
+    if (l && l.id === id) return gespeichert + (Date.now() - l.seit) / 1000
+    return gespeichert
+  }
+
+  function starte(id) {
+    if (stand.laufend && stand.laufend.id !== id) halte()
+    if (stand.laufend && stand.laufend.id === id) return
+    stand.laufend = { id, seit: Date.now() }
+    if (status(id) === 'offen') stand.status[id] = 'laeuft'
+    sichern()
+  }
+
+  function halte() {
+    const l = stand.laufend
+    if (!l) return
+    stand.ist[l.id] = (stand.ist[l.id] || 0) + (Date.now() - l.seit) / 1000
+    stand.laufend = null
+    sichern()
+  }
+
+  /* ------------------------------------------------------------- Speichern */
+
+  let api = null
+  let timer = null
+  let hinweisText = 'nur auf diesem Gerät'
+
+  if (window.claude && typeof window.claude.use === 'function') {
+    window.claude.use('artifact').then((a) => {
+      api = a
+      if (a) { hinweisText = 'für alle gespeichert'; zeigeStand() }
+    }).catch(() => {})
+  }
+
+  function neueFassung(daten) {
+    const marke = 'id="zustand"'
+    const i = QUELLE.indexOf(marke)
+    if (i < 0) return null
+    const auf = QUELLE.indexOf('>', i)
+    const zu = QUELLE.indexOf('<\/script>', auf)
+    if (auf < 0 || zu < 0) return null
+    const json = JSON.stringify(daten).replace(/</g, '\\u003c')
+    return QUELLE.slice(0, auf + 1) + json + QUELLE.slice(zu)
+  }
+
+  function sichern() {
+    stand.geaendert = Date.now()
+    try { localStorage.setItem(SPEICHER, JSON.stringify(stand)) } catch (_) {}
+    zeigeStand()
+    clearTimeout(timer)
+    timer = setTimeout(teilen, 2000)
+  }
+
+  async function teilen() {
+    if (!api) return
+    const html = neueFassung(stand)
+    if (!html) return
+    try {
+      await api.publish(html)
+    } catch (e) {
+      if (e && e.code === 'conflict') return
+      api = null
+      hinweisText = 'nur auf diesem Gerät'
+      zeigeStand()
+    }
+  }
+
+  function zeigeStand() {
+    const el = document.getElementById('speicherstand')
+    if (!el) return
+    const wann = stand.geaendert ? new Date(stand.geaendert) : null
+    el.textContent = wann
+      ? hinweisText + ' · ' + wann.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' }) + ' ' +
+        wann.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })
+      : hinweisText
+  }
+
+  /* ------------------------------------------------------------------ HTML */
+
+  const esc = (s) =>
+    String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]))
+
+  const HAKEN = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5 8 14.5 16 6"/></svg>'
+  const LAEUFT = '<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 3a7 7 0 1 0 7 7h-7z"/></svg>'
+  const PFEIL = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg>'
+
+  function ring(anteil, farbe) {
+    const r = 19
+    const u = 2 * Math.PI * r
+    return `<svg class="ring" viewBox="0 0 46 46" style="--kante:${farbe}" aria-hidden="true">
+      <circle class="spur" cx="23" cy="23" r="${r}"></circle>
+      <circle class="weg" cx="23" cy="23" r="${r}" stroke-dasharray="${u.toFixed(1)}"
+              stroke-dashoffset="${(u * (1 - anteil)).toFixed(1)}" transform="rotate(-90 23 23)"></circle>
+      <text x="23" y="24">${Math.round(anteil * 100)}</text>
+    </svg>`
+  }
+
+  /* ------------------------------------------------------------ Kopfbereich */
+
+  function zeichneKopf() {
+    const gesamt = RAEUME.reduce((s, r) => {
+      const b = bilanz(r.id)
+      s.gesamt += b.gesamt; s.fertig += b.fertig; s.rest += b.restMin; s.dran += b.dran
+      return s
+    }, { gesamt: 0, fertig: 0, rest: 0, dran: 0 })
+
+    document.getElementById('unterzeile').textContent =
+      gesamt.fertig === gesamt.gesamt
+        ? 'Schlafzimmer und Bad sind durch. Zeit, das Wohnzimmer aufzunehmen.'
+        : `${gesamt.gesamt - gesamt.fertig} von ${gesamt.gesamt} Aufgaben offen, ungefähr ${zeit(gesamt.rest)} Arbeit. ` +
+          `${gesamt.dran} davon könnt ihr sofort anfangen — der Rest wartet auf etwas anderes.`
+
+    document.querySelectorAll('#reiter button').forEach((b) => {
+      b.setAttribute('aria-selected', String(b.dataset.blick === blick))
+    })
+
+    const n0 = document.getElementById('name-0')
+    const n1 = document.getElementById('name-1')
+    if (n0 && document.activeElement !== n0) n0.value = stand.namen[0]
+    if (n1 && document.activeElement !== n1) n1.value = stand.namen[1]
+  }
+
+  function zeichneUebersicht() {
+    const kacheln = RAEUME.map((raum) => {
+      const b = bilanz(raum.id)
+      return `
+        <button class="kachel" type="button" data-raum="${raum.id}" aria-pressed="${raumFilter === raum.id}" style="--kante:${raum.farbe}">
+          ${ring(b.anteil, raum.farbe)}
+          <span class="kachel-text">
+            <span class="kachel-name">${esc(raum.name)}</span>
+            <span class="kachel-zahl">${b.fertig} / ${b.gesamt}</span>
+            <span class="kachel-fuss">${b.restMin ? 'noch ≈ ' + zeit(b.restMin) : 'alles erledigt'}${b.dran ? ' · ' + b.dran + ' dran' : ''}</span>
+          </span>
+        </button>`
+    })
+
+    const wz = `
+      <div class="kachel" style="--kante:var(--raum-wz)">
+        ${ring(0, 'var(--raum-wz)')}
+        <span class="kachel-text">
+          <span class="kachel-name">Wohnzimmer</span>
+          <span class="kachel-zahl">–</span>
+          <span class="kachel-fuss">kommt später</span>
+        </span>
+      </div>`
+
+    return `<div class="uebersicht">${kacheln.join('')}${wz}</div>`
+  }
+
+  /* ------------------------------------------------------------ Plan-Ansicht */
+
+  function zeichneFilter() {
+    const zaehle = (pruefe) => AUFGABEN.filter((a) => aktiv(a) && pruefe(a)).length
+    const knoepfe = [
+      { id: 'alle', name: 'Alles', n: AUFGABEN.filter(aktiv).length },
+      { id: 'offen', name: 'Offen', n: zaehle((a) => status(a.id) !== 'fertig') },
+      { id: 'dran', name: 'Jetzt dran', n: zaehle(istDran) },
+      { id: 'fertig', name: 'Erledigt', n: zaehle((a) => status(a.id) === 'fertig') },
+    ]
+    const meins = stand.namen.map((name, i) => ({
+      id: 'p' + i, name: esc(name), n: zaehle((a) => stand.wer[a.id] === i && status(a.id) !== 'fertig'),
+    }))
+    return `<div class="filter">` +
+      knoepfe.concat(meins).map((k) =>
+        `<button class="chip" type="button" data-ansicht="${k.id}" aria-pressed="${ansicht === k.id}">${k.name} <span class="chip-zahl">${k.n}</span></button>`,
+      ).join('') +
+      (raumFilter
+        ? `<button class="chip" type="button" data-raum="${raumFilter}" aria-pressed="true">nur ${esc(RAUM_NACH_ID[raumFilter].name)} ✕</button>`
+        : '') +
+      `</div>`
+  }
+
+  function passt(a) {
+    if (raumFilter && a.raum !== raumFilter) return false
+    if (ansicht === 'offen') return status(a.id) !== 'fertig'
+    if (ansicht === 'fertig') return status(a.id) === 'fertig'
+    if (ansicht === 'dran') return istDran(a)
+    if (ansicht === 'p0') return stand.wer[a.id] === 0
+    if (ansicht === 'p1') return stand.wer[a.id] === 1
+    return true
+  }
+
+  function zeichneAufgabe(a) {
+    const s = status(a.id)
+    const ruht = !aktiv(a)
+    const bl = ruht ? [] : blocker(a)
+    const fehlt = ruht ? [] : fehltMaterial(a)
+    const auf = offeneDetails.has(a.id)
+    const wer = stand.wer[a.id]
+    const lauf = stand.laufend && stand.laufend.id === a.id
+
+    const marker = []
+    if (a.min) marker.push(`<span class="tag${a.warten ? ' warten' : ''}">${a.warten ? 'wartet ' : ''}${zeit(a.min)}</span>`)
+    if (stand.ist[a.id] || lauf) marker.push(`<span class="tag ist">gebraucht ${uhrzeit(gelaufen(a.id))}</span>`)
+    if (a.dazu) marker.push('<span class="tag dazu">dazu</span>')
+    if (ruht) marker.push('<span class="tag blocker">Entscheidung offen</span>')
+    bl.slice(0, 2).forEach((v) => marker.push(`<span class="tag blocker">erst: ${esc(v.t.split(':')[0])}</span>`))
+    if (bl.length > 2) marker.push(`<span class="tag blocker">+${bl.length - 2} weitere</span>`)
+    fehlt.forEach((m) => marker.push(`<span class="tag einkauf">fehlt: ${esc(m.name.split(',')[0])}</span>`))
+    if (!ruht && s === 'offen' && !bl.length && !fehlt.length) marker.push('<span class="tag dran">kann losgehen</span>')
+
+    const klassen = ['zeile']
+    if (s === 'fertig') klassen.push('fertig')
+    if (bl.length || fehlt.length) klassen.push('blockiert')
+    if (ruht) klassen.push('ruht')
+    if (auf) klassen.push('offen-detail')
+    if (lauf) klassen.push('imfokus')
+
+    const detail = auf
+      ? `<div class="detail">
+           ${a.text ? `<p>${esc(a.text)}</p>` : ''}
+           ${(a.braucht || []).length
+             ? `<ul class="liste">${a.braucht.map((id) => MATERIAL_NACH_ID[id]).filter(Boolean)
+                 .map((m) => `<li>${esc(m.name)}${daIstEs(m.id) ? ' — da' : ' — fehlt noch'}</li>`).join('')}</ul>`
+             : ''}
+           <textarea class="notiz" data-notiz="${a.id}" placeholder="Notiz, Maß, Farbnummer …">${esc(stand.notizen[a.id] || '')}</textarea>
+           ${istDran(a) ? `<div class="detail-knoepfe"><button class="knopf klein stark" type="button" data-losgehen="${a.id}">Jetzt machen</button></div>` : ''}
+         </div>`
+      : ''
+
+    return `
+      <div class="${klassen.join(' ')}">
+        <div class="zeile-kopf">
+          <button class="status" type="button" data-status="${a.id}" data-s="${s}"
+                  aria-label="Status von ${esc(a.t)}: ${s}">${s === 'fertig' ? HAKEN : s === 'laeuft' ? LAEUFT : ''}</button>
+          <div class="zeile-mitte">
+            <button class="titel" type="button" data-detail="${a.id}" aria-expanded="${auf}">${esc(a.t)}</button>
+            ${marker.length ? `<div class="marker">${marker.join('')}</div>` : ''}
+          </div>
+          <button class="wer" type="button" data-wer="${a.id}" ${wer === 0 || wer === 1 ? `data-p="${wer}"` : ''}
+                  aria-label="Zuständig für ${esc(a.t)}: ${wer === 0 || wer === 1 ? esc(stand.namen[wer]) : 'niemand'}"
+                  title="${wer === 0 || wer === 1 ? esc(stand.namen[wer]) : 'niemand zugeteilt'}">${wer === 0 || wer === 1 ? esc(stand.namen[wer].slice(0, 2)) : '+'}</button>
+          <button class="aufklapp" type="button" data-detail="${a.id}" aria-label="Details zu ${esc(a.t)}" aria-expanded="${auf}">${PFEIL}</button>
+        </div>
+        ${detail}
+      </div>`
+  }
+
+  function zeichneRaum(raum) {
+    const b = bilanz(raum.id)
+    const teile = []
+
+    raum.phasen.forEach((phase) => {
+      const sichtbar = phase.aufgaben.filter(passt)
+      if (!sichtbar.length) return
+      teile.push(`<div class="phase"><span>${esc(phase.name)}</span>${phase.hinweis ? `<em>${esc(phase.hinweis)}</em>` : ''}</div>`)
+      sichtbar.forEach((a) => teile.push(zeichneAufgabe(a)))
+    })
+
+    const e = raum.entscheidung
+    const gewaehlt = e ? stand.entscheidungen[e.id] || 'offen' : null
+    const entscheidung = e
+      ? `<div class="entscheidung${gewaehlt !== 'offen' ? ' erledigt' : ''}">
+           <div>
+             <strong>${esc(e.frage)}</strong>
+             <div class="warum">${esc(e.text)}</div>
+           </div>
+           <div class="wahl">
+             ${['ja', 'nein', 'später'].map((w) =>
+               `<button class="chip" type="button" data-entscheidung="${e.id}" data-wahl="${w}" aria-pressed="${gewaehlt === w}">${w}</button>`).join('')}
+           </div>
+         </div>`
+      : ''
+
+    return `
+      <section class="karte" style="--kante:${raum.farbe}">
+        <div class="karte-kopf">
+          <h2>${esc(raum.name)}</h2>
+          <span class="meta">${b.fertig}/${b.gesamt} erledigt${b.restMin ? ' · noch ≈ ' + zeit(b.restMin) : ''}${b.ruht ? ' · ' + b.ruht + ' ruhen' : ''}</span>
+        </div>
+        ${entscheidung}
+        ${teile.length ? teile.join('') : '<div class="leer">In dieser Ansicht ist hier gerade nichts.</div>'}
+      </section>`
+  }
+
+  function zeichneEinkauf() {
+    const noetig = MATERIAL.filter((m) => !m.wenn || stand.entscheidungen[m.wenn] === 'ja')
+    const offen = noetig.filter((m) => !daIstEs(m.id)).length
+    return `
+      <section class="karte" style="--kante:var(--akzent)">
+        <div class="karte-kopf">
+          <h2>Einkaufsliste</h2>
+          <span class="meta">${offen ? offen + ' von ' + noetig.length + ' fehlen' : 'alles da'}</span>
+        </div>
+        <div class="einkauf-liste">
+          ${noetig.map((m) => `
+            <button class="einkauf-zeile${daIstEs(m.id) ? ' da' : ''}" type="button" data-einkauf="${m.id}" aria-pressed="${daIstEs(m.id)}">
+              <span class="status" data-s="${daIstEs(m.id) ? 'fertig' : 'offen'}" aria-hidden="true" style="pointer-events:none">${daIstEs(m.id) ? HAKEN : ''}</span>
+              <span><span class="e-name">${esc(m.name)}</span><span class="e-wofuer">für ${esc(m.wofuer)}</span></span>
+            </button>`).join('')}
+        </div>
+      </section>`
+  }
+
+  function zeichneWohnzimmer() {
+    return `
+      <section class="karte" style="--kante:var(--raum-wz)">
+        <div class="karte-kopf"><h2>Wohnzimmer</h2><span class="meta">geparkt</span></div>
+        <div class="parken">
+          <p>Kommt später dran. Was euch bis dahin auffällt, kann hier stehen — dann muss es niemand neu zusammensuchen, wenn der Raum an der Reihe ist.</p>
+          <textarea class="notiz" id="wz-notiz" placeholder="Vorhänge? Regal umstellen? Fenster …">${esc(stand.wohnzimmer || '')}</textarea>
+        </div>
+      </section>`
+  }
+
+  function blickPlan() {
+    return zeichneUebersicht() + zeichneFilter() +
+      RAEUME.filter((r) => !raumFilter || r.id === raumFilter).map(zeichneRaum).join('') +
+      zeichneEinkauf() + (raumFilter ? '' : zeichneWohnzimmer())
+  }
+
+  /* ----------------------------------------------------------- Fokus-Ansicht */
+
+  function blickFokus() {
+    const schlange = warteschlange()
+    if (!schlange.length) {
+      const wartend = AUFGABEN.filter((a) => aktiv(a) && status(a.id) !== 'fertig')
+      return `<section class="fokus-karte"><div class="fokus-leer">
+        ${wartend.length
+          ? `<p><strong>Gerade ist nichts dran.</strong></p><p>Alle ${wartend.length} offenen Aufgaben warten auf einen Vorgänger oder auf Material. Ein Blick in die Einkaufsliste oder in den Ablauf zeigt, was den Stau löst.</p>`
+          : `<p><strong>Beide Räume sind fertig.</strong></p><p>Nichts mehr zu tun — außer das Wohnzimmer aufzunehmen.</p>`}
+      </div></section>`
+    }
+
+    const l = stand.laufend
+    const jetzt = (l && AUFGABE_NACH_ID[l.id] && istDran(AUFGABE_NACH_ID[l.id])) ? AUFGABE_NACH_ID[l.id] : schlange[0]
+    const raum = RAUM_NACH_ID[jetzt.raum]
+    const laeuft = !!(l && l.id === jetzt.id)
+    const sek = gelaufen(jetzt.id)
+    const drueber = jetzt.min && sek > jetzt.min * 60
+
+    const rest = schlange.filter((a) => a.id !== jetzt.id).slice(0, 4)
+
+    return `
+      <section class="fokus-karte" style="--kante:${raum.farbe}">
+        <div class="fokus-innen">
+          <span class="fokus-raum">${esc(raum.name)} · ${esc(jetzt.phase)}</span>
+          <h2 class="fokus-titel">${esc(jetzt.t)}</h2>
+          <div class="uhr${laeuft ? ' laeuft' : ''}${drueber ? ' drueber' : ''}">
+            <span id="uhrwerk">${uhrzeit(sek)}</span>
+            <span class="schaetzung">${jetzt.min ? 'geschätzt ' + zeit(jetzt.min) : ''}${drueber ? ' · drüber' : ''}</span>
+          </div>
+          ${jetzt.text ? `<p style="margin:0;color:var(--text-2);max-width:44rem">${esc(jetzt.text)}</p>` : ''}
+          <div class="fokus-knoepfe">
+            <button class="knopf ${laeuft ? '' : 'stark'}" type="button" data-uhr="${jetzt.id}">${laeuft ? 'Pause' : sek ? 'Weiter' : 'Los'}</button>
+            <button class="knopf fertig" type="button" data-erledigt="${jetzt.id}">Fertig</button>
+            <button class="knopf" type="button" data-ueberspringen="${jetzt.id}">Anderes nehmen</button>
+          </div>
+        </div>
+        ${rest.length ? `<div class="warteschlange">
+          ${rest.map((a, i) => `
+            <button class="warte-zeile" type="button" data-losgehen="${a.id}">
+              <span class="warte-nr">${i + 2}</span>
+              <span class="w-titel">${esc(a.t)}</span>
+              <span class="tag">${zeit(a.min)}</span>
+            </button>`).join('')}
+        </div>` : ''}
+      </section>`
+  }
+
+  /* ---------------------------------------------------------- Ablauf-Ansicht */
+
+  // Stufe = laengster Weg durch die Vorgaenger. Daraus werden die Spalten:
+  // links, was sofort geht, rechts, was am Ende der Kette haengt.
+  function stufen(raumId) {
+    const menge = AUFGABEN.filter((a) => a.raum === raumId && aktiv(a))
+    const tiefe = {}
+    const rechne = (a, pfad) => {
+      if (tiefe[a.id] != null) return tiefe[a.id]
+      if (pfad.has(a.id)) return 0
+      pfad.add(a.id)
+      const vorher = (a.nach || []).map((id) => AUFGABE_NACH_ID[id]).filter((v) => v && aktiv(v))
+      const d = vorher.length ? 1 + Math.max(...vorher.map((v) => rechne(v, pfad))) : 0
+      pfad.delete(a.id)
+      tiefe[a.id] = d
+      return d
+    }
+    menge.forEach((a) => rechne(a, new Set()))
+    const spalten = []
+    menge.forEach((a) => {
+      const d = tiefe[a.id]
+      ;(spalten[d] = spalten[d] || []).push(a)
+    })
+    // Array.from schliesst Luecken: eine unbesetzte Stufe wuerde sonst als
+    // Loch durch map() rutschen und Math.max auf NaN schicken.
+    return Array.from(spalten, (s) => s || [])
+  }
+
+  function blickAblauf() {
+    const spalten = stufen(ablaufRaum)
+    const raum = RAUM_NACH_ID[ablaufRaum]
+    const SB = 164, SL = 44, KH = 42, KA = 12, OBEN = 34
+
+    const platz = {}
+    spalten.forEach((spalte, x) => {
+      spalte.forEach((a, y) => { platz[a.id] = { x: x * (SB + SL), y: OBEN + y * (KH + KA) } })
+    })
+
+    const hoehe = OBEN + Math.max(1, ...spalten.map((s) => s.length)) * (KH + KA) + 12
+    const breite = spalten.length * (SB + SL) - SL + 4
+
+    const kanten = []
+    spalten.flat().forEach((a) => {
+      (a.nach || []).forEach((id) => {
+        const von = platz[id]
+        const bis = platz[a.id]
+        if (!von || !bis) return
+        const x1 = von.x + SB, y1 = von.y + KH / 2
+        const x2 = bis.x, y2 = bis.y + KH / 2
+        const m = (x1 + x2) / 2
+        kanten.push(`<path class="kante-linie${status(id) === 'fertig' ? ' erfuellt' : ''}" d="M${x1} ${y1} C${m} ${y1} ${m} ${y2} ${x2} ${y2}"></path>`)
+      })
+    })
+
+    const knoten = spalten.flat().map((a) => {
+      const p = platz[a.id]
+      const s = status(a.id)
+      const fuellung = s === 'fertig' ? 'var(--gut-weich)' : s === 'laeuft' ? 'var(--warn-weich)' : 'var(--flaeche-2)'
+      const rand = s === 'fertig' ? 'var(--gut)' : s === 'laeuft' ? 'var(--warn)' : istDran(a) ? 'var(--akzent)' : 'var(--fuge-stark)'
+      const kurz = a.t.length > 23 ? a.t.slice(0, 22).trimEnd() + '…' : a.t
+      return `<g class="knoten ${s}" data-status="${a.id}" transform="translate(${p.x} ${p.y})" role="button" tabindex="0"
+                 aria-label="${esc(a.t)} — ${s}">
+        <title>${esc(a.t)} · ${zeit(a.min)}</title>
+        <rect width="${SB}" height="${KH}" rx="4" fill="${fuellung}" stroke="${rand}" stroke-width="1.4"
+              ${istDran(a) && s === 'offen' ? 'stroke-dasharray="5 3"' : ''}></rect>
+        <text x="11" y="${KH / 2}">${esc(kurz)}</text>
+      </g>`
+    })
+
+    const titel = spalten.map((s, x) =>
+      `<text class="stufe-titel" x="${x * (SB + SL)}" y="16">Stufe ${x + 1}</text>`).join('')
+
+    return `
+      <section class="karte" style="--kante:${raum.farbe}">
+        <div class="karte-kopf">
+          <h2>Ablauf</h2>
+          <span class="meta">was welche Aufgabe freigibt — tippen schaltet den Status</span>
+        </div>
+        <div class="filter" style="position:static;padding:10px 16px;background:var(--flaeche)">
+          ${RAEUME.map((r) => `<button class="chip" type="button" data-ablauf="${r.id}" aria-pressed="${ablaufRaum === r.id}">${esc(r.name)}</button>`).join('')}
+        </div>
+        <div class="ablauf-huelle">
+          <svg width="${breite + 32}" height="${hoehe}" viewBox="0 0 ${breite + 32} ${hoehe}" style="min-width:${breite + 32}px">
+            <g transform="translate(16 0)">${titel}${kanten.join('')}${knoten.join('')}</g>
+          </svg>
+        </div>
+      </section>`
+  }
+
+  /* ---------------------------------------------------------------- Meldung */
+
+  function melde(text, zurueck) {
+    const alt = document.querySelector('.meldung')
+    if (alt) alt.remove()
+    clearTimeout(meldungTimer)
+    rueckgaengig = zurueck || null
+
+    const el = document.createElement('div')
+    el.className = 'meldung'
+    el.setAttribute('role', 'status')
+    const span = document.createElement('span')
+    span.textContent = text
+    el.appendChild(span)
+    if (zurueck) {
+      const b = document.createElement('button')
+      b.type = 'button'
+      b.textContent = 'Rückgängig'
+      b.dataset.zurueck = '1'
+      el.appendChild(b)
+    }
+    document.body.appendChild(el)
+    meldungTimer = setTimeout(() => { el.remove(); rueckgaengig = null }, 7000)
+  }
+
+  /* --------------------------------------------------------------- Konfetti */
+
+  function konfetti(farbe) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const leinwand = document.getElementById('konfetti')
+    const ctx = leinwand.getContext('2d')
+    const dpr = window.devicePixelRatio || 1
+    leinwand.width = innerWidth * dpr
+    leinwand.height = innerHeight * dpr
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+
+    const farben = [farbe, '#2f7d3a', '#eda100', '#e87ba4', '#2a78d6']
+    const stuecke = Array.from({ length: 90 }, () => ({
+      x: innerWidth / 2 + (Math.random() - 0.5) * 120,
+      y: innerHeight * 0.42,
+      vx: (Math.random() - 0.5) * 11,
+      vy: -7 - Math.random() * 9,
+      w: 5 + Math.random() * 6,
+      h: 3 + Math.random() * 5,
+      dreh: Math.random() * Math.PI,
+      dv: (Math.random() - 0.5) * 0.28,
+      f: farben[(Math.random() * farben.length) | 0],
+    }))
+
+    const start = performance.now()
+    function schritt(t) {
+      const alter = t - start
+      ctx.clearRect(0, 0, innerWidth, innerHeight)
+      if (alter > 2600) { ctx.clearRect(0, 0, innerWidth, innerHeight); return }
+      stuecke.forEach((s) => {
+        s.vy += 0.26
+        s.x += s.vx
+        s.y += s.vy
+        s.dreh += s.dv
+        ctx.save()
+        ctx.translate(s.x, s.y)
+        ctx.rotate(s.dreh)
+        ctx.globalAlpha = Math.max(0, 1 - alter / 2600)
+        ctx.fillStyle = s.f
+        ctx.fillRect(-s.w / 2, -s.h / 2, s.w, s.h)
+        ctx.restore()
+      })
+      requestAnimationFrame(schritt)
+    }
+    requestAnimationFrame(schritt)
+  }
+
+  /* ------------------------------------------------------------ Zeichnen */
+
+  function zeichne() {
+    zeichneKopf()
+    const buehne = document.getElementById('buehne')
+    buehne.innerHTML = blick === 'fokus' ? blickFokus() : blick === 'ablauf' ? blickAblauf() : blickPlan()
+    zeigeStand()
+  }
+
+  /* --------------------------------------------------------------- Aktionen */
+
+  function setzeStatus(id, neu, alt) {
+    stand.status[id] = neu
+    if (neu === 'fertig') {
+      if (stand.laufend && stand.laufend.id === id) halte()
+      const raumId = AUFGABE_NACH_ID[id].raum
+      const vorher = alt === 'fertig'
+      const b = bilanz(raumId)
+      if (!vorher && b.gesamt && b.fertig === b.gesamt) {
+        konfetti(RAUM_NACH_ID[raumId].jubel)
+        melde(RAUM_NACH_ID[raumId].name + ' ist durch.')
+      }
+    }
+    sichern()
+  }
+
+  function erledige(id) {
+    const alt = status(id)
+    if (stand.laufend && stand.laufend.id === id) halte()
+    const gebraucht = stand.ist[id]
+    setzeStatus(id, 'fertig', alt)
+    zeichne()
+    melde(
+      'Erledigt' + (gebraucht ? ' in ' + uhrzeit(gebraucht) : '') + '.',
+      () => { stand.status[id] = alt; sichern(); zeichne() },
+    )
+  }
+
+  document.addEventListener('click', (ev) => {
+    const ziel = ev.target.closest(
+      '[data-status],[data-detail],[data-ansicht],[data-raum],[data-einkauf],[data-entscheidung],[data-blick],[data-wer],[data-uhr],[data-erledigt],[data-ueberspringen],[data-losgehen],[data-ablauf],[data-zurueck],#zuruecksetzen',
+    )
+    if (!ziel) return
+
+    if (ziel.dataset.zurueck) {
+      if (rueckgaengig) rueckgaengig()
+      const m = document.querySelector('.meldung')
+      if (m) m.remove()
+      rueckgaengig = null
+      return
+    }
+
+    if (ziel.dataset.blick) { blick = ziel.dataset.blick; return zeichne() }
+    if (ziel.dataset.ablauf) { ablaufRaum = ziel.dataset.ablauf; return zeichne() }
+
+    if (ziel.dataset.status) {
+      const id = ziel.dataset.status
+      const alt = status(id)
+      const folge = { offen: 'laeuft', laeuft: 'fertig', fertig: 'offen' }
+      const neu = folge[alt]
+      if (neu === 'laeuft') starte(id)
+      else if (alt === 'laeuft' && stand.laufend && stand.laufend.id === id) halte()
+      setzeStatus(id, neu, alt)
+      return zeichne()
+    }
+
+    if (ziel.dataset.wer) {
+      const id = ziel.dataset.wer
+      const jetzt = stand.wer[id]
+      stand.wer[id] = jetzt == null ? 0 : jetzt === 0 ? 1 : null
+      if (stand.wer[id] == null) delete stand.wer[id]
+      sichern()
+      return zeichne()
+    }
+
+    if (ziel.dataset.uhr) {
+      const id = ziel.dataset.uhr
+      if (stand.laufend && stand.laufend.id === id) halte()
+      else starte(id)
+      return zeichne()
+    }
+
+    if (ziel.dataset.erledigt) return erledige(ziel.dataset.erledigt)
+
+    if (ziel.dataset.ueberspringen) {
+      const id = ziel.dataset.ueberspringen
+      if (stand.laufend && stand.laufend.id === id) halte()
+      const schlange = warteschlange()
+      const naechste = schlange.find((a) => a.id !== id)
+      if (naechste) { stand.laufend = { id: naechste.id, seit: Date.now() }; sichern() }
+      return zeichne()
+    }
+
+    if (ziel.dataset.losgehen) {
+      starte(ziel.dataset.losgehen)
+      blick = 'fokus'
+      return zeichne()
+    }
+
+    if (ziel.dataset.detail) {
+      const id = ziel.dataset.detail
+      if (offeneDetails.has(id)) offeneDetails.delete(id)
+      else offeneDetails.add(id)
+      return zeichne()
+    }
+
+    if (ziel.dataset.ansicht) { ansicht = ziel.dataset.ansicht; return zeichne() }
+
+    if (ziel.dataset.raum) {
+      raumFilter = raumFilter === ziel.dataset.raum ? null : ziel.dataset.raum
+      return zeichne()
+    }
+
+    if (ziel.dataset.einkauf) {
+      const id = ziel.dataset.einkauf
+      stand.einkauf[id] = !stand.einkauf[id]
+      sichern()
+      return zeichne()
+    }
+
+    if (ziel.dataset.entscheidung) {
+      const id = ziel.dataset.entscheidung
+      const wahl = ziel.dataset.wahl
+      stand.entscheidungen[id] = stand.entscheidungen[id] === wahl ? 'offen' : wahl
+      sichern()
+      return zeichne()
+    }
+
+    if (ziel.id === 'zuruecksetzen') {
+      if (!confirm('Alle Haken, Zeiten, Notizen und die Einkaufsliste zurücksetzen?')) return
+      const alt = stand
+      stand = leer()
+      stand.namen = alt.namen
+      sichern()
+      zeichne()
+      melde('Alles zurückgesetzt.', () => { stand = alt; sichern(); zeichne() })
+    }
+  })
+
+  document.addEventListener('input', (ev) => {
+    const el = ev.target
+    if (el.dataset && el.dataset.notiz) { stand.notizen[el.dataset.notiz] = el.value; sichern() }
+    else if (el.id === 'wz-notiz') { stand.wohnzimmer = el.value; sichern() }
+    else if (el.id === 'name-0' || el.id === 'name-1') {
+      stand.namen[el.id === 'name-0' ? 0 : 1] = el.value
+      sichern()
+    }
+  })
+
+  // Namensfelder erst beim Verlassen neu zeichnen, sonst springt der Cursor
+  // bei jedem Tastendruck.
+  document.addEventListener('change', (ev) => {
+    if (ev.target.id === 'name-0' || ev.target.id === 'name-1') zeichne()
+  })
+
+  document.addEventListener('keydown', (ev) => {
+    const t = ev.target
+    if (t && (t.tagName === 'TEXTAREA' || t.tagName === 'INPUT')) return
+    if (ev.metaKey || ev.ctrlKey || ev.altKey) return
+
+    const k = ev.key.toLowerCase()
+    if (k === 'p') { blick = 'plan'; zeichne() }
+    else if (k === 'f') { blick = 'fokus'; zeichne() }
+    else if (k === 'a') { blick = 'ablauf'; zeichne() }
+    else if (blick === 'fokus') {
+      const schlange = warteschlange()
+      if (!schlange.length) return
+      const l = stand.laufend
+      const jetzt = (l && AUFGABE_NACH_ID[l.id] && istDran(AUFGABE_NACH_ID[l.id])) ? AUFGABE_NACH_ID[l.id] : schlange[0]
+      if (ev.key === ' ') {
+        ev.preventDefault()
+        if (l && l.id === jetzt.id) halte()
+        else starte(jetzt.id)
+        zeichne()
+      } else if (ev.key === 'Enter') {
+        ev.preventDefault()
+        erledige(jetzt.id)
+      }
+    }
+  })
+
+  // Der Ablaufgraph ist mit der Tastatur bedienbar: die Knoten sind fokussierbar.
+  document.addEventListener('keydown', (ev) => {
+    if (ev.key !== 'Enter' && ev.key !== ' ') return
+    const knoten = ev.target.closest && ev.target.closest('.knoten')
+    if (!knoten) return
+    ev.preventDefault()
+    knoten.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+  })
+
+  // Nur die Ziffern der Uhr aktualisieren, nicht die ganze Seite: ein
+  // Neuaufbau pro Sekunde wuerde jede Eingabe und jeden Fokus zerstoeren.
+  setInterval(() => {
+    const l = stand.laufend
+    if (!l || blick !== 'fokus') return
+    const el = document.getElementById('uhrwerk')
+    if (el) el.textContent = uhrzeit(gelaufen(l.id))
+  }, 1000)
+
+  zeichne()
+})()
+</script>
+<!-- fragment:end -->
+</body>
+</html>
