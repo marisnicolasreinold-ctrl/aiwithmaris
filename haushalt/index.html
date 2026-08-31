@@ -480,6 +480,55 @@ h1 {
 .knopf-still:hover { border-color: var(--stop); color: var(--stop); }
 .leer { background: var(--flaeche); padding: 22px 16px; color: var(--text-3); text-align: center; }
 
+/* ------------------------------------------------------------- Als Naechstes */
+
+.naechstes { display: flex; flex-direction: column; gap: 10px; }
+
+.naechstes h2 {
+  font-family: Oswald, "Arial Narrow", sans-serif; font-weight: 500;
+  font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--text-3); margin: 0;
+}
+
+.naechstes-liste { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 10px; }
+
+.naechstes-karte {
+  background: var(--flaeche); border: 1px solid var(--fuge);
+  border-left: 3px solid var(--kante, var(--akzent));
+  border-radius: var(--r-karte); padding: 13px 15px; text-align: left;
+  display: flex; flex-direction: column; gap: 4px; min-height: 44px;
+  transition: transform 140ms var(--ease), border-color 140ms var(--ease), background 140ms var(--ease);
+}
+
+.naechstes-karte:hover { background: var(--flaeche-2); border-color: var(--fuge-stark); border-left-color: var(--kante); transform: translateY(-1px); }
+.naechstes-karte:active { transform: translateY(0); }
+
+.n-raum {
+  font-family: Oswald, sans-serif; font-size: 11px; letter-spacing: 0.13em;
+  text-transform: uppercase; color: var(--kante, var(--text-3));
+}
+.n-titel { font-size: 16px; line-height: 1.3; }
+.n-fuss { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--text-3); }
+
+/* ------------------------------------------------------------- Wer-Auswahl */
+
+.wer-wahl {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+  padding: 0 16px 12px 54px; animation: aufklappen 180ms var(--ease);
+}
+
+.wer-frage { font-size: 13px; color: var(--text-3); margin-right: 2px; }
+
+.ausklapp {
+  width: 100%; background: var(--flaeche-2); border: 0; border-top: 1px solid var(--fuge);
+  padding: 11px 16px; text-align: left; color: var(--text-3);
+  font-family: Oswald, sans-serif; font-size: 12px; letter-spacing: 0.09em;
+  text-transform: uppercase; min-height: 44px;
+  transition: background 140ms var(--ease), color 140ms var(--ease);
+}
+
+.ausklapp:hover { background: var(--flaeche-3); color: var(--text); }
+
 /* ------------------------------------------------------------------ Meldung */
 
 .meldung {
@@ -506,6 +555,12 @@ h1 {
 }
 
 @media (max-width: 460px) {
+  /* Auf dem Handy wird mit dem Daumen getippt, nicht mit dem Mauszeiger:
+     44 px ist die kleinste Flaeche, die verlaesslich trifft. */
+  .status, .wer { width: 32px; height: 32px; }
+  .zeile-kopf { padding: 13px 12px; gap: 10px; }
+  .chip { padding: 8px 14px; }
+  .wer-wahl { padding-left: 16px; }
   .huelle { padding: 20px 10px 80px; }
   .detail { padding-left: 16px; }
   .entscheidung .wahl { margin-left: 0; width: 100%; }
@@ -722,7 +777,7 @@ h1 {
 
   const leer = () => ({
     v: 1, status: {}, notizen: {}, einkauf: {}, entscheidungen: {},
-    wer: {}, ist: {}, namen: ['Maris', 'Zweite:r'], laufend: null,
+    wer: {}, ist: {}, namen: ['Steffi', 'Maris'], laufend: null,
     wohnzimmer: '', geaendert: 0,
   })
 
@@ -758,6 +813,8 @@ h1 {
   const offeneDetails = new Set()
   let rueckgaengig = null
   let meldungTimer = null
+  let offenerWer = null
+  const offeneFertige = new Set()
 
   /* ------------------------------------------------------------- Ableitungen */
 
@@ -1046,16 +1103,28 @@ h1 {
       <div class="${klassen.join(' ')}">
         <div class="zeile-kopf">
           <button class="status" type="button" data-status="${a.id}" data-s="${s}"
-                  aria-label="Status von ${esc(a.t)}: ${s}">${s === 'fertig' ? HAKEN : s === 'laeuft' ? LAEUFT : ''}</button>
+                  aria-pressed="${s === 'fertig'}"
+                  aria-label="${esc(a.t)}${s === 'fertig' ? ' — erledigt, zum Zurücknehmen tippen' : ' — als erledigt abhaken'}"
+                  >${s === 'fertig' ? HAKEN : lauf ? LAEUFT : ''}</button>
           <div class="zeile-mitte">
             <button class="titel" type="button" data-detail="${a.id}" aria-expanded="${auf}">${esc(a.t)}</button>
             ${marker.length ? `<div class="marker">${marker.join('')}</div>` : ''}
           </div>
           <button class="wer" type="button" data-wer="${a.id}" ${wer === 0 || wer === 1 ? `data-p="${wer}"` : ''}
+                  aria-expanded="${offenerWer === a.id}"
                   aria-label="Zuständig für ${esc(a.t)}: ${wer === 0 || wer === 1 ? esc(stand.namen[wer]) : 'niemand'}"
                   title="${wer === 0 || wer === 1 ? esc(stand.namen[wer]) : 'niemand zugeteilt'}">${wer === 0 || wer === 1 ? esc(stand.namen[wer].slice(0, 2)) : '+'}</button>
           <button class="aufklapp" type="button" data-detail="${a.id}" aria-label="Details zu ${esc(a.t)}" aria-expanded="${auf}">${PFEIL}</button>
         </div>
+        ${offenerWer === a.id ? `
+          <div class="wer-wahl">
+            <span class="wer-frage">Wer macht das?</span>
+            ${stand.namen.map((name, i) => `
+              <button class="chip" type="button" data-wer-wahl="${a.id}" data-person="${i}"
+                      aria-pressed="${wer === i}">${esc(name)}</button>`).join('')}
+            <button class="chip" type="button" data-wer-wahl="${a.id}" data-person="keiner"
+                    aria-pressed="${wer !== 0 && wer !== 1}">niemand</button>
+          </div>` : ''}
         ${detail}
       </div>`
   }
@@ -1064,12 +1133,28 @@ h1 {
     const b = bilanz(raum.id)
     const teile = []
 
+    // Erledigtes verschwindet hinter einer Zeile, statt die Liste zu fluten.
+    // Beim Filter "Erledigt" waere das Zuklappen albern, dort bleibt alles offen.
+    const fertigeZeigen = ansicht === 'fertig' || offeneFertige.has(raum.id)
+    let versteckt = 0
+
     raum.phasen.forEach((phase) => {
-      const sichtbar = phase.aufgaben.filter(passt)
+      let sichtbar = phase.aufgaben.filter(passt)
+      if (!fertigeZeigen) {
+        const vorher = sichtbar.length
+        sichtbar = sichtbar.filter((a) => status(a.id) !== 'fertig')
+        versteckt += vorher - sichtbar.length
+      }
       if (!sichtbar.length) return
       teile.push(`<div class="phase"><span>${esc(phase.name)}</span>${phase.hinweis ? `<em>${esc(phase.hinweis)}</em>` : ''}</div>`)
       sichtbar.forEach((a) => teile.push(zeichneAufgabe(a)))
     })
+
+    if (versteckt || (fertigeZeigen && b.fertig && ansicht !== 'fertig')) {
+      teile.push(`<button class="ausklapp" type="button" data-fertige="${raum.id}" aria-expanded="${fertigeZeigen}">
+        ${fertigeZeigen ? 'Erledigte wieder ausblenden' : `${versteckt} Erledigte${versteckt === 1 ? 's' : ''} einblenden`}
+      </button>`)
+    }
 
     const e = raum.entscheidung
     const gewaehlt = e ? stand.entscheidungen[e.id] || 'offen' : null
@@ -1127,8 +1212,32 @@ h1 {
       </section>`
   }
 
+  // Wer die Seite aufmacht, will nicht 36 Zeilen lesen, sondern wissen, was
+  // jetzt dran ist. Drei Vorschlaege, gross genug zum Antippen.
+  function zeichneNaechstes() {
+    if (ansicht !== 'alle' || raumFilter) return ''
+    const schlange = warteschlange().slice(0, 3)
+    if (!schlange.length) return ''
+    return `
+      <section class="naechstes">
+        <h2>Als Nächstes</h2>
+        <div class="naechstes-liste">
+          ${schlange.map((a) => {
+            const raum = RAUM_NACH_ID[a.raum]
+            const wer = stand.wer[a.id]
+            return `
+            <button class="naechstes-karte" type="button" data-losgehen="${a.id}" style="--kante:${raum.farbe}">
+              <span class="n-raum">${esc(raum.name)}</span>
+              <span class="n-titel">${esc(a.t)}</span>
+              <span class="n-fuss">${zeit(a.min)}${wer === 0 || wer === 1 ? ' · ' + esc(stand.namen[wer]) : ''}</span>
+            </button>`
+          }).join('')}
+        </div>
+      </section>`
+  }
+
   function blickPlan() {
-    return zeichneUebersicht() + zeichneFilter() +
+    return zeichneUebersicht() + zeichneNaechstes() + zeichneFilter() +
       RAEUME.filter((r) => !raumFilter || r.id === raumFilter).map(zeichneRaum).join('') +
       zeichneEinkauf() + (raumFilter ? '' : zeichneWohnzimmer())
   }
@@ -1383,7 +1492,7 @@ h1 {
 
   document.addEventListener('click', (ev) => {
     const ziel = ev.target.closest(
-      '[data-status],[data-detail],[data-ansicht],[data-raum],[data-einkauf],[data-entscheidung],[data-blick],[data-wer],[data-uhr],[data-erledigt],[data-ueberspringen],[data-losgehen],[data-ablauf],[data-zurueck],#zuruecksetzen',
+      '[data-status],[data-detail],[data-ansicht],[data-raum],[data-einkauf],[data-entscheidung],[data-blick],[data-wer],[data-wer-wahl],[data-uhr],[data-erledigt],[data-ueberspringen],[data-losgehen],[data-ablauf],[data-zurueck],[data-fertige],#zuruecksetzen',
     )
     if (!ziel) return
 
@@ -1399,21 +1508,35 @@ h1 {
     if (ziel.dataset.ablauf) { ablaufRaum = ziel.dataset.ablauf; return zeichne() }
 
     if (ziel.dataset.status) {
+      // Ein Kaestchen, zwei Zustaende: angetippt heisst erledigt, nochmal
+      // angetippt nimmt es zurueck. "Laeuft" entsteht nur, wenn wirklich eine
+      // Uhr laeuft — ein Dreier-Zyklus im Kaestchen hat niemand erraten.
+      //
+      // Abgehaktes klappt sofort aus der Liste. Deshalb geht es hier ueber
+      // erledige(): das zeigt die Rueckgaengig-Meldung. Ohne sie waere ein
+      // Fehlgriff nicht zurueckzunehmen — das Kaestchen ist ja verschwunden.
       const id = ziel.dataset.status
-      const alt = status(id)
-      const folge = { offen: 'laeuft', laeuft: 'fertig', fertig: 'offen' }
-      const neu = folge[alt]
-      if (neu === 'laeuft') starte(id)
-      else if (alt === 'laeuft' && stand.laufend && stand.laufend.id === id) halte()
-      setzeStatus(id, neu, alt)
-      return zeichne()
+      if (status(id) === 'fertig') {
+        stand.status[id] = 'offen'
+        sichern()
+        return zeichne()
+      }
+      return erledige(id)
     }
 
     if (ziel.dataset.wer) {
-      const id = ziel.dataset.wer
-      const jetzt = stand.wer[id]
-      stand.wer[id] = jetzt == null ? 0 : jetzt === 0 ? 1 : null
-      if (stand.wer[id] == null) delete stand.wer[id]
+      // Aufklappen statt durchklicken: wer zuteilt, will einen Namen waehlen,
+      // nicht raten, beim wievielten Tipp der richtige kommt.
+      offenerWer = offenerWer === ziel.dataset.wer ? null : ziel.dataset.wer
+      return zeichne()
+    }
+
+    if (ziel.dataset.werWahl) {
+      const id = ziel.dataset.werWahl
+      const wahl = ziel.dataset.person
+      if (wahl === 'keiner') delete stand.wer[id]
+      else stand.wer[id] = Number(wahl)
+      offenerWer = null
       sichern()
       return zeichne()
     }
@@ -1446,6 +1569,13 @@ h1 {
       const id = ziel.dataset.detail
       if (offeneDetails.has(id)) offeneDetails.delete(id)
       else offeneDetails.add(id)
+      return zeichne()
+    }
+
+    if (ziel.dataset.fertige) {
+      const id = ziel.dataset.fertige
+      if (offeneFertige.has(id)) offeneFertige.delete(id)
+      else offeneFertige.add(id)
       return zeichne()
     }
 
