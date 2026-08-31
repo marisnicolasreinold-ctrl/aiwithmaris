@@ -11,7 +11,7 @@ export const config = {
   // Middleware läuft nur noch auf den gegateten Pfaden und den Login-
   // Endpoints — alle öffentlichen Info-Seiten werden gar nicht erst
   // abgefangen (schneller, kein Supabase-Call pro Seitenaufruf).
-  matcher: ['/admin', '/admin.html', '/report', '/report.html', '/lsu', '/lsu/', '/__gate/:path*'],
+  matcher: ['/admin', '/admin.html', '/report', '/report.html', '/lsu', '/lsu/', '/haushalt', '/haushalt/', '/__gate/:path*'],
 };
 
 const SUPABASE_URL = 'https://amrdmnnijbfwtrjcpocl.supabase.co';
@@ -30,7 +30,13 @@ const MAXAGE = 60 * 60 * 24 * 30; // 30 Tage (Refresh hält die Session frisch)
 // /lsu ist das Backyard-Live-Dashboard (Last Soul Ultra). Gegated wird nur die
 // Einstiegsseite, nicht /lsu/assets/* — sonst liefe pro Datei ein Supabase-Call,
 // und ohne die Seite ist das Bundle allein nutzlos. Genau wie bei admin.html.
-const GATED = new Set(['/admin', '/admin.html', '/report', '/report.html', '/lsu', '/lsu/']);
+//
+// /haushalt ist der private Wohnungsplan (Schlafzimmer, Bad). Er steht hier
+// nicht aus Vorsicht, sondern weil er sonst gar nicht geschuetzt waere: Diese
+// Middleware laeuft nur auf den Pfaden im matcher oben, alles andere im Repo
+// ist oeffentlich erreichbar. Wie bei /lsu wird nur die Einstiegsseite
+// gegated — die Seite ist eine einzelne Datei ohne weitere Bestandteile.
+const GATED = new Set(['/admin', '/admin.html', '/report', '/report.html', '/lsu', '/lsu/', '/haushalt', '/haushalt/']);
 
 function isGated(path) {
   return GATED.has(path);
@@ -88,6 +94,7 @@ async function verifyAccess(token) {
 // Welcher Bereich hinter einem Pfad steckt.
 function areaOf(path) {
   if (path === '/lsu' || path === '/lsu/') return 'lsu';
+  if (path === '/haushalt' || path === '/haushalt/') return 'haushalt';
   if (path === '/report' || path === '/report.html') return 'report';
   return 'admin';
 }
@@ -126,16 +133,18 @@ async function refresh(refreshToken) {
 }
 
 
-// ── Gastzugang fuer das Renn-Dashboard ────────────────────────────────
-// /lsu bekommt einen zweiten, einfacheren Weg hinein: ein geteilter
-// Benutzername mit Passwort, per HTTP Basic. Supabase-Auth waere hier das
-// falsche Werkzeug — es identifiziert ueber E-Mail-Adressen, und fuer einen
-// Gast ohne Postfach bliebe davon nur eine verkleidete Kennung uebrig, dafuer
-// mit Bestaetigungsmail und einem Passwort-Reset, der ins Leere laeuft.
+// ── Gastzugang fuer die geteilten Bereiche ────────────────────────────
+// /lsu und /haushalt bekommen einen zweiten, einfacheren Weg hinein: ein
+// geteilter Benutzername mit Passwort, per HTTP Basic. Supabase-Auth waere
+// hier das falsche Werkzeug — es identifiziert ueber E-Mail-Adressen, und fuer
+// einen Gast ohne Postfach bliebe davon nur eine verkleidete Kennung uebrig,
+// dafuer mit Bestaetigungsmail und einem Passwort-Reset, der ins Leere laeuft.
 //
-// Die Zugangsdaten stehen in den Projekt-Variablen LSU_USER und LSU_PASSWORD,
-// niemals im Repo — das hier ist oeffentlich. Fehlt eine der beiden, ist der
-// Gastzugang schlicht aus und es bleibt beim Supabase-Login.
+// Die Zugangsdaten stehen in den Projekt-Variablen, niemals im Repo — das hier
+// ist oeffentlich. Jeder Bereich hat sein eigenes Paar, damit ein Gast fuer das
+// Renn-Dashboard nicht automatisch in den Wohnungsplan kommt. Fehlt eines der
+// beiden, ist der Gastzugang fuer diesen Bereich aus und es bleibt beim
+// Supabase-Login.
 
 // Zeichenweiser Vergleich ohne fruehen Abbruch, damit die Laufzeit nichts
 // ueber einen falschen Versuch verraet.
@@ -163,13 +172,23 @@ function readBasic(request) {
   return { user: decoded.slice(0, sep), pass: decoded.slice(sep + 1) };
 }
 
+// Welche Bereiche ueberhaupt einen Gastzugang haben, und unter welchen
+// Projekt-Variablen ihre Zugangsdaten stehen.
+const GAST = {
+  lsu: { user: 'LSU_USER', pass: 'LSU_PASSWORD', realm: 'Last Soul Ultra' },
+  haushalt: { user: 'HAUSHALT_USER', pass: 'HAUSHALT_PASSWORD', realm: 'Wohnungsplan' },
+};
+
 async function guestOk(request, area) {
+  const konfig = GAST[area];
+  if (!konfig) return false;
+
   const creds = readBasic(request);
   if (!creds) return false;
 
   // Variante 1: Zugangsdaten stehen in den Projekt-Variablen.
-  const envUser = process.env.LSU_USER;
-  const envPass = process.env.LSU_PASSWORD;
+  const envUser = process.env[konfig.user];
+  const envPass = process.env[konfig.pass];
   if (envUser && envPass) {
     return safeEqual(creds.user, envUser) && safeEqual(creds.pass, envPass);
   }
@@ -194,11 +213,15 @@ async function guestOk(request, area) {
   }
 }
 
-function askForGuestLogin() {
+// Jeder Bereich fragt unter eigenem Realm: Browser merken sich Basic-Auth pro
+// Ursprung UND Realm, sonst wuerde ein Gast des Renn-Dashboards ungefragt auch
+// am Wohnungsplan angemeldet.
+function askForGuestLogin(area) {
+  const realm = (GAST[area] && GAST[area].realm) || 'Intern';
   return new Response('Zugang nur mit Anmeldung.', {
     status: 401,
     headers: {
-      'WWW-Authenticate': 'Basic realm="Last Soul Ultra", charset="UTF-8"',
+      'WWW-Authenticate': `Basic realm="${realm}", charset="UTF-8"`,
       'Cache-Control': 'no-store',
     },
   });
@@ -256,9 +279,9 @@ export default async function middleware(request) {
     return rewrite(new URL('/coming-soon', request.url));
   }
 
-  // Kein Supabase-Konto? Für das Dashboard genügt der Gastzugang.
-  if (area === 'lsu') {
-    return (await guestOk(request, area)) ? next() : askForGuestLogin();
+  // Kein Supabase-Konto? Für die geteilten Bereiche genügt der Gastzugang.
+  if (GAST[area]) {
+    return (await guestOk(request, area)) ? next() : askForGuestLogin(area);
   }
 
   // Access abgelaufen? Mit Refresh-Token erneuern und durchlassen.
