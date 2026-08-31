@@ -8,6 +8,10 @@
 <body>
 <!-- fragment:start -->
 <title>Zimmer für Zimmer</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Wohnungsplan">
+<meta name="theme-color" content="#e8ebec">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Karla:wght@400;500;700&family=Oswald:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap">
@@ -488,8 +492,11 @@ h1 {
   padding: 14px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px;
 }
 
-.wolke.verbunden { border-left-color: var(--gut); font-size: 15px; color: var(--text-2); }
-.wolke.verbunden .knopf-still { margin-left: auto; }
+.wolke.verbunden { border-left-color: var(--gut); font-size: 15px; color: var(--text-2); flex-direction: column; align-items: stretch; gap: 10px; }
+.wolke-zeile { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.wolke-zeile .knopf-still, .wolke-zeile .knopf { margin-left: auto; }
+.wolke-zeile.push { border-top: 1px dashed var(--fuge); padding-top: 10px; font-size: 14px; }
+.wolke-hinweis { color: var(--text-3); font-size: 14px; flex: 1 1 16rem; }
 
 .wolke-punkt {
   width: 9px; height: 9px; border-radius: var(--r-pille);
@@ -654,7 +661,8 @@ h1 {
   // Was geteilt wird. `laufend` bewusst nicht: eine laufende Uhr gehoert zu dem
   // Geraet, das sie gestartet hat — sonst wuerde das Speichern des einen die
   // Uhr des anderen anhalten.
-  const GETEILT = ['v', 'status', 'notizen', 'wer', 'einkauf', 'ist', 'entscheidungen', 'namen', 'wohnzimmer']
+  const GETEILT = ['v', 'status', 'notizen', 'wer', 'einkauf', 'ist', 'entscheidungen', 'namen', 'wohnzimmer', 'meldung']
+  const VAPID = 'BMrYrbJWoq0v_f9z0TxZ_JBt4VnsYBgHQ_iSkt8tPDUU6GjYqyITwepV1-hFM9ftl69vGLo66rALKQmqlu9Tu0s'
 
   /* ------------------------------------------------------------- Material */
 
@@ -1018,6 +1026,7 @@ h1 {
       await schieben()
       hinweisText = 'geteilt mit ' + (wolke.wer === 'Steffi' ? 'Maris' : 'Steffi')
       zeichne()
+      pushPruefen()
     } catch (e) {
       wolkeFehler = 'Keine Verbindung zur Datenbank.'
       zeichne()
@@ -1026,8 +1035,12 @@ h1 {
 
   function abmelden() {
     wolke = null
+    pushAn = false
     hinweisText = 'nur auf diesem Gerät'
     try { localStorage.removeItem(WOLKE) } catch (_) {}
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({ art: 'abmelden' })
+    }
     zeichne()
   }
 
@@ -1042,6 +1055,126 @@ h1 {
       /* Funkloch: der naechste Durchlauf holt es nach */
     } finally {
       holtGerade = false
+    }
+  }
+
+  /* -------------------------------------------------------------- Push */
+
+  let swReg = null
+  let pushAn = false
+  let pushHinweis = ''
+
+  const amHandy = () => /iPhone|iPad|iPod/.test(navigator.userAgent)
+  const abgelegt = () => window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true
+
+  // Auf dem iPhone gibt es Push nur fuer die Fassung, die ueber Teilen ->
+  // "Zum Home-Bildschirm" abgelegt wurde. Ein offener Tab bekommt keine,
+  // egal in welchem Browser — die benutzen dort alle dieselbe Maschinerie.
+  const pushMoeglich = () =>
+    'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window &&
+    (!amHandy() || abgelegt())
+
+  function schluesselAlsBytes(b64) {
+    const roh = atob(b64.replace(/-/g, '+').replace(/_/g, '/').padEnd(Math.ceil(b64.length / 4) * 4, '='))
+    return Uint8Array.from(roh, (c) => c.charCodeAt(0))
+  }
+
+  async function swBereit() {
+    if (swReg) return swReg
+    if (!('serviceWorker' in navigator)) return null
+    try {
+      swReg = await navigator.serviceWorker.register('/haushalt-sw.js', { scope: '/haushalt' })
+      return swReg
+    } catch (_) {
+      return null
+    }
+  }
+
+  function sitzungAnSw() {
+    if (!wolke || !navigator.serviceWorker || !navigator.serviceWorker.controller) return
+    navigator.serviceWorker.controller.postMessage({ art: 'sitzung', token: wolke.token, wer: wolke.wer })
+  }
+
+  async function pushEinschalten() {
+    pushHinweis = ''
+    if (!wolke) { pushHinweis = 'Erst verbinden.'; return zeichne() }
+    try {
+      const erlaubnis = await Notification.requestPermission()
+      if (erlaubnis !== 'granted') {
+        pushHinweis = 'Der Browser hat Benachrichtigungen abgelehnt. In den Einstellungen der Seite freigeben.'
+        return zeichne()
+      }
+      const reg = await swBereit()
+      if (!reg) { pushHinweis = 'Der Service Worker liess sich nicht anmelden.'; return zeichne() }
+      await navigator.serviceWorker.ready
+
+      const abo = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: schluesselAlsBytes(VAPID),
+      })
+      const j = abo.toJSON()
+      const gut = await ruf('haushalt_push_anmelden', {
+        t: wolke.token, endpunkt: j.endpoint, p256dh: j.keys.p256dh, auth: j.keys.auth,
+      })
+      if (!gut) { pushHinweis = 'Die Anmeldung wurde abgelehnt — bitte neu verbinden.'; return zeichne() }
+      pushAn = true
+      sitzungAnSw()
+      zeichne()
+    } catch (e) {
+      pushHinweis = 'Hat nicht geklappt: ' + (e && e.message ? e.message : 'unbekannter Fehler')
+      zeichne()
+    }
+  }
+
+  async function pushAusschalten() {
+    try {
+      const reg = await swBereit()
+      const abo = reg && (await reg.pushManager.getSubscription())
+      if (abo) {
+        if (wolke) await ruf('haushalt_push_abmelden', { t: wolke.token, endpunkt: abo.endpoint }).catch(() => {})
+        await abo.unsubscribe()
+      }
+    } catch (_) { /* dann bleibt es beim Serverstand */ }
+    pushAn = false
+    zeichne()
+  }
+
+  async function pushPruefen() {
+    if (!pushMoeglich() || !wolke) return
+    try {
+      const reg = await swBereit()
+      if (!reg) return
+      const abo = await reg.pushManager.getSubscription()
+      pushAn = !!abo && Notification.permission === 'granted'
+      if (pushAn) sitzungAnSw()
+      zeichne()
+    } catch (_) { /* egal */ }
+  }
+
+  // Eine Zuteilung ist das Einzige, was den anderen wirklich betrifft — also
+  // das Einzige, wofuer ein Handy klingelt.
+  async function meldeZuteilung(aufgabe, anPerson) {
+    if (!wolke || anPerson == null) return
+    const anName = stand.namen[anPerson]
+    if (anName === wolke.wer) return    // sich selbst weckt man nicht
+    stand.meldung = {
+      titel: wolke.wer + ' hat dir etwas zugeteilt',
+      text: aufgabe.t + ' · ' + RAUM_NACH_ID[aufgabe.raum].name,
+      an: anName,
+      von: wolke.wer,
+      zeit: Date.now(),
+    }
+    sichern()
+    await schieben()
+    try {
+      await fetch(DB + '/functions/v1/haushalt-push', {
+        method: 'POST',
+        headers: { apikey: DB_KEY, Authorization: 'Bearer ' + DB_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ t: wolke.token }),
+      })
+    } catch (_) {
+      /* Die Meldung steht im geteilten Stand; sie kommt spaetestens beim
+         naechsten Oeffnen an, auch wenn der Push nicht rausging. */
     }
   }
 
@@ -1099,6 +1232,7 @@ h1 {
   if (wolke) {
     hinweisText = 'geteilt mit ' + (wolke.wer === 'Steffi' ? 'Maris' : 'Steffi')
     holen()
+    pushPruefen()
   }
 
   function zeigeStand() {
@@ -1394,11 +1528,28 @@ h1 {
   function zeichneVerbinden() {
     if (!teilbar()) return ''
     if (wolke) {
+      const andere = wolke.wer === 'Steffi' ? 'Maris' : 'Steffi'
       return `<div class="wolke verbunden">
-        <span class="wolke-punkt"></span>
-        <span>Geteilter Stand an, als <strong>${esc(wolke.wer)}</strong>.
-          ${esc(wolke.wer === 'Steffi' ? 'Maris' : 'Steffi')} sieht dieselben Haken.</span>
-        <button class="knopf-still" type="button" id="trennen">Trennen</button>
+        <div class="wolke-zeile">
+          <span class="wolke-punkt"></span>
+          <span>Geteilter Stand an, als <strong>${esc(wolke.wer)}</strong>.
+            ${esc(andere)} sieht dieselben Haken.</span>
+          <button class="knopf-still" type="button" id="trennen">Trennen</button>
+        </div>
+        <div class="wolke-zeile push">
+          ${pushMoeglich()
+            ? pushAn
+              ? `<span class="wolke-punkt"></span>
+                 <span>Benachrichtigungen an — du wirst gerufen, wenn ${esc(andere)} dir etwas zuteilt.</span>
+                 <button class="knopf-still" type="button" id="push-aus">Aus</button>`
+              : `<span>Benachrichtigt werden, wenn ${esc(andere)} dir eine Aufgabe zuteilt?</span>
+                 <button class="knopf klein stark" type="button" id="push-an">Einschalten</button>`
+            : amHandy()
+              ? `<span class="wolke-hinweis">Für Benachrichtigungen auf dem iPhone: <strong>Teilen → Zum Home-Bildschirm</strong>,
+                 dann die Seite von dort öffnen. Apple gibt sie einem offenen Tab nicht — in keinem Browser.</span>`
+              : `<span class="wolke-hinweis">Dieser Browser kann keine Benachrichtigungen.</span>`}
+          ${pushHinweis ? `<span class="wolke-fehler" role="alert">${esc(pushHinweis)}</span>` : ''}
+        </div>
       </div>`
     }
     return `<form class="wolke" id="verbinden-form">
@@ -1678,7 +1829,7 @@ h1 {
 
   document.addEventListener('click', (ev) => {
     const ziel = ev.target.closest(
-      '[data-status],[data-detail],[data-ansicht],[data-raum],[data-einkauf],[data-entscheidung],[data-blick],[data-wer],[data-wer-wahl],[data-uhr],[data-erledigt],[data-ueberspringen],[data-losgehen],[data-ablauf],[data-zurueck],[data-fertige],#zuruecksetzen,#trennen',
+      '[data-status],[data-detail],[data-ansicht],[data-raum],[data-einkauf],[data-entscheidung],[data-blick],[data-wer],[data-wer-wahl],[data-uhr],[data-erledigt],[data-ueberspringen],[data-losgehen],[data-ablauf],[data-zurueck],[data-fertige],#zuruecksetzen,#trennen,#push-an,#push-aus',
     )
     if (!ziel) return
 
@@ -1723,10 +1874,15 @@ h1 {
       // Ausdrueckliches null statt Schluessel loeschen: beim Verschmelzen auf
       // dem Server ist ein fehlender Schluessel nicht von "nicht geaendert" zu
       // unterscheiden, ein null schon.
+      const vorher = stand.wer[id]
       stand.wer[id] = wahl === 'keiner' ? null : Number(wahl)
       offenerWer = null
       sichern()
-      return zeichne()
+      zeichne()
+      if (stand.wer[id] != null && stand.wer[id] !== vorher) {
+        meldeZuteilung(AUFGABE_NACH_ID[id], stand.wer[id])
+      }
+      return
     }
 
     if (ziel.dataset.uhr) {
@@ -1788,6 +1944,9 @@ h1 {
       sichern()
       return zeichne()
     }
+
+    if (ziel.id === 'push-an') { pushEinschalten(); return }
+    if (ziel.id === 'push-aus') { pushAusschalten(); return }
 
     if (ziel.id === 'trennen') {
       if (!confirm('Nur dieses Gerät trennen. Der gemeinsame Stand bleibt erhalten.')) return
