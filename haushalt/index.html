@@ -480,6 +480,39 @@ h1 {
 .knopf-still:hover { border-color: var(--stop); color: var(--stop); }
 .leer { background: var(--flaeche); padding: 22px 16px; color: var(--text-3); text-align: center; }
 
+/* ---------------------------------------------------------------- Verbinden */
+
+.wolke {
+  background: var(--flaeche); border: 1px solid var(--fuge);
+  border-left: 3px solid var(--akzent); border-radius: var(--r-karte);
+  padding: 14px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px;
+}
+
+.wolke.verbunden { border-left-color: var(--gut); font-size: 15px; color: var(--text-2); }
+.wolke.verbunden .knopf-still { margin-left: auto; }
+
+.wolke-punkt {
+  width: 9px; height: 9px; border-radius: var(--r-pille);
+  background: var(--gut); flex: 0 0 auto;
+}
+
+.wolke-text { display: flex; flex-direction: column; gap: 3px; flex: 1 1 16rem; min-width: 0; }
+.wolke-text span { font-size: 14px; color: var(--text-2); }
+.wolke-felder { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+.wolke-felder input, .wolke-felder select {
+  background: var(--flaeche-2); border: 1px solid var(--fuge-stark);
+  border-radius: var(--r-klein); padding: 9px 11px; font-size: 15px; min-height: 42px;
+}
+
+.wolke-felder input { width: 11rem; }
+.wolke-fehler { width: 100%; margin: 0; color: var(--stop); font-size: 14px; }
+
+.sr {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
 /* ------------------------------------------------------------- Als Naechstes */
 
 .naechstes { display: flex; flex-direction: column; gap: 10px; }
@@ -608,6 +641,20 @@ h1 {
   // Fassung gebaut, wenn die Seite sich selbst veroeffentlichen darf.
   const QUELLE = '<!doctype html>\n' + document.documentElement.outerHTML
   const SPEICHER = 'zimmer-fuer-zimmer/v1'
+  const WOLKE = 'zimmer-fuer-zimmer/sitzung'
+
+  // Gemeinsamer Stand ueber die eigene Supabase. Der anon-Key ist oeffentlich
+  // — er steht ohnehin schon in der Middleware — und oeffnet fuer sich gar
+  // nichts: Er darf nur drei Funktionen aufrufen, und die verlangen ein Token,
+  // das es erst gegen das Haushaltspasswort gibt. Tabellen und Schema bleiben
+  // fuer ihn zu.
+  const DB = 'https://amrdmnnijbfwtrjcpocl.supabase.co'
+  const DB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtcmRtbm5pamJmd3RyamNwb2NsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTU0OTcsImV4cCI6MjA5NjQzMTQ5N30.y-9eLzeQKDlHzSG3_ro-ThAnnpnAEKLTWS8NMrpSXCI'
+
+  // Was geteilt wird. `laufend` bewusst nicht: eine laufende Uhr gehoert zu dem
+  // Geraet, das sie gestartet hat — sonst wuerde das Speichern des einen die
+  // Uhr des anderen anhalten.
+  const GETEILT = ['v', 'status', 'notizen', 'wer', 'einkauf', 'ist', 'entscheidungen', 'namen', 'wohnzimmer']
 
   /* ------------------------------------------------------------- Material */
 
@@ -905,12 +952,110 @@ h1 {
   let api = null
   let timer = null
   let hinweisText = 'nur auf diesem Gerät'
+  let artifactGeprueft = false
+  let wolke = null          // { token, wer }
+  let wolkeFehler = ''
+  let holtGerade = false
 
+  try { wolke = JSON.parse(localStorage.getItem(WOLKE) || 'null') } catch (_) { wolke = null }
+
+  // Erst klaeren, ob die Seite als Artifact laeuft. Dort teilt sie sich ueber
+  // ihre eigene Veroeffentlichung, und ein Aufruf nach draussen waere dort
+  // ohnehin gesperrt — die Verbinden-Karte hat da nichts zu suchen.
   if (window.claude && typeof window.claude.use === 'function') {
     window.claude.use('artifact').then((a) => {
       api = a
-      if (a) { hinweisText = 'für alle gespeichert'; zeigeStand() }
-    }).catch(() => {})
+      artifactGeprueft = true
+      if (a) hinweisText = 'für alle gespeichert'
+      zeichne()
+    }).catch(() => { artifactGeprueft = true; zeichne() })
+  } else {
+    artifactGeprueft = true
+  }
+
+  const teilbar = () => artifactGeprueft && !api
+
+  async function ruf(funktion, koerper) {
+    const antwort = await fetch(DB + '/rest/v1/rpc/' + funktion, {
+      method: 'POST',
+      headers: { apikey: DB_KEY, Authorization: 'Bearer ' + DB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify(koerper),
+    })
+    if (!antwort.ok) throw new Error('HTTP ' + antwort.status)
+    return antwort.json()
+  }
+
+  function zumSenden() {
+    const o = {}
+    GETEILT.forEach((k) => { if (stand[k] !== undefined) o[k] = stand[k] })
+    return o
+  }
+
+  function uebernehmen(daten) {
+    if (!daten) return false
+    let etwasNeu = false
+    GETEILT.forEach((k) => {
+      if (daten[k] === undefined) return
+      if (JSON.stringify(daten[k]) !== JSON.stringify(stand[k])) etwasNeu = true
+      stand[k] = daten[k]
+    })
+    if (etwasNeu) {
+      try { localStorage.setItem(SPEICHER, JSON.stringify(stand)) } catch (_) {}
+    }
+    return etwasNeu
+  }
+
+  async function anmelden(passwort, wer) {
+    wolkeFehler = ''
+    try {
+      const token = await ruf('haushalt_anmelden', { u: 'haushalt', p: passwort, wer })
+      if (!token) { wolkeFehler = 'Passwort stimmt nicht.'; return zeichne() }
+      wolke = { token, wer }
+      try { localStorage.setItem(WOLKE, JSON.stringify(wolke)) } catch (_) {}
+      // Erst den fremden Stand holen, dann den eigenen dazulegen, damit beim
+      // Verbinden nichts von der anderen Seite verloren geht.
+      await holen()
+      await schieben()
+      hinweisText = 'geteilt mit ' + (wolke.wer === 'Steffi' ? 'Maris' : 'Steffi')
+      zeichne()
+    } catch (e) {
+      wolkeFehler = 'Keine Verbindung zur Datenbank.'
+      zeichne()
+    }
+  }
+
+  function abmelden() {
+    wolke = null
+    hinweisText = 'nur auf diesem Gerät'
+    try { localStorage.removeItem(WOLKE) } catch (_) {}
+    zeichne()
+  }
+
+  async function holen() {
+    if (!wolke || holtGerade) return
+    holtGerade = true
+    try {
+      const fern = await ruf('haushalt_lesen', { t: wolke.token })
+      if (fern === null) { abmelden(); wolkeFehler = 'Die Sitzung gilt nicht mehr — bitte neu verbinden.'; return }
+      if (uebernehmen(fern.daten)) zeichne()
+    } catch (_) {
+      /* Funkloch: der naechste Durchlauf holt es nach */
+    } finally {
+      holtGerade = false
+    }
+  }
+
+  async function schieben() {
+    if (!wolke) return
+    try {
+      const fern = await ruf('haushalt_speichern', { t: wolke.token, daten: zumSenden(), wer: wolke.wer })
+      if (fern === null) { abmelden(); return }
+      // Die Antwort ist der verschmolzene Stand — damit kommt an, was der
+      // andere in der Zwischenzeit geaendert hat.
+      if (uebernehmen(fern.daten)) zeichne()
+    } catch (_) {
+      /* offline: localStorage haelt den Stand, der naechste Versuch schiebt nach */
+    }
   }
 
   function neueFassung(daten) {
@@ -933,6 +1078,7 @@ h1 {
   }
 
   async function teilen() {
+    if (wolke) return schieben()
     if (!api) return
     const html = neueFassung(stand)
     if (!html) return
@@ -944,6 +1090,15 @@ h1 {
       hinweisText = 'nur auf diesem Gerät'
       zeigeStand()
     }
+  }
+
+  // Der andere Stand kommt nicht von selbst — also regelmaessig nachsehen,
+  // solange die Seite sichtbar ist, und sofort beim Zurueckwechseln.
+  setInterval(() => { if (wolke && document.visibilityState === 'visible') holen() }, 15000)
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') holen() })
+  if (wolke) {
+    hinweisText = 'geteilt mit ' + (wolke.wer === 'Steffi' ? 'Maris' : 'Steffi')
+    holen()
   }
 
   function zeigeStand() {
@@ -1236,8 +1391,39 @@ h1 {
       </section>`
   }
 
+  function zeichneVerbinden() {
+    if (!teilbar()) return ''
+    if (wolke) {
+      return `<div class="wolke verbunden">
+        <span class="wolke-punkt"></span>
+        <span>Geteilter Stand an, als <strong>${esc(wolke.wer)}</strong>.
+          ${esc(wolke.wer === 'Steffi' ? 'Maris' : 'Steffi')} sieht dieselben Haken.</span>
+        <button class="knopf-still" type="button" id="trennen">Trennen</button>
+      </div>`
+    }
+    return `<form class="wolke" id="verbinden-form">
+      <div class="wolke-text">
+        <strong>Gemeinsam planen</strong>
+        <span>Einmal verbinden, dann sehen Steffi und Maris dieselben Haken — auf beiden Handys.
+          Dasselbe Passwort wie für die Seite.</span>
+      </div>
+      <div class="wolke-felder">
+        <label class="wolke-wer">
+          <span class="sr">Wer bist du?</span>
+          <select id="verbinden-wer">
+            <option value="Steffi">Steffi</option>
+            <option value="Maris">Maris</option>
+          </select>
+        </label>
+        <input type="password" id="verbinden-pw" placeholder="Passwort" autocomplete="current-password" required>
+        <button class="knopf stark" type="submit">Verbinden</button>
+      </div>
+      ${wolkeFehler ? `<p class="wolke-fehler" role="alert">${esc(wolkeFehler)}</p>` : ''}
+    </form>`
+  }
+
   function blickPlan() {
-    return zeichneUebersicht() + zeichneNaechstes() + zeichneFilter() +
+    return zeichneVerbinden() + zeichneUebersicht() + zeichneNaechstes() + zeichneFilter() +
       RAEUME.filter((r) => !raumFilter || r.id === raumFilter).map(zeichneRaum).join('') +
       zeichneEinkauf() + (raumFilter ? '' : zeichneWohnzimmer())
   }
@@ -1492,7 +1678,7 @@ h1 {
 
   document.addEventListener('click', (ev) => {
     const ziel = ev.target.closest(
-      '[data-status],[data-detail],[data-ansicht],[data-raum],[data-einkauf],[data-entscheidung],[data-blick],[data-wer],[data-wer-wahl],[data-uhr],[data-erledigt],[data-ueberspringen],[data-losgehen],[data-ablauf],[data-zurueck],[data-fertige],#zuruecksetzen',
+      '[data-status],[data-detail],[data-ansicht],[data-raum],[data-einkauf],[data-entscheidung],[data-blick],[data-wer],[data-wer-wahl],[data-uhr],[data-erledigt],[data-ueberspringen],[data-losgehen],[data-ablauf],[data-zurueck],[data-fertige],#zuruecksetzen,#trennen',
     )
     if (!ziel) return
 
@@ -1534,8 +1720,10 @@ h1 {
     if (ziel.dataset.werWahl) {
       const id = ziel.dataset.werWahl
       const wahl = ziel.dataset.person
-      if (wahl === 'keiner') delete stand.wer[id]
-      else stand.wer[id] = Number(wahl)
+      // Ausdrueckliches null statt Schluessel loeschen: beim Verschmelzen auf
+      // dem Server ist ein fehlender Schluessel nicht von "nicht geaendert" zu
+      // unterscheiden, ein null schon.
+      stand.wer[id] = wahl === 'keiner' ? null : Number(wahl)
       offenerWer = null
       sichern()
       return zeichne()
@@ -1601,6 +1789,12 @@ h1 {
       return zeichne()
     }
 
+    if (ziel.id === 'trennen') {
+      if (!confirm('Nur dieses Gerät trennen. Der gemeinsame Stand bleibt erhalten.')) return
+      abmelden()
+      return
+    }
+
     if (ziel.id === 'zuruecksetzen') {
       if (!confirm('Alle Haken, Zeiten, Notizen und die Einkaufsliste zurücksetzen?')) return
       const alt = stand
@@ -1610,6 +1804,16 @@ h1 {
       zeichne()
       melde('Alles zurückgesetzt.', () => { stand = alt; sichern(); zeichne() })
     }
+  })
+
+  document.addEventListener('submit', (ev) => {
+    if (ev.target.id !== 'verbinden-form') return
+    ev.preventDefault()
+    const pw = document.getElementById('verbinden-pw')
+    const wer = document.getElementById('verbinden-wer')
+    if (!pw.value) return
+    anmelden(pw.value, wer.value)
+    pw.value = ''
   })
 
   document.addEventListener('input', (ev) => {
