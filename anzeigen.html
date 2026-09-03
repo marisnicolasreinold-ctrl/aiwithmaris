@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="de" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Anzeigen · AI with Maris</title>
+<link rel="icon" href="./assets/logo-axon.png" />
+<link rel="stylesheet" href="./assets/fonts/fonts.css" />
+<link rel="stylesheet" href="./style.css" />
+<style>
+  /* Nur fuer diese Seite. Nichts davon ist auf der oeffentlichen Website
+     wiederverwendbar, also gehoert nichts davon in style.css. */
+
+  .az-wrap { max-width: 1100px; margin: 0 auto; padding: 96px 20px 80px; }
+  .az-kopf { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px 20px; margin-bottom: 22px; }
+  .az-kopf h1 { margin: 0; flex: 1 1 auto; font-size: clamp(1.7rem, 4vw, 2.4rem); }
+  .az-kopf .az-wer { font-family: var(--mono); font-size: .78rem; color: var(--muted); }
+
+  /* --- Anmeldung --- */
+  .az-gate { max-width: 26rem; margin: 8vh auto; }
+  .az-gate p { color: var(--muted); font-size: .95rem; }
+
+  /* --- Werkzeugleiste --- */
+  .az-leiste { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 20px; }
+  .az-chip {
+    border: 1px solid var(--line); background: var(--glass); color: var(--muted);
+    border-radius: 999px; padding: 7px 15px; font-family: var(--mono); font-size: .74rem;
+    cursor: pointer; transition: border-color .16s, color .16s, background .16s;
+  }
+  .az-chip:hover { border-color: var(--cyan); color: var(--text); }
+  .az-chip[aria-pressed="true"] { border-color: var(--cyan); color: var(--bg); background: var(--cyan); }
+  .az-chip .n { opacity: .6; }
+
+  /* --- Kacheln: nutzt .cards / a.card / .card-art aus style.css --- */
+  .az-karte-leer {
+    display: grid; place-items: center; min-height: 190px; text-align: center;
+    border: 1px dashed var(--line); border-radius: 20px; color: var(--muted);
+    background: var(--glass); cursor: pointer; padding: 20px;
+    transition: border-color .16s, color .16s;
+  }
+  .az-karte-leer:hover { border-color: var(--cyan); color: var(--text); }
+  .az-karte-leer strong { display: block; font-size: 1.05rem; color: var(--text); margin-bottom: 6px; }
+
+  .az-pille {
+    display: inline-block; font-family: var(--mono); font-size: .68rem; letter-spacing: .04em;
+    padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted);
+  }
+  .az-pille[data-s="entwurf"]     { border-color: rgba(238,241,250,.18); }
+  .az-pille[data-s="bereit"]      { border-color: var(--cyan);   color: var(--cyan); }
+  .az-pille[data-s="eingestellt"] { border-color: var(--violet); color: #b9a8ff; }
+  .az-pille[data-s="reserviert"]  { border-color: #ffcc55;       color: #ffcc55; }
+  .az-pille[data-s="verkauft"]    { border-color: #5cff9d;       color: #5cff9d; }
+  .az-pille[data-s="archiv"]      { opacity: .5; }
+
+  .az-karte-fuss { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 10px; }
+  .az-preis { font-family: var(--mono); font-size: .95rem; color: var(--text); }
+  .az-ohne-bild { display: grid; place-items: center; height: 150px; background: rgba(255,255,255,.03); color: var(--muted); font-family: var(--mono); font-size: .72rem; }
+
+  /* --- Bearbeiten --- */
+  .az-spalten { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 20px; align-items: start; }
+  @media (max-width: 900px) { .az-spalten { grid-template-columns: 1fr; } }
+
+  .az-panel { border: 1px solid var(--line); border-radius: 20px; background: var(--glass); padding: 20px; }
+  .az-panel + .az-panel { margin-top: 20px; }
+  .az-panel h2 { margin: 0 0 14px; font-size: 1.05rem; }
+
+  /* display:block, weil ein <label> sonst inline bleibt und der gestrichelte
+     Rahmen schief um seinen Inhalt statt um die Flaeche laeuft. */
+  .az-drop {
+    display: block; border: 1px dashed var(--line); border-radius: 14px;
+    padding: 22px; text-align: center; line-height: 1.5;
+    color: var(--muted); cursor: pointer; transition: border-color .16s, background .16s;
+  }
+  .az-drop small { display: block; margin-top: 4px; }
+  .az-drop:hover, .az-drop.over { border-color: var(--cyan); background: rgba(94,240,255,.05); color: var(--text); }
+  .az-drop input { display: none; }
+
+  .az-raster { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px,1fr)); gap: 10px; margin-top: 14px; }
+  .az-bild { position: relative; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: rgba(255,255,255,.03); }
+  .az-bild img { display: block; width: 100%; height: 110px; object-fit: cover; }
+  .az-bild .az-titelbild {
+    position: absolute; left: 6px; top: 6px; font-family: var(--mono); font-size: .6rem;
+    background: var(--cyan); color: var(--bg); padding: 2px 7px; border-radius: 999px;
+  }
+  .az-bild .az-knopfleiste { position: absolute; right: 4px; bottom: 4px; display: flex; gap: 3px; }
+  .az-bild .az-knopfleiste button {
+    width: 30px; height: 30px; border-radius: 8px; border: 0; cursor: pointer;
+    background: rgba(5,6,12,.78); color: var(--text); font-size: .8rem; line-height: 1;
+  }
+  .az-bild .az-knopfleiste button:hover { background: var(--cyan); color: var(--bg); }
+  .az-bild.laedt { display: grid; place-items: center; height: 110px; color: var(--muted); font-family: var(--mono); font-size: .68rem; text-align: center; padding: 8px; }
+  .az-bild.fehler { border-color: #ff6b8b; color: #ff6b8b; }
+
+  .az-zaehler { display: block; text-align: right; font-family: var(--mono); font-size: .7rem; color: var(--muted); margin-top: 4px; }
+  .az-zaehler.warn { color: #ffcc55; }
+  .az-zaehler.voll { color: #ff6b8b; }
+
+  .az-liste-pruef { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 7px; }
+  .az-liste-pruef li { display: flex; gap: 9px; align-items: baseline; font-size: .9rem; color: var(--muted); }
+  .az-liste-pruef li.ok { color: var(--text); }
+  .az-liste-pruef .h { font-family: var(--mono); width: 1.1em; flex: 0 0 auto; }
+  .az-liste-pruef li.ok .h { color: #5cff9d; }
+
+  .az-kopierzeile { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 14px; }
+  .az-kopierzeile > div { flex: 1 1 auto; min-width: 0; }
+  .az-kopierzeile label { display: block; font-family: var(--mono); font-size: .68rem; color: var(--muted); margin-bottom: 4px; }
+  .az-kopierzeile .wert {
+    background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 10px;
+    padding: 9px 11px; font-size: .92rem; white-space: pre-wrap; word-break: break-word; max-height: 16rem; overflow: auto;
+  }
+  .az-kopf-knopf { flex: 0 0 auto; }
+
+  .az-status { font-family: var(--mono); font-size: .72rem; color: var(--muted); min-height: 1.2em; }
+  .az-status.gut { color: #5cff9d; }
+  .az-status.bad { color: #ff6b8b; }
+
+  .az-zurueck { background: none; border: 0; color: var(--muted); cursor: pointer; font-size: .9rem; padding: 0; margin-bottom: 12px; }
+  .az-zurueck:hover { color: var(--cyan); }
+
+  .az-hinweis { color: var(--muted); font-size: .85rem; margin: 10px 0 0; }
+  .az-warnung { color: #ffcc55; font-size: .85rem; margin: 10px 0 0; }
+
+  .az-reihe { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 12px; }
+</style>
+</head>
+<body>
+<nav id="nav" class="scrolled" aria-label="Navigation">
+  <div class="nav-inner">
+    <a class="logo" href="index.html" aria-label="AI with Maris — zur Startseite">
+      <img src="./assets/logo-axon.png" alt="" />AI with Maris
+    </a>
+    <div class="nav-links"><a href="index.html">Zur Website</a></div>
+  </div>
+</nav>
+
+<div class="az-wrap">
+  <div id="az-buehne"><p class="az-status">Lädt …</p></div>
+</div>
+
+<script src="./vendor/supabase.min.js"></script>
+<script>
+(() => {
+  'use strict'
+
+  const DB = 'https://amrdmnnijbfwtrjcpocl.supabase.co'
+  const DB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtcmRtbm5pamJmd3RyamNwb2NsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTU0OTcsImV4cCI6MjA5NjQzMTQ5N30.y-9eLzeQKDlHzSG3_ro-ThAnnpnAEKLTWS8NMrpSXCI'
+  const FN = DB + '/functions/v1/anzeigen'
+  const SPEICHER = 'aiwm_anzeigen_token'
+  const BUCKET = 'anzeigen'
+
+  // Grenzen von Kleinanzeigen, recherchiert:
+  const MAX_TITEL = 65
+  const MAX_TEXT = 3500
+  // Die maximale Bildanzahl liess sich nicht verifizieren (Hilfeseite gesperrt).
+  // Eine aeltere Quelle nennt 12 — deshalb ab da ein Hinweis, aber keine Sperre.
+  const FOTO_HINWEIS = 12
+  const MAX_KANTE = 2000
+  const JPEG_GUETE = 0.85
+
+  const sb = window.supabase.createClient(DB, DB_KEY)
+
+  let token = null
+  let wer = ''
+  let anzeigen = []
+  let filter = 'alle'
+  let aktuell = null          // { anzeige, fotos }
+  let speicherUhr = null
+  const laufendeUploads = []  // fuer die Fortschrittsanzeige
+
+  const buehne = () => document.getElementById('az-buehne')
+  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]))
+
+  const euro = (cent) => cent == null ? '' :
+    (cent / 100).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €'
+
+  const PREISTYP = { fest: 'Festpreis', vb: 'VB', verschenken: 'Zu verschenken', tausch: 'Tausch' }
+  const ZUSTAND = { neu: 'Neu', neuwertig: 'Neuwertig', sehr_gut: 'Sehr gut', gut: 'Gut', in_ordnung: 'In Ordnung', defekt: 'Defekt' }
+  const VERSAND = { abholung: 'Nur Abholung', versand: 'Nur Versand', beides: 'Versand oder Abholung' }
+  const STATUS = { entwurf: 'Entwurf', bereit: 'Bereit', eingestellt: 'Eingestellt', reserviert: 'Reserviert', verkauft: 'Verkauft', archiv: 'Archiv' }
+
+  /* ------------------------------------------------------------ Zugriff */
+
+  async function ruf(koerper) {
+    const kopf = { 'Content-Type': 'application/json', apikey: DB_KEY, Authorization: 'Bearer ' + DB_KEY }
+    if (token) kopf['x-anzeigen-token'] = token
+    const antwort = await fetch(FN, { method: 'POST', headers: kopf, body: JSON.stringify(koerper) })
+    const daten = await antwort.json().catch(() => ({}))
+    if (antwort.status === 401 && koerper.op !== 'anmelden') {
+      token = null
+      try { localStorage.removeItem(SPEICHER) } catch (_) {}
+      zeichneGate('Die Sitzung gilt nicht mehr. Bitte neu anmelden.')
+      throw new Error('abgemeldet')
+    }
+    if (!antwort.ok) throw new Error(daten.error || ('HTTP ' + antwort.status))
+    return daten
+  }
+
+  /* -------------------------------------------------- Bilder verkleinern */
+
+  // Der Fehler, der hier sonst garantiert passiert: Hochkantfotos vom Handy
+  // tragen ihre Drehung nur im EXIF. Ohne imageOrientation zeichnet der Canvas
+  // sie liegend — und weil die Neu-Enkodierung das EXIF wegwirft, waeren sie
+  // dauerhaft falsch herum.
+  const ROH = (datei) => ({ blob: datei, mime: datei.type || 'application/octet-stream', breite: null, hoehe: null, roh: true })
+
+  async function verkleinern(datei) {
+    let bitmap
+    try {
+      // Mit Frist: `createImageBitmap` kann haengen statt zu werfen — bei einem
+      // beschaedigten Bild oder einem Format, an dem der Dekodierer sich
+      // verschluckt. Ohne Frist bliebe die ganze Warteschlange bei
+      // "verkleinern ..." stehen, ohne Weg zurueck.
+      bitmap = await Promise.race([
+        createImageBitmap(datei, { imageOrientation: 'from-image' }),
+        new Promise((_, schief) => setTimeout(() => schief(new Error('Frist')), 15000)),
+      ])
+    } catch (_) {
+      // HEIC aus der Dateien-App kann dieser Browser nicht dekodieren, und ein
+      // haengender Dekodierer landet auch hier. Kleinanzeigen nimmt HEIC an,
+      // also unveraendert durchreichen statt abzulehnen.
+      return ROH(datei)
+    }
+    if (!bitmap) return ROH(datei)
+    const faktor = Math.min(1, MAX_KANTE / Math.max(bitmap.width, bitmap.height))
+    const b = Math.round(bitmap.width * faktor)
+    const h = Math.round(bitmap.height * faktor)
+    const leinwand = document.createElement('canvas')
+    leinwand.width = b
+    leinwand.height = h
+    leinwand.getContext('2d').drawImage(bitmap, 0, 0, b, h)
+    bitmap.close && bitmap.close()
+    const blob = await new Promise((fertig) => leinwand.toBlob(fertig, 'image/jpeg', JPEG_GUETE))
+    return { blob: blob || datei, mime: 'image/jpeg', breite: b, hoehe: h, roh: false }
+  }
+
+  /* ---------------------------------------------------------- Hochladen */
+
+  async function hochladen(dateien) {
+    if (!aktuell || !dateien.length) return
+    const liste = Array.from(dateien).filter((d) => d.type.startsWith('image/') || /\.hei[cf]$/i.test(d.name))
+    if (!liste.length) return
+
+    liste.forEach((d) => laufendeUploads.push({ name: d.name, zustand: 'verkleinern' }))
+    zeichneBearbeiten()
+
+    let ziele
+    try {
+      ziele = (await ruf({ op: 'upload_urls', id: aktuell.anzeige.id, dateien: liste.map((d) => ({ name: d.name })) })).ziele
+    } catch (e) {
+      laufendeUploads.length = 0
+      melde(e.message, true)
+      return zeichneBearbeiten()
+    }
+
+    // Drei gleichzeitig: Verkleinern kostet Rechenzeit, Hochladen Netz —
+    // so bleibt beides beschaeftigt, ohne die Oberflaeche einzufrieren.
+    const warteschlange = liste.map((datei, i) => ({ datei, ziel: ziele[i], eintrag: laufendeUploads[laufendeUploads.length - liste.length + i] }))
+    const arbeiter = Array.from({ length: Math.min(3, warteschlange.length) }, async () => {
+      while (warteschlange.length) {
+        const { datei, ziel, eintrag } = warteschlange.shift()
+        try {
+          const bild = await verkleinern(datei)
+          eintrag.zustand = 'laedt'
+          zeichneUploads()
+          const hoch = await sb.storage.from(BUCKET).uploadToSignedUrl(ziel.pfad, ziel.token, bild.blob, { contentType: bild.mime })
+          if (hoch.error) throw new Error(hoch.error.message)
+          await ruf({
+            op: 'foto_fertig', id: aktuell.anzeige.id, pfad: ziel.pfad, lfd: ziel.lfd, pos: ziel.pos,
+            mime: bild.mime, bytes: bild.blob.size, breite: bild.breite, hoehe: bild.hoehe,
+          })
+          eintrag.zustand = 'fertig'
+        } catch (e) {
+          eintrag.zustand = 'fehler'
+          eintrag.grund = e.message
+        }
+        zeichneUploads()
+      }
+    })
+    await Promise.all(arbeiter)
+
+    const gescheitert = laufendeUploads.filter((u) => u.zustand === 'fehler').length
+    laufendeUploads.length = 0
+    await oeffne(aktuell.anzeige.id)
+    if (gescheitert) melde(gescheitert + ' Foto(s) sind nicht durchgekommen. Nochmal versuchen?', true)
+  }
+
+  /* ------------------------------------------------------------ Meldung */
+
+  function melde(text, schlecht) {
+    const el = document.getElementById('az-meldung')
+    if (!el) return
+    el.textContent = text
+    el.className = 'az-status ' + (schlecht ? 'bad' : 'gut')
+    if (!schlecht) setTimeout(() => { if (el.textContent === text) { el.textContent = ''; el.className = 'az-status' } }, 2500)
+  }
+
+  /* ------------------------------------------------------------ Ansichten */
+
+  function zeichneGate(fehler) {
+    buehne().innerHTML = `
+      <section class="az-gate holo-panel">
+        <h1 style="margin:0 0 6px;font-size:1.4rem">Anzeigen</h1>
+        <p>Vorbereitung für Kleinanzeigen. Zugang mit dem Passwort dieses Bereichs.</p>
+        <form class="form" id="az-anmelden">
+          <div class="field">
+            <label for="az-wer">Wer bist du?</label>
+            <select id="az-wer"><option>Maris</option><option>Steffi</option></select>
+          </div>
+          <div class="field">
+            <label for="az-pw">Passwort</label>
+            <input type="password" id="az-pw" autocomplete="current-password" required />
+          </div>
+          <button class="btn btn-primary" type="submit">Anmelden</button>
+          <p class="az-status ${fehler ? 'bad' : ''}" id="az-meldung">${esc(fehler || '')}</p>
+        </form>
+      </section>`
+    const f = document.getElementById('az-anmelden')
+    f.addEventListener('submit', async (ev) => {
+      ev.preventDefault()
+      const pw = document.getElementById('az-pw').value
+      const w = document.getElementById('az-wer').value
+      if (!pw) return
+      try {
+        const a = await ruf({ op: 'anmelden', passwort: pw, wer: w })
+        token = a.token
+        wer = a.wer
+        try { localStorage.setItem(SPEICHER, JSON.stringify({ token, wer })) } catch (_) {}
+        await zeigeListe()
+      } catch (e) {
+        zeichneGate(e.message === 'abgemeldet' ? 'Bitte neu anmelden.' : 'Passwort stimmt nicht.')
+      }
+    })
+  }
+
+  function karte(a) {
+    const bild = a.titelbild
+      ? `<div class="card-art"><img src="${esc(a.titelbild)}" alt="" loading="lazy" decoding="async" /></div>`
+      : `<div class="card-art"><div class="az-ohne-bild">noch kein Foto</div></div>`
+    return `
+      <a class="card" href="#/a/${a.id}">
+        ${bild}
+        <h3>${esc(a.titel || 'Ohne Titel')}</h3>
+        <p>${esc(a.kategorie || '')}${a.anzahl_fotos ? (a.kategorie ? ' · ' : '') + a.anzahl_fotos + ' Foto' + (a.anzahl_fotos > 1 ? 's' : '') : ''}</p>
+        <div class="az-karte-fuss">
+          <span class="az-preis">${a.preistyp === 'verschenken' ? 'Zu verschenken' : (a.preis_cent != null ? euro(a.preis_cent) + (a.preistyp === 'vb' ? ' VB' : '') : '—')}</span>
+          <span class="az-pille" data-s="${esc(a.status)}">${esc(STATUS[a.status] || a.status)}</span>
+        </div>
+      </a>`
+  }
+
+  async function zeigeListe() {
+    const daten = await ruf({ op: 'liste' })
+    anzeigen = daten.anzeigen || []
+    wer = daten.wer || wer
+    zeichneListe()
+  }
+
+  function zeichneListe() {
+    const zaehler = {}
+    anzeigen.forEach((a) => { zaehler[a.status] = (zaehler[a.status] || 0) + 1 })
+    const gefiltert = filter === 'alle' ? anzeigen : anzeigen.filter((a) => a.status === filter)
+
+    const chips = ['alle'].concat(Object.keys(STATUS))
+      .filter((s) => s === 'alle' || zaehler[s])
+      .map((s) => `<button class="az-chip" type="button" data-filter="${s}" aria-pressed="${filter === s}">
+         ${s === 'alle' ? 'Alle' : esc(STATUS[s])} <span class="n">${s === 'alle' ? anzeigen.length : zaehler[s]}</span></button>`).join('')
+
+    buehne().innerHTML = `
+      <div class="az-kopf">
+        <h1>Anzeigen</h1>
+        <span class="az-wer">angemeldet als ${esc(wer || '—')}</span>
+        <button class="btn btn-ghost" type="button" id="az-abmelden">Abmelden</button>
+      </div>
+      <p class="az-status" id="az-meldung"></p>
+      <div class="az-leiste">${chips}</div>
+      <div class="cards">
+        <button class="az-karte-leer" type="button" id="az-neu">
+          <span><strong>＋ Neue Anzeige</strong>Fotos aufnehmen und loslegen</span>
+        </button>
+        ${gefiltert.map(karte).join('')}
+      </div>`
+
+    document.getElementById('az-neu').addEventListener('click', neueAnzeige)
+    document.getElementById('az-abmelden').addEventListener('click', abmelden)
+    buehne().querySelectorAll('[data-filter]').forEach((b) =>
+      b.addEventListener('click', () => { filter = b.dataset.filter; zeichneListe() }))
+  }
+
+  async function neueAnzeige() {
+    const titel = prompt('Wie heißt der Artikel? (Der Ordnername entsteht daraus und bleibt dann stehen.)')
+    if (titel === null) return
+    try {
+      const a = await ruf({ op: 'neu', titel: titel.trim().slice(0, MAX_TITEL) })
+      location.hash = '#/a/' + a.anzeige.id
+    } catch (e) { melde(e.message, true) }
+  }
+
+  function abmelden() {
+    token = null
+    try { localStorage.removeItem(SPEICHER) } catch (_) {}
+    location.hash = ''
+    zeichneGate()
+  }
+
+  /* --------------------------------------------------------- Bearbeiten */
+
+  async function oeffne(id) {
+    aktuell = await ruf({ op: 'holen', id })
+    zeichneBearbeiten()
+  }
+
+  function pruefliste(a, fotos) {
+    return [
+      { ok: fotos.length > 0, text: 'Mindestens ein Foto' },
+      { ok: a.titel && a.titel.length > 0 && a.titel.length <= MAX_TITEL, text: `Titel, höchstens ${MAX_TITEL} Zeichen` },
+      { ok: a.beschreibung && a.beschreibung.trim().length > 0 && a.beschreibung.length <= MAX_TEXT, text: `Beschreibung, höchstens ${MAX_TEXT} Zeichen` },
+      { ok: a.preistyp === 'verschenken' || a.preis_cent != null, text: 'Preis gesetzt oder „zu verschenken“' },
+      { ok: !!a.plz, text: 'PLZ' },
+      { ok: !!a.kategorie, text: 'Kategorie' },
+    ]
+  }
+
+  // Die Prueliste muss beim Tippen mitlaufen. Sie neu zu zeichnen reicht —
+  // die ganze Ansicht neu aufzubauen wuerde den Cursor aus dem Feld reissen,
+  // in dem gerade geschrieben wird.
+  function aktualisierePruefliste() {
+    const liste = document.querySelector('.az-liste-pruef')
+    const knopf = document.getElementById('az-einstellen')
+    if (!liste || !knopf || !aktuell) return
+    const pruef = pruefliste(aktuell.anzeige, aktuell.fotos)
+    liste.innerHTML = pruef.map((p) =>
+      `<li class="${p.ok ? 'ok' : ''}"><span class="h">${p.ok ? '✓' : '·'}</span>${esc(p.text)}</li>`).join('')
+    const alleGut = pruef.every((p) => p.ok)
+    knopf.disabled = !alleGut
+    knopf.style.opacity = alleGut ? '' : '.4'
+    knopf.style.cursor = alleGut ? '' : 'not-allowed'
+  }
+
+  function zeichneUploads() {
+    const el = document.getElementById('az-uploads')
+    if (!el) return
+    el.innerHTML = laufendeUploads.map((u) => `
+      <div class="az-bild laedt ${u.zustand === 'fehler' ? 'fehler' : ''}">
+        ${esc(u.name.slice(0, 22))}<br>${u.zustand === 'verkleinern' ? 'verkleinern …' : u.zustand === 'laedt' ? 'lädt …' : u.zustand === 'fertig' ? '✓' : '✗ ' + esc(u.grund || '')}
+      </div>`).join('')
+  }
+
+  function zeichneBearbeiten() {
+    const a = aktuell.anzeige
+    const fotos = aktuell.fotos
+    const pruef = pruefliste(a, fotos)
+    const alleGut = pruef.every((p) => p.ok)
+
+    const feld = (id, label, wert, attr = '') =>
+      `<div class="field"><label for="${id}">${label}</label><input id="${id}" value="${esc(wert ?? '')}" ${attr} /></div>`
+
+    const auswahl = (id, label, wert, optionen) =>
+      `<div class="field"><label for="${id}">${label}</label><select id="${id}">${
+        Object.entries(optionen).map(([k, v]) => `<option value="${k}" ${wert === k ? 'selected' : ''}>${esc(v)}</option>`).join('')
+      }</select></div>`
+
+    buehne().innerHTML = `
+      <button class="az-zurueck" type="button" id="az-zurueck">← Alle Anzeigen</button>
+      <div class="az-kopf">
+        <h1>${esc(a.titel || 'Ohne Titel')}</h1>
+        <span class="az-wer">Nr. ${String(a.nummer).padStart(4, '0')} · Ordner <code>${esc(a.ordner)}</code></span>
+      </div>
+      <p class="az-status" id="az-meldung"></p>
+
+      <div class="az-spalten">
+        <div>
+          <section class="az-panel">
+            <h2>Fotos</h2>
+            <label class="az-drop" id="az-drop">
+              Fotos hierher ziehen oder tippen
+              <small style="opacity:.7">Werden vor dem Hochladen auf ${MAX_KANTE} px verkleinert</small>
+              <input type="file" id="az-datei" accept="image/*" multiple />
+            </label>
+            <div class="az-raster" id="az-raster">
+              ${fotos.map((f, i) => `
+                <div class="az-bild">
+                  <img src="${esc(f.url)}" alt="" loading="lazy" decoding="async" />
+                  ${i === 0 ? '<span class="az-titelbild">Titelbild</span>' : ''}
+                  <div class="az-knopfleiste">
+                    ${i > 0 ? `<button type="button" data-hoch="${f.id}" title="nach vorn">◀</button>` : ''}
+                    ${i < fotos.length - 1 ? `<button type="button" data-runter="${f.id}" title="nach hinten">▶</button>` : ''}
+                    <button type="button" data-weg="${f.id}" title="löschen">✕</button>
+                  </div>
+                </div>`).join('')}
+              <span id="az-uploads" style="display:contents"></span>
+            </div>
+            ${fotos.length >= FOTO_HINWEIS ? `<p class="az-warnung">${fotos.length} Fotos. Kleinanzeigen nimmt möglicherweise nur ${FOTO_HINWEIS} — die genaue Grenze ist nicht belegt.</p>` : ''}
+            ${fotos.length ? '<p class="az-hinweis">Das erste Foto ist das Titelbild. Mit ◀ ▶ umsortieren.</p>' : ''}
+          </section>
+
+          <section class="az-panel">
+            <h2>Bereit für Kleinanzeigen?</h2>
+            <ul class="az-liste-pruef">
+              ${pruef.map((p) => `<li class="${p.ok ? 'ok' : ''}"><span class="h">${p.ok ? '✓' : '·'}</span>${esc(p.text)}</li>`).join('')}
+            </ul>
+            <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn btn-primary" type="button" id="az-einstellen" ${alleGut ? '' : 'disabled style="opacity:.4;cursor:not-allowed"'}>Zum Einstellen →</button>
+              <button class="btn btn-ghost" type="button" id="az-loeschen">Anzeige löschen</button>
+            </div>
+          </section>
+        </div>
+
+        <div>
+          <section class="az-panel">
+            <h2>Angaben</h2>
+            <div class="form">
+              <div class="field">
+                <label for="az-titel">Titel</label>
+                <input id="az-titel" value="${esc(a.titel)}" maxlength="${MAX_TITEL}" />
+                <span class="az-zaehler" id="az-z-titel"></span>
+              </div>
+              <div class="field">
+                <label for="az-text">Beschreibung</label>
+                <textarea id="az-text" rows="9" maxlength="${MAX_TEXT}">${esc(a.beschreibung)}</textarea>
+                <span class="az-zaehler" id="az-z-text"></span>
+              </div>
+              <div class="az-reihe">
+                ${feld('az-preis', 'Preis in Euro', a.preis_cent != null ? (a.preis_cent / 100).toFixed(2).replace('.', ',') : '', 'inputmode="decimal"')}
+                ${auswahl('az-preistyp', 'Preistyp', a.preistyp, PREISTYP)}
+              </div>
+              <div class="az-reihe">
+                ${auswahl('az-zustand', 'Zustand', a.zustand || 'gut', ZUSTAND)}
+                ${auswahl('az-versand', 'Versand', a.versand, VERSAND)}
+              </div>
+              <div class="az-reihe">
+                ${feld('az-kategorie', 'Kategorie', a.kategorie)}
+                ${feld('az-plz', 'PLZ', a.plz, 'inputmode="numeric" maxlength="10"')}
+              </div>
+              ${feld('az-ort', 'Ort', a.ort)}
+              <div class="field">
+                <label for="az-notiz">Notiz (intern, kommt nie in die Anzeige)</label>
+                <input id="az-notiz" value="${esc(a.notiz || '')}" />
+              </div>
+              ${auswahl('az-status', 'Status', a.status, STATUS)}
+            </div>
+          </section>
+        </div>
+      </div>`
+
+    verdrahteBearbeiten()
+    zaehle()
+  }
+
+  function zaehle() {
+    const paare = [['az-titel', 'az-z-titel', MAX_TITEL], ['az-text', 'az-z-text', MAX_TEXT]]
+    paare.forEach(([feldId, zaehlerId, grenze]) => {
+      const f = document.getElementById(feldId)
+      const z = document.getElementById(zaehlerId)
+      if (!f || !z) return
+      const n = f.value.length
+      z.textContent = n + ' / ' + grenze
+      z.className = 'az-zaehler' + (n > grenze ? ' voll' : n > grenze * 0.85 ? ' warn' : '')
+      f.setAttribute('aria-invalid', n > grenze ? 'true' : 'false')
+    })
+  }
+
+  function sammle() {
+    const zahl = (id) => {
+      const roh = (document.getElementById(id).value || '').replace(/[^\d,.-]/g, '').replace(',', '.')
+      if (!roh) return null
+      const n = Math.round(parseFloat(roh) * 100)
+      return Number.isFinite(n) ? n : null
+    }
+    return {
+      titel: document.getElementById('az-titel').value.trim(),
+      beschreibung: document.getElementById('az-text').value,
+      preis_cent: zahl('az-preis'),
+      preistyp: document.getElementById('az-preistyp').value,
+      zustand: document.getElementById('az-zustand').value,
+      versand: document.getElementById('az-versand').value,
+      kategorie: document.getElementById('az-kategorie').value.trim() || null,
+      plz: document.getElementById('az-plz').value.trim() || null,
+      ort: document.getElementById('az-ort').value.trim() || null,
+      notiz: document.getElementById('az-notiz').value.trim() || null,
+      status: document.getElementById('az-status').value,
+    }
+  }
+
+  // Kein Speichern-Knopf, den man vergessen kann: 800 ms nach dem letzten
+  // Anschlag, zusaetzlich beim Verlassen eines Feldes.
+  function planeSpeichern() {
+    clearTimeout(speicherUhr)
+    speicherUhr = setTimeout(speichere, 800)
+  }
+
+  async function speichere() {
+    clearTimeout(speicherUhr)
+    if (!aktuell) return
+    try {
+      const daten = await ruf(Object.assign({ op: 'speichern', id: aktuell.anzeige.id }, sammle()))
+      aktuell.anzeige = daten.anzeige
+      aktualisierePruefliste()
+      melde('gespeichert ' + new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }))
+    } catch (e) {
+      if (e.message !== 'abgemeldet') melde(e.message, true)
+    }
+  }
+
+  function verdrahteBearbeiten() {
+    document.getElementById('az-zurueck').addEventListener('click', async () => {
+      await speichere(); location.hash = ''
+    })
+
+    ;['az-titel', 'az-text', 'az-preis', 'az-kategorie', 'az-plz', 'az-ort', 'az-notiz'].forEach((id) => {
+      const el = document.getElementById(id)
+      el.addEventListener('input', () => { zaehle(); planeSpeichern() })
+      el.addEventListener('blur', speichere)
+    })
+    ;['az-preistyp', 'az-zustand', 'az-versand', 'az-status'].forEach((id) =>
+      document.getElementById(id).addEventListener('change', speichere))
+
+    const drop = document.getElementById('az-drop')
+    const datei = document.getElementById('az-datei')
+    datei.addEventListener('change', () => { hochladen(datei.files); datei.value = '' })
+    ;['dragenter', 'dragover'].forEach((e) => drop.addEventListener(e, (ev) => {
+      ev.preventDefault(); drop.classList.add('over')
+    }))
+    ;['dragleave', 'drop'].forEach((e) => drop.addEventListener(e, (ev) => {
+      ev.preventDefault(); drop.classList.remove('over')
+    }))
+    drop.addEventListener('drop', (ev) => hochladen(ev.dataTransfer.files))
+
+    buehne().querySelectorAll('[data-weg]').forEach((b) => b.addEventListener('click', async () => {
+      if (!confirm('Dieses Foto löschen?')) return
+      try {
+        await ruf({ op: 'foto_weg', id: aktuell.anzeige.id, foto_id: b.dataset.weg })
+        await oeffne(aktuell.anzeige.id)
+      } catch (e) { melde(e.message, true) }
+    }))
+
+    const schieben = async (fotoId, richtung) => {
+      const ids = aktuell.fotos.map((f) => f.id)
+      const i = ids.indexOf(fotoId)
+      const j = i + richtung
+      if (i < 0 || j < 0 || j >= ids.length) return
+      ids.splice(j, 0, ids.splice(i, 1)[0])
+      try {
+        await ruf({ op: 'fotos_ordnen', id: aktuell.anzeige.id, ids })
+        await oeffne(aktuell.anzeige.id)
+      } catch (e) { melde(e.message, true) }
+    }
+    buehne().querySelectorAll('[data-hoch]').forEach((b) =>
+      b.addEventListener('click', () => schieben(b.dataset.hoch, -1)))
+    buehne().querySelectorAll('[data-runter]').forEach((b) =>
+      b.addEventListener('click', () => schieben(b.dataset.runter, 1)))
+
+    document.getElementById('az-loeschen').addEventListener('click', async () => {
+      if (!confirm('Anzeige samt Fotos löschen? Das lässt sich nicht rückgängig machen.')) return
+      try {
+        await ruf({ op: 'loeschen', id: aktuell.anzeige.id })
+        location.hash = ''
+      } catch (e) { melde(e.message, true) }
+    })
+
+    // Zuhoerer immer haengen, nicht nur wenn der Knopf gerade frei ist —
+    // sonst bliebe er tot, sobald die Pruefliste ihn spaeter freigibt.
+    document.getElementById('az-einstellen').addEventListener('click', async (ev) => {
+      if (ev.currentTarget.disabled) return
+      await speichere()
+      location.hash = '#/a/' + aktuell.anzeige.id + '/einstellen'
+    })
+  }
+
+  /* -------------------------------------------------------- Zum Einstellen */
+
+  function zeichneEinstellen() {
+    const a = aktuell.anzeige
+    const fotos = aktuell.fotos
+    const preis = a.preistyp === 'verschenken' ? '' :
+      (a.preis_cent != null ? String(Math.round(a.preis_cent / 100)) : '')
+
+    const zeile = (label, wert, id, zaehler) => `
+      <div class="az-kopierzeile">
+        <div>
+          <label>${esc(label)}${zaehler ? ` <span style="opacity:.6">${wert.length} / ${zaehler}</span>` : ''}</label>
+          <div class="wert" id="${id}">${esc(wert) || '<span style="opacity:.5">—</span>'}</div>
+        </div>
+        <button class="btn btn-ghost az-kopf-knopf" type="button" data-kopieren="${id}">Kopieren</button>
+      </div>`
+
+    buehne().innerHTML = `
+      <button class="az-zurueck" type="button" id="az-zurueck">← Zurück zum Bearbeiten</button>
+      <div class="az-kopf"><h1>Bei Kleinanzeigen einstellen</h1></div>
+      <p class="az-status" id="az-meldung"></p>
+
+      <div class="az-spalten">
+        <section class="az-panel">
+          <h2>In dieser Reihenfolge eintragen</h2>
+          ${zeile('Kategorie', a.kategorie || '', 'k-kategorie')}
+          ${zeile('Titel', a.titel || '', 'k-titel', MAX_TITEL)}
+          ${zeile('Beschreibung', a.beschreibung || '', 'k-text', MAX_TEXT)}
+          ${zeile('Preis (nur die Zahl)', preis, 'k-preis')}
+          ${zeile('PLZ', a.plz || '', 'k-plz')}
+          <p class="az-hinweis">Zustand: <strong>${esc(ZUSTAND[a.zustand] || '—')}</strong> · Versand: <strong>${esc(VERSAND[a.versand] || '—')}</strong> · Preistyp: <strong>${esc(PREISTYP[a.preistyp])}</strong></p>
+        </section>
+
+        <section class="az-panel">
+          <h2>Fotos</h2>
+          <p class="az-hinweis" style="margin-top:0">
+            Nacheinander heruntergeladen als <code>01.jpg</code>, <code>02.jpg</code> … in der Reihenfolge von oben.
+            Der Dateidialog sortiert alphabetisch — beim Mehrfachauswählen sitzt das Titelbild damit automatisch vorn.
+          </p>
+          <button class="btn btn-primary" type="button" id="az-alle-fotos">Alle ${fotos.length} Fotos herunterladen</button>
+          <div class="az-raster" style="margin-top:14px">
+            ${fotos.map((f, i) => `
+              <div class="az-bild">
+                <img src="${esc(f.url)}" alt="" loading="lazy" />
+                <span class="az-titelbild">${String(i + 1).padStart(2, '0')}</span>
+                <div class="az-knopfleiste"><button type="button" data-einzeln="${i}" title="herunterladen">⤓</button></div>
+              </div>`).join('')}
+          </div>
+
+          <h2 style="margin-top:22px">Wenn sie online ist</h2>
+          <div class="field">
+            <label for="az-url">Link zur Anzeige</label>
+            <input id="az-url" value="${esc(a.kleinanzeigen_url || '')}" placeholder="https://www.kleinanzeigen.de/s-anzeige/…" />
+          </div>
+          <button class="btn btn-primary" type="button" id="az-ist-drin">Ist eingestellt</button>
+        </section>
+      </div>`
+
+    document.getElementById('az-zurueck').addEventListener('click', () => { location.hash = '#/a/' + a.id })
+
+    buehne().querySelectorAll('[data-kopieren]').forEach((b) => b.addEventListener('click', async () => {
+      const el = document.getElementById(b.dataset.kopieren)
+      try {
+        await navigator.clipboard.writeText(el.textContent === '—' ? '' : el.textContent)
+        const alt = b.textContent
+        b.textContent = 'Kopiert ✓'
+        setTimeout(() => { b.textContent = alt }, 1500)
+      } catch (_) { melde('Kopieren hat nicht geklappt — bitte von Hand markieren.', true) }
+    }))
+
+    const laden = async (i) => {
+      const f = fotos[i]
+      const antwort = await fetch(f.url)
+      const blob = await antwort.blob()
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = String(i + 1).padStart(2, '0') + '.jpg'
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      setTimeout(() => URL.revokeObjectURL(url), 4000)
+    }
+
+    buehne().querySelectorAll('[data-einzeln]').forEach((b) =>
+      b.addEventListener('click', () => laden(Number(b.dataset.einzeln)).catch(() => melde('Download fehlgeschlagen.', true))))
+
+    document.getElementById('az-alle-fotos').addEventListener('click', async () => {
+      for (let i = 0; i < fotos.length; i++) {
+        try { await laden(i) } catch (_) { melde('Foto ' + (i + 1) + ' ging nicht.', true) }
+        // Der Browser blockt einen Schwall gleichzeitiger Downloads.
+        await new Promise((r) => setTimeout(r, 350))
+      }
+      melde(fotos.length + ' Fotos heruntergeladen.')
+    })
+
+    document.getElementById('az-ist-drin').addEventListener('click', async () => {
+      try {
+        await ruf({
+          op: 'speichern', id: a.id, status: 'eingestellt',
+          kleinanzeigen_url: document.getElementById('az-url').value.trim() || null,
+          eingestellt_am: new Date().toISOString(),
+        })
+        melde('Als eingestellt vermerkt.')
+        setTimeout(() => { location.hash = '' }, 700)
+      } catch (e) { melde(e.message, true) }
+    })
+  }
+
+  /* ------------------------------------------------------------- Routing */
+
+  async function route() {
+    if (!token) return zeichneGate()
+    const teile = (location.hash || '').replace(/^#\/?/, '').split('/')
+    try {
+      if (teile[0] === 'a' && teile[1]) {
+        if (!aktuell || aktuell.anzeige.id !== teile[1]) await oeffne(teile[1])
+        if (teile[2] === 'einstellen') zeichneEinstellen()
+        else zeichneBearbeiten()
+      } else {
+        aktuell = null
+        await zeigeListe()
+      }
+    } catch (e) {
+      if (e.message !== 'abgemeldet') {
+        buehne().innerHTML = `<p class="az-status bad">${esc(e.message)}</p>`
+      }
+    }
+  }
+
+  window.addEventListener('hashchange', route)
+
+  try {
+    const gespeichert = JSON.parse(localStorage.getItem(SPEICHER) || 'null')
+    if (gespeichert && gespeichert.token) { token = gespeichert.token; wer = gespeichert.wer || '' }
+  } catch (_) {}
+
+  route()
+})()
+</script>
+</body>
+</html>

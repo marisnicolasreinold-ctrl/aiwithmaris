@@ -11,7 +11,7 @@ export const config = {
   // Middleware läuft nur noch auf den gegateten Pfaden und den Login-
   // Endpoints — alle öffentlichen Info-Seiten werden gar nicht erst
   // abgefangen (schneller, kein Supabase-Call pro Seitenaufruf).
-  matcher: ['/admin', '/admin.html', '/report', '/report.html', '/lsu', '/lsu/', '/haushalt', '/haushalt/', '/__gate/:path*'],
+  matcher: ['/admin', '/admin.html', '/report', '/report.html', '/lsu', '/lsu/', '/haushalt', '/haushalt/', '/anzeigen', '/anzeigen.html', '/__gate/:path*'],
 };
 
 const SUPABASE_URL = 'https://amrdmnnijbfwtrjcpocl.supabase.co';
@@ -36,7 +36,12 @@ const MAXAGE = 60 * 60 * 24 * 30; // 30 Tage (Refresh hält die Session frisch)
 // Middleware laeuft nur auf den Pfaden im matcher oben, alles andere im Repo
 // ist oeffentlich erreichbar. Wie bei /lsu wird nur die Einstiegsseite
 // gegated — die Seite ist eine einzelne Datei ohne weitere Bestandteile.
-const GATED = new Set(['/admin', '/admin.html', '/report', '/report.html', '/lsu', '/lsu/', '/haushalt', '/haushalt/']);
+//
+// /anzeigen ist die Werkstatt fuer Kleinanzeigen (Fotos, Titel, Preise). Sie
+// liegt als anzeigen.html im Wurzelverzeichnis; wegen cleanUrls trifft sowohl
+// /anzeigen als auch /anzeigen.html die Middleware, deshalb stehen beide Formen
+// hier und oben im matcher. Ohne diese beiden Eintraege waere die Seite offen.
+const GATED = new Set(['/admin', '/admin.html', '/report', '/report.html', '/lsu', '/lsu/', '/haushalt', '/haushalt/', '/anzeigen', '/anzeigen.html']);
 
 function isGated(path) {
   return GATED.has(path);
@@ -95,6 +100,7 @@ async function verifyAccess(token) {
 function areaOf(path) {
   if (path === '/lsu' || path === '/lsu/') return 'lsu';
   if (path === '/haushalt' || path === '/haushalt/') return 'haushalt';
+  if (path === '/anzeigen' || path === '/anzeigen.html') return 'anzeigen';
   if (path === '/report' || path === '/report.html') return 'report';
   return 'admin';
 }
@@ -177,6 +183,7 @@ function readBasic(request) {
 const GAST = {
   lsu: { user: 'LSU_USER', pass: 'LSU_PASSWORD', realm: 'Last Soul Ultra' },
   haushalt: { user: 'HAUSHALT_USER', pass: 'HAUSHALT_PASSWORD', realm: 'Wohnungsplan' },
+  anzeigen: { user: 'ANZEIGEN_USER', pass: 'ANZEIGEN_PASSWORD', realm: 'Anzeigen' },
 };
 
 async function guestOk(request, area) {
