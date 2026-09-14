@@ -59,8 +59,10 @@ const pruefe = (name, ist, ok, soll) => {
   const r = await ruf('/anzeigen')
   pruefe('ohne Anmeldung: kein 401', r.status, r.status === 200, '200')
   pruefe('ohne Anmeldung: kein WWW-Authenticate', r.realm === '' ? '(keiner)' : r.realm, r.realm === '', 'keiner')
+  // OHNE .html — vercel.json steht auf cleanUrls. Mit Endung gab es in der
+  // Produktion 404; genau diese Erwartung hat den Fehler mitgetragen.
   pruefe('ohne Anmeldung: eigene Anmeldeseite', r.ziel.replace('https://aiwithmaris.com', ''),
-    r.stub === 'rewrite' && /anzeigen-anmeldung\.html$/.test(r.ziel), '/anzeigen-anmeldung.html')
+    r.stub === 'rewrite' && /\/anzeigen-anmeldung$/.test(r.ziel), '/anzeigen-anmeldung')
   pruefe('Anmeldeseite nicht zwischengespeichert', r.stub, r.stub === 'rewrite', 'rewrite')
 }
 
