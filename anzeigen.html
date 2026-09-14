@@ -117,11 +117,18 @@
     background: var(--cyan); color: var(--bg); padding: 2px 7px; border-radius: 999px;
   }
   .az-bild .az-knopfleiste { position: absolute; right: 4px; bottom: 4px; display: flex; gap: 3px; }
-  .az-bild .az-knopfleiste button {
+  .az-bild .az-knopfleiste button,
+  .az-bild .az-weg {
     width: 30px; height: 30px; border-radius: 8px; border: 0; cursor: pointer;
     background: rgba(5,6,12,.78); color: var(--text); font-size: .8rem; line-height: 1;
   }
-  .az-bild .az-knopfleiste button:hover { background: var(--cyan); color: var(--bg); }
+  .az-bild .az-knopfleiste button:hover,
+  .az-bild .az-weg:hover { background: var(--cyan); color: var(--bg); }
+  /* Loeschen sitzt bewusst NICHT in der Knopfleiste: dort klebte es 3 px neben
+     den Sortierpfeilen, und Umsortieren braucht je Position einen Tipp. Ein
+     Fehlgriff loescht das Foto. Oben rechts ist es aus dem Weg des Daumens. */
+  .az-bild .az-weg { position: absolute; right: 6px; top: 6px; }
+  .az-bild .az-weg:hover { background: #ff6b8b; color: var(--bg); }
   .az-bild.laedt { display: grid; place-items: center; height: 110px; color: var(--muted); font-family: var(--mono); font-size: .68rem; text-align: center; padding: 8px; }
   .az-bild.fehler { border-color: #ff6b8b; color: #ff6b8b; }
 
@@ -155,6 +162,77 @@
   .az-warnung { color: #ffcc55; font-size: .85rem; margin: 10px 0 0; }
 
   .az-reihe { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 12px; }
+
+  /* ------------------------------------------------------------- Am Handy
+     Die Seite wird direkt nach dem Fotografieren am Telefon benutzt, oft
+     einhaendig. Alles hier drin dient diesem einen Weg. */
+
+  @media (max-width: 900px) {
+    /* Reihenfolge: Fotos, dann TIPPEN, dann pruefen. In der DOM-Reihenfolge
+       stand die Pruefliste vor den Angaben — man scrollte an der Fotoflaeche
+       UND an sechs Haken vorbei, bevor man den Titel eintippen konnte, gut
+       1300 px. `display:contents` loest die beiden Spalten-Huellen auf, damit
+       die drei Panels selbst sortierbar werden. */
+    .az-spalten { display: flex; flex-direction: column; gap: 20px; }
+    .az-spalten > div { display: contents; }
+    .az-panel + .az-panel { margin-top: 0; }  /* der Abstand kommt jetzt aus gap */
+    .az-panel-fotos   { order: 1; }
+    .az-panel-angaben { order: 2; }
+    .az-panel-pruef   { order: 3; }
+
+    /* Der Kopfbereich (Titel ueber drei Zeilen, Nummer, Ordner) schob die
+       Eingabefelder allein schon ueber eine Bildschirmhoehe. */
+    .az-wrap { padding-top: 72px; }
+    .az-drop { padding: 14px; }
+
+    /* Tippziele auf Daumengroesse. 30 px trifft man nicht zuverlaessig. */
+    .az-bild .az-knopfleiste { right: auto; left: 6px; bottom: 6px; gap: 8px; }
+    .az-bild .az-knopfleiste button,
+    .az-bild .az-weg { width: 44px; height: 44px; font-size: 1rem; border-radius: 10px; }
+    .az-chip { padding: 12px 18px; font-size: .78rem; }
+    .az-zurueck { padding: 12px 4px; margin-bottom: 4px; }
+
+    /* Es gibt keinen Speichern-Knopf — das Vertrauen haengt allein an der
+       Meldung "gespeichert 14:32". Die stand am Seitenkopf, also rund 2000 px
+       ueber dem Feld, in dem gerade getippt wird: nie im Bild. Der vorhandene
+       2,5-s-Timer blendet sie weiterhin selbst aus. */
+    #az-meldung {
+      position: fixed; left: 14px; right: 14px; bottom: 14px; z-index: 120;
+      margin: 0; padding: 10px 14px; border-radius: 12px; text-align: center;
+      background: rgba(5,6,12,.94); border: 1px solid var(--line);
+      box-shadow: 0 8px 28px rgba(0,0,0,.45);
+    }
+    #az-meldung:empty { display: none; }
+  }
+
+  @media (max-width: 600px) {
+    /* Der Kopieren-Knopf fraas rund 132 px der Panelbreite, der Wert daneben
+       blieb auf ~166 px — genau in der Ansicht, aus der man kopiert. */
+    /* align-items:flex-start aus der Grundregel laesst die Kinder in der
+       Spalten-Richtung auf Inhaltsbreite schrumpfen — der Wert blieb dann
+       trotz Stapelung schmal. stretch ist hier das Entscheidende. */
+    .az-kopierzeile { flex-direction: column; gap: 8px; align-items: stretch; }
+    .az-kopierzeile .az-kopf-knopf { width: 100%; justify-content: center; }
+    .az-kopierzeile .wert { max-height: 22rem; }
+  }
+
+  /* style.css macht .nav-links unter 1040 px zu einem bildschirmfuellenden
+     Overlay, das per translateX(100%) wegsteht und vom Burger-Knopf
+     aufgeschoben wird. Diese Seite hat keinen Burger — der Rueckweg "Zur
+     Website" war am Handy damit unerreichbar. Hier steht ohnehin nur ein
+     einziger Link: der bleibt einfach in der Leiste stehen, statt ein Overlay
+     zu sein, das niemand oeffnen kann. */
+  @media (max-width: 1040px) {
+    #nav .nav-links {
+      position: static; inset: auto; transform: none; background: none;
+      -webkit-backdrop-filter: none; backdrop-filter: none;
+      flex-direction: row; font-size: .82rem;
+    }
+    #nav .nav-links a { padding: 10px 4px; }
+  }
+
+  /* Abstand zur Hauptaktion, damit "Anzeige loeschen" kein Nachbar ist. */
+  .az-gefahr { margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--line); }
 </style>
 </head>
 <body>
@@ -527,7 +605,7 @@
 
       <div class="az-spalten">
         <div>
-          <section class="az-panel">
+          <section class="az-panel az-panel-fotos">
             <h2>Fotos</h2>
             <label class="az-drop" id="az-drop">
               Fotos hierher ziehen oder tippen
@@ -539,10 +617,10 @@
                 <div class="az-bild">
                   <img src="${esc(f.url)}" alt="" loading="lazy" decoding="async" />
                   ${i === 0 ? '<span class="az-titelbild">Titelbild</span>' : ''}
+                  <button class="az-weg" type="button" data-weg="${f.id}" title="Foto ${i + 1} löschen">✕</button>
                   <div class="az-knopfleiste">
-                    ${i > 0 ? `<button type="button" data-hoch="${f.id}" title="nach vorn">◀</button>` : ''}
-                    ${i < fotos.length - 1 ? `<button type="button" data-runter="${f.id}" title="nach hinten">▶</button>` : ''}
-                    <button type="button" data-weg="${f.id}" title="löschen">✕</button>
+                    ${i > 0 ? `<button type="button" data-hoch="${f.id}" title="Foto ${i + 1} nach vorn">◀</button>` : ''}
+                    ${i < fotos.length - 1 ? `<button type="button" data-runter="${f.id}" title="Foto ${i + 1} nach hinten">▶</button>` : ''}
                   </div>
                 </div>`).join('')}
               <span id="az-uploads" style="display:contents"></span>
@@ -551,20 +629,24 @@
             ${fotos.length ? '<p class="az-hinweis">Das erste Foto ist das Titelbild. Mit ◀ ▶ umsortieren.</p>' : ''}
           </section>
 
-          <section class="az-panel">
+          <section class="az-panel az-panel-pruef">
             <h2>Bereit für Kleinanzeigen?</h2>
             <ul class="az-liste-pruef">
               ${pruef.map((p) => `<li class="${p.ok ? 'ok' : ''}"><span class="h">${p.ok ? '✓' : '·'}</span>${esc(p.text)}</li>`).join('')}
             </ul>
             <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
               <button class="btn btn-primary" type="button" id="az-einstellen" ${alleGut ? '' : 'disabled style="opacity:.4;cursor:not-allowed"'}>Zum Einstellen →</button>
+            </div>
+            <!-- Loeschen klebte 8 px unter der Hauptaktion. Am Handy ist das
+                 eine Daumenbreite zwischen "weiter" und "alles weg". -->
+            <div class="az-gefahr">
               <button class="btn btn-ghost" type="button" id="az-loeschen">Anzeige löschen</button>
             </div>
           </section>
         </div>
 
         <div>
-          <section class="az-panel">
+          <section class="az-panel az-panel-angaben">
             <h2>Angaben</h2>
             <div class="form">
               <div class="field">
@@ -776,7 +858,8 @@
           <h2 style="margin-top:22px">Wenn sie online ist</h2>
           <div class="field">
             <label for="az-url">Link zur Anzeige</label>
-            <input id="az-url" value="${esc(a.kleinanzeigen_url || '')}" placeholder="https://www.kleinanzeigen.de/s-anzeige/…" />
+            <input id="az-url" type="url" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false"
+                   value="${esc(a.kleinanzeigen_url || '')}" placeholder="https://www.kleinanzeigen.de/s-anzeige/…" />
           </div>
           <button class="btn btn-primary" type="button" id="az-ist-drin">Ist eingestellt</button>
         </section>
