@@ -182,6 +182,22 @@
   }
   .az-kopierzeile .wert:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
   .az-kopf-knopf { flex: 0 0 auto; }
+  /* Nummern, damit "In dieser Reihenfolge" auch eine Reihenfolge zeigt. */
+  .az-nr {
+    display: inline-grid; place-items: center; width: 1.45em; height: 1.45em; margin-right: 8px;
+    border-radius: 999px; border: 1px solid var(--line); color: var(--text); font-size: .82em;
+  }
+  /* Bleibt stehen, bis die Ansicht verlassen wird — sonst weiss man nach dem
+     Tabwechsel nicht mehr, was schon kopiert war. */
+  .az-kopierzeile.erledigt .az-nr { background: #5cff9d; border-color: #5cff9d; color: var(--bg); }
+  .az-kopierzeile.erledigt .wert { border-left-color: #5cff9d; }
+  .az-statt { flex: 0 0 auto; align-self: center; max-width: 13rem; color: var(--muted); font-size: .8rem; line-height: 1.35; }
+
+  /* Der Status bleibt Handarbeit; die Kachel sagt, was der Anzeige noch fehlt. */
+  .az-fehlt { margin: 6px 0 0; font-family: var(--mono); font-size: .7rem; color: #ffcc55; }
+  .az-fehlt.az-komplett { color: #5cff9d; }
+  .az-karte-link { font-family: var(--mono); font-size: .68rem; color: var(--cyan); text-decoration: none; }
+  .az-karte-link:hover { text-decoration: underline; }
 
   .az-status { font-family: var(--mono); font-size: .72rem; color: var(--muted); min-height: 1.2em; }
   .az-status.gut { color: #5cff9d; }
@@ -504,6 +520,18 @@
     })
   }
 
+  // Der Status ist Handarbeit — eine fertig ausgefuellte Anzeige bleibt
+  // "Entwurf", bis jemand daran denkt. Statt das selbsttaetig umzustellen
+  // (und damit eine Einstellung zu ueberschreiben, die die beiden bewusst
+  // gesetzt haben) sagt die Kachel, was noch fehlt.
+  function fehltZeile(a) {
+    if (a.status !== 'entwurf') return ''
+    const offen = pruefliste(a, a.anzahl_fotos).filter((p) => !p.ok)
+    if (!offen.length) return '<p class="az-fehlt az-komplett">vollständig — Status noch auf Entwurf</p>'
+    const kurz = { 'Mindestens ein Foto': 'Foto', 'Preis eingetragen oder Preistyp „Zu verschenken“': 'Preis' }
+    return `<p class="az-fehlt">fehlt: ${esc(offen.map((p) => kurz[p.text] || p.text.split(',')[0]).join(', '))}</p>`
+  }
+
   function karte(a) {
     const bild = a.titelbild
       ? `<div class="card-art"><img src="${esc(a.titelbild)}" alt="" loading="lazy" decoding="async" /></div>`
@@ -513,6 +541,7 @@
         ${bild}
         <h3>${esc(a.titel || 'Ohne Titel')}</h3>
         <p>${esc(a.kategorie || '')}${a.anzahl_fotos ? (a.kategorie ? ' · ' : '') + a.anzahl_fotos + ' Foto' + (a.anzahl_fotos > 1 ? 's' : '') : ''}</p>
+        ${fehltZeile(a)}
         <div class="az-karte-fuss">
           <span class="az-preis">${a.preistyp === 'verschenken' ? 'Zu verschenken' : (a.preis_cent != null ? euro(a.preis_cent) + (a.preistyp === 'vb' ? ' VB' : '') : '—')}</span>
           <span class="az-pille" data-s="${esc(a.status)}">${esc(STATUS[a.status] || a.status)}</span>
@@ -530,6 +559,10 @@
   function zeichneListe() {
     const zaehler = {}
     anzeigen.forEach((a) => { zaehler[a.status] = (zaehler[a.status] || 0) + 1 })
+    // Ein Chip wird nur gezeichnet, wenn es den Status ueberhaupt gibt. Stellt
+    // man die letzte "bereit"-Anzeige ein, verschwand der Chip, waehrend der
+    // Filter weiter stand — zurueck blieb ein leerer Bildschirm ohne Erklaerung.
+    if (filter !== 'alle' && !zaehler[filter]) filter = 'alle'
     const gefiltert = filter === 'alle' ? anzeigen : anzeigen.filter((a) => a.status === filter)
 
     const chips = ['alle'].concat(Object.keys(STATUS))
@@ -583,9 +616,11 @@
     zeichneBearbeiten()
   }
 
-  function pruefliste(a, fotos) {
+  // Nimmt die ANZAHL der Fotos, nicht die Liste — so kann die Uebersicht
+  // dieselbe Pruefung fahren, wo nur `anzahl_fotos` vorliegt.
+  function pruefliste(a, anzahlFotos) {
     return [
-      { ok: fotos.length > 0, text: 'Mindestens ein Foto' },
+      { ok: (anzahlFotos || 0) > 0, text: 'Mindestens ein Foto' },
       { ok: a.titel && a.titel.length > 0 && a.titel.length <= MAX_TITEL, text: `Titel, höchstens ${MAX_TITEL} Zeichen` },
       { ok: a.beschreibung && a.beschreibung.trim().length > 0 && a.beschreibung.length <= MAX_TEXT, text: `Beschreibung, höchstens ${MAX_TEXT} Zeichen` },
       { ok: a.preistyp === 'verschenken' || a.preis_cent != null, text: 'Preis eingetragen oder Preistyp „Zu verschenken“' },
@@ -601,7 +636,7 @@
     const liste = document.querySelector('.az-liste-pruef')
     const knopf = document.getElementById('az-einstellen')
     if (!liste || !knopf || !aktuell) return
-    const pruef = pruefliste(aktuell.anzeige, aktuell.fotos)
+    const pruef = pruefliste(aktuell.anzeige, aktuell.fotos.length)
     liste.innerHTML = pruef.map((p) =>
       `<li class="${p.ok ? 'ok' : ''}"><span class="h" aria-hidden="true">${p.ok ? '✓' : '·'}</span><span class="sr-only">${p.ok ? 'erledigt: ' : 'offen: '}</span>${esc(p.text)}</li>`).join('')
     const alleGut = pruef.every((p) => p.ok)
@@ -624,7 +659,7 @@
   function zeichneBearbeiten() {
     const a = aktuell.anzeige
     const fotos = aktuell.fotos
-    const pruef = pruefliste(a, fotos)
+    const pruef = pruefliste(a, fotos.length)
     const alleGut = pruef.every((p) => p.ok)
 
     const feld = (id, label, wert, attr = '') =>
@@ -640,6 +675,9 @@
       <div class="az-kopf">
         <h1>${esc(a.titel || 'Ohne Titel')}</h1>
         <span class="az-wer" title="Ordner in Supabase: ${esc(a.ordner)}">Nr. ${String(a.nummer).padStart(4, '0')}</span>
+        ${a.kleinanzeigen_url
+          ? `<a class="az-karte-link" href="${esc(a.kleinanzeigen_url)}" target="_blank" rel="noopener noreferrer">Anzeige ansehen ↗</a>`
+          : ''}
       </div>
       <p class="az-status" id="az-meldung" role="status" aria-live="polite"></p>
 
@@ -703,7 +741,7 @@
                 <span class="az-zaehler" id="az-z-text" aria-live="polite"></span>
               </div>
               <div class="az-reihe">
-                ${feld('az-preis', 'Preis in Euro', a.preis_cent != null ? (a.preis_cent / 100).toFixed(2).replace('.', ',') : '', 'inputmode="decimal"')}
+                ${feld('az-preis', 'Preis in ganzen Euro', a.preis_cent != null ? String(Math.round(a.preis_cent / 100)) : '', 'inputmode="numeric" pattern="[0-9]*"')}
                 ${auswahl('az-preistyp', 'Preistyp', a.preistyp, PREISTYP)}
               </div>
               <div class="az-reihe">
@@ -747,10 +785,18 @@
 
   function sammle() {
     const zahl = (id) => {
-      const roh = (document.getElementById(id).value || '').replace(/[^\d,.-]/g, '').replace(',', '.')
+      // Nur ganze Euro. Kleinanzeigen fragt den Preis als ganze Zahl ab; liesse
+      // man hier Cent zu, stuende in der Anzeige ein anderer Preis als der
+      // erfasste — vorher wurde beim Kopieren sogar aufgerundet.
+      //
+      // Das Trennzeichen MUSS dabei erhalten bleiben: streicht man es einfach
+      // weg, wird aus "12,50" die Zahl 1250. Also richtig lesen und dann
+      // abschneiden — nie aufrunden, sonst steht in der Anzeige mehr, als
+      // jemand eingetragen hat.
+      const roh = (document.getElementById(id).value || '').replace(/[^\d,.]/g, '').replace(',', '.')
       if (!roh) return null
-      const n = Math.round(parseFloat(roh) * 100)
-      return Number.isFinite(n) ? n : null
+      const n = parseFloat(roh)
+      return Number.isFinite(n) ? Math.max(0, Math.trunc(n)) * 100 : null
     }
     return {
       titel: document.getElementById('az-titel').value.trim(),
@@ -780,6 +826,13 @@
     try {
       const daten = await ruf(Object.assign({ op: 'speichern', id: aktuell.anzeige.id }, sammle()))
       aktuell.anzeige = daten.anzeige
+      // Erst hier steht fest, was wirklich gespeichert wurde. Ein eigener
+      // blur-Zuhoerer lief vor dem Abschluss und zeigte den alten Wert: man
+      // las weiter "12,50", waehrend 12 in der Datenbank stand.
+      const preisFeld = document.getElementById('az-preis')
+      if (preisFeld && document.activeElement !== preisFeld && preisFeld.value.trim()) {
+        preisFeld.value = daten.anzeige.preis_cent != null ? String(Math.round(daten.anzeige.preis_cent / 100)) : ''
+      }
       aktualisierePruefliste()
       melde('gespeichert ' + new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }))
     } catch (e) {
@@ -860,13 +913,16 @@
     const preis = a.preistyp === 'verschenken' ? '' :
       (a.preis_cent != null ? String(Math.round(a.preis_cent / 100)) : '')
 
-    const zeile = (label, wert, id, zaehler) => `
-      <div class="az-kopierzeile">
+    let schritt = 0
+    const zeile = (label, wert, id, zaehler, statt) => `
+      <div class="az-kopierzeile" data-zeile="${id}">
         <div>
-          <div class="az-feldname" id="${id}-name">${esc(label)}${zaehler ? ` <span class="az-zaehler-inline">${wert.length} / ${zaehler}</span>` : ''}</div>
+          <div class="az-feldname" id="${id}-name"><span class="az-nr">${++schritt}</span>${esc(label)}${zaehler ? ` <span class="az-zaehler-inline">${wert.length} / ${zaehler}</span>` : ''}</div>
           <div class="wert" id="${id}" tabindex="0" role="group" aria-labelledby="${id}-name">${esc(wert) || '<span class="az-leer">—</span>'}</div>
         </div>
-        <button class="btn btn-ghost az-kopf-knopf" type="button" data-kopieren="${id}" aria-label="${esc(label)} kopieren">Kopieren</button>
+        ${statt
+          ? `<span class="az-statt">${esc(statt)}</span>`
+          : `<button class="btn btn-ghost az-kopf-knopf" type="button" data-kopieren="${id}" aria-label="${esc(label)} kopieren">Kopieren</button>`}
       </div>`
 
     buehne().innerHTML = `
@@ -881,11 +937,12 @@
             Öffne <a href="https://www.kleinanzeigen.de/p-anzeige-aufgeben.html" target="_blank" rel="noopener noreferrer">kleinanzeigen.de</a>
             in einem zweiten Tab und leg dort die Anzeige an — hier steht nur, was du dort einfügst.
           </p>
-          ${zeile('Kategorie', a.kategorie || '', 'k-kategorie')}
+          ${zeile('Kategorie', a.kategorie || '', 'k-kategorie', null, 'Bei Kleinanzeigen aus dem Menü wählen, nicht einfügen')}
           ${zeile('Titel', a.titel || '', 'k-titel', MAX_TITEL)}
           ${zeile('Beschreibung', a.beschreibung || '', 'k-text', MAX_TEXT)}
           ${zeile('Preis (nur die Zahl)', preis, 'k-preis')}
           ${zeile('PLZ', a.plz || '', 'k-plz')}
+          ${zeile('Ort', a.ort || '', 'k-ort')}
           <p class="az-hinweis">Diese drei wählst du bei Kleinanzeigen aus einem Menü aus — Zustand: <strong>${esc(ZUSTAND[a.zustand] || '—')}</strong> · Versand: <strong>${esc(VERSAND[a.versand] || '—')}</strong> · Preistyp: <strong>${esc(PREISTYP[a.preistyp])}</strong></p>
         </section>
 
@@ -911,8 +968,10 @@
             <input id="az-url" type="url" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false"
                    value="${esc(a.kleinanzeigen_url || '')}" placeholder="https://www.kleinanzeigen.de/s-anzeige/…" />
           </div>
-          <button class="btn btn-primary" type="button" id="az-ist-drin">Als eingestellt markieren</button>
-          <p class="az-hinweis">Speichert den Link, setzt den Status auf „Eingestellt" und bringt dich zurück zur Übersicht.</p>
+          <button class="btn btn-primary" type="button" id="az-ist-drin">${a.eingestellt_am ? 'Link aktualisieren' : 'Als eingestellt markieren'}</button>
+          <p class="az-hinweis">${a.eingestellt_am
+            ? 'Eingestellt am ' + esc(new Date(a.eingestellt_am).toLocaleDateString('de-DE')) + '. Das Datum bleibt, nur der Link wird neu gespeichert.'
+            : 'Speichert den Link, setzt den Status auf „Eingestellt" und bringt dich zurück zur Übersicht.'}</p>
         </section>
       </div>`
 
@@ -922,11 +981,20 @@
       const el = document.getElementById(b.dataset.kopieren)
       try {
         await navigator.clipboard.writeText(el.textContent === '—' ? '' : el.textContent)
-        const alt = b.textContent
+        // Der Haken bleibt stehen, bis die Ansicht verlassen wird. Bei fuenf
+        // Tabwechseln je Anzeige ist "was habe ich schon?" die eigentliche
+        // Frage — ein Zustand, der nach 1,5 s zurueckfaellt, beantwortet sie nicht.
         b.textContent = 'Kopiert ✓'
-        setTimeout(() => { b.textContent = alt }, 1500)
+        b.closest('.az-kopierzeile').classList.add('erledigt')
       } catch (_) { melde('Kopieren hat nicht geklappt — bitte von Hand markieren.', true) }
     }))
+
+    // HEIC aus der Dateien-App wird bewusst unveraendert durchgereicht. Hiess
+    // die Datei dann trotzdem 01.jpg, war es beim Hochladen ein Bild, das
+    // nirgends aufgeht. Die Endung kommt jetzt aus dem gespeicherten Typ.
+    const ENDUNG = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/heic': 'heic', 'image/heif': 'heif' }
+    const endungVon = (f, blob) =>
+      ENDUNG[f.mime] || ENDUNG[blob && blob.type] || (String(f.pfad || '').match(/\.([a-z0-9]{3,4})$/i) || [, 'jpg'])[1].toLowerCase()
 
     const laden = async (i) => {
       const f = fotos[i]
@@ -935,7 +1003,7 @@
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url
-      link.download = String(i + 1).padStart(2, '0') + '.jpg'
+      link.download = String(i + 1).padStart(2, '0') + '.' + endungVon(f, blob)
       document.body.appendChild(link)
       link.click()
       link.remove()
@@ -960,14 +1028,27 @@
       else melde(`${gut} von ${fotos.length} Fotos heruntergeladen. ${fehlt.length === 1 ? 'Foto ' + fehlt[0] + ' hat' : 'Fotos ' + fehlt.join(', ') + ' haben'} nicht geklappt — einzeln über ⤓ nachholen.`, true)
     })
 
+    // Jedes andere Feld speichert von selbst; dieses hing an keinem Zuhoerer
+    // und ging verloren, wenn man nicht auf den Knopf drueckte.
+    const urlFeld = document.getElementById('az-url')
+    const linkSpeichern = async () => {
+      const wert = urlFeld.value.trim() || null
+      if (wert === (aktuell.anzeige.kleinanzeigen_url || null)) return
+      try {
+        const daten = await ruf({ op: 'speichern', id: a.id, kleinanzeigen_url: wert })
+        aktuell.anzeige = daten.anzeige
+        melde('Link gespeichert.')
+      } catch (e) { if (e.message !== 'abgemeldet') melde(e.message, true) }
+    }
+    urlFeld.addEventListener('blur', linkSpeichern)
+
     document.getElementById('az-ist-drin').addEventListener('click', async () => {
       try {
-        await ruf({
-          op: 'speichern', id: a.id, status: 'eingestellt',
-          kleinanzeigen_url: document.getElementById('az-url').value.trim() || null,
-          eingestellt_am: new Date().toISOString(),
-        })
-        melde('Als eingestellt vermerkt.')
+        const felder = { op: 'speichern', id: a.id, status: 'eingestellt', kleinanzeigen_url: urlFeld.value.trim() || null }
+        // Ein zweites Druecken darf das urspruengliche Datum nicht ueberschreiben.
+        if (!a.eingestellt_am) felder.eingestellt_am = new Date().toISOString()
+        await ruf(felder)
+        melde(a.eingestellt_am ? 'Link aktualisiert.' : 'Als eingestellt vermerkt.')
         setTimeout(() => { location.hash = '' }, 700)
       } catch (e) { melde(e.message, true) }
     })
