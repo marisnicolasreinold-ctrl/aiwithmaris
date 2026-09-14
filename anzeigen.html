@@ -107,7 +107,12 @@
   }
   .az-drop small { display: block; margin-top: 4px; }
   .az-drop:hover, .az-drop.over { border-color: var(--cyan); background: rgba(94,240,255,.05); color: var(--text); }
-  .az-drop input { display: none; }
+  /* NICHT display:none. Das nimmt das Feld aus der Tab-Reihenfolge UND aus dem
+     Accessibility-Tree — der Foto-Upload, die Kernfunktion dieser Seite, war
+     per Tastatur und Screenreader gar nicht ausloesbar. So bleibt es
+     fokussierbar, das umschliessende <label> faengt den Klick weiterhin. */
+  .az-drop input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+  .az-drop:focus-within { border-color: var(--cyan); background: rgba(94,240,255,.05); color: var(--text); }
 
   .az-raster { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px,1fr)); gap: 10px; margin-top: 14px; }
   .az-bild { position: relative; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: rgba(255,255,255,.03); }
@@ -135,20 +140,47 @@
   .az-zaehler { display: block; text-align: right; font-family: var(--mono); font-size: .7rem; color: var(--muted); margin-top: 4px; }
   .az-zaehler.warn { color: #ffcc55; }
   .az-zaehler.voll { color: #ff6b8b; }
+  /* Frueher inline mit opacity:.6 auf dem schon gedaempften --muted — rund
+     3,3:1 bei sehr kleiner Schrift. --muted allein liegt bei etwa 7,3:1. */
+  .az-zaehler-inline { color: var(--muted); }
+  .az-leer { color: var(--muted); }
 
   .az-liste-pruef { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 7px; }
   .az-liste-pruef li { display: flex; gap: 9px; align-items: baseline; font-size: .9rem; color: var(--muted); }
   .az-liste-pruef li.ok { color: var(--text); }
   .az-liste-pruef .h { font-family: var(--mono); width: 1.1em; flex: 0 0 auto; }
   .az-liste-pruef li.ok .h { color: #5cff9d; }
+  /* Offen war nur ein grauer Mittelpunkt gegen ein gruenes Haekchen — der
+     Unterschied lag praktisch allein in der Farbe. */
+  .az-liste-pruef li:not(.ok) .h { color: #ffcc55; }
+  .az-liste-pruef li:not(.ok) { text-decoration: underline dotted rgba(255,204,85,.5); text-underline-offset: 4px; }
+
+  /* Gesperrt heisst gesperrt — nicht "Hauptknopf, nur blasser". opacity:.4 hat
+     den dunklen Text auf dem Verlauf auf 1,7:1 gedrueckt und den Leuchtschein
+     stehenlassen, der Knopf sah weiter nach Hauptaktion aus. */
+  .btn.az-gesperrt {
+    background: var(--glass); border: 1px solid var(--line); color: var(--muted);
+    box-shadow: none; cursor: not-allowed;
+  }
+  .btn.az-gesperrt:hover { background: var(--glass); color: var(--muted); }
 
   .az-kopierzeile { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 14px; }
   .az-kopierzeile > div { flex: 1 1 auto; min-width: 0; }
-  .az-kopierzeile label { display: block; font-family: var(--mono); font-size: .68rem; color: var(--muted); margin-bottom: 4px; }
+  .az-feldname { display: block; font-family: var(--mono); font-size: .68rem; color: var(--muted); margin-bottom: 4px; }
+  /* Der Kasten sah aus wie das echte Eingabefeld daneben (gleicher Rahmen,
+     gleiche Fuellung) und lud zum Hineinklicken ein — er ist aber nur Text zum
+     Kopieren. Ein linker Balken statt eines Rahmens sagt: hier steht etwas,
+     hier tippt man nicht. */
   .az-kopierzeile .wert {
-    background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 10px;
-    padding: 9px 11px; font-size: .92rem; white-space: pre-wrap; word-break: break-word; max-height: 16rem; overflow: auto;
+    background: none; border: 0; border-left: 2px solid var(--line); border-radius: 0;
+    padding: 4px 0 4px 12px; font-size: .92rem; white-space: pre-wrap; word-break: break-word;
+    /* Vielfaches der Zeilenhoehe, damit nicht mitten durch eine Zeile
+       geschnitten wird, plus eine Blende, die das Weiterscrollen zeigt. */
+    max-height: 15.4rem; overflow: auto;
+    -webkit-mask-image: linear-gradient(#000 calc(100% - 20px), transparent);
+    mask-image: linear-gradient(#000 calc(100% - 20px), transparent);
   }
+  .az-kopierzeile .wert:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
   .az-kopf-knopf { flex: 0 0 auto; }
 
   .az-status { font-family: var(--mono); font-size: .72rem; color: var(--muted); min-height: 1.2em; }
@@ -507,7 +539,7 @@
         <span class="az-wer">angemeldet als ${esc(wer || '—')}</span>
         <button class="btn btn-ghost" type="button" id="az-abmelden">Abmelden</button>
       </div>
-      <p class="az-status" id="az-meldung"></p>
+      <p class="az-status" id="az-meldung" role="status" aria-live="polite"></p>
       <div class="az-leiste">${chips}</div>
       <div class="cards">
         <button class="az-karte-leer" type="button" id="az-neu">
@@ -565,11 +597,13 @@
     if (!liste || !knopf || !aktuell) return
     const pruef = pruefliste(aktuell.anzeige, aktuell.fotos)
     liste.innerHTML = pruef.map((p) =>
-      `<li class="${p.ok ? 'ok' : ''}"><span class="h">${p.ok ? '✓' : '·'}</span>${esc(p.text)}</li>`).join('')
+      `<li class="${p.ok ? 'ok' : ''}"><span class="h" aria-hidden="true">${p.ok ? '✓' : '·'}</span><span class="sr-only">${p.ok ? 'erledigt: ' : 'offen: '}</span>${esc(p.text)}</li>`).join('')
     const alleGut = pruef.every((p) => p.ok)
-    knopf.disabled = !alleGut
-    knopf.style.opacity = alleGut ? '' : '.4'
-    knopf.style.cursor = alleGut ? '' : 'not-allowed'
+    // aria-disabled statt disabled: der Knopf bleibt in der Tab-Reihenfolge,
+    // damit man ueberhaupt erfaehrt, dass es ihn gibt und warum er nicht geht.
+    // Den Klick faengt der Guard im Zuhoerer ab.
+    knopf.setAttribute('aria-disabled', alleGut ? 'false' : 'true')
+    knopf.classList.toggle('az-gesperrt', !alleGut)
   }
 
   function zeichneUploads() {
@@ -601,7 +635,7 @@
         <h1>${esc(a.titel || 'Ohne Titel')}</h1>
         <span class="az-wer">Nr. ${String(a.nummer).padStart(4, '0')} · Ordner <code>${esc(a.ordner)}</code></span>
       </div>
-      <p class="az-status" id="az-meldung"></p>
+      <p class="az-status" id="az-meldung" role="status" aria-live="polite"></p>
 
       <div class="az-spalten">
         <div>
@@ -609,18 +643,18 @@
             <h2>Fotos</h2>
             <label class="az-drop" id="az-drop">
               Fotos hierher ziehen oder tippen
-              <small style="opacity:.7">Werden vor dem Hochladen auf ${MAX_KANTE} px verkleinert</small>
+              <small>Werden vor dem Hochladen auf ${MAX_KANTE} px verkleinert</small>
               <input type="file" id="az-datei" accept="image/*" multiple />
             </label>
             <div class="az-raster" id="az-raster">
               ${fotos.map((f, i) => `
                 <div class="az-bild">
-                  <img src="${esc(f.url)}" alt="" loading="lazy" decoding="async" />
+                  <img src="${esc(f.url)}" alt="${i === 0 ? 'Titelbild' : 'Foto ' + (i + 1)}" loading="lazy" decoding="async" />
                   ${i === 0 ? '<span class="az-titelbild">Titelbild</span>' : ''}
-                  <button class="az-weg" type="button" data-weg="${f.id}" title="Foto ${i + 1} löschen">✕</button>
+                  <button class="az-weg" type="button" data-weg="${f.id}" aria-label="Foto ${i + 1} löschen"><span aria-hidden="true">✕</span></button>
                   <div class="az-knopfleiste">
-                    ${i > 0 ? `<button type="button" data-hoch="${f.id}" title="Foto ${i + 1} nach vorn">◀</button>` : ''}
-                    ${i < fotos.length - 1 ? `<button type="button" data-runter="${f.id}" title="Foto ${i + 1} nach hinten">▶</button>` : ''}
+                    ${i > 0 ? `<button type="button" data-hoch="${f.id}" aria-label="Foto ${i + 1} nach vorn"><span aria-hidden="true">◀</span></button>` : ''}
+                    ${i < fotos.length - 1 ? `<button type="button" data-runter="${f.id}" aria-label="Foto ${i + 1} nach hinten"><span aria-hidden="true">▶</span></button>` : ''}
                   </div>
                 </div>`).join('')}
               <span id="az-uploads" style="display:contents"></span>
@@ -631,11 +665,12 @@
 
           <section class="az-panel az-panel-pruef">
             <h2>Bereit für Kleinanzeigen?</h2>
-            <ul class="az-liste-pruef">
-              ${pruef.map((p) => `<li class="${p.ok ? 'ok' : ''}"><span class="h">${p.ok ? '✓' : '·'}</span>${esc(p.text)}</li>`).join('')}
+            <ul class="az-liste-pruef" id="az-pruefliste" aria-live="polite">
+              ${pruef.map((p) => `<li class="${p.ok ? 'ok' : ''}"><span class="h" aria-hidden="true">${p.ok ? '✓' : '·'}</span><span class="sr-only">${p.ok ? 'erledigt: ' : 'offen: '}</span>${esc(p.text)}</li>`).join('')}
             </ul>
             <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
-              <button class="btn btn-primary" type="button" id="az-einstellen" ${alleGut ? '' : 'disabled style="opacity:.4;cursor:not-allowed"'}>Zum Einstellen →</button>
+              <button class="btn btn-primary${alleGut ? '' : ' az-gesperrt'}" type="button" id="az-einstellen"
+                      aria-disabled="${alleGut ? 'false' : 'true'}" aria-describedby="az-pruefliste">Zum Einstellen →</button>
             </div>
             <!-- Loeschen klebte 8 px unter der Hauptaktion. Am Handy ist das
                  eine Daumenbreite zwischen "weiter" und "alles weg". -->
@@ -652,12 +687,12 @@
               <div class="field">
                 <label for="az-titel">Titel</label>
                 <input id="az-titel" value="${esc(a.titel)}" maxlength="${MAX_TITEL}" />
-                <span class="az-zaehler" id="az-z-titel"></span>
+                <span class="az-zaehler" id="az-z-titel" aria-live="polite"></span>
               </div>
               <div class="field">
                 <label for="az-text">Beschreibung</label>
                 <textarea id="az-text" rows="9" maxlength="${MAX_TEXT}">${esc(a.beschreibung)}</textarea>
-                <span class="az-zaehler" id="az-z-text"></span>
+                <span class="az-zaehler" id="az-z-text" aria-live="polite"></span>
               </div>
               <div class="az-reihe">
                 ${feld('az-preis', 'Preis in Euro', a.preis_cent != null ? (a.preis_cent / 100).toFixed(2).replace('.', ',') : '', 'inputmode="decimal"')}
@@ -693,9 +728,12 @@
       const z = document.getElementById(zaehlerId)
       if (!f || !z) return
       const n = f.value.length
-      z.textContent = n + ' / ' + grenze
-      z.className = 'az-zaehler' + (n > grenze ? ' voll' : n > grenze * 0.85 ? ' warn' : '')
+      const knapp = n > grenze * 0.85
+      // Die Farbe allein trug die Aussage "es wird eng". Der Zusatz sagt es.
+      z.textContent = n + ' / ' + grenze + (n >= grenze ? ' · Grenze erreicht' : knapp ? ' · noch ' + (grenze - n) : '')
+      z.className = 'az-zaehler' + (n >= grenze ? ' voll' : knapp ? ' warn' : '')
       f.setAttribute('aria-invalid', n > grenze ? 'true' : 'false')
+      f.setAttribute('aria-describedby', zaehlerId)
     })
   }
 
@@ -800,7 +838,7 @@
     // Zuhoerer immer haengen, nicht nur wenn der Knopf gerade frei ist —
     // sonst bliebe er tot, sobald die Pruefliste ihn spaeter freigibt.
     document.getElementById('az-einstellen').addEventListener('click', async (ev) => {
-      if (ev.currentTarget.disabled) return
+      if (ev.currentTarget.getAttribute('aria-disabled') === 'true') return
       await speichere()
       location.hash = '#/a/' + aktuell.anzeige.id + '/einstellen'
     })
@@ -817,16 +855,16 @@
     const zeile = (label, wert, id, zaehler) => `
       <div class="az-kopierzeile">
         <div>
-          <label>${esc(label)}${zaehler ? ` <span style="opacity:.6">${wert.length} / ${zaehler}</span>` : ''}</label>
-          <div class="wert" id="${id}">${esc(wert) || '<span style="opacity:.5">—</span>'}</div>
+          <div class="az-feldname" id="${id}-name">${esc(label)}${zaehler ? ` <span class="az-zaehler-inline">${wert.length} / ${zaehler}</span>` : ''}</div>
+          <div class="wert" id="${id}" tabindex="0" role="group" aria-labelledby="${id}-name">${esc(wert) || '<span class="az-leer">—</span>'}</div>
         </div>
-        <button class="btn btn-ghost az-kopf-knopf" type="button" data-kopieren="${id}">Kopieren</button>
+        <button class="btn btn-ghost az-kopf-knopf" type="button" data-kopieren="${id}" aria-label="${esc(label)} kopieren">Kopieren</button>
       </div>`
 
     buehne().innerHTML = `
       <button class="az-zurueck" type="button" id="az-zurueck">← Zurück zum Bearbeiten</button>
       <div class="az-kopf"><h1>Bei Kleinanzeigen einstellen</h1></div>
-      <p class="az-status" id="az-meldung"></p>
+      <p class="az-status" id="az-meldung" role="status" aria-live="polite"></p>
 
       <div class="az-spalten">
         <section class="az-panel">
@@ -851,7 +889,7 @@
               <div class="az-bild">
                 <img src="${esc(f.url)}" alt="" loading="lazy" />
                 <span class="az-titelbild">${String(i + 1).padStart(2, '0')}</span>
-                <div class="az-knopfleiste"><button type="button" data-einzeln="${i}" title="herunterladen">⤓</button></div>
+                <div class="az-knopfleiste"><button type="button" data-einzeln="${i}" aria-label="Foto ${i + 1} herunterladen"><span aria-hidden="true">⤓</span></button></div>
               </div>`).join('')}
           </div>
 
