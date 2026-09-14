@@ -605,8 +605,9 @@
   function abmelden() {
     token = null
     try { localStorage.removeItem(SPEICHER) } catch (_) {}
-    location.hash = ''
-    zeichneGate()
+    // Ohne das hier laesst das Gate-Cookie einen sofort wieder herein.
+    document.cookie = 'aiwm_anz=; Path=/anzeigen; Max-Age=0; Secure; SameSite=Lax'
+    location.replace('/anzeigen')
   }
 
   /* --------------------------------------------------------- Bearbeiten */
@@ -1077,9 +1078,22 @@
 
   window.addEventListener('hashchange', route)
 
+  // Das Gate hat beim Anmelden bereits ein Sitzungstoken geholt und in einem
+  // Cookie hinterlegt. Wer hier ankommt, ist also schon angemeldet — eine
+  // zweite Abfrage waere dasselbe Passwort ein zweites Mal.
+  const ausCookie = (name) => {
+    const treffer = document.cookie.split(';').map((t) => t.trim())
+      .find((t) => t.startsWith(name + '='))
+    return treffer ? treffer.slice(name.length + 1) : ''
+  }
+
+  const vomGate = ausCookie('aiwm_anz')
+  if (vomGate) token = vomGate
+
   try {
     const gespeichert = JSON.parse(localStorage.getItem(SPEICHER) || 'null')
-    if (gespeichert && gespeichert.token) { token = gespeichert.token; wer = gespeichert.wer || '' }
+    if (!token && gespeichert && gespeichert.token) token = gespeichert.token
+    if (gespeichert && gespeichert.wer) wer = gespeichert.wer
   } catch (_) {}
 
   route()

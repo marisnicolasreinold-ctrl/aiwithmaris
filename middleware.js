@@ -19,6 +19,13 @@ const SUPABASE_URL = 'https://amrdmnnijbfwtrjcpocl.supabase.co';
 const SUPABASE_ANON =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtcmRtbm5pamJmd3RyamNwb2NsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTU0OTcsImV4cCI6MjA5NjQzMTQ5N30.y-9eLzeQKDlHzSG3_ro-ThAnnpnAEKLTWS8NMrpSXCI';
 
+// Sitzungstoken des Bereichs /anzeigen. Bewusst NICHT HttpOnly: die Seite
+// selbst braucht es fuer ihre Aufrufe an die Edge Function. Es lag bisher
+// ohnehin im localStorage derselben Herkunft — die Preisgabe ist dieselbe,
+// aber so muss man sich nur EINMAL anmelden statt zweimal.
+const ANZ = 'aiwm_anz';
+const ANZ_TAGE = 180;
+
 const AT = 'aiwm_at'; // Supabase access token
 const RT = 'aiwm_rt'; // Supabase refresh token
 const MAXAGE = 60 * 60 * 24 * 30; // 30 Tage (Refresh hält die Session frisch)
@@ -59,6 +66,12 @@ function readCookie(request, name) {
 
 function cookie(name, value, maxAge) {
   return `${name}=${value}; Path=/; Max-Age=${maxAge}; HttpOnly; Secure; SameSite=Lax`;
+}
+
+// Wie cookie(), aber lesbar fuer die Seite und nur unter /anzeigen gueltig —
+// es wird also nicht bei jedem Aufruf der oeffentlichen Website mitgeschickt.
+function offenesCookie(name, value, maxAge, pfad) {
+  return `${name}=${value}; Path=${pfad}; Max-Age=${maxAge}; Secure; SameSite=Lax`;
 }
 
 function clear(name) {
@@ -220,6 +233,28 @@ async function guestOk(request, area) {
   }
 }
 
+// Gilt das Sitzungstoken aus dem Cookie noch? Die Funktion liegt hinter
+// SECURITY DEFINER: der oeffentliche anon-Key darf sie rufen, die Tabelle
+// dahinter aber nie lesen — dasselbe Muster wie check_site_guest.
+async function anzeigenSitzungGueltig(token) {
+  if (!token || token.length !== 48 || !/^[0-9a-f]+$/.test(token)) return false;
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/anzeigen_sitzung_gueltig`, {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_ANON,
+        Authorization: `Bearer ${SUPABASE_ANON}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ t: token }),
+    });
+    if (!r.ok) return false;
+    return (await r.json()) === true;
+  } catch {
+    return false;
+  }
+}
+
 // Jeder Bereich fragt unter eigenem Realm: Browser merken sich Basic-Auth pro
 // Ursprung UND Realm, sonst wuerde ein Gast des Renn-Dashboards ungefragt auch
 // am Wohnungsplan angemeldet.
@@ -263,6 +298,51 @@ export default async function middleware(request) {
     return res;
   }
 
+  // Anmeldung fuer /anzeigen. Ersetzt den eingebauten Basic-Auth-Dialog des
+  // Browsers, der sich nicht gestalten laesst und auf dem Handy wie eine
+  // Systemmeldung aussieht. Das Passwort wandert einmal hierher; zurueck kommt
+  // dasselbe Sitzungstoken, das auch die Seite fuer ihre Aufrufe braucht —
+  // deshalb genuegt danach EINE Anmeldung statt zweier.
+  if (path === '/__gate/anzeigen') {
+    if (request.method !== 'POST') {
+      return new Response('Method Not Allowed', { status: 405 });
+    }
+    let passwort = '', wer = '';
+    try {
+      const body = await request.json();
+      passwort = String(body.passwort || '');
+      wer = String(body.wer || '').slice(0, 40);
+    } catch {
+      /* ignore */
+    }
+    if (!passwort) return json({ ok: false }, 400);
+
+    let token = '';
+    try {
+      const r = await fetch(`${SUPABASE_URL}/functions/v1/anzeigen`, {
+        method: 'POST',
+        headers: {
+          apikey: SUPABASE_ANON,
+          Authorization: `Bearer ${SUPABASE_ANON}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ op: 'anmelden', passwort, wer }),
+      });
+      // 401 heisst wirklich "Passwort stimmt nicht"; alles andere ist ein
+      // Fehler auf unserer Seite und darf nicht auf den Nutzer zeigen.
+      if (r.status === 401) return json({ ok: false }, 401);
+      if (!r.ok) return json({ ok: false }, 502);
+      token = (await r.json()).token || '';
+    } catch {
+      return json({ ok: false }, 502);
+    }
+    if (!token) return json({ ok: false }, 502);
+
+    const res = json({ ok: true }, 200);
+    res.headers.append('Set-Cookie', offenesCookie(ANZ, token, ANZ_TAGE * 86400, '/anzeigen'));
+    return res;
+  }
+
   // Logout: Token-Cookies löschen -> zurück zur Baustelle.
   if (path === '/__gate/leave') {
     const res = rewrite(new URL('/coming-soon', request.url));
@@ -284,6 +364,18 @@ export default async function middleware(request) {
     if (mayAccess(user, area)) return next();
     // Angemeldet, aber nicht für diesen Bereich: nichts verraten.
     return rewrite(new URL('/coming-soon', request.url));
+  }
+
+  // /anzeigen hat seine eigene Anmeldeseite: eine gueltige Sitzung laesst
+  // durch, sonst wird die Anmeldung unter derselben Adresse ausgeliefert.
+  // Kein 401, also kein Browser-Dialog. Basic Auth bleibt als stiller
+  // Nebenweg bestehen, falls ein Passwortmanager ihn mitschickt.
+  if (area === 'anzeigen') {
+    if (await anzeigenSitzungGueltig(readCookie(request, ANZ))) return next();
+    if (await guestOk(request, area)) return next();
+    const res = rewrite(new URL('/anzeigen-anmeldung.html', request.url));
+    res.headers.set('Cache-Control', 'no-store');
+    return res;
   }
 
   // Kein Supabase-Konto? Für die geteilten Bereiche genügt der Gastzugang.
