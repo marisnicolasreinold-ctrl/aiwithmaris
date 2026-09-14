@@ -65,6 +65,39 @@
   .az-panel + .az-panel { margin-top: 20px; }
   .az-panel h2 { margin: 0 0 14px; font-size: 1.05rem; }
 
+  /* .form aus style.css ist selbst eine vollwertige Karte (Rahmen, Verlauf,
+     Polsterung). In einem .az-panel ergaebe das zwei Rahmen ineinander — und
+     am Handy fressen die doppelten Innenabstaende gut 100 px Feldbreite.
+     Hier bleibt nur die Feld-Typografie uebrig, die Karte macht das Panel. */
+  .az-panel .form {
+    padding: 0; border: 0; border-radius: 0; background: none;
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+  }
+
+  /* style.css formatiert .field input und .field textarea, aber kein select —
+     im ganzen Projekt gibt es dafuer keine einzige Regel. Ohne diesen Block
+     stehen Preistyp, Zustand, Versand und Status als weisse System-Dropdowns
+     unterschiedlicher Breite im dunklen Formular, am Handy rund 20 px hoch
+     und damit kaum zu treffen. */
+  .az-wrap select {
+    width: 100%; font-family: var(--body); font-size: .95rem; color: var(--text);
+    background-color: rgba(255,255,255,.04);
+    border: 1px solid var(--line); border-radius: 12px;
+    padding: 13px 40px 13px 15px; line-height: 1.3;
+    appearance: none; -webkit-appearance: none;
+    /* Eigenes Pfeilchen, weil appearance:none das eingebaute entfernt. */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%238b93a7' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 15px center; background-size: 12px 8px;
+    transition: border-color .25s ease, background-color .25s ease;
+  }
+  .az-wrap select:focus {
+    outline: none; border-color: rgba(94, 240, 255, .55);
+    background-color: rgba(94, 240, 255, .05);
+  }
+  /* Die aufgeklappte Liste zeichnet das Betriebssystem — ohne das hier stuende
+     schwarze Schrift auf weiss mitten im dunklen Entwurf. */
+  .az-wrap select option { background: #14161c; color: #eef1fa; }
+
   /* display:block, weil ein <label> sonst inline bleibt und der gestrichelte
      Rahmen schief um seinen Inhalt statt um die Flaeche laeuft. */
   .az-drop {
@@ -182,10 +215,28 @@
 
   /* ------------------------------------------------------------ Zugriff */
 
+  // Scheitert `fetch` selbst, wirft es einen TypeError — kein Statuscode, keine
+  // Antwort. Das passiert bei fehlender Verbindung, aber auch, wenn der Browser
+  // die Anfrage wegen CORS gar nicht erst rauslaesst. Beides darf nicht als
+  // "Passwort stimmt nicht" beim Nutzer landen.
+  const NETZFEHLER = 'netz'
+
+  function erklaere(e) {
+    if (e && e.message === 'abgemeldet') return 'Bitte neu anmelden.'
+    if (e && e.message === NETZFEHLER) return 'Keine Verbindung zum Server. Nochmal versuchen — am Passwort liegt es nicht.'
+    if (e && e.message === 'Passwort stimmt nicht') return 'Passwort stimmt nicht.'
+    return 'Anmeldung fehlgeschlagen: ' + ((e && e.message) || 'unbekannter Fehler')
+  }
+
   async function ruf(koerper) {
     const kopf = { 'Content-Type': 'application/json', apikey: DB_KEY, Authorization: 'Bearer ' + DB_KEY }
     if (token) kopf['x-anzeigen-token'] = token
-    const antwort = await fetch(FN, { method: 'POST', headers: kopf, body: JSON.stringify(koerper) })
+    let antwort
+    try {
+      antwort = await fetch(FN, { method: 'POST', headers: kopf, body: JSON.stringify(koerper) })
+    } catch (_) {
+      throw new Error(NETZFEHLER)
+    }
     const daten = await antwort.json().catch(() => ({}))
     if (antwort.status === 401 && koerper.op !== 'anmelden') {
       token = null
@@ -329,7 +380,12 @@
         try { localStorage.setItem(SPEICHER, JSON.stringify({ token, wer })) } catch (_) {}
         await zeigeListe()
       } catch (e) {
-        zeichneGate(e.message === 'abgemeldet' ? 'Bitte neu anmelden.' : 'Passwort stimmt nicht.')
+        // Nicht jeder Fehler ist ein falsches Passwort. Genau diese Verwechslung
+        // hat einmal eine CORS-Sperre als "Passwort stimmt nicht" ausgegeben:
+        // der Browser kam mit der Vorabfrage gar nicht durch, das Passwort war
+        // richtig, und die Meldung zeigte trotzdem auf den Nutzer. Eine falsche
+        // Fehlermeldung kostet mehr Zeit als gar keine.
+        zeichneGate(erklaere(e))
       }
     })
   }

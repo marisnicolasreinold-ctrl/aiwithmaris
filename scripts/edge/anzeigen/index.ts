@@ -53,7 +53,16 @@ Deno.serve(async (req: Request) => {
   const cors = {
     "Access-Control-Allow-Origin": allowOrigin,
     "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "content-type, x-anzeigen-token, authorization",
+    // `apikey` MUSS hier stehen. Der Browser schickt ihn bei jedem Aufruf mit
+    // (anzeigen.html setzt ihn in `ruf()`), und was die Vorabfrage nicht
+    // erlaubt, laesst der Browser gar nicht erst raus — die eigentliche
+    // POST-Anfrage kommt dann nie an. Genau das ist passiert: im Log standen
+    // nur `OPTIONS 204` und kein einziges POST, waehrend die Seite "Passwort
+    // stimmt nicht" zeigte. Aus der Datenbank per pg_net faellt das nicht auf,
+    // weil es serverseitig gar kein CORS gibt.
+    // `x-client-info` setzt supabase-js von sich aus.
+    "Access-Control-Allow-Headers":
+      "content-type, apikey, authorization, x-anzeigen-token, x-client-info",
     "Content-Type": "application/json",
     "Cache-Control": "no-store",
   };
