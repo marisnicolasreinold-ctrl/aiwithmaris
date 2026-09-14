@@ -444,7 +444,11 @@
     const gescheitert = laufendeUploads.filter((u) => u.zustand === 'fehler').length
     laufendeUploads.length = 0
     await oeffne(aktuell.anzeige.id)
-    if (gescheitert) melde(gescheitert + ' Foto(s) sind nicht durchgekommen. Nochmal versuchen?', true)
+    if (gescheitert) {
+      melde(gescheitert === 1
+        ? 'Ein Foto ist nicht angekommen. Zieh es noch einmal in das Feld oben.'
+        : gescheitert + ' Fotos sind nicht angekommen. Zieh sie noch einmal in das Feld oben.', true)
+    }
   }
 
   /* ------------------------------------------------------------ Meldung */
@@ -543,7 +547,7 @@
       <div class="az-leiste">${chips}</div>
       <div class="cards">
         <button class="az-karte-leer" type="button" id="az-neu">
-          <span><strong>＋ Neue Anzeige</strong>Fotos aufnehmen und loslegen</span>
+          <span><strong>＋ Neue Anzeige</strong>Titel eingeben, Fotos kommen danach</span>
         </button>
         ${gefiltert.map(karte).join('')}
       </div>`
@@ -555,7 +559,9 @@
   }
 
   async function neueAnzeige() {
-    const titel = prompt('Wie heißt der Artikel? (Der Ordnername entsteht daraus und bleibt dann stehen.)')
+    // Der Ordnername ist interne Mechanik und gehoert nicht in den ersten
+    // Satz, den jemand liest.
+    const titel = prompt('Wie heißt der Artikel? (Kannst du später ändern.)')
     if (titel === null) return
     try {
       const a = await ruf({ op: 'neu', titel: titel.trim().slice(0, MAX_TITEL) })
@@ -582,7 +588,7 @@
       { ok: fotos.length > 0, text: 'Mindestens ein Foto' },
       { ok: a.titel && a.titel.length > 0 && a.titel.length <= MAX_TITEL, text: `Titel, höchstens ${MAX_TITEL} Zeichen` },
       { ok: a.beschreibung && a.beschreibung.trim().length > 0 && a.beschreibung.length <= MAX_TEXT, text: `Beschreibung, höchstens ${MAX_TEXT} Zeichen` },
-      { ok: a.preistyp === 'verschenken' || a.preis_cent != null, text: 'Preis gesetzt oder „zu verschenken“' },
+      { ok: a.preistyp === 'verschenken' || a.preis_cent != null, text: 'Preis eingetragen oder Preistyp „Zu verschenken“' },
       { ok: !!a.plz, text: 'PLZ' },
       { ok: !!a.kategorie, text: 'Kategorie' },
     ]
@@ -633,7 +639,7 @@
       <button class="az-zurueck" type="button" id="az-zurueck">← Alle Anzeigen</button>
       <div class="az-kopf">
         <h1>${esc(a.titel || 'Ohne Titel')}</h1>
-        <span class="az-wer">Nr. ${String(a.nummer).padStart(4, '0')} · Ordner <code>${esc(a.ordner)}</code></span>
+        <span class="az-wer" title="Ordner in Supabase: ${esc(a.ordner)}">Nr. ${String(a.nummer).padStart(4, '0')}</span>
       </div>
       <p class="az-status" id="az-meldung" role="status" aria-live="polite"></p>
 
@@ -642,8 +648,8 @@
           <section class="az-panel az-panel-fotos">
             <h2>Fotos</h2>
             <label class="az-drop" id="az-drop">
-              Fotos hierher ziehen oder tippen
-              <small>Werden vor dem Hochladen auf ${MAX_KANTE} px verkleinert</small>
+              Fotos hierher ziehen oder auswählen
+              <small>Große Fotos werden vor dem Hochladen automatisch verkleinert.</small>
               <input type="file" id="az-datei" accept="image/*" multiple />
             </label>
             <div class="az-raster" id="az-raster">
@@ -659,12 +665,14 @@
                 </div>`).join('')}
               <span id="az-uploads" style="display:contents"></span>
             </div>
-            ${fotos.length >= FOTO_HINWEIS ? `<p class="az-warnung">${fotos.length} Fotos. Kleinanzeigen nimmt möglicherweise nur ${FOTO_HINWEIS} — die genaue Grenze ist nicht belegt.</p>` : ''}
-            ${fotos.length ? '<p class="az-hinweis">Das erste Foto ist das Titelbild. Mit ◀ ▶ umsortieren.</p>' : ''}
+            ${fotos.length >= FOTO_HINWEIS ? `<p class="az-warnung">Du hast ${fotos.length} Fotos. Kleinanzeigen nimmt vermutlich nicht mehr als ${FOTO_HINWEIS} an — falls dort welche fehlen, lösch hier die hintersten.</p>` : ''}
+            ${fotos.length > 1
+              ? '<p class="az-hinweis">Das erste Foto ist das Titelbild. Mit ◀ ▶ umsortieren.</p>'
+              : fotos.length ? '<p class="az-hinweis">Dieses Foto wird das Titelbild.</p>' : ''}
           </section>
 
           <section class="az-panel az-panel-pruef">
-            <h2>Bereit für Kleinanzeigen?</h2>
+            <h2>Vollständig für Kleinanzeigen?</h2>
             <ul class="az-liste-pruef" id="az-pruefliste" aria-live="polite">
               ${pruef.map((p) => `<li class="${p.ok ? 'ok' : ''}"><span class="h" aria-hidden="true">${p.ok ? '✓' : '·'}</span><span class="sr-only">${p.ok ? 'erledigt: ' : 'offen: '}</span>${esc(p.text)}</li>`).join('')}
             </ul>
@@ -711,7 +719,7 @@
                 <label for="az-notiz">Notiz (intern, kommt nie in die Anzeige)</label>
                 <input id="az-notiz" value="${esc(a.notiz || '')}" />
               </div>
-              ${auswahl('az-status', 'Status', a.status, STATUS)}
+              ${auswahl('az-status', 'Status (stellst du selbst um)', a.status, STATUS)}
             </div>
           </section>
         </div>
@@ -868,22 +876,26 @@
 
       <div class="az-spalten">
         <section class="az-panel">
-          <h2>In dieser Reihenfolge eintragen</h2>
+          <h2>In dieser Reihenfolge bei Kleinanzeigen eintragen</h2>
+          <p class="az-hinweis" style="margin-top:0">
+            Öffne <a href="https://www.kleinanzeigen.de/p-anzeige-aufgeben.html" target="_blank" rel="noopener noreferrer">kleinanzeigen.de</a>
+            in einem zweiten Tab und leg dort die Anzeige an — hier steht nur, was du dort einfügst.
+          </p>
           ${zeile('Kategorie', a.kategorie || '', 'k-kategorie')}
           ${zeile('Titel', a.titel || '', 'k-titel', MAX_TITEL)}
           ${zeile('Beschreibung', a.beschreibung || '', 'k-text', MAX_TEXT)}
           ${zeile('Preis (nur die Zahl)', preis, 'k-preis')}
           ${zeile('PLZ', a.plz || '', 'k-plz')}
-          <p class="az-hinweis">Zustand: <strong>${esc(ZUSTAND[a.zustand] || '—')}</strong> · Versand: <strong>${esc(VERSAND[a.versand] || '—')}</strong> · Preistyp: <strong>${esc(PREISTYP[a.preistyp])}</strong></p>
+          <p class="az-hinweis">Diese drei wählst du bei Kleinanzeigen aus einem Menü aus — Zustand: <strong>${esc(ZUSTAND[a.zustand] || '—')}</strong> · Versand: <strong>${esc(VERSAND[a.versand] || '—')}</strong> · Preistyp: <strong>${esc(PREISTYP[a.preistyp])}</strong></p>
         </section>
 
         <section class="az-panel">
           <h2>Fotos</h2>
           <p class="az-hinweis" style="margin-top:0">
-            Nacheinander heruntergeladen als <code>01.jpg</code>, <code>02.jpg</code> … in der Reihenfolge von oben.
-            Der Dateidialog sortiert alphabetisch — beim Mehrfachauswählen sitzt das Titelbild damit automatisch vorn.
+            Werden als <code>01.jpg</code>, <code>02.jpg</code> … gespeichert, in der Nummerierung, die auf den Bildern steht.
+            Wenn du sie bei Kleinanzeigen später alle auf einmal auswählst, bleibt das Titelbild dadurch vorn.
           </p>
-          <button class="btn btn-primary" type="button" id="az-alle-fotos">Alle ${fotos.length} Fotos herunterladen</button>
+          <button class="btn btn-primary" type="button" id="az-alle-fotos">${fotos.length === 1 ? 'Das Foto herunterladen' : 'Alle ' + fotos.length + ' Fotos herunterladen'}</button>
           <div class="az-raster" style="margin-top:14px">
             ${fotos.map((f, i) => `
               <div class="az-bild">
@@ -893,13 +905,14 @@
               </div>`).join('')}
           </div>
 
-          <h2 style="margin-top:22px">Wenn sie online ist</h2>
+          <h2 style="margin-top:22px">Wenn die Anzeige online ist</h2>
           <div class="field">
             <label for="az-url">Link zur Anzeige</label>
             <input id="az-url" type="url" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false"
                    value="${esc(a.kleinanzeigen_url || '')}" placeholder="https://www.kleinanzeigen.de/s-anzeige/…" />
           </div>
-          <button class="btn btn-primary" type="button" id="az-ist-drin">Ist eingestellt</button>
+          <button class="btn btn-primary" type="button" id="az-ist-drin">Als eingestellt markieren</button>
+          <p class="az-hinweis">Speichert den Link, setzt den Status auf „Eingestellt" und bringt dich zurück zur Übersicht.</p>
         </section>
       </div>`
 
@@ -933,12 +946,18 @@
       b.addEventListener('click', () => laden(Number(b.dataset.einzeln)).catch(() => melde('Download fehlgeschlagen.', true))))
 
     document.getElementById('az-alle-fotos').addEventListener('click', async () => {
+      // Zwischenmeldungen je Fehlschlag waren sinnlos: die naechste ueberschrieb
+      // sie 350 ms spaeter, und am Ende stand in jedem Fall "3 Fotos
+      // heruntergeladen" in gruen — auch wenn nur zwei ankamen.
+      const fehlt = []
       for (let i = 0; i < fotos.length; i++) {
-        try { await laden(i) } catch (_) { melde('Foto ' + (i + 1) + ' ging nicht.', true) }
+        try { await laden(i) } catch (_) { fehlt.push(i + 1) }
         // Der Browser blockt einen Schwall gleichzeitiger Downloads.
         await new Promise((r) => setTimeout(r, 350))
       }
-      melde(fotos.length + ' Fotos heruntergeladen.')
+      const gut = fotos.length - fehlt.length
+      if (!fehlt.length) melde(gut === 1 ? '1 Foto heruntergeladen.' : gut + ' Fotos heruntergeladen.')
+      else melde(`${gut} von ${fotos.length} Fotos heruntergeladen. ${fehlt.length === 1 ? 'Foto ' + fehlt[0] + ' hat' : 'Fotos ' + fehlt.join(', ') + ' haben'} nicht geklappt — einzeln über ⤓ nachholen.`, true)
     })
 
     document.getElementById('az-ist-drin').addEventListener('click', async () => {
