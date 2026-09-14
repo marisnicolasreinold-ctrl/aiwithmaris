@@ -373,7 +373,10 @@ export default async function middleware(request) {
   if (area === 'anzeigen') {
     if (await anzeigenSitzungGueltig(readCookie(request, ANZ))) return next();
     if (await guestOk(request, area)) return next();
-    const res = rewrite(new URL('/anzeigen-anmeldung.html', request.url));
+    // OHNE .html: vercel.json steht auf cleanUrls, unter dieser Einstellung
+    // gibt es den .html-Pfad gar nicht — er liefert 404. Die Datei heisst
+    // anzeigen-anmeldung.html, ausgeliefert wird sie unter /anzeigen-anmeldung.
+    const res = rewrite(new URL('/anzeigen-anmeldung', request.url));
     res.headers.set('Cache-Control', 'no-store');
     return res;
   }
