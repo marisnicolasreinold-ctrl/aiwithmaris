@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="de" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Anmelden · Wohnungsplan</title>
+<link rel="icon" href="./assets/logo-axon.png" />
+<link rel="stylesheet" href="./assets/fonts/fonts.css" />
+<link rel="stylesheet" href="./style.css" />
+<style>
+  /* Diese Seite steht offen im Netz — sie enthaelt nur ein Formular, kein
+     Geheimnis. Die Middleware liefert sie unter /haushalt aus, solange keine
+     gueltige Sitzung da ist; die Adresse in der Leiste bleibt /haushalt. */
+  .an-wrap { max-width: 26rem; margin: 0 auto; padding: 120px 20px 80px; }
+  .an-wrap h1 { margin: 0 0 6px; font-size: 1.5rem; }
+  .an-wrap .an-unter { color: var(--muted); font-size: .95rem; margin: 0 0 22px; }
+  .an-wrap .form { padding: 26px 24px; }
+
+  /* Wer bist du? als zwei grosse Flaechen statt eines Auswahlfeldes — am Handy
+     ein Tipp statt Aufklappen, Auswaehlen, Schliessen. */
+  .an-wer { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .an-wer input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+  .an-wer label {
+    display: grid; place-items: center; min-height: 52px; cursor: pointer;
+    border: 1px solid var(--line); border-radius: 12px; color: var(--muted);
+    background: rgba(255,255,255,.04); font-size: .98rem;
+    transition: border-color .16s, color .16s, background .16s;
+  }
+  .an-wer input:checked + label { border-color: var(--cyan); color: var(--bg); background: var(--cyan); }
+  .an-wer input:focus-visible + label { outline: 2px solid var(--cyan); outline-offset: 3px; }
+
+  .an-knopf { width: 100%; justify-content: center; margin-top: 4px; }
+  .an-meldung { min-height: 1.3em; margin: 12px 0 0; font-family: var(--mono); font-size: .78rem; color: #ff6b8b; }
+  .an-fuss { margin-top: 18px; color: var(--muted); font-size: .8rem; line-height: 1.5; }
+  /* style.css faerbt Links nur in bestimmten Bereichen — hier stuende sonst
+     das Browser-Blau mitten im dunklen Entwurf. */
+  .an-fuss a { color: var(--cyan); text-decoration: none; }
+  .an-fuss a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<nav id="nav" class="scrolled" aria-label="Navigation">
+  <div class="nav-inner">
+    <a class="logo" href="index.html" aria-label="AI with Maris — zur Startseite">
+      <img src="./assets/logo-axon.png" alt="" />AI with Maris
+    </a>
+  </div>
+</nav>
+
+<div class="an-wrap">
+  <h1>Wohnungsplan</h1>
+  <p class="an-unter">Zimmer für Zimmer, ToDo Garten und ToDo Haus. Einmal anmelden, dann bleibst du drin.</p>
+
+  <form class="form" id="an-form">
+    <div class="field">
+      <label for="an-benutzer">Benutzer</label>
+      <!-- Ausgefuellt, aber nicht gesperrt: so speichert der Passwortmanager
+           Name und Passwort als Paar, und niemand muss am Handy tippen. -->
+      <input type="text" id="an-benutzer" name="benutzer" value="Haushalt"
+             autocomplete="username" autocapitalize="off" autocorrect="off" spellcheck="false" />
+    </div>
+
+    <div class="field">
+      <label for="an-pw">Passwort</label>
+      <input type="password" id="an-pw" name="passwort" autocomplete="current-password"
+             autocapitalize="off" autocorrect="off" spellcheck="false" required />
+    </div>
+
+    <div class="field">
+      <label for="an-steffi" id="an-wer-name">Wer bist du?</label>
+      <div class="an-wer" role="radiogroup" aria-labelledby="an-wer-name">
+        <input type="radio" name="wer" id="an-steffi" value="Steffi" checked />
+        <label for="an-steffi">Steffi</label>
+        <input type="radio" name="wer" id="an-maris" value="Maris" />
+        <label for="an-maris">Maris</label>
+      </div>
+    </div>
+
+    <button class="btn btn-primary an-knopf" type="submit" id="an-knopf">Anmelden</button>
+    <p class="an-meldung" id="an-meldung" role="status" aria-live="polite"></p>
+  </form>
+
+  <p class="an-fuss">
+    Nur für Steffi und Maris. Wer du bist, entscheidet, wem Aufgaben zugeteilt werden
+    und wer die Benachrichtigungen bekommt — das lässt sich später nicht raten.
+    Wenn du hier gelandet bist, ohne das Passwort zu kennen, gibt es nichts zu sehen —
+    <a href="index.html">zur Website</a>.
+  </p>
+</div>
+
+<script>
+(() => {
+  'use strict'
+  const form = document.getElementById('an-form')
+  const knopf = document.getElementById('an-knopf')
+  const meldung = document.getElementById('an-meldung')
+
+  form.addEventListener('submit', async (ev) => {
+    ev.preventDefault()
+    const pw = document.getElementById('an-pw').value
+    if (!pw) return
+    const benutzer = document.getElementById('an-benutzer').value || 'Haushalt'
+    const wer = (document.querySelector('input[name="wer"]:checked') || {}).value || 'Steffi'
+
+    knopf.disabled = true
+    knopf.textContent = 'Moment …'
+    meldung.textContent = ''
+    try {
+      const antwort = await fetch('/__gate/haushalt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ benutzer, passwort: pw, wer }),
+      })
+      if (antwort.ok) {
+        // Die Middleware hat die Sitzung gesetzt — dieselbe Adresse noch einmal
+        // laden liefert jetzt den Plan statt dieser Seite.
+        location.replace('/haushalt')
+        return
+      }
+      // Nur eine echte Absage heisst "Passwort stimmt nicht". Alles andere ist
+      // ein Fehler auf unserer Seite und darf nicht auf den Nutzer zeigen.
+      meldung.textContent = antwort.status === 401
+        ? 'Benutzer oder Passwort stimmt nicht.'
+        : 'Die Anmeldung hat gerade nicht geklappt. Gleich noch einmal versuchen.'
+    } catch (_) {
+      meldung.textContent = 'Keine Verbindung. Internet prüfen und noch einmal versuchen.'
+    }
+    knopf.disabled = false
+    knopf.textContent = 'Anmelden'
+  })
+})()
+</script>
+</body>
+</html>

@@ -1,13 +1,16 @@
 // Gate-Pruefung gegen einen nachgebauten Supabase. Kein echter Netzverkehr —
 // die Pruefung sagt, was der Code tut, nicht was der Server gerade antwortet.
-const GUELTIG = 'b'.repeat(48)          // eine bestehende Sitzung
+const GUELTIG = 'b'.repeat(48)          // eine bestehende Anzeigen-Sitzung
+const HH_GUELTIG = 'd'.repeat(48)       // eine bestehende Haushalt-Sitzung
 const PASSWORT = 'kaktus42'
+const HH_PASSWORT = 'geheim-haus'
 const GAESTE = [
   { user: 'anzeigen', pass: PASSWORT, area: 'anzeigen' },
-  { user: 'wohnen',   pass: 'geheim-haus', area: 'haushalt' },
+  { user: 'wohnen',   pass: HH_PASSWORT, area: 'haushalt' },
   { user: 'renner',   pass: 'geheim-lsu',  area: 'lsu' },
 ]
 let funktionsAufrufe = 0
+let anmeldeAufrufe = 0
 
 globalThis.fetch = async (url, init) => {
   const u = String(url)
@@ -19,6 +22,17 @@ globalThis.fetch = async (url, init) => {
   if (u.endsWith('/rpc/anzeigen_sitzung_gueltig')) {
     return new Response(JSON.stringify(b.t === GUELTIG), { status: 200 })
   }
+  if (u.endsWith('/rpc/haushalt_sitzung_gueltig')) {
+    return new Response(JSON.stringify(b.t === HH_GUELTIG), { status: 200 })
+  }
+  if (u.endsWith('/rpc/haushalt_anmelden')) {
+    anmeldeAufrufe++
+    // Wie die echte Funktion: bei falschen Daten `null` mit Status 200 —
+    // sie verraet nicht, ob Name oder Passwort danebenlag. Und ohne Ruecksicht
+    // auf Gross- und Kleinschreibung beim Namen, genau wie check_site_guest.
+    const ok = String(b.u || '').toLowerCase() === 'haushalt' && b.p === HH_PASSWORT
+    return new Response(JSON.stringify(ok ? 'e'.repeat(48) : null), { status: 200 })
+  }
   if (u.endsWith('/functions/v1/anzeigen')) {
     funktionsAufrufe++
     if (b.op !== 'anmelden') return new Response('{}', { status: 400 })
@@ -29,8 +43,31 @@ globalThis.fetch = async (url, init) => {
   throw new Error('unerwarteter fetch: ' + u)
 }
 
-const mw = (await import('./middleware.js')).default
-const konfig = (await import('./middleware.js')).config
+// middleware.js importiert '@vercel/edge'. Das Paket liegt nicht im Repo (npm
+// ist hier gesperrt) und waere auch das falsche: gebraucht wird ein Doppel, das
+// sichtbar macht, WAS die Middleware entschieden hat — durchlassen oder
+// umleiten. Also die Quelle einmal umbiegen und aus dem Zwischenspeicher laden,
+// damit `node scripts/gate/pruef.mjs` ohne Vorbereitung laeuft.
+import { readFileSync, writeFileSync, mkdtempSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join, dirname } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
+
+const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..')
+const bau = mkdtempSync(join(tmpdir(), 'gate-'))
+writeFileSync(join(bau, 'edge.mjs'), [
+  "export const next = () => new Response('', { headers: { 'x-stub': 'next' } })",
+  "export const rewrite = (ziel) =>",
+  "  new Response('', { headers: { 'x-stub': 'rewrite', 'x-stub-ziel': String(ziel) } })",
+  '',
+].join('\n'))
+writeFileSync(join(bau, 'middleware.mjs'),
+  readFileSync(join(REPO, 'middleware.js'), 'utf8')
+    .replace(/from '@vercel\/edge'/, "from './edge.mjs'"))
+
+const geladen = await import(pathToFileURL(join(bau, 'middleware.mjs')).href)
+const mw = geladen.default
+const konfig = geladen.config
 const basic = (u, p) => 'Basic ' + Buffer.from(u + ':' + p, 'utf8').toString('base64')
 
 async function ruf(pfad, { kopf = {}, methode = 'GET', koerper } = {}) {
@@ -112,25 +149,79 @@ const pruefe = (name, ist, ok, soll) => {
   pruefe('Passwortmanager mit Basic kommt weiterhin durch', r.stub, r.stub === 'next', 'next')
 }
 
-// --- Gegenprobe: die anderen Bereiche sind unberuehrt --------------------
+// --- Wohnungsplan: dieselbe eigene Anmeldeseite --------------------------
 {
   const r = await ruf('/haushalt')
-  pruefe('Haushalt fragt weiterhin per Basic', r.status + '/' + r.realm, r.status === 401 && r.realm === 'Wohnungsplan', '401/Wohnungsplan')
+  pruefe('Haushalt ohne Anmeldung: kein 401', r.status, r.status === 200, '200')
+  pruefe('Haushalt ohne Anmeldung: kein Browser-Dialog', r.realm === '' ? '(keiner)' : r.realm, r.realm === '', 'keiner')
+  pruefe('Haushalt ohne Anmeldung: eigene Anmeldeseite', r.ziel.replace('https://aiwithmaris.com', ''),
+    r.stub === 'rewrite' && /\/haushalt-anmeldung$/.test(r.ziel), '/haushalt-anmeldung')
 }
 {
+  const r = await ruf('/__gate/haushalt', { methode: 'POST', koerper: { benutzer: 'Haushalt', passwort: HH_PASSWORT, wer: 'Steffi' } })
+  const c = r.cookies.join(' | ')
+  pruefe('Haushalt: richtiges Passwort -> 200', r.status, r.status === 200, '200')
+  pruefe('Haushalt: setzt ein Sitzungscookie', /aiwm_hh=e{10}/.test(c), /aiwm_hh=e{10}/.test(c), 'aiwm_hh=<token>')
+  pruefe('Haushalt: merkt sich, wer davorsitzt', /aiwm_hh_wer=Steffi/.test(c), /aiwm_hh_wer=Steffi/.test(c), 'aiwm_hh_wer=Steffi')
+  pruefe('Haushalt: Cookie nur unter /haushalt', /Path=\/haushalt/.test(c), /Path=\/haushalt/.test(c), 'Path=/haushalt')
+  pruefe('Haushalt: Cookie fuer die Seite lesbar', !/HttpOnly/.test(c), !/HttpOnly/.test(c), 'ohne HttpOnly')
+  pruefe('Haushalt: Cookie nur ueber HTTPS', /Secure/.test(c), /Secure/.test(c), 'Secure')
+}
+{
+  const r = await ruf('/__gate/haushalt', { methode: 'POST', koerper: { benutzer: 'haushalt', passwort: HH_PASSWORT, wer: 'Maris' } })
+  pruefe('Haushalt: Name ohne Ruecksicht auf Grossschreibung', r.status, r.status === 200, '200')
+}
+{
+  const r = await ruf('/__gate/haushalt', { methode: 'POST', koerper: { passwort: HH_PASSWORT, wer: 'Maris' } })
+  pruefe('Haushalt: ohne Namen gilt Haushalt', r.status, r.status === 200, '200')
+}
+{
+  const r = await ruf('/__gate/haushalt', { methode: 'POST', koerper: { benutzer: 'Haushalt', passwort: 'falsch', wer: 'Maris' } })
+  pruefe('Haushalt: falsches Passwort -> 401', r.status, r.status === 401, '401')
+  pruefe('Haushalt: falsches Passwort setzt kein Cookie', r.cookies.length, r.cookies.length === 0, '0')
+}
+{
+  const r = await ruf('/__gate/haushalt', { methode: 'GET' })
+  pruefe('Haushalt: Anmeldung nur per POST', r.status, r.status === 405, '405')
+}
+{
+  const r = await ruf('/haushalt', { kopf: { cookie: `aiwm_hh=${HH_GUELTIG}` } })
+  pruefe('Haushalt: gueltige Sitzung -> durch', r.stub, r.stub === 'next', 'next')
+}
+{
+  const r = await ruf('/haushalt', { kopf: { cookie: 'aiwm_hh=' + 'f'.repeat(48) } })
+  pruefe('Haushalt: fremdes Token -> Anmeldeseite', r.stub, r.stub === 'rewrite', 'rewrite')
+}
+{
+  const vorher = anmeldeAufrufe
+  await ruf('/haushalt', { kopf: { cookie: 'aiwm_hh=<script>alert(1)</script>' } })
+  pruefe('Haushalt: unsauberes Token wird gar nicht erst gefragt', anmeldeAufrufe === vorher,
+    anmeldeAufrufe === vorher, 'kein Aufruf')
+}
+
+// --- Gegenprobe: die Bereiche bleiben voneinander getrennt ---------------
+{
   const r = await ruf('/haushalt', { kopf: { cookie: `aiwm_anz=${GUELTIG}` } })
-  pruefe('Anzeigen-Sitzung oeffnet /haushalt NICHT', r.status, r.status === 401, '401')
+  pruefe('Anzeigen-Sitzung oeffnet /haushalt NICHT', r.stub, r.stub === 'rewrite', 'Anmeldeseite')
+}
+{
+  const r = await ruf('/anzeigen', { kopf: { cookie: `aiwm_hh=${HH_GUELTIG}` } })
+  pruefe('Haushalt-Sitzung oeffnet /anzeigen NICHT', r.stub, r.stub === 'rewrite', 'Anmeldeseite')
+}
+{
+  const r = await ruf('/lsu', { kopf: { cookie: `aiwm_hh=${HH_GUELTIG}` } })
+  pruefe('Haushalt-Sitzung oeffnet /lsu NICHT', r.status, r.status === 401, '401')
 }
 {
   const r = await ruf('/lsu', { kopf: { cookie: `aiwm_anz=${GUELTIG}` } })
   pruefe('Anzeigen-Sitzung oeffnet /lsu NICHT', r.status, r.status === 401, '401')
 }
 {
-  const r = await ruf('/haushalt', { kopf: { authorization: basic('wohnen', 'geheim-haus') } })
-  pruefe('Haushalt-Gast kommt weiterhin durch', r.stub, r.stub === 'next', 'next')
+  const r = await ruf('/haushalt', { kopf: { authorization: basic('wohnen', HH_PASSWORT) } })
+  pruefe('Haushalt-Gast mit Basic kommt weiterhin durch', r.stub, r.stub === 'next', 'next')
 }
 {
-  const r = await ruf('/anzeigen', { kopf: { authorization: basic('wohnen', 'geheim-haus') } })
+  const r = await ruf('/anzeigen', { kopf: { authorization: basic('wohnen', HH_PASSWORT) } })
   pruefe('Haushalt-Daten oeffnen /anzeigen nicht', r.stub, r.stub === 'rewrite', 'Anmeldeseite')
 }
 {
@@ -138,8 +229,11 @@ const pruefe = (name, ist, ok, soll) => {
   pruefe('oeffentliche Seite bleibt oeffentlich', r.stub, r.stub === 'next', 'next')
 }
 {
-  pruefe('Anmeldeseite selbst ist nicht gegated', konfig.matcher.some((m) => m.includes('anzeigen-anmeldung')),
-    !konfig.matcher.some((m) => m.includes('anzeigen-anmeldung')), 'nicht im matcher')
+  for (const seite of ['anzeigen-anmeldung', 'haushalt-anmeldung']) {
+    const drin = konfig.matcher.some((m) => m.includes(seite))
+    pruefe(`Anmeldeseite ${seite} ist nicht gegated`, drin ? 'im matcher' : '(nicht im matcher)',
+      !drin, 'nicht im matcher')
+  }
 }
 
 console.log(schlecht ? `\n${schlecht} FEHLGESCHLAGEN` : '\nalle bestanden')
