@@ -26,6 +26,13 @@ const SUPABASE_ANON =
 const ANZ = 'aiwm_anz';
 const ANZ_TAGE = 180;
 
+// Dasselbe fuer /haushalt. Zwei Cookies statt einem: das Token oeffnet den
+// geteilten Stand, der Name sagt der Seite, wer von beiden gerade davorsitzt —
+// das braucht sie fuer die Zuteilung und die Benachrichtigungen.
+const HH = 'aiwm_hh';
+const HH_WER = 'aiwm_hh_wer';
+const HH_TAGE = 180;
+
 const AT = 'aiwm_at'; // Supabase access token
 const RT = 'aiwm_rt'; // Supabase refresh token
 const MAXAGE = 60 * 60 * 24 * 30; // 30 Tage (Refresh hält die Session frisch)
@@ -255,6 +262,27 @@ async function anzeigenSitzungGueltig(token) {
   }
 }
 
+// Dasselbe fuer den Wohnungsplan. Die Funktion im Schema `private` liefert
+// PostgREST nicht aus, davor steht deshalb ein oeffentliches Fenster.
+async function haushaltSitzungGueltig(token) {
+  if (!token || token.length !== 48 || !/^[0-9a-f]+$/.test(token)) return false;
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/haushalt_sitzung_gueltig`, {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_ANON,
+        Authorization: `Bearer ${SUPABASE_ANON}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ t: token }),
+    });
+    if (!r.ok) return false;
+    return (await r.json()) === true;
+  } catch {
+    return false;
+  }
+}
+
 // Jeder Bereich fragt unter eigenem Realm: Browser merken sich Basic-Auth pro
 // Ursprung UND Realm, sonst wuerde ein Gast des Renn-Dashboards ungefragt auch
 // am Wohnungsplan angemeldet.
@@ -343,6 +371,53 @@ export default async function middleware(request) {
     return res;
   }
 
+  // Anmeldung fuer /haushalt — dasselbe Muster wie oben. Der Wohnungsplan
+  // fragte bisher per Basic; der Dialog dazu gehoert dem Betriebssystem und
+  // sieht am Handy aus wie eine Stoerung. Das Sitzungstoken, das hier
+  // zurueckkommt, ist genau das, mit dem die Seite auch ihren geteilten Stand
+  // liest und schreibt — eine Anmeldung reicht also fuer beides.
+  if (path === '/__gate/haushalt') {
+    if (request.method !== 'POST') {
+      return new Response('Method Not Allowed', { status: 405 });
+    }
+    let benutzer = '', passwort = '', wer = '';
+    try {
+      const body = await request.json();
+      benutzer = String(body.benutzer || 'Haushalt').slice(0, 40);
+      passwort = String(body.passwort || '');
+      wer = String(body.wer || '').slice(0, 40);
+    } catch {
+      /* ignore */
+    }
+    if (!passwort) return json({ ok: false }, 400);
+
+    let token = '';
+    try {
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/haushalt_anmelden`, {
+        method: 'POST',
+        headers: {
+          apikey: SUPABASE_ANON,
+          Authorization: `Bearer ${SUPABASE_ANON}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ u: benutzer, p: passwort, wer }),
+      });
+      if (!r.ok) return json({ ok: false }, 502);
+      // Die Funktion gibt bei falschem Passwort `null` zurueck, nicht einen
+      // Fehlercode — sie verraet bewusst nicht, was falsch war.
+      token = (await r.json()) || '';
+    } catch {
+      return json({ ok: false }, 502);
+    }
+    if (!token) return json({ ok: false }, 401);
+
+    const res = json({ ok: true }, 200);
+    res.headers.append('Set-Cookie', offenesCookie(HH, token, HH_TAGE * 86400, '/haushalt'));
+    res.headers.append('Set-Cookie',
+      offenesCookie(HH_WER, encodeURIComponent(wer), HH_TAGE * 86400, '/haushalt'));
+    return res;
+  }
+
   // Logout: Token-Cookies löschen -> zurück zur Baustelle.
   if (path === '/__gate/leave') {
     const res = rewrite(new URL('/coming-soon', request.url));
@@ -377,6 +452,18 @@ export default async function middleware(request) {
     // gibt es den .html-Pfad gar nicht — er liefert 404. Die Datei heisst
     // anzeigen-anmeldung.html, ausgeliefert wird sie unter /anzeigen-anmeldung.
     const res = rewrite(new URL('/anzeigen-anmeldung', request.url));
+    res.headers.set('Cache-Control', 'no-store');
+    return res;
+  }
+
+  // /haushalt ebenso: eigene Anmeldeseite unter derselben Adresse, kein 401
+  // und damit kein Browser-Dialog. Basic Auth bleibt als stiller Nebenweg,
+  // falls ein Passwortmanager ihn noch mitschickt.
+  if (area === 'haushalt') {
+    if (await haushaltSitzungGueltig(readCookie(request, HH))) return next();
+    if (await guestOk(request, area)) return next();
+    // OHNE .html — vercel.json steht auf cleanUrls.
+    const res = rewrite(new URL('/haushalt-anmeldung', request.url));
     res.headers.set('Cache-Control', 'no-store');
     return res;
   }
