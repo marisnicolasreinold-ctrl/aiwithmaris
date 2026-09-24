@@ -617,6 +617,7 @@ h1 {
 }
 
 .p-feld:focus { outline: 2px solid var(--akzent); outline-offset: 1px; }
+select.p-feld.p-thema { flex: 0 1 auto; }
 .p-feld::placeholder { color: var(--text-3); }
 
 .p-anlegen {
@@ -980,57 +981,53 @@ h1 {
     },
     haus: {
       name: 'ToDo Haus', farbe: 'var(--liste-haus)', jubel: '#3b5a9a',
+      // Die Liste kam bunt gemischt. Die Themen sind nur Ueberschriften, keine
+      // Punkte: man kann sie nicht abhaken, und ein Unterpunkt bleibt unter
+      // seinem Kopf. Punkte ohne (bekanntes) Thema landen unter "Weitere".
+      themen: [
+        { id: 'kinder', name: 'Kinder' },
+        { id: 'orga', name: 'Papierkram & Orga' },
+        { id: 'feste', name: 'Basteln & Feste' },
+        { id: 'renovieren', name: 'Renovieren & Reparieren' },
+        { id: 'ordnung', name: 'Aufräumen & Putzen' },
+        { id: 'pflanzen', name: 'Pflanzen' },
+        { id: 'wohnwagen', name: 'Wohnwagen' },
+        { id: 'friedhof', name: 'Friedhof' },
+      ],
       punkte: [
-        { id: 'h-schwimmen', t: 'Abmeldung schwimmen?' },
-        { id: 'h-zahnfee', t: 'Zahnfee' },
-        { id: 'h-ligretto', t: 'Ligretto verschicken' },
-        { id: 'h-weihn-bucket', t: 'Weihnachtsbucketlist', saison: 'Nov–Dez', monate: [11, 12] },
-        { id: 'h-weihn-basteln', t: 'Weihnachtsbasteleien', saison: 'Nov–Dez', monate: [11, 12] },
-        { id: 'h-herbst-basteln', t: 'Herbstbasteleien', saison: 'Sep–Nov', monate: [9, 10, 11] },
-        { id: 'h-wohnwagen', t: 'Wohnwagen' },
-        { id: 'h-blumen', t: 'Blumen umtopfen' },
-        { id: 'h-volksbank', t: 'Volksbank Papierkram' },
-        { id: 'h-butterbrotgeister', t: 'Butterbrotgeister' },
-        { id: 'h-waesche-falten', t: 'Wäsche falten' },
-        { id: 'h-waschen', t: 'Waschen', kinder: [
-          { id: 'h-waschen-lego', t: 'Lego' },
-        ] },
-        { id: 'h-dachgeschoss', t: 'Dachgeschoss' },
-        { id: 'h-kleinanzeigen', t: 'Kleinanzeigen',
+        // Kinder
+        { id: 'h-schwimmen', thema: 'kinder', t: 'Abmeldung schwimmen?' },
+        { id: 'h-zahnfee', thema: 'kinder', t: 'Zahnfee' },
+        { id: 'h-haare-jonah', thema: 'kinder', t: 'Haare Jonah' },
+        { id: 'h-schrank-jonah', thema: 'kinder', t: 'Kleiderschrank Jonah' },
+        { id: 'h-butterbrotgeister', thema: 'kinder', t: 'Butterbrotgeister' },
+        { id: 'h-sportgutschein', thema: 'kinder', t: 'Sportgutschein?' },
+        { id: 'h-spiegel-bad', thema: 'kinder', t: 'KinderSpiegel bad kleben' },
+        { id: 'h-loecher-kinderzimmer', thema: 'kinder', t: 'Löcher Kinderzimmer' },
+        { id: 'h-buchstaben', thema: 'kinder', t: 'Buchstaben für Tür' },
+        // Papierkram & Orga
+        { id: 'h-volksbank', thema: 'orga', t: 'Volksbank Papierkram' },
+        { id: 'h-rente', thema: 'orga', t: 'Lückenauskunft Rentenversicherung' },
+        { id: 'h-sorgerecht', thema: 'orga', t: 'Sorgerecht Antje' },
+        { id: 'h-testament', thema: 'orga', t: 'Testament' },
+        { id: 'h-handyvertrag', thema: 'orga', t: 'Handyvertrag neu' },
+        { id: 'h-geburtstagskalender', thema: 'orga', t: 'Happy Birthday Kalender' },
+        { id: 'h-tshirt', thema: 'orga', t: 'Tshirt kaufen Antje Takis Geschenk' },
+        { id: 'h-ligretto', thema: 'orga', t: 'Ligretto verschicken' },
+        { id: 'h-kleinanzeigen', thema: 'orga', t: 'Kleinanzeigen',
           zeigt: { text: 'Die Werkstatt dafür steht schon: Fotos hochladen, Titel und Preis vorbereiten.', ziel: '/anzeigen', wie: 'Zur Anzeigen-Werkstatt' } },
-        { id: 'h-fettkraut', t: 'Fettkraut' },
-        { id: 'h-sprossen', t: 'Sprossen züchten' },
-        { id: 'h-tshirt', t: 'Tshirt kaufen Antje Takis Geschenk' },
-        { id: 'h-wohnwagen-waschen', t: 'Wohnwagen waschen' },
-        { id: 'h-haare-jonah', t: 'Haare Jonah' },
-        { id: 'h-klodeckel', t: 'Klodeckel reinigen 37x45' },
-        { id: 'h-sportgutschein', t: 'Sportgutschein?' },
-        { id: 'h-schrank-jonah', t: 'Kleiderschrank Jonah' },
-        { id: 'h-friedhof', t: 'Friedhof' },
-        { id: 'h-grabstein', t: 'Grabstein' },
-        { id: 'h-sz-schraenke', t: 'Schlafzimmer Schränke',
-          zeigt: { text: 'Steht im Plan schon als „Kleiderschrank ausmisten“ und „Oben auf dem Schrank Staub wischen“.', bereich: 'sz', wie: 'Zum Schlafzimmer' } },
-        { id: 'h-kueche-ausraeumen', t: 'Küche ausräumen' },
-        { id: 'h-kuechenfronten', t: 'Küchenfronten' },
-        { id: 'h-loecher-kinderzimmer', t: 'Löcher Kinderzimmer' },
-        { id: 'h-spiegel-bad', t: 'KinderSpiegel bad kleben' },
-        { id: 'h-tueren-lack', t: 'Türen endgültig lackieren' },
-        { id: 'h-silikon-bad', t: 'Silikon Bad',
+        // Basteln & Feste
+        { id: 'h-weihn-bucket', thema: 'feste', t: 'Weihnachtsbucketlist', saison: 'Nov–Dez', monate: [11, 12] },
+        { id: 'h-weihn-basteln', thema: 'feste', t: 'Weihnachtsbasteleien', saison: 'Nov–Dez', monate: [11, 12] },
+        { id: 'h-herbst-basteln', thema: 'feste', t: 'Herbstbasteleien', saison: 'Sep–Nov', monate: [9, 10, 11] },
+        { id: 'h-fotobuch', thema: 'feste', t: 'Fotobuch' },
+        // Renovieren & Reparieren
+        { id: 'h-tueren-lack', thema: 'renovieren', t: 'Türen endgültig lackieren' },
+        { id: 'h-kuechenfronten', thema: 'renovieren', t: 'Küchenfronten' },
+        { id: 'h-silikon-bad', thema: 'renovieren', t: 'Silikon Bad',
           zeigt: { text: 'Steht im Bad-Plan mit allen vier Schritten: altes Silikon raus an Waschbecken und WC, neue Fugen ziehen.', bereich: 'bad', wie: 'Zum Bad' } },
-        { id: 'h-silikon-tueren', t: 'Silikon Türen/Vinyl' },
-        { id: 'h-rente', t: 'Lückenauskunft Rentenversicherung' },
-        { id: 'h-fotobuch', t: 'Fotobuch' },
-        { id: 'h-buchstaben', t: 'Buchstaben für Tür' },
-        { id: 'h-sorgerecht', t: 'Sorgerecht Antje' },
-        { id: 'h-testament', t: 'Testament' },
-        { id: 'h-handyvertrag', t: 'Handyvertrag neu' },
-        { id: 'h-geburtstagskalender', t: 'Happy Birthday Kalender' },
-        { id: 'h-naehen', t: 'Nähen', kinder: [
-          { id: 'h-naehen-handtuch', t: 'Handtuch' },
-          { id: 'h-naehen-reparaturen', t: 'Reparaturen' },
-          { id: 'h-naehen-decke', t: 'Decke Charlotte?' },
-        ] },
-        { id: 'h-treppenhaus', t: 'Treppenhaus', kinder: [
+        { id: 'h-silikon-tueren', thema: 'renovieren', t: 'Silikon Türen/Vinyl' },
+        { id: 'h-treppenhaus', thema: 'renovieren', t: 'Treppenhaus', kinder: [
           { id: 'h-treppenhaus-ausraeumen', t: 'Ausräumen' },
           { id: 'h-treppenhaus-putzen', t: 'Putzen' },
           { id: 'h-treppenhaus-ausbessern', t: 'Ausbessern' },
@@ -1039,6 +1036,31 @@ h1 {
           { id: 'h-treppenhaus-bilder', t: 'Bilder Treppenhaus' },
           { id: 'h-treppenhaus-kabel', t: 'Kabel Hauseingang' },
         ] },
+        { id: 'h-naehen', thema: 'renovieren', t: 'Nähen', kinder: [
+          { id: 'h-naehen-handtuch', t: 'Handtuch' },
+          { id: 'h-naehen-reparaturen', t: 'Reparaturen' },
+          { id: 'h-naehen-decke', t: 'Decke Charlotte?' },
+        ] },
+        // Aufräumen & Putzen
+        { id: 'h-waesche-falten', thema: 'ordnung', t: 'Wäsche falten' },
+        { id: 'h-waschen', thema: 'ordnung', t: 'Waschen', kinder: [
+          { id: 'h-waschen-lego', t: 'Lego' },
+        ] },
+        { id: 'h-dachgeschoss', thema: 'ordnung', t: 'Dachgeschoss' },
+        { id: 'h-kueche-ausraeumen', thema: 'ordnung', t: 'Küche ausräumen' },
+        { id: 'h-sz-schraenke', thema: 'ordnung', t: 'Schlafzimmer Schränke',
+          zeigt: { text: 'Steht im Plan schon als „Kleiderschrank ausmisten“ und „Oben auf dem Schrank Staub wischen“.', bereich: 'sz', wie: 'Zum Schlafzimmer' } },
+        { id: 'h-klodeckel', thema: 'ordnung', t: 'Klodeckel reinigen 37x45' },
+        // Pflanzen
+        { id: 'h-blumen', thema: 'pflanzen', t: 'Blumen umtopfen' },
+        { id: 'h-fettkraut', thema: 'pflanzen', t: 'Fettkraut' },
+        { id: 'h-sprossen', thema: 'pflanzen', t: 'Sprossen züchten' },
+        // Wohnwagen
+        { id: 'h-wohnwagen', thema: 'wohnwagen', t: 'Wohnwagen' },
+        { id: 'h-wohnwagen-waschen', thema: 'wohnwagen', t: 'Wohnwagen waschen' },
+        // Friedhof
+        { id: 'h-friedhof', thema: 'friedhof', t: 'Friedhof' },
+        { id: 'h-grabstein', thema: 'friedhof', t: 'Grabstein' },
       ],
     },
   }
@@ -1113,18 +1135,48 @@ h1 {
   const allePunkte = () => (punkteMemo || (punkteMemo = bauePunkte()))
   const punktNachId = (id) => allePunkte()[id]
 
+  // Themen gibt es nur, wo die Saat welche nennt (heute: ToDo Haus). Ein Punkt
+  // ohne bekanntes Thema kommt unter "Weitere" — auch einer, den jemand
+  // selbst angelegt hat, ohne ein Thema zu waehlen.
+  const WEITERE = 'weitere'
+  const themenVon = (liste) => (SAAT[liste] && SAAT[liste].themen) || []
+  function themaVon(p) {
+    if (p.eltern) return null
+    const t = themenVon(p.liste)
+    if (!t.length) return null
+    return t.some((x) => x.id === p.thema) ? p.thema : WEITERE
+  }
+  function themaReihe(liste) {
+    const t = themenVon(liste)
+    return t.length ? t.map((x) => x.id).concat(WEITERE) : [null]
+  }
+  function themaName(liste, id) {
+    if (id === WEITERE) return 'Weitere'
+    const t = themenVon(liste).find((x) => x.id === id)
+    return t ? t.name : ''
+  }
+
+  // Geschwister sind, was man mit ↑ ↓ gegeneinander tauscht: dieselben Eltern,
+  // oder oben in derselben Liste UND im selben Thema. Sonst sprange ein Punkt
+  // mit ↑ unsichtbar ueber eine Themengrenze.
   const geschwister = (p) => Object.values(allePunkte())
-    .filter((q) => p.eltern ? q.eltern === p.eltern : (q.liste === p.liste && !q.eltern))
+    .filter((q) => p.eltern
+      ? q.eltern === p.eltern
+      : (q.liste === p.liste && !q.eltern && themaVon(q) === themaVon(p)))
     .sort(ordnePunkte)
 
   // Baumordnung zum Zeichnen: Kopf, dann seine Kinder.
   function listePunkte(liste) {
     const alle = Object.values(allePunkte())
+    const reihe = themaReihe(liste)
+    const rang = (p) => reihe.indexOf(themaVon(p))
     const raus = []
-    alle.filter((p) => p.liste === liste && !p.eltern).sort(ordnePunkte).forEach((kopf) => {
-      raus.push(kopf)
-      alle.filter((p) => p.eltern === kopf.id).sort(ordnePunkte).forEach((k) => raus.push(k))
-    })
+    alle.filter((p) => p.liste === liste && !p.eltern)
+      .sort((a, b) => rang(a) - rang(b) || ordnePunkte(a, b))
+      .forEach((kopf) => {
+        raus.push(kopf)
+        alle.filter((p) => p.eltern === kopf.id).sort(ordnePunkte).forEach((k) => raus.push(k))
+      })
     return raus
   }
 
@@ -1957,6 +2009,10 @@ h1 {
                    ${platz === geschwisterZahl - 1 ? 'disabled' : ''}>↓</button>
            ${p.eltern ? '' : `<button class="p-knopf" type="button" data-p-kind="${p.id}">+ Unterpunkt</button>`}
            <button class="p-knopf weg" type="button" data-p-weg="${p.id}">Löschen</button>
+           ${!p.eltern && themenVon(p.liste).length ? `
+             <select class="p-feld p-thema" data-p-thema="${p.id}" aria-label="Thema für ${esc(p.t)}">
+               ${themaReihe(p.liste).map((t) => `<option value="${t}"${t === themaVon(p) ? ' selected' : ''}>Thema: ${esc(themaName(p.liste, t))}</option>`).join('')}
+             </select>` : ''}
          </div>`
 
     const verweis = p.zeigt
@@ -2045,9 +2101,40 @@ h1 {
       platzImZweig[p.id] = { n: schlange.length, i: schlange.findIndex((q) => q.id === p.id) }
     })
 
-    const zeilen = sichtbar.length
-      ? sichtbar.map((p) => zeichnePunkt(p, platzImZweig[p.id].n, platzImZweig[p.id].i)).join('')
+    // Themen als Zwischenueberschriften — dieselbe Form wie die Phasen in den
+    // Raeumen. Gezaehlt wird, was im Thema noch offen ist, Unterpunkte mit.
+    const mitThemen = themenVon(liste).length > 0
+    const offenImThema = {}
+    if (mitThemen) {
+      alle.forEach((p) => {
+        const kopf = p.eltern ? allePunkte()[p.eltern] : p
+        const t = kopf ? themaVon(kopf) : WEITERE
+        if (status(p.id) !== 'fertig') offenImThema[t] = (offenImThema[t] || 0) + 1
+      })
+    }
+    let letztesThema
+    const teile = []
+    sichtbar.forEach((p) => {
+      if (mitThemen && !p.eltern) {
+        const t = themaVon(p)
+        if (t !== letztesThema) {
+          const n = offenImThema[t] || 0
+          teile.push(`<div class="phase"><span>${esc(themaName(liste, t))}</span><em>${n ? n + ' offen' : 'alles erledigt'}</em></div>`)
+          letztesThema = t
+        }
+      }
+      teile.push(zeichnePunkt(p, platzImZweig[p.id].n, platzImZweig[p.id].i))
+    })
+
+    const zeilen = teile.length
+      ? teile.join('')
       : '<div class="leer">In dieser Ansicht ist hier gerade nichts.</div>'
+
+    const themaWahl = mitThemen
+      ? `<select class="p-feld p-thema" name="thema" aria-label="Thema für den neuen Punkt">
+           ${themaReihe(liste).map((t) => `<option value="${t}"${t === WEITERE ? ' selected' : ''}>${esc(themaName(liste, t))}</option>`).join('')}
+         </select>`
+      : ''
 
     const klappe = (versteckt || (fertigeZeigen && b.fertig && ansicht !== 'fertig'))
       ? `<button class="ausklapp" type="button" data-fertige="${liste}" aria-expanded="${fertigeZeigen}">
@@ -2067,6 +2154,7 @@ h1 {
           <div class="p-form">
             <input class="p-feld" name="text" maxlength="200" placeholder="Noch ein Punkt …"
                    aria-label="Neuer Punkt in ${esc(angabe.name)}">
+            ${themaWahl}
             <button class="p-knopf" type="submit">Hinzufügen</button>
           </div>
           <span class="p-hinweis">Unterpunkte, Umbenennen und Löschen stehen im Detail jeder Zeile.</span>
@@ -2449,17 +2537,33 @@ h1 {
     stand.punkte[id] = { ...(stand.punkte[id] || {}), ...felder }
   }
 
-  function legePunkt(liste, elternId, text) {
+  function legePunkt(liste, elternId, text, thema) {
     const t = String(text || '').trim().slice(0, 200)
     if (!t) return null
     const id = neuePunktId()
+    const felder = { t, liste, eltern: elternId || null }
+    if (!elternId && themenVon(liste).length) felder.thema = thema || WEITERE
+    // Ans Ende der eigenen Gruppe — bei Themen also ans Ende des Themas.
     const gruppe = elternId
       ? Object.values(allePunkte()).filter((q) => q.eltern === elternId).sort(ordnePunkte)
-      : Object.values(allePunkte()).filter((q) => q.liste === liste && !q.eltern).sort(ordnePunkte)
+      : geschwister({ ...felder, id: null })
     const letzter = gruppe[gruppe.length - 1]
-    schreibePunkt(id, { t, liste, eltern: elternId || null, pos: (letzter ? letzter.pos || 0 : 0) + 1000 })
+    felder.pos = (letzter ? letzter.pos || 0 : 0) + 1000
+    schreibePunkt(id, felder)
     sichern()
     return id
+  }
+
+  // In ein anderes Thema umhaengen: dort ans Ende, damit der Punkt nicht
+  // irgendwo mitten zwischen fremden Plaetzen landet.
+  function themaSetzen(id, thema) {
+    const p = punktNachId(id)
+    if (!p || p.eltern || themaVon(p) === thema) return
+    const ziel = geschwister({ ...p, thema, id: null })
+    const letzter = ziel[ziel.length - 1]
+    schreibePunkt(id, { thema, pos: (letzter ? letzter.pos || 0 : 0) + 1000 })
+    sichern()
+    zeichne()
   }
 
   function benennePunkt(id, text) {
@@ -2777,14 +2881,19 @@ h1 {
     // Eingabetaste tut, was sie soll — am Handy steht dort dann "Fertig".
     if (form.dataset.anlegen) {
       ev.preventDefault()
-      const feld = form.querySelector('.p-feld')
-      const id = legePunkt(form.dataset.anlegen, null, feld.value)
+      const feld = form.querySelector('input.p-feld')
+      const wahl = form.querySelector('select.p-thema')
+      const id = legePunkt(form.dataset.anlegen, null, feld.value, wahl ? wahl.value : undefined)
       if (!id) return
       zeichne()
       // Nach dem Neuzeichnen steht ein anderes Feld da — den Fokus
       // zurueckgeben, damit man mehrere Punkte hintereinander eintippen kann.
-      const neu = document.querySelector('[data-anlegen="' + form.dataset.anlegen + '"] .p-feld')
+      const neu = document.querySelector('[data-anlegen="' + form.dataset.anlegen + '"] input.p-feld')
       if (neu) neu.focus()
+      // Das gewaehlte Thema stehen lassen: wer drei Kinder-Sachen nacheinander
+      // eintippt, will nicht dreimal "Kinder" auswaehlen.
+      const neueWahl = document.querySelector('[data-anlegen="' + form.dataset.anlegen + '"] select.p-thema')
+      if (neueWahl && wahl) neueWahl.value = wahl.value
       return
     }
 
@@ -2823,6 +2932,10 @@ h1 {
   // Namensfelder erst beim Verlassen neu zeichnen, sonst springt der Cursor
   // bei jedem Tastendruck.
   document.addEventListener('change', (ev) => {
+    if (ev.target.dataset && ev.target.dataset.pThema) {
+      themaSetzen(ev.target.dataset.pThema, ev.target.value)
+      return
+    }
     if (ev.target.id === 'name-0' || ev.target.id === 'name-1') zeichne()
   })
 
