@@ -1286,6 +1286,31 @@ h1 {
 
   try { wolke = JSON.parse(localStorage.getItem(WOLKE) || 'null') } catch (_) { wolke = null }
 
+  // Unter aiwithmaris.com liegt vor dieser Seite eine Anmeldung. Wer da durch
+  // ist, hat damit schon ein Sitzungstoken fuer den geteilten Stand — es ist
+  // dasselbe. Also hier uebernehmen, statt ein zweites Mal nach demselben
+  // Passwort zu fragen. Liegt kein Cookie vor (Artifact, lokale Datei), bleibt
+  // alles wie bisher.
+  const GATE = 'aiwm_hh'
+  const GATE_WER = 'aiwm_hh_wer'
+
+  function ausCookie(name) {
+    const treffer = document.cookie.split(';').map((t) => t.trim())
+      .find((t) => t.startsWith(name + '='))
+    if (!treffer) return ''
+    const roh = treffer.slice(name.length + 1)
+    try { return decodeURIComponent(roh) } catch (_) { return roh }
+  }
+
+  const vomGate = ausCookie(GATE)
+  if (vomGate) {
+    const werVomGate = ausCookie(GATE_WER) || (wolke && wolke.wer) || 'Steffi'
+    if (!wolke || wolke.token !== vomGate || wolke.wer !== werVomGate) {
+      wolke = { token: vomGate, wer: werVomGate }
+      try { localStorage.setItem(WOLKE, JSON.stringify(wolke)) } catch (_) {}
+    }
+  }
+
   // Erst klaeren, ob die Seite als Artifact laeuft. Dort teilt sie sich ueber
   // ihre eigene Veroeffentlichung, und ein Aufruf nach draussen waere dort
   // ohnehin gesperrt — die Verbinden-Karte hat da nichts zu suchen.
@@ -1406,6 +1431,12 @@ h1 {
     pushAn = false
     hinweisText = 'nur auf diesem Gerät'
     try { localStorage.removeItem(WOLKE) } catch (_) {}
+    // Ohne das waere das Trennen folgenlos: der naechste Seitenaufruf liest das
+    // Cookie des Gates und meldet wieder an.
+    if (vomGate) {
+      document.cookie = GATE + '=; Path=/haushalt; Max-Age=0; Secure; SameSite=Lax'
+      document.cookie = GATE_WER + '=; Path=/haushalt; Max-Age=0; Secure; SameSite=Lax'
+    }
     if (navigator.serviceWorker && navigator.serviceWorker.controller) {
       navigator.serviceWorker.controller.postMessage({ art: 'abmelden' })
     }
@@ -2708,7 +2739,7 @@ h1 {
     if (ziel.id === 'push-aus') { pushAusschalten(); return }
 
     if (ziel.id === 'trennen') {
-      if (!confirm('Nur dieses Gerät trennen. Der gemeinsame Stand bleibt erhalten.')) return
+      if (!confirm('Dieses Gerät abmelden. Der gemeinsame Stand bleibt erhalten — beim nächsten Öffnen fragt die Seite wieder nach dem Passwort.')) return
       abmelden()
       return
     }
