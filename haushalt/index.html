@@ -49,6 +49,8 @@
   --raum-sz: #6a5b93;
   --raum-bad: #17708a;
   --raum-wz: #8a6a3f;
+  --liste-garten: #41763a;
+  --liste-haus: #3b5a9a;
 
   --r-klein: 3px;
   --r-karte: 5px;
@@ -79,6 +81,8 @@
     --raum-sz: #a294dd;
     --raum-bad: #66bcdb;
     --raum-wz: #cca677;
+    --liste-garten: #8cc57e;
+    --liste-haus: #93afe9;
   }
 }
 
@@ -104,6 +108,8 @@
   --raum-sz: #a294dd;
   --raum-bad: #66bcdb;
   --raum-wz: #cca677;
+  --liste-garten: #8cc57e;
+  --liste-haus: #93afe9;
 }
 
 * { box-sizing: border-box; }
@@ -569,6 +575,62 @@ h1 {
 
 .ausklapp:hover { background: var(--flaeche-3); color: var(--text); }
 
+/* --------------------------------------------------------------- ToDo-Punkte */
+
+/* Eigene Punkte sehen aus wie Aufgaben — sie benutzen .zeile und .zeile-kopf
+   unveraendert. Neu ist nur, was Aufgaben nicht haben: eine zweite Ebene, ein
+   Saison-Etikett und die Werkzeuge zum Aendern. */
+
+.zeile.kind .zeile-kopf { padding-left: 40px; }
+.zeile.kind::before {
+  content: ""; position: absolute; left: 25px; top: 0; bottom: 0;
+  border-left: 1px solid var(--fuge);
+}
+.zeile.kind { position: relative; }
+
+.tag.saison { background: var(--flaeche-3); color: var(--text-2); }
+.tag.saison.jetzt { background: var(--gut-weich); color: var(--gut); }
+.tag.sperre { background: var(--warn-weich); color: var(--warn); }
+
+.punkt-werkzeug { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+
+.p-knopf {
+  min-height: 44px; min-width: 44px; padding: 0 14px;
+  background: var(--flaeche-2); border: 1px solid var(--fuge);
+  border-radius: var(--r-klein); color: var(--text-2); font-size: 14px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  transition: border-color 140ms var(--ease), color 140ms var(--ease), background 140ms var(--ease);
+}
+
+.p-knopf:hover { border-color: var(--akzent); color: var(--text); background: var(--flaeche-3); }
+.p-knopf:disabled { opacity: 1; color: var(--text-3); border-style: dashed; }
+.p-knopf.weg:hover { border-color: var(--stop); color: var(--stop); }
+
+/* Umbenennen und Anlegen benutzen dasselbe Feld-Paar. */
+.p-form { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+.p-feld {
+  flex: 1 1 12rem; min-width: 0; min-height: 44px;
+  background: var(--flaeche-2); border: 1px solid var(--fuge);
+  border-radius: var(--r-klein); padding: 8px 11px;
+  font-family: Karla, "Helvetica Neue", Arial, sans-serif; font-size: 16px; color: var(--text);
+}
+
+.p-feld:focus { outline: 2px solid var(--akzent); outline-offset: 1px; }
+.p-feld::placeholder { color: var(--text-3); }
+
+.p-anlegen {
+  background: var(--flaeche); border-top: 1px solid var(--fuge);
+  padding: 12px 16px; display: flex; flex-direction: column; gap: 8px;
+}
+
+.p-anlegen .p-hinweis { color: var(--text-3); font-size: 13px; }
+
+.p-verweis {
+  display: inline-flex; align-items: center; min-height: 44px;
+  color: var(--akzent-text); font-size: 14px;
+}
+
 /* ------------------------------------------------------------------ Meldung */
 
 .meldung {
@@ -612,7 +674,7 @@ h1 {
 
 <div class="huelle">
   <header class="kopf">
-    <p class="marke">Haushalt · zwei Räume</p>
+    <p class="marke">Haushalt · Räume und Listen</p>
     <h1>Zimmer für Zimmer</h1>
     <p class="unterzeile" id="unterzeile"></p>
   </header>
@@ -661,7 +723,12 @@ h1 {
   // Was geteilt wird. `laufend` bewusst nicht: eine laufende Uhr gehoert zu dem
   // Geraet, das sie gestartet hat — sonst wuerde das Speichern des einen die
   // Uhr des anderen anhalten.
-  const GETEILT = ['v', 'status', 'notizen', 'wer', 'einkauf', 'ist', 'entscheidungen', 'namen', 'wohnzimmer', 'meldung']
+  const GETEILT = ['v', 'status', 'notizen', 'wer', 'einkauf', 'ist', 'entscheidungen', 'punkte', 'namen', 'wohnzimmer', 'meldung']
+
+  // Diese Schluessel verschmilzt der Server Eintrag fuer Eintrag (dieselbe
+  // Liste steht in `public.haushalt_speichern`). Alles andere in GETEILT ist
+  // ein Einzelwert und wird flach ersetzt.
+  const TIEF = ['status', 'notizen', 'wer', 'einkauf', 'ist', 'entscheidungen', 'punkte']
   const VAPID = 'BMrYrbJWoq0v_f9z0TxZ_JBt4VnsYBgHQ_iSkt8tPDUU6GjYqyITwepV1-hFM9ftl69vGLo66rALKQmqlu9Tu0s'
 
   /* ------------------------------------------------------------- Material */
@@ -828,11 +895,253 @@ h1 {
   const AUFGABE_NACH_ID = Object.fromEntries(AUFGABEN.map((a) => [a.id, a]))
   const RAUM_NACH_ID = Object.fromEntries(RAEUME.map((r) => [r.id, r]))
 
+  /* --------------------------------------------------------- Eigene ToDo-Listen */
+
+  // Zwei Listen, die Steffi und Maris selbst fuehren. Anders als die Raeume
+  // oben sind sie aenderbar: Punkte hinzufuegen, umbenennen, verschieben,
+  // loeschen.
+  //
+  // Die Saat steht trotzdem hier im Quelltext, und im Zustand liegt nur, was
+  // davon abweicht — ein Umbenennen, eine neue Reihenfolge, ein Grabstein, ein
+  // selbst angelegter Punkt. Das spart das erste Befuellen samt seinem
+  // Wettlauf (zwei Geraete, die gleichzeitig 93 Punkte anlegen), haelt
+  // Tippfehler in der Vorlage korrigierbar und macht das Loeschen von allein
+  // dauerhaft: ein geloeschter Punkt hat einen Grabstein, und ohne Grabstein
+  // kommt er nie von selbst zurueck.
+  //
+  // `saison` ist das kurze Etikett in der Zeile, `monate` hebt es hervor, wenn
+  // der laufende Monat passt, `warum` steht im Detail. `zeigt` verweist auf
+  // etwas, das es schon gibt, damit niemand dieselbe Arbeit zweimal macht.
+  const SAAT = {
+    garten: {
+      name: 'ToDo Garten', farbe: 'var(--liste-garten)', jubel: '#41763a',
+      punkte: [
+        { id: 'g-kalender', t: 'Gartenkalender 26/27 planen' },
+        { id: 'g-herbstdeko', t: 'Herbstdeko Eingang', saison: 'Sep–Nov', monate: [9, 10, 11] },
+        { id: 'g-wein', t: 'Wein ausgraben', saison: 'Winterruhe', monate: [11, 12, 1, 2],
+          warum: 'Ohne Laub und Saft im Holz stecken Wurzeln das Ausgraben am besten weg. An einem frostfreien Tag.' },
+        { id: 'g-solar', t: 'Solaranlage installieren', kinder: [
+          { id: 'g-solar-details', t: 'Details von Maris' },
+        ] },
+        { id: 'g-wpc', t: 'WPC Terasse aufnehmen' },
+        { id: 'g-bachlauf', t: 'Bachlauf weg' },
+        { id: 'g-tomaten', t: 'Tomaten umpflanzen', saison: 'vor dem Frost', monate: [9, 10],
+          warum: 'Unter etwa 5 °C nehmen Tomaten Schaden, auch ohne echten Frost.' },
+        { id: 'g-mangold', t: 'Mangold umpflanzen', saison: 'Sep–Okt', monate: [9, 10],
+          warum: 'Umgesetzt wurzelt er noch an, solange der Boden warm ist.' },
+        { id: 'g-knoblauch', t: 'Knoblauch pflanzen', saison: 'Okt–Nov', monate: [10, 11],
+          warum: 'Vor dem ersten Frost stecken: er wurzelt noch an, braucht die Kaelte zum Teilen der Zehen und treibt im Fruehjahr durch. Im Fruehjahr gesteckt bleiben die Knollen klein.' },
+        { id: 'g-aster', t: 'Aster pflegen', saison: 'Herbst', monate: [9, 10, 11],
+          warum: 'Verblühtes ausputzen, aber die Stängel über Winter stehen lassen — sie schützen die Pflanze und Insekten überwintern darin. Rückschnitt erst im Frühjahr.' },
+        { id: 'g-heidekraut', t: 'Heidekraut einpflanzen', saison: 'Herbst', monate: [9, 10, 11],
+          warum: 'Solange der Boden warm ist, wurzelt es vor dem Winter ein. Sauren Boden mag es, Kalk nicht.' },
+        { id: 'g-bambus', t: 'Bambus Gräser ausgraben', saison: 'Okt–März, frostfrei', monate: [10, 11, 12, 1, 2, 3],
+          warum: 'In der Ruhezeit ausgraben. Bei Bambus die Rhizome großzügig mitnehmen, sonst kommt er wieder.' },
+        { id: 'g-kompost', t: 'Kompost umpacken', saison: 'Herbst oder Frühjahr', monate: [3, 4, 10, 11],
+          warum: 'Nicht im Hochsommer: dann trocknet der Haufen aus und die Arbeit beginnt von vorn.' },
+        { id: 'g-hecke', t: 'Hecke schneiden', saison: 'stark: Okt–Feb', monate: [10, 11, 12, 1, 2],
+          sperre: '1. März – 30. Sep nur Formschnitt',
+          warum: 'Vom 1. März bis 30. September verbietet § 39 Bundesnaturschutzgesetz das Abschneiden oder starke Zurücksetzen von Hecken — wegen der Vögel. Ein schonender Form- und Pflegeschnitt bleibt erlaubt, aber nur wenn kein Nest besetzt ist. Der kräftige Rückschnitt gehört in den Winter.' },
+        { id: 'g-einfahrt', t: 'Einfahrt kärchern', saison: 'frostfrei', monate: [3, 4, 5, 6, 7, 8, 9, 10] },
+        { id: 'g-terrassendach', t: 'Terassendach reinigen', saison: 'frostfrei', monate: [3, 4, 5, 6, 7, 8, 9, 10] },
+        { id: 'g-windschutz', t: 'Windschutz Terrasse ausdenken' },
+        { id: 'g-kies', t: 'Kies am Haus' },
+        { id: 'g-birke', t: 'Birke schneiden', saison: 'Spätsommer–Herbst', monate: [8, 9, 10],
+          warum: 'Im Frühjahr blutet die Birke stark aus der Schnittstelle — der Saft steht dann unter Druck. Nach der Hauptwachstumszeit schneiden, bei trockenem Wetter.' },
+        { id: 'g-rasenkante', t: 'Rasenkante schneiden', saison: 'Apr–Okt', monate: [4, 5, 6, 7, 8, 9, 10] },
+        { id: 'g-beikraut', t: 'Beikraut jäten', kinder: [
+          { id: 'g-beikraut-beete', t: 'Alle 6 Beete/Bereiche' },
+        ] },
+        { id: 'g-streichen', t: 'Streichen', saison: 'trocken, über 10 °C', monate: [4, 5, 6, 7, 8, 9],
+          warum: 'Lack und Öl brauchen trockenes Holz und Wärme zum Durchhärten. Unter 10 °C oder bei Nachttau wird der Film weich und trübe.', kinder: [
+          { id: 'g-streichen-snoopy', t: 'Snoopy Hütte' },
+          { id: 'g-streichen-baenke', t: 'Weiße Bänke, neue Bretter' },
+          { id: 'g-streichen-oelen', t: 'Holzmöbel ölen' },
+          { id: 'g-streichen-stuehle', t: 'Essstühle schleifen und ölen' },
+        ] },
+        { id: 'g-terrasse', t: 'Terrasse', saison: 'trocken, über 10 °C', monate: [4, 5, 6, 7, 8, 9],
+          warum: 'Bitumen und Dichtmasse ziehen nur auf trockenem, warmem Untergrund an.', kinder: [
+          { id: 'g-terrasse-bitum', t: 'Holzstamm Bitum dichten' },
+          { id: 'g-terrasse-fass', t: 'Tischplatte Fass abdichten' },
+        ] },
+        { id: 'g-projekte', t: 'Projekte', kinder: [
+          { id: 'g-projekte-bank', t: 'Bank Vorgarten' },
+          { id: 'g-projekte-fenster', t: 'Alten Fensterrahmen' },
+          { id: 'g-projekte-wegweiser', t: 'Wegweiser' },
+          { id: 'g-projekte-sandkasten', t: 'Sandkasten dekorieren' },
+        ] },
+        { id: 'g-vorgarten', t: 'Vorgarten', kinder: [
+          { id: 'g-vorgarten-gasschilder', t: 'Gasschilder am Haus anbringen' },
+          { id: 'g-vorgarten-specht', t: 'Specht Bauschaum' },
+          { id: 'g-vorgarten-regenrinne', t: 'Regenrinne reinigen' },
+          { id: 'g-vorgarten-hauswand', t: 'Hauswand ausbessern' },
+        ] },
+      ],
+    },
+    haus: {
+      name: 'ToDo Haus', farbe: 'var(--liste-haus)', jubel: '#3b5a9a',
+      punkte: [
+        { id: 'h-schwimmen', t: 'Abmeldung schwimmen?' },
+        { id: 'h-zahnfee', t: 'Zahnfee' },
+        { id: 'h-ligretto', t: 'Ligretto verschicken' },
+        { id: 'h-weihn-bucket', t: 'Weihnachtsbucketlist', saison: 'Nov–Dez', monate: [11, 12] },
+        { id: 'h-weihn-basteln', t: 'Weihnachtsbasteleien', saison: 'Nov–Dez', monate: [11, 12] },
+        { id: 'h-herbst-basteln', t: 'Herbstbasteleien', saison: 'Sep–Nov', monate: [9, 10, 11] },
+        { id: 'h-wohnwagen', t: 'Wohnwagen' },
+        { id: 'h-blumen', t: 'Blumen umtopfen' },
+        { id: 'h-volksbank', t: 'Volksbank Papierkram' },
+        { id: 'h-butterbrotgeister', t: 'Butterbrotgeister' },
+        { id: 'h-waesche-falten', t: 'Wäsche falten' },
+        { id: 'h-waschen', t: 'Waschen', kinder: [
+          { id: 'h-waschen-lego', t: 'Lego' },
+        ] },
+        { id: 'h-dachgeschoss', t: 'Dachgeschoss' },
+        { id: 'h-kleinanzeigen', t: 'Kleinanzeigen',
+          zeigt: { text: 'Die Werkstatt dafür steht schon: Fotos hochladen, Titel und Preis vorbereiten.', ziel: '/anzeigen', wie: 'Zur Anzeigen-Werkstatt' } },
+        { id: 'h-fettkraut', t: 'Fettkraut' },
+        { id: 'h-sprossen', t: 'Sprossen züchten' },
+        { id: 'h-tshirt', t: 'Tshirt kaufen Antje Takis Geschenk' },
+        { id: 'h-wohnwagen-waschen', t: 'Wohnwagen waschen' },
+        { id: 'h-haare-jonah', t: 'Haare Jonah' },
+        { id: 'h-klodeckel', t: 'Klodeckel reinigen 37x45' },
+        { id: 'h-sportgutschein', t: 'Sportgutschein?' },
+        { id: 'h-schrank-jonah', t: 'Kleiderschrank Jonah' },
+        { id: 'h-friedhof', t: 'Friedhof' },
+        { id: 'h-grabstein', t: 'Grabstein' },
+        { id: 'h-sz-schraenke', t: 'Schlafzimmer Schränke',
+          zeigt: { text: 'Steht im Plan schon als „Kleiderschrank ausmisten“ und „Oben auf dem Schrank Staub wischen“.', bereich: 'sz', wie: 'Zum Schlafzimmer' } },
+        { id: 'h-kueche-ausraeumen', t: 'Küche ausräumen' },
+        { id: 'h-kuechenfronten', t: 'Küchenfronten' },
+        { id: 'h-loecher-kinderzimmer', t: 'Löcher Kinderzimmer' },
+        { id: 'h-spiegel-bad', t: 'KinderSpiegel bad kleben' },
+        { id: 'h-tueren-lack', t: 'Türen endgültig lackieren' },
+        { id: 'h-silikon-bad', t: 'Silikon Bad',
+          zeigt: { text: 'Steht im Bad-Plan mit allen vier Schritten: altes Silikon raus an Waschbecken und WC, neue Fugen ziehen.', bereich: 'bad', wie: 'Zum Bad' } },
+        { id: 'h-silikon-tueren', t: 'Silikon Türen/Vinyl' },
+        { id: 'h-rente', t: 'Lückenauskunft Rentenversicherung' },
+        { id: 'h-fotobuch', t: 'Fotobuch' },
+        { id: 'h-buchstaben', t: 'Buchstaben für Tür' },
+        { id: 'h-sorgerecht', t: 'Sorgerecht Antje' },
+        { id: 'h-testament', t: 'Testament' },
+        { id: 'h-handyvertrag', t: 'Handyvertrag neu' },
+        { id: 'h-geburtstagskalender', t: 'Happy Birthday Kalender' },
+        { id: 'h-naehen', t: 'Nähen', kinder: [
+          { id: 'h-naehen-handtuch', t: 'Handtuch' },
+          { id: 'h-naehen-reparaturen', t: 'Reparaturen' },
+          { id: 'h-naehen-decke', t: 'Decke Charlotte?' },
+        ] },
+        { id: 'h-treppenhaus', t: 'Treppenhaus', kinder: [
+          { id: 'h-treppenhaus-ausraeumen', t: 'Ausräumen' },
+          { id: 'h-treppenhaus-putzen', t: 'Putzen' },
+          { id: 'h-treppenhaus-ausbessern', t: 'Ausbessern' },
+          { id: 'h-treppenhaus-abkleben', t: 'Abkleben' },
+          { id: 'h-treppenhaus-farbe', t: 'Farbe kaufen' },
+          { id: 'h-treppenhaus-bilder', t: 'Bilder Treppenhaus' },
+          { id: 'h-treppenhaus-kabel', t: 'Kabel Hauseingang' },
+        ] },
+      ],
+    },
+  }
+
+  const LISTEN = ['garten', 'haus']
+  const IST_LISTE = (id) => LISTEN.indexOf(id) >= 0
+
+  // Die Saat flach ausrollen. Flach, nicht verschachtelt: der Server
+  // verschmilzt genau eine Ebene tief, also ist jeder Unterpunkt seine eigene
+  // Einheit. Waeren die Kinder ein Feld im Elternpunkt, verlieren zwei
+  // gleichzeitig angehaengte Unterpunkte einander.
+  const SAAT_FLACH = {}
+  LISTEN.forEach((liste) => {
+    SAAT[liste].punkte.forEach((p, i) => {
+      const { kinder, ...rest } = p
+      SAAT_FLACH[p.id] = { ...rest, liste, eltern: null, pos: (i + 1) * 1000, saat: 1 }
+      ;(kinder || []).forEach((k, j) => {
+        SAAT_FLACH[k.id] = { ...k, liste, eltern: p.id, pos: (j + 1) * 1000, saat: 1 }
+      })
+    })
+  })
+
+  const MONAT = new Date().getMonth() + 1
+  const saisonJetzt = (p) => Array.isArray(p.monate) && p.monate.indexOf(MONAT) >= 0
+
+  // Reihenfolge: `pos` als Zahl, die Saat in Tausenderschritten. Einfuegen und
+  // Verschieben setzen den Mittelwert der neuen Nachbarn — so schreibt ein
+  // Handgriff genau einen Eintrag und klobbert nicht die Umbenennung des
+  // anderen. Die Id entscheidet den Gleichstand: jsonb normalisiert die
+  // Schluesselreihenfolge, auf Object.keys ist hier kein Verlass.
+  const ordnePunkte = (a, b) =>
+    (a.pos || 0) - (b.pos || 0) || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0)
+
+  let punkteMemo = null
+  const punkteNeu = () => { punkteMemo = null }
+
+  function bauePunkte() {
+    const zusammen = {}
+    Object.keys(SAAT_FLACH).forEach((id) => { zusammen[id] = { ...SAAT_FLACH[id] } })
+
+    const eigen = (stand.punkte && typeof stand.punkte === 'object') ? stand.punkte : {}
+    Object.keys(eigen).forEach((id) => {
+      const ab = eigen[id]
+      if (!ab || typeof ab !== 'object') return
+      zusammen[id] = zusammen[id] ? { ...zusammen[id], ...ab, id } : { eltern: null, ...ab, id }
+    })
+
+    // Nur zeigen, was einen Text hat, zu einer Liste gehoert und nicht begraben
+    // ist. Damit ist die Seite gegen Felder gewappnet, die eine spaetere
+    // Fassung hinzufuegt, und Graeber bleiben unsichtbar, ohne zu verschwinden.
+    const lebt = {}
+    Object.keys(zusammen).forEach((id) => {
+      const p = zusammen[id]
+      if (p.weg) return
+      if (typeof p.t !== 'string' || !p.t.trim()) return
+      if (!IST_LISTE(p.liste)) return
+      lebt[id] = p
+    })
+
+    // Waisen und dritte Ebene weg: ein Kind, dessen Elternpunkt geloescht ist,
+    // haengt sonst allein in der Liste — und ein Enkel wuerde beim Zeichnen
+    // gar nicht auftauchen, aber in jeder Zaehlung mitlaufen.
+    Object.keys(lebt).forEach((id) => {
+      const p = lebt[id]
+      if (!p.eltern) return
+      const e = lebt[p.eltern]
+      if (!e || e.eltern || e.liste !== p.liste) delete lebt[id]
+    })
+    return lebt
+  }
+
+  const allePunkte = () => (punkteMemo || (punkteMemo = bauePunkte()))
+  const punktNachId = (id) => allePunkte()[id]
+
+  const geschwister = (p) => Object.values(allePunkte())
+    .filter((q) => p.eltern ? q.eltern === p.eltern : (q.liste === p.liste && !q.eltern))
+    .sort(ordnePunkte)
+
+  // Baumordnung zum Zeichnen: Kopf, dann seine Kinder.
+  function listePunkte(liste) {
+    const alle = Object.values(allePunkte())
+    const raus = []
+    alle.filter((p) => p.liste === liste && !p.eltern).sort(ordnePunkte).forEach((kopf) => {
+      raus.push(kopf)
+      alle.filter((p) => p.eltern === kopf.id).sort(ordnePunkte).forEach((k) => raus.push(k))
+    })
+    return raus
+  }
+
+  function listeBilanz(liste) {
+    const menge = listePunkte(liste)
+    const fertig = menge.filter((p) => status(p.id) === 'fertig').length
+    return { gesamt: menge.length, fertig, anteil: menge.length ? fertig / menge.length : 0 }
+  }
+
+  const ortName = (a) =>
+    RAUM_NACH_ID[a.raum] ? RAUM_NACH_ID[a.raum].name : (SAAT[a.liste] ? SAAT[a.liste].name : 'Liste')
+
   /* ---------------------------------------------------------------- Zustand */
 
   const leer = () => ({
     v: 1, status: {}, notizen: {}, einkauf: {}, entscheidungen: {},
-    wer: {}, ist: {}, namen: ['Steffi', 'Maris'], laufend: null,
+    wer: {}, ist: {}, punkte: {}, namen: ['Steffi', 'Maris'], laufend: null,
     wohnzimmer: '', geaendert: 0,
   })
 
@@ -844,6 +1153,10 @@ h1 {
       // Aeltere Staende kannten die Namen noch nicht; ein halbes Paar waere
       // schlimmer als gar keins.
       if (!Array.isArray(zusammen.namen) || zusammen.namen.length !== 2) zusammen.namen = leer().namen
+      // Eine Sammlung, die keine ist, wuerde beim ersten Schreiben durchfallen.
+      TIEF.forEach((k) => {
+        if (!zusammen[k] || typeof zusammen[k] !== 'object' || Array.isArray(zusammen[k])) zusammen[k] = {}
+      })
       return zusammen
     } catch (_) {
       return null
@@ -863,13 +1176,19 @@ h1 {
 
   let blick = 'plan'
   let ansicht = 'alle'
-  let raumFilter = null
+  // Haelt eine Raum- oder eine Listen-Id: beide filtern die Plan-Ansicht gleich.
+  let bereichFilter = null
   let ablaufRaum = 'sz'
   const offeneDetails = new Set()
   let rueckgaengig = null
   let meldungTimer = null
   let offenerWer = null
   const offeneFertige = new Set()
+  // Welcher Punkt gerade umbenannt wird, und ob ein fremder Stand noch aufs
+  // Zeichnen wartet, weil hier jemand tippt.
+  let umbenennen = null
+  let neuesKind = null
+  let nachzeichnen = false
 
   /* ------------------------------------------------------------- Ableitungen */
 
@@ -993,7 +1312,46 @@ h1 {
     return antwort.json()
   }
 
+  // Der letzte Stand, den der Server uns bestaetigt hat. Ohne ihn kann man
+  // "was habe ich geaendert" nicht von "was ist hier nur veraltet"
+  // unterscheiden.
+  let fernStand = null
+
+  const gleich = (a, b) => JSON.stringify(a) === JSON.stringify(b)
+
+  const merkeFern = (daten) => {
+    const o = {}
+    TIEF.forEach((k) => { if (daten && daten[k] && typeof daten[k] === 'object') o[k] = daten[k] })
+    fernStand = JSON.parse(JSON.stringify(o))
+  }
+
+  // Alle Eintraege, die dieses Geraet seit der letzten Antwort des Servers
+  // geaendert hat.
+  function eigeneAenderungen(k) {
+    const meins = stand[k] || {}
+    const bestaetigt = (fernStand && fernStand[k]) || {}
+    const raus = {}
+    Object.keys(meins).forEach((id) => {
+      if (!gleich(meins[id], bestaetigt[id])) raus[id] = meins[id]
+    })
+    return raus
+  }
+
   function zumSenden() {
+    const o = {}
+    GETEILT.forEach((k) => {
+      if (stand[k] === undefined) return
+      // Von den verschmolzenen Sammlungen nur das Geaenderte schicken. Schickte
+      // man die ganze Abbildung, ueberschriebe jedes Speichern hier den Haken,
+      // den der andere in den letzten Sekunden gesetzt hat — unsere Abbildung
+      // ist dann ja die aeltere. Mit dem Ausschnitt wird das Verschmelzen
+      // wirklich additiv, und ein Grabstein kann nicht auferstehen.
+      o[k] = (fernStand && TIEF.indexOf(k) >= 0) ? eigeneAenderungen(k) : stand[k]
+    })
+    return o
+  }
+
+  function alsGanzes() {
     const o = {}
     GETEILT.forEach((k) => { if (stand[k] !== undefined) o[k] = stand[k] })
     return o
@@ -1004,9 +1362,19 @@ h1 {
     let etwasNeu = false
     GETEILT.forEach((k) => {
       if (daten[k] === undefined) return
-      if (JSON.stringify(daten[k]) !== JSON.stringify(stand[k])) etwasNeu = true
-      stand[k] = daten[k]
+      let wert = daten[k]
+      if (fernStand && TIEF.indexOf(k) >= 0 && wert && typeof wert === 'object') {
+        // Was hier noch auf seine Bestaetigung wartet, darf die Antwort nicht
+        // zurueckdrehen — sonst springt ein gerade getippter Punkt wieder weg,
+        // wenn der 15-Sekunden-Abgleich dazwischenkommt.
+        const offen = eigeneAenderungen(k)
+        if (Object.keys(offen).length) wert = { ...wert, ...offen }
+      }
+      if (!gleich(wert, stand[k])) etwasNeu = true
+      stand[k] = wert
     })
+    merkeFern(daten)
+    punkteNeu()
     if (etwasNeu) {
       try { localStorage.setItem(SPEICHER, JSON.stringify(stand)) } catch (_) {}
     }
@@ -1050,7 +1418,7 @@ h1 {
     try {
       const fern = await ruf('haushalt_lesen', { t: wolke.token })
       if (fern === null) { abmelden(); wolkeFehler = 'Die Sitzung gilt nicht mehr — bitte neu verbinden.'; return }
-      if (uebernehmen(fern.daten)) zeichne()
+      if (uebernehmen(fern.daten)) zeichneSanft()
     } catch (_) {
       /* Funkloch: der naechste Durchlauf holt es nach */
     } finally {
@@ -1159,7 +1527,7 @@ h1 {
     if (anName === wolke.wer) return    // sich selbst weckt man nicht
     stand.meldung = {
       titel: wolke.wer + ' hat dir etwas zugeteilt',
-      text: aufgabe.t + ' · ' + RAUM_NACH_ID[aufgabe.raum].name,
+      text: aufgabe.t + ' · ' + ortName(aufgabe),
       an: anName,
       von: wolke.wer,
       zeit: Date.now(),
@@ -1185,9 +1553,24 @@ h1 {
       if (fern === null) { abmelden(); return }
       // Die Antwort ist der verschmolzene Stand — damit kommt an, was der
       // andere in der Zwischenzeit geaendert hat.
-      if (uebernehmen(fern.daten)) zeichne()
+      if (uebernehmen(fern.daten)) zeichneSanft()
     } catch (_) {
       /* offline: localStorage haelt den Stand, der naechste Versuch schiebt nach */
+    }
+  }
+
+  // Der Gegensatz zum Verschmelzen, und die einzige Stelle, an der etwas
+  // verschwinden kann. "Alles zuruecksetzen" braucht das: verschmelzend behielt
+  // der Server jeden Haken, und das naechste Lesen holte sie alle zurueck.
+  async function ersetzenFern() {
+    if (!wolke) return
+    try {
+      const fern = await ruf('haushalt_ersetzen', { t: wolke.token, daten: alsGanzes(), wer: wolke.wer })
+      if (fern === null) { abmelden(); return }
+      merkeFern(fern.daten)
+    } catch (_) {
+      /* offline: der naechste Versuch schiebt verschmelzend nach, dann stehen
+         die alten Haken wieder da — besser als ein stiller Verlust. */
     }
   }
 
@@ -1204,6 +1587,7 @@ h1 {
 
   function sichern() {
     stand.geaendert = Date.now()
+    punkteNeu()
     try { localStorage.setItem(SPEICHER, JSON.stringify(stand)) } catch (_) {}
     zeigeStand()
     clearTimeout(timer)
@@ -1274,11 +1658,19 @@ h1 {
       return s
     }, { gesamt: 0, fertig: 0, rest: 0, dran: 0 })
 
+    const pGesamt = LISTEN.reduce((n, l) => n + listeBilanz(l).gesamt, 0)
+    const pFertig = LISTEN.reduce((n, l) => n + listeBilanz(l).fertig, 0)
+
     document.getElementById('unterzeile').textContent =
-      gesamt.fertig === gesamt.gesamt
-        ? 'Schlafzimmer und Bad sind durch. Zeit, das Wohnzimmer aufzunehmen.'
-        : `${gesamt.gesamt - gesamt.fertig} von ${gesamt.gesamt} Aufgaben offen, ungefähr ${zeit(gesamt.rest)} Arbeit. ` +
-          `${gesamt.dran} davon könnt ihr sofort anfangen — der Rest wartet auf etwas anderes.`
+      (gesamt.fertig === gesamt.gesamt
+        ? 'Schlafzimmer und Bad sind durch.'
+        : `${gesamt.gesamt - gesamt.fertig} von ${gesamt.gesamt} Aufgaben in den Räumen offen, ungefähr ${zeit(gesamt.rest)} Arbeit. ` +
+          `${gesamt.dran} davon könnt ihr sofort anfangen — der Rest wartet auf etwas anderes.`) +
+      (pGesamt
+        ? pFertig === pGesamt
+          ? ' Garten und Haus sind abgearbeitet.'
+          : ` In den Listen stehen noch ${pGesamt - pFertig} von ${pGesamt} Punkten.`
+        : '')
 
     document.querySelectorAll('#reiter button').forEach((b) => {
       b.setAttribute('aria-selected', String(b.dataset.blick === blick))
@@ -1294,12 +1686,26 @@ h1 {
     const kacheln = RAEUME.map((raum) => {
       const b = bilanz(raum.id)
       return `
-        <button class="kachel" type="button" data-raum="${raum.id}" aria-pressed="${raumFilter === raum.id}" style="--kante:${raum.farbe}">
+        <button class="kachel" type="button" data-bereich="${raum.id}" aria-pressed="${bereichFilter === raum.id}" style="--kante:${raum.farbe}">
           ${ring(b.anteil, raum.farbe)}
           <span class="kachel-text">
             <span class="kachel-name">${esc(raum.name)}</span>
             <span class="kachel-zahl">${b.fertig} / ${b.gesamt}</span>
             <span class="kachel-fuss">${b.restMin ? 'noch ≈ ' + zeit(b.restMin) : 'alles erledigt'}${b.dran ? ' · ' + b.dran + ' dran' : ''}</span>
+          </span>
+        </button>`
+    })
+
+    const listen = LISTEN.map((liste) => {
+      const b = listeBilanz(liste)
+      const angabe = SAAT[liste]
+      return `
+        <button class="kachel" type="button" data-bereich="${liste}" aria-pressed="${bereichFilter === liste}" style="--kante:${angabe.farbe}">
+          ${ring(b.anteil, angabe.farbe)}
+          <span class="kachel-text">
+            <span class="kachel-name">${esc(angabe.name)}</span>
+            <span class="kachel-zahl">${b.fertig} / ${b.gesamt}</span>
+            <span class="kachel-fuss">${b.gesamt - b.fertig ? (b.gesamt - b.fertig) + ' offen' : 'alles erledigt'}</span>
           </span>
         </button>`
     })
@@ -1314,17 +1720,23 @@ h1 {
         </span>
       </div>`
 
-    return `<div class="uebersicht">${kacheln.join('')}${wz}</div>`
+    return `<div class="uebersicht">${kacheln.join('')}${listen.join('')}${wz}</div>`
   }
 
   /* ------------------------------------------------------------ Plan-Ansicht */
 
+  const bereichName = (id) =>
+    RAUM_NACH_ID[id] ? RAUM_NACH_ID[id].name : (SAAT[id] ? SAAT[id].name : id)
+
   function zeichneFilter() {
-    const zaehle = (pruefe) => AUFGABEN.filter((a) => aktiv(a) && pruefe(a)).length
+    // Zeilen sind Aufgaben und Punkte zusammen. "Jetzt dran" bleibt bei den
+    // Aufgaben: Punkte haben keine Vorgaenger, sie waeren alle dran.
+    const zeilen = AUFGABEN.filter(aktiv).concat(LISTEN.map(listePunkte).flat())
+    const zaehle = (pruefe) => zeilen.filter(pruefe).length
     const knoepfe = [
-      { id: 'alle', name: 'Alles', n: AUFGABEN.filter(aktiv).length },
+      { id: 'alle', name: 'Alles', n: zeilen.length },
       { id: 'offen', name: 'Offen', n: zaehle((a) => status(a.id) !== 'fertig') },
-      { id: 'dran', name: 'Jetzt dran', n: zaehle(istDran) },
+      { id: 'dran', name: 'Jetzt dran', n: AUFGABEN.filter((a) => aktiv(a) && istDran(a)).length },
       { id: 'fertig', name: 'Erledigt', n: zaehle((a) => status(a.id) === 'fertig') },
     ]
     const meins = stand.namen.map((name, i) => ({
@@ -1334,14 +1746,14 @@ h1 {
       knoepfe.concat(meins).map((k) =>
         `<button class="chip" type="button" data-ansicht="${k.id}" aria-pressed="${ansicht === k.id}">${k.name} <span class="chip-zahl">${k.n}</span></button>`,
       ).join('') +
-      (raumFilter
-        ? `<button class="chip" type="button" data-raum="${raumFilter}" aria-pressed="true">nur ${esc(RAUM_NACH_ID[raumFilter].name)} ✕</button>`
+      (bereichFilter
+        ? `<button class="chip" type="button" data-bereich="${bereichFilter}" aria-pressed="true">nur ${esc(bereichName(bereichFilter))} ✕</button>`
         : '') +
       `</div>`
   }
 
   function passt(a) {
-    if (raumFilter && a.raum !== raumFilter) return false
+    if (bereichFilter && a.raum !== bereichFilter) return false
     if (ansicht === 'offen') return status(a.id) !== 'fertig'
     if (ansicht === 'fertig') return status(a.id) === 'fertig'
     if (ansicht === 'dran') return istDran(a)
@@ -1471,6 +1883,166 @@ h1 {
       </section>`
   }
 
+
+  /* ------------------------------------------------------- Listen zeichnen */
+
+  // Punkte benutzen dieselbe Zeile wie Aufgaben — dieselben Klassen, dasselbe
+  // Kaestchen, dieselbe Personenwahl. Neu ist nur, was Aufgaben nicht haben:
+  // eine zweite Ebene, das Saison-Etikett und die Werkzeuge zum Aendern. Die
+  // Werkzeuge stehen im Detail, nicht in der Zeile: bei 93 Punkten muss die
+  // Liste lesbar bleiben, und im Detail ist Platz fuer Tippziele von 44 px.
+  function zeichnePunkt(p, geschwisterZahl, platz) {
+    const s = status(p.id)
+    const auf = offeneDetails.has(p.id)
+    const wer = stand.wer[p.id]
+    const kindZahl = p.eltern ? 0 : Object.values(allePunkte()).filter((q) => q.eltern === p.id).length
+
+    const marker = []
+    if (p.saison) marker.push(`<span class="tag saison${saisonJetzt(p) ? ' jetzt' : ''}">${esc(p.saison)}</span>`)
+    if (p.sperre) marker.push(`<span class="tag sperre">${esc(p.sperre)}</span>`)
+    if (p.zeigt) marker.push('<span class="tag dazu">gibt es schon</span>')
+    if (kindZahl && !auf) {
+      const offen = Object.values(allePunkte())
+        .filter((q) => q.eltern === p.id && status(q.id) !== 'fertig').length
+      marker.push(`<span class="tag">${kindZahl - offen}/${kindZahl} Unterpunkte</span>`)
+    }
+
+    const klassen = ['zeile']
+    if (s === 'fertig') klassen.push('fertig')
+    if (p.eltern) klassen.push('kind')
+    if (auf) klassen.push('offen-detail')
+
+    const werkzeug = umbenennen === p.id
+      ? `<form class="p-form" data-umbenennen="${p.id}">
+           <input class="p-feld" name="text" value="${esc(p.t)}" maxlength="200" aria-label="Neuer Text für ${esc(p.t)}">
+           <button class="p-knopf" type="submit">Übernehmen</button>
+           <button class="p-knopf" type="button" data-umbenennen-ab="1">Abbrechen</button>
+         </form>`
+      : `<div class="punkt-werkzeug">
+           <button class="p-knopf" type="button" data-p-name="${p.id}">Umbenennen</button>
+           <button class="p-knopf" type="button" data-p-auf="${p.id}" aria-label="${esc(p.t)} nach oben"
+                   ${platz === 0 ? 'disabled' : ''}>↑</button>
+           <button class="p-knopf" type="button" data-p-ab="${p.id}" aria-label="${esc(p.t)} nach unten"
+                   ${platz === geschwisterZahl - 1 ? 'disabled' : ''}>↓</button>
+           ${p.eltern ? '' : `<button class="p-knopf" type="button" data-p-kind="${p.id}">+ Unterpunkt</button>`}
+           <button class="p-knopf weg" type="button" data-p-weg="${p.id}">Löschen</button>
+         </div>`
+
+    const verweis = p.zeigt
+      ? `<p>${esc(p.zeigt.text)}</p>` + (p.zeigt.ziel
+          ? `<a class="p-verweis" href="${esc(p.zeigt.ziel)}">${esc(p.zeigt.wie)} →</a>`
+          : `<div class="detail-knoepfe"><button class="knopf klein" type="button" data-bereich="${esc(p.zeigt.bereich)}">${esc(p.zeigt.wie)}</button></div>`)
+      : ''
+
+    const detail = auf
+      ? `<div class="detail">
+           ${p.warum ? `<p>${esc(p.warum)}</p>` : ''}
+           ${verweis}
+           <textarea class="notiz" data-notiz="${p.id}" placeholder="Notiz, Maß, Farbnummer …">${esc(stand.notizen[p.id] || '')}</textarea>
+           ${werkzeug}
+           ${neuesKind === p.id ? `
+             <form class="p-form" data-anlegen-kind="${p.id}">
+               <input class="p-feld" name="text" maxlength="200" placeholder="Unterpunkt zu „${esc(p.t)}“ …"
+                      aria-label="Neuer Unterpunkt zu ${esc(p.t)}">
+               <button class="p-knopf" type="submit">Hinzufügen</button>
+             </form>` : ''}
+         </div>`
+      : ''
+
+    return `
+      <div class="${klassen.join(' ')}">
+        <div class="zeile-kopf">
+          <button class="status" type="button" data-status="${p.id}" data-s="${s}"
+                  aria-pressed="${s === 'fertig'}"
+                  aria-label="${esc(p.t)}${s === 'fertig' ? ' — erledigt, zum Zurücknehmen tippen' : ' — als erledigt abhaken'}"
+                  >${s === 'fertig' ? HAKEN : ''}</button>
+          <div class="zeile-mitte">
+            <button class="titel" type="button" data-detail="${p.id}" aria-expanded="${auf}">${esc(p.t)}</button>
+            ${marker.length ? `<div class="marker">${marker.join('')}</div>` : ''}
+          </div>
+          <button class="wer" type="button" data-wer="${p.id}" ${wer === 0 || wer === 1 ? `data-p="${wer}"` : ''}
+                  aria-expanded="${offenerWer === p.id}"
+                  aria-label="Zuständig für ${esc(p.t)}: ${wer === 0 || wer === 1 ? esc(stand.namen[wer]) : 'niemand'}"
+                  title="${wer === 0 || wer === 1 ? esc(stand.namen[wer]) : 'niemand zugeteilt'}">${wer === 0 || wer === 1 ? esc(stand.namen[wer].slice(0, 2)) : '+'}</button>
+          <button class="aufklapp" type="button" data-detail="${p.id}" aria-label="Details zu ${esc(p.t)}" aria-expanded="${auf}">${PFEIL}</button>
+        </div>
+        ${offenerWer === p.id ? `
+          <div class="wer-wahl">
+            <span class="wer-frage">Wer macht das?</span>
+            ${stand.namen.map((name, i) => `
+              <button class="chip" type="button" data-wer-wahl="${p.id}" data-person="${i}"
+                      aria-pressed="${wer === i}">${esc(name)}</button>`).join('')}
+            <button class="chip" type="button" data-wer-wahl="${p.id}" data-person="keiner"
+                    aria-pressed="${wer !== 0 && wer !== 1}">niemand</button>
+          </div>` : ''}
+        ${detail}
+      </div>`
+  }
+
+  function passtPunkt(p) {
+    if (ansicht === 'offen') return status(p.id) !== 'fertig'
+    if (ansicht === 'fertig') return status(p.id) === 'fertig'
+    if (ansicht === 'p0') return stand.wer[p.id] === 0
+    if (ansicht === 'p1') return stand.wer[p.id] === 1
+    return true
+  }
+
+  function zeichneListe(liste) {
+    const angabe = SAAT[liste]
+    const b = listeBilanz(liste)
+    const alle = listePunkte(liste)
+
+    const fertigeZeigen = ansicht === 'fertig' || offeneFertige.has(liste)
+    let versteckt = 0
+
+    // Erst je Punkt entscheiden, dann die Koepfe nachziehen: ein Unterpunkt
+    // ohne seinen Kopf haengt sonst ohne Zusammenhang in der Liste.
+    const zeigen = new Set()
+    alle.forEach((p) => {
+      let ja = passtPunkt(p)
+      if (ja && !fertigeZeigen && status(p.id) === 'fertig') { ja = false; versteckt += 1 }
+      if (ja) {
+        zeigen.add(p.id)
+        if (p.eltern) zeigen.add(p.eltern)
+      }
+    })
+
+    const sichtbar = alle.filter((p) => zeigen.has(p.id))
+    const platzImZweig = {}
+    sichtbar.forEach((p) => {
+      const schlange = geschwister(p)
+      platzImZweig[p.id] = { n: schlange.length, i: schlange.findIndex((q) => q.id === p.id) }
+    })
+
+    const zeilen = sichtbar.length
+      ? sichtbar.map((p) => zeichnePunkt(p, platzImZweig[p.id].n, platzImZweig[p.id].i)).join('')
+      : '<div class="leer">In dieser Ansicht ist hier gerade nichts.</div>'
+
+    const klappe = (versteckt || (fertigeZeigen && b.fertig && ansicht !== 'fertig'))
+      ? `<button class="ausklapp" type="button" data-fertige="${liste}" aria-expanded="${fertigeZeigen}">
+           ${fertigeZeigen ? 'Erledigte wieder ausblenden' : `${versteckt} Erledigte${versteckt === 1 ? 's' : ''} einblenden`}
+         </button>`
+      : ''
+
+    return `
+      <section class="karte" style="--kante:${angabe.farbe}">
+        <div class="karte-kopf">
+          <h2>${esc(angabe.name)}</h2>
+          <span class="meta">${b.fertig}/${b.gesamt} erledigt</span>
+        </div>
+        ${zeilen}
+        ${klappe}
+        <form class="p-anlegen" data-anlegen="${liste}">
+          <div class="p-form">
+            <input class="p-feld" name="text" maxlength="200" placeholder="Noch ein Punkt …"
+                   aria-label="Neuer Punkt in ${esc(angabe.name)}">
+            <button class="p-knopf" type="submit">Hinzufügen</button>
+          </div>
+          <span class="p-hinweis">Unterpunkte, Umbenennen und Löschen stehen im Detail jeder Zeile.</span>
+        </form>
+      </section>`
+  }
+
   function zeichneEinkauf() {
     const noetig = MATERIAL.filter((m) => !m.wenn || stand.entscheidungen[m.wenn] === 'ja')
     const offen = noetig.filter((m) => !daIstEs(m.id)).length
@@ -1504,7 +2076,7 @@ h1 {
   // Wer die Seite aufmacht, will nicht 36 Zeilen lesen, sondern wissen, was
   // jetzt dran ist. Drei Vorschlaege, gross genug zum Antippen.
   function zeichneNaechstes() {
-    if (ansicht !== 'alle' || raumFilter) return ''
+    if (ansicht !== 'alle' || bereichFilter) return ''
     const schlange = warteschlange().slice(0, 3)
     if (!schlange.length) return ''
     return `
@@ -1574,9 +2146,15 @@ h1 {
   }
 
   function blickPlan() {
+    // "Jetzt dran" laesst die Listen aus: Punkte haben keine Vorgaenger und kein
+    // Material, sie waeren alle dran und wuerden die Ansicht zuschuetten.
+    const listen = ansicht === 'dran' ? ''
+      : LISTEN.filter((l) => !bereichFilter || l === bereichFilter).map(zeichneListe).join('')
     return zeichneVerbinden() + zeichneUebersicht() + zeichneNaechstes() + zeichneFilter() +
-      RAEUME.filter((r) => !raumFilter || r.id === raumFilter).map(zeichneRaum).join('') +
-      zeichneEinkauf() + (raumFilter ? '' : zeichneWohnzimmer())
+      RAEUME.filter((r) => !bereichFilter || r.id === bereichFilter).map(zeichneRaum).join('') +
+      listen +
+      (IST_LISTE(bereichFilter) ? '' : zeichneEinkauf()) +
+      (bereichFilter ? '' : zeichneWohnzimmer())
   }
 
   /* ----------------------------------------------------------- Fokus-Ansicht */
@@ -1792,24 +2370,171 @@ h1 {
   /* ------------------------------------------------------------ Zeichnen */
 
   function zeichne() {
+    // Aufgeraeumt, bevor gezeichnet wird: diese Mengen halten Ids, und ein
+    // Punkt kann auf dem anderen Geraet geloescht worden sein.
+    if (offenerWer && !AUFGABE_NACH_ID[offenerWer] && !punktNachId(offenerWer)) offenerWer = null
+    if (umbenennen && !punktNachId(umbenennen)) umbenennen = null
+
     zeichneKopf()
     const buehne = document.getElementById('buehne')
     buehne.innerHTML = blick === 'fokus' ? blickFokus() : blick === 'ablauf' ? blickAblauf() : blickPlan()
     zeigeStand()
+    nachzeichnen = false
   }
 
+  // Fuer alles, was von aussen kommt: `buehne.innerHTML` wirft jedes Eingabefeld
+  // samt Cursor weg. Der Abgleich alle 15 Sekunden darf niemandem beim Tippen
+  // das Feld unter den Fingern wegziehen — er wartet, bis es verlassen wird.
+  function zeichneSanft() {
+    const f = document.activeElement
+    const tippt = f && (f.tagName === 'INPUT' || f.tagName === 'TEXTAREA')
+    const buehne = document.getElementById('buehne')
+    if (tippt && buehne && buehne.contains(f)) { nachzeichnen = true; return }
+    zeichne()
+  }
+
+  document.addEventListener('focusout', () => {
+    // Erst im naechsten Takt: sonst ist beim Wechsel von einem Feld ins
+    // naechste kurz gar nichts fokussiert und die Seite baut sich mitten im
+    // Wechsel neu auf.
+    setTimeout(() => { if (nachzeichnen) zeichneSanft() }, 0)
+  })
+
   /* --------------------------------------------------------------- Aktionen */
+
+
+  /* ------------------------------------------------------- Punkte aendern */
+
+  // Kurz halten: der Auslieferungs-Workflow lehnt 43 Zeichen aus [A-Za-z0-9_-]
+  // in Anfuehrungszeichen ab — das waere der Verdacht auf einen privaten
+  // VAPID-Schluessel in der Datei.
+  const neuePunktId = () =>
+    'p' + Date.now().toString(36) + Math.floor(Math.random() * 46656).toString(36).padStart(3, '0')
+
+  // Felder dazuschreiben, nie den ganzen Eintrag ersetzen: sonst nimmt ein
+  // Verschieben die Umbenennung zurueck, die daneben schon drinsteht.
+  function schreibePunkt(id, felder) {
+    if (!stand.punkte || typeof stand.punkte !== 'object') stand.punkte = {}
+    stand.punkte[id] = { ...(stand.punkte[id] || {}), ...felder }
+  }
+
+  function legePunkt(liste, elternId, text) {
+    const t = String(text || '').trim().slice(0, 200)
+    if (!t) return null
+    const id = neuePunktId()
+    const gruppe = elternId
+      ? Object.values(allePunkte()).filter((q) => q.eltern === elternId).sort(ordnePunkte)
+      : Object.values(allePunkte()).filter((q) => q.liste === liste && !q.eltern).sort(ordnePunkte)
+    const letzter = gruppe[gruppe.length - 1]
+    schreibePunkt(id, { t, liste, eltern: elternId || null, pos: (letzter ? letzter.pos || 0 : 0) + 1000 })
+    sichern()
+    return id
+  }
+
+  function benennePunkt(id, text) {
+    const p = punktNachId(id)
+    const t = String(text || '').trim().slice(0, 200)
+    if (!p || !t || t === p.t) return false
+    schreibePunkt(id, { t })
+    sichern()
+    return true
+  }
+
+  function verschiebePunkt(id, richtung) {
+    const p = punktNachId(id)
+    if (!p) return
+    const gruppe = geschwister(p)
+    const i = gruppe.findIndex((q) => q.id === id)
+    const ziel = i + (richtung === 'auf' ? -1 : 1)
+    if (i < 0 || ziel < 0 || ziel >= gruppe.length) return
+
+    // Zwischen die Nachbarn des Zielplatzes einsortieren, statt Plaetze zu
+    // tauschen: so schreibt der Handgriff genau einen Eintrag.
+    const ohne = gruppe.filter((q) => q.id !== id)
+    const vor = ohne[ziel - 1]
+    const nach = ohne[ziel]
+    const a = vor ? (vor.pos || 0) : 0
+    const b = nach ? (nach.pos || 0) : a + 2000
+    const mitte = (a + b) / 2
+
+    if (mitte > a && mitte < b) {
+      schreibePunkt(id, { pos: mitte })
+    } else {
+      // Luecke erschoepft (nach etwa 50 Halbierungen an derselben Stelle).
+      // Dann die ganze Gruppe neu nummerieren — selten, aber sonst bliebe der
+      // Punkt fuer immer stehen.
+      const folge = ohne.slice(0, ziel).concat([p], ohne.slice(ziel))
+      folge.forEach((q, n) => schreibePunkt(q.id, { pos: (n + 1) * 1000 }))
+    }
+    sichern()
+    zeichne()
+  }
+
+  function loeschePunkt(id) {
+    const p = punktNachId(id)
+    if (!p) return
+    const kinder = Object.values(allePunkte()).filter((q) => q.eltern === id).map((q) => q.id)
+    const betroffen = [id].concat(kinder)
+
+    const vorher = betroffen.map((x) => ({
+      id: x,
+      ab: stand.punkte && stand.punkte[x] ? { ...stand.punkte[x] } : null,
+      notiz: stand.notizen[x],
+    }))
+
+    betroffen.forEach((x) => {
+      // Grabstein statt Schluessel loeschen: verschmelzend ist ein fehlender
+      // Schluessel nicht von "nicht geaendert" zu unterscheiden — der Punkt kaeme
+      // beim naechsten Speichern des anderen Geraets zurueck.
+      schreibePunkt(x, { weg: 1, wann: Date.now() })
+      // Die Notiz muss mit ins Grab, sonst bleibt ihr Text unsterblich im Stand.
+      if (stand.notizen[x]) stand.notizen[x] = ''
+    })
+    if (umbenennen && betroffen.indexOf(umbenennen) >= 0) umbenennen = null
+    sichern()
+    zeichne()
+
+    melde(
+      kinder.length
+        ? `Gelöscht, mit ${kinder.length} Unterpunkt${kinder.length === 1 ? '' : 'en'}.`
+        : 'Gelöscht.',
+      () => {
+        vorher.forEach((v) => {
+          // Ausdrueckliches weg: 0 statt den Eintrag zu entfernen — aus demselben
+          // Grund wie oben.
+          stand.punkte[v.id] = v.ab || { weg: 0 }
+          if (v.notiz) stand.notizen[v.id] = v.notiz
+        })
+        sichern()
+        zeichne()
+      },
+    )
+  }
 
   function setzeStatus(id, neu, alt) {
     stand.status[id] = neu
     if (neu === 'fertig') {
       if (stand.laufend && stand.laufend.id === id) halte()
-      const raumId = AUFGABE_NACH_ID[id].raum
       const vorher = alt === 'fertig'
-      const b = bilanz(raumId)
-      if (!vorher && b.gesamt && b.fertig === b.gesamt) {
-        konfetti(RAUM_NACH_ID[raumId].jubel)
-        melde(RAUM_NACH_ID[raumId].name + ' ist durch.')
+      // Aufgabe oder Listenpunkt? Ein Punkt steht nicht in AUFGABE_NACH_ID —
+      // ohne diese Weiche waere jeder Haken in den Listen ein TypeError.
+      const a = AUFGABE_NACH_ID[id]
+      if (a) {
+        const b = bilanz(a.raum)
+        if (!vorher && b.gesamt && b.fertig === b.gesamt) {
+          konfetti(RAUM_NACH_ID[a.raum].jubel)
+          melde(RAUM_NACH_ID[a.raum].name + ' ist durch.')
+        }
+      } else {
+        const p = punktNachId(id)
+        if (p) {
+          punkteNeu()
+          const b = listeBilanz(p.liste)
+          if (!vorher && b.gesamt && b.fertig === b.gesamt) {
+            konfetti(SAAT[p.liste].jubel)
+            melde(SAAT[p.liste].name + ' ist abgearbeitet.')
+          }
+        }
       }
     }
     sichern()
@@ -1829,7 +2554,7 @@ h1 {
 
   document.addEventListener('click', (ev) => {
     const ziel = ev.target.closest(
-      '[data-status],[data-detail],[data-ansicht],[data-raum],[data-einkauf],[data-entscheidung],[data-blick],[data-wer],[data-wer-wahl],[data-uhr],[data-erledigt],[data-ueberspringen],[data-losgehen],[data-ablauf],[data-zurueck],[data-fertige],#zuruecksetzen,#trennen,#push-an,#push-aus',
+      '[data-status],[data-detail],[data-ansicht],[data-bereich],[data-einkauf],[data-entscheidung],[data-blick],[data-wer],[data-wer-wahl],[data-uhr],[data-erledigt],[data-ueberspringen],[data-losgehen],[data-ablauf],[data-zurueck],[data-fertige],[data-p-name],[data-p-auf],[data-p-ab],[data-p-kind],[data-p-weg],[data-umbenennen-ab],#zuruecksetzen,#trennen,#push-an,#push-aus',
     )
     if (!ziel) return
 
@@ -1879,8 +2604,9 @@ h1 {
       offenerWer = null
       sichern()
       zeichne()
-      if (stand.wer[id] != null && stand.wer[id] !== vorher) {
-        meldeZuteilung(AUFGABE_NACH_ID[id], stand.wer[id])
+      const was = AUFGABE_NACH_ID[id] || punktNachId(id)
+      if (was && stand.wer[id] != null && stand.wer[id] !== vorher) {
+        meldeZuteilung(was, stand.wer[id])
       }
       return
     }
@@ -1923,10 +2649,43 @@ h1 {
       return zeichne()
     }
 
+    if (ziel.dataset.pName) {
+      umbenennen = ziel.dataset.pName
+      neuesKind = null
+      zeichne()
+      const feld = document.querySelector('[data-umbenennen="' + umbenennen + '"] .p-feld')
+      if (feld) { feld.focus(); feld.select() }
+      return
+    }
+
+    if (ziel.dataset.umbenennenAb) { umbenennen = null; return zeichne() }
+
+    if (ziel.dataset.pKind) {
+      neuesKind = neuesKind === ziel.dataset.pKind ? null : ziel.dataset.pKind
+      umbenennen = null
+      zeichne()
+      const feld = document.querySelector('[data-anlegen-kind="' + ziel.dataset.pKind + '"] .p-feld')
+      if (feld) feld.focus()
+      return
+    }
+
+    if (ziel.dataset.pAuf) return verschiebePunkt(ziel.dataset.pAuf, 'auf')
+    if (ziel.dataset.pAb) return verschiebePunkt(ziel.dataset.pAb, 'ab')
+
+    if (ziel.dataset.pWeg) {
+      const p = punktNachId(ziel.dataset.pWeg)
+      const kinder = p ? Object.values(allePunkte()).filter((q) => q.eltern === p.id).length : 0
+      // Gefragt wird nur, wenn Unterpunkte mitgehen. Fuer eine einzelne Zeile
+      // reicht die Rueckgaengig-Meldung — eine Abfrage je Zeile waere bei
+      // neunzig Punkten eine Zumutung.
+      if (kinder && !confirm(`„${p.t}“ mit ${kinder} Unterpunkt${kinder === 1 ? '' : 'en'} löschen?`)) return
+      return loeschePunkt(ziel.dataset.pWeg)
+    }
+
     if (ziel.dataset.ansicht) { ansicht = ziel.dataset.ansicht; return zeichne() }
 
-    if (ziel.dataset.raum) {
-      raumFilter = raumFilter === ziel.dataset.raum ? null : ziel.dataset.raum
+    if (ziel.dataset.bereich) {
+      bereichFilter = bereichFilter === ziel.dataset.bereich ? null : ziel.dataset.bereich
       return zeichne()
     }
 
@@ -1955,24 +2714,69 @@ h1 {
     }
 
     if (ziel.id === 'zuruecksetzen') {
-      if (!confirm('Alle Haken, Zeiten, Notizen und die Einkaufsliste zurücksetzen?')) return
+      if (!confirm('Alle Haken, Zeiten, Notizen und die Einkaufsliste zurücksetzen? Die Punkte in ToDo Garten und ToDo Haus bleiben stehen.')) return
       const alt = stand
       stand = leer()
       stand.namen = alt.namen
+      // Die Listen sind Inhalt, keine Haken — ein Fehlgriff auf diesen Knopf
+      // darf nicht neunzig Punkte mitnehmen.
+      stand.punkte = alt.punkte
+      const zurueck = () => { stand = alt; punkteNeu(); sichern(); ersetzenFern(); zeichne() }
       sichern()
+      ersetzenFern()
       zeichne()
-      melde('Alles zurückgesetzt.', () => { stand = alt; sichern(); zeichne() })
+      melde('Alles zurückgesetzt.', zurueck)
     }
   })
 
   document.addEventListener('submit', (ev) => {
-    if (ev.target.id !== 'verbinden-form') return
-    ev.preventDefault()
-    const pw = document.getElementById('verbinden-pw')
-    const wer = document.getElementById('verbinden-wer')
-    if (!pw.value) return
-    anmelden(pw.value, wer.value)
-    pw.value = ''
+    const form = ev.target
+
+    if (form.id === 'verbinden-form') {
+      ev.preventDefault()
+      const pw = document.getElementById('verbinden-pw')
+      const wer = document.getElementById('verbinden-wer')
+      if (!pw.value) return
+      anmelden(pw.value, wer.value)
+      pw.value = ''
+      return
+    }
+
+    // Anlegen, Unterpunkt und Umbenennen sind Formulare, damit die
+    // Eingabetaste tut, was sie soll — am Handy steht dort dann "Fertig".
+    if (form.dataset.anlegen) {
+      ev.preventDefault()
+      const feld = form.querySelector('.p-feld')
+      const id = legePunkt(form.dataset.anlegen, null, feld.value)
+      if (!id) return
+      zeichne()
+      // Nach dem Neuzeichnen steht ein anderes Feld da — den Fokus
+      // zurueckgeben, damit man mehrere Punkte hintereinander eintippen kann.
+      const neu = document.querySelector('[data-anlegen="' + form.dataset.anlegen + '"] .p-feld')
+      if (neu) neu.focus()
+      return
+    }
+
+    if (form.dataset.anlegenKind) {
+      ev.preventDefault()
+      const eltern = form.dataset.anlegenKind
+      const feld = form.querySelector('.p-feld')
+      const id = legePunkt(punktNachId(eltern).liste, eltern, feld.value)
+      if (!id) return
+      offeneDetails.add(eltern)
+      zeichne()
+      const neu = document.querySelector('[data-anlegen-kind="' + eltern + '"] .p-feld')
+      if (neu) neu.focus()
+      return
+    }
+
+    if (form.dataset.umbenennen) {
+      ev.preventDefault()
+      const feld = form.querySelector('.p-feld')
+      benennePunkt(form.dataset.umbenennen, feld.value)
+      umbenennen = null
+      return zeichne()
+    }
   })
 
   document.addEventListener('input', (ev) => {
